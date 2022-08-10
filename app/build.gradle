@@ -40,6 +40,10 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    buildFeatures {
+        viewBinding true
+        dataBinding true
+    }
 }
 
 
@@ -65,7 +69,7 @@ dependencies {
 
     implementation AndroidX.ROOM_RUNTIME
     implementation AndroidX.ROOM_KTX
-    annotationProcessor AndroidX.ROOM_COMPILER
+    kapt AndroidX.ROOM_COMPILER
 
     implementation Libraries.RETROFIT
     implementation Libraries.OKHTTP
@@ -78,6 +82,5 @@ dependencies {
     implementation Kotlin.KOTLIN_STDLIB
     implementation Libraries.KOTLINX_SERIALIZATION
     implementation Libraries.RETROFIT_CONVERTER_KOTLINX_SERIALIZATION
-    //implementation 'com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0'
 
 }

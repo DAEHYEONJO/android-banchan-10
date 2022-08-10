@@ -1,22 +1,16 @@
-package com.woowahan.android10.deliverbanchan.data.repository
+package com.woowahan.android10.deliverbanchan.data.remote.repository
 
-import com.woowahan.android10.deliverbanchan.data.remote.model.*
+import com.woowahan.android10.deliverbanchan.data.remote.dao.DishApi
+import com.woowahan.android10.deliverbanchan.data.remote.model.DishItem
+import com.woowahan.android10.deliverbanchan.data.remote.model.Exhibition
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
-import com.woowahan.android10.deliverbanchan.data.remote.DishApi
-import com.woowahan.android10.deliverbanchan.domain.repository.DishRemoteRepository
+import com.woowahan.android10.deliverbanchan.domain.repository.remote.DishItemRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class DishRemoteRepositoryImpl @Inject constructor(
+class DishItemRepositoryImpl(
     private val dishApi: DishApi
-) : DishRemoteRepository {
-
-    companion object {
-        const val TAG = "DishRemoteRepositoryImpl"
-    }
+): DishItemRepository {
 
     override suspend fun getSideDishes(): Flow<BaseResult<List<DishItem>, Int>> = flow {
         val response = dishApi.getSideDishes()
@@ -66,18 +60,4 @@ class DishRemoteRepositoryImpl @Inject constructor(
                 }
             }
         }
-
-    override suspend fun getDetailDish(hash: String): Flow<BaseResult<DishDetail.DishDetailData, Int>> =
-        flow {
-            val response = dishApi.getDetailDish(hash)
-            with(response) {
-                if (isSuccessful) {
-                    val dishDetailData = body()!!.data
-                    emit(BaseResult.Success(dishDetailData))
-                } else {
-                    emit(BaseResult.Error(code()))
-                }
-            }
-        }
-
 }
