@@ -2,7 +2,7 @@ package com.woowahan.android10.deliverbanchan.utils.di
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.woowahan.android10.deliverbanchan.BuildConfig
-import com.woowahan.android10.deliverbanchan.data.remote.DishApi
+import com.woowahan.android10.deliverbanchan.data.remote.dao.DishApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,7 +13,6 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
