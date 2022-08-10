@@ -21,5 +21,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main, "
     private val dishViewModel: DishViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
     }
 }
