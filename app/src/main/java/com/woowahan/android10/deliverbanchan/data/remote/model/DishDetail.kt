@@ -1,18 +1,18 @@
-package com.woowahan.android10.deliverbanchan.data.model
+package com.woowahan.android10.deliverbanchan.data.remote.model
 
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class DetailDish(
+data class DishDetail(
     @SerialName("data")
-    val data: Data,
+    val data: DishDetailData,
     @SerialName("hash")
     val hash: String
 ) {
     @Serializable
-    data class Data(
+    data class DishDetailData(
         @SerialName("delivery_fee")
         val deliveryFee: String,
         @SerialName("delivery_info")

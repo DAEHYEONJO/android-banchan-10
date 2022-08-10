@@ -1,4 +1,4 @@
-package com.woowahan.android10.deliverbanchan.data.model
+package com.woowahan.android10.deliverbanchan.data.remote.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -18,9 +18,9 @@ data class DishItem(
     @SerialName("image")
     val image: String,
     @SerialName("n_price")
-    val nPrice: String = "", // 원래 가격
+    val nPrice: String = "",
     @SerialName("s_price")
-    val sPrice: String, // 할인된 가격
+    val sPrice: String,
     @SerialName("title")
     val title: String
 )
