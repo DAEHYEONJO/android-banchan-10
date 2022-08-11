@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="uiDishItem"
             type="com.woowahan.android10.deliverbanchan.domain.model.UiDishItem" />
@@ -25,14 +26,20 @@
 
             <ImageView
                 android:id="@+id/maindish_iv_food"
+                imageUrl="@{uiDishItem.image}"
                 android:layout_width="130dp"
                 android:layout_height="130dp"
-                android:background="@color/grey_scale_default"
-                imageUrl="@{uiDishItem.image}"/>
+                tools:background="@color/grey_scale_default" />
 
             <ImageButton
-                android:id="@+id/imageView"
-                style="@style/cartBtnStyle" />
+                android:id="@+id/maindish_ib_cart"
+                android:layout_width="@dimen/cart_btn_width_32dp"
+                android:layout_height="@dimen/cart_btn_width_32dp"
+                android:layout_gravity="bottom|end"
+                android:layout_marginEnd="@dimen/rv_space_8dp"
+                android:layout_marginBottom="@dimen/rv_space_8dp"
+                android:background="@drawable/btn_cart_32dp"
+                android:elevation="2dp" />
         </FrameLayout>
 
         <TextView
@@ -42,12 +49,12 @@
             android:layout_height="@dimen/text_size_24sp"
             android:layout_marginStart="16sp"
             android:gravity="center_vertical"
-            tools:text="오리주물럭_반조리"
             android:text="@{uiDishItem.title}"
             app:layout_constraintBottom_toTopOf="@id/maindish_tv_description"
             app:layout_constraintStart_toEndOf="@id/maindish_fl"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed" />
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="오리주물럭_반조리" />
 
         <TextView
             android:id="@+id/maindish_tv_description"
@@ -56,22 +63,22 @@
             android:layout_height="@dimen/text_size_24sp"
             android:layout_marginStart="16sp"
             android:gravity="center_vertical"
-            tools:text="감칠맛 나는 매콤한 양념"
             android:text="@{uiDishItem.description}"
             app:layout_constraintBottom_toTopOf="@id/maindish_tv_sPrice"
             app:layout_constraintStart_toEndOf="@id/maindish_fl"
-            app:layout_constraintTop_toBottomOf="@id/maindish_tv_title" />
+            app:layout_constraintTop_toBottomOf="@id/maindish_tv_title"
+            tools:text="감칠맛 나는 매콤한 양념" />
 
         <TextView
             android:id="@+id/maindish_tv_sale"
             style="@style/Widget.TextView.NotoSansKR_PrimaryAccent14_Medium.Style"
+            nPrice="@{uiDishItem.NPrice}"
+            sPrice="@{uiDishItem.SPrice}"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/text_size_24sp"
             android:gravity="center_vertical"
             android:paddingEnd="4dp"
             android:text="10%"
-            nPrice="@{uiDishItem.NPrice}"
-            sPrice="@{uiDishItem.SPrice}"
             android:visibility="visible"
             app:layout_constraintBottom_toTopOf="@id/maindish_tv_nPrice"
             app:layout_constraintStart_toStartOf="@id/maindish_tv_description"
@@ -80,14 +87,14 @@
         <TextView
             android:id="@+id/maindish_tv_sPrice"
             style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Bold.Style"
+            sPrice="@{uiDishItem.SPrice}"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/text_size_24sp"
             android:gravity="center_vertical"
-            tools:text="12,640원"
-            sPrice="@{uiDishItem.SPrice}"
             app:layout_constraintBottom_toTopOf="@id/maindish_tv_nPrice"
             app:layout_constraintStart_toEndOf="@id/maindish_tv_sale"
-            app:layout_constraintTop_toBottomOf="@id/maindish_tv_description" />
+            app:layout_constraintTop_toBottomOf="@id/maindish_tv_description"
+            tools:text="12,640원" />
 
         <TextView
             android:id="@+id/maindish_tv_nPrice"

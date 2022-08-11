@@ -50,7 +50,10 @@ class MainDishFragment: BaseFragment<FragmentMaindishBinding>(R.layout.fragment_
     }
 
     private fun setRecyclerView() {
-        mainDishLinearAdapter = MainDishLinearAdapter()
+        mainDishLinearAdapter = MainDishLinearAdapter {
+            // bottom sheet 에 uiDishItem 전달하기
+            Log.e("TAG", "cart icon clicked")
+        }
         binding.maindishRv.apply {
             adapter = mainDishLinearAdapter
             layoutManager = LinearLayoutManager(requireContext())

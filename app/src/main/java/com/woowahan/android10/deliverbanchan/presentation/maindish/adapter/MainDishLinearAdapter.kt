@@ -5,17 +5,21 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.woowahan.android10.deliverbanchan.databinding.ItemMaindishLinearBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 
-class MainDishLinearAdapter :
+class MainDishLinearAdapter(
+    private val cartIconClick: (uiDishItem: UiDishItem) -> Unit
+) :
     ListAdapter<UiDishItem, MainDishLinearAdapter.MainDishLinearViewHolder>(UiDishItemDiffUtil) {
 
     inner class MainDishLinearViewHolder(val binding: ItemMaindishLinearBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(uiDishItem: UiDishItem) {
+        fun bind(uiDishItem: UiDishItem, cartIconClick: (uiDishItem: UiDishItem) -> Unit) {
             binding.uiDishItem = uiDishItem
+            binding.maindishIbCart.setOnClickListener {
+                cartIconClick.invoke(uiDishItem)
+            }
         }
     }
 
@@ -30,7 +34,7 @@ class MainDishLinearAdapter :
     }
 
     override fun onBindViewHolder(holder: MainDishLinearViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), cartIconClick)
     }
 
     companion object UiDishItemDiffUtil : DiffUtil.ItemCallback<UiDishItem>() {
