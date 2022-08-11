@@ -10,4 +10,5 @@
     <dimen name="text_size_32sp">32sp</dimen>
 
     <dimen name="base_space_16dp">16dp</dimen>
+    <dimen name="base_space_34dp">34dp</dimen>
 </resources>
