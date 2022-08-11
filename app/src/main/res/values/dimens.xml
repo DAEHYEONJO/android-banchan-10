@@ -8,4 +8,6 @@
     <dimen name="text_size_20sp">20sp</dimen>
     <dimen name="text_size_24sp">24sp</dimen>
     <dimen name="text_size_32sp">32sp</dimen>
+
+    <dimen name="base_space_16dp">16dp</dimen>
 </resources>
