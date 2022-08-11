@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -11,15 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".presentation.recently.RecentlyViewedProductActivity">
-
-        <include
-            android:id="@+id/recently_viewed_product_abl"
-            layout="@layout/layout_app_bar_with_back_btn"/>
+        tools:context=".presentation.recently.RecentlyViewedFragment">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recently_viewed_product_rv"
-            app:layout_constraintTop_toBottomOf="@+id/l1"
+            android:layout_marginStart="@dimen/rv_space_8dp"
+            android:layout_marginEnd="@dimen/base_space_16dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
