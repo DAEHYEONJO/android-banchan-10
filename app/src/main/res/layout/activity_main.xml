@@ -34,7 +34,8 @@
             app:tabMinWidth="140dp"
             app:tabMode="scrollable"
             app:tabSelectedTextColor="@color/grey_scale_black"
-            app:tabTextColor="@color/grey_scale_black" />
+            app:tabTextColor="@color/grey_scale_black"
+            app:tabTextAppearance="@style/tab_text"/>
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/main_vp"
