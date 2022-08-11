@@ -2,4 +2,13 @@
     <string name="app_name">DeliverBanChan</string>
     <string name="app_bar_with_back_btn_title">Recently viewed products</string>
     <string name="app_bar_no_back_btn_title">ORDERING</string>
+
+    <string name="main_header_exhibition">한 번 주문하면
+            \n두 번 반하는 반찬들"</string>
+    <string name="main_header_main_dish">모두가 좋아하는
+            \n든든한 메인 요리"</string>
+    <string name="main_header_soup_dish">정성이 담긴
+            \n뜨끈뜨끈 국물 요리"</string>
+    <string name="main_header_side_dish">식탁을 풍성하게 하는
+            \n정갈한 밑반찬"</string>
 </resources>
