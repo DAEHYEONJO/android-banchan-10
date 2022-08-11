@@ -14,82 +14,106 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="cardViewRadius">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="tab_text" parent="@android:style/TextAppearance.Widget.TabWidget">
+        <item name="android:fontFamily">@font/kopub_world_dotum_pro_bold_700</item>
+    </style>
+
     <!-- Appearance NotoSansKR -->
     <style name="Widget.TextView.NotoSansKR_GreyScaleBlack10_Medium.TextAppearance" parent="">
         <item name="android:textColor">@color/grey_scale_black</item>
         <item name="android:textSize">@dimen/text_size_10sp</item>
         <item name="android:fontFamily">@font/noto_sans_kr_medium_500</item>
     </style>
+
     <style name="Widget.TextView.NotoSansKR_GreyScaleBlack12_Normal.TextAppearance" parent="">
         <item name="android:textColor">@color/grey_scale_black</item>
         <item name="android:textSize">@dimen/text_size_12sp</item>
         <item name="android:fontFamily">@font/noto_sans_kr_normal_400</item>
     </style>
+
     <style name="Widget.TextView.NotoSansKR_GreyScaleDefault12_Medium.TextAppearance" parent="">
         <item name="android:textColor">@color/grey_scale_default</item>
         <item name="android:textSize">@dimen/text_size_12sp</item>
         <item name="android:fontFamily">@font/noto_sans_kr_medium_500</item>
     </style>
+
     <style name="Widget.TextView.NotoSansKR_GreyScaleBlack14_Normal.TextAppearance" parent="">
         <item name="android:textColor">@color/grey_scale_black</item>
         <item name="android:textSize">@dimen/text_size_14sp</item>
         <item name="android:fontFamily">@font/noto_sans_kr_normal_400</item>
     </style>
+
     <style name="Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.TextAppearance" parent="">
         <item name="android:textColor">@color/grey_scale_black</item>
         <item name="android:textSize">@dimen/text_size_14sp</item>
         <item name="android:fontFamily">@font/noto_sans_kr_medium_500</item>
     </style>
+
     <style name="Widget.TextView.NotoSansKR_GreyScaleDefault14_Normal.TextAppearance" parent="">
         <item name="android:textColor">@color/grey_scale_default</item>
         <item name="android:textSize">@dimen/text_size_14sp</item>
         <item name="android:fontFamily">@font/noto_sans_kr_normal_400</item>
     </style>
+
     <style name="Widget.TextView.NotoSansKR_PrimaryAccent14_Medium.TextAppearance" parent="">
         <item name="android:textColor">@color/primary_accent</item>
         <item name="android:textSize">@dimen/text_size_14sp</item>
         <item name="android:fontFamily">@font/noto_sans_kr_medium_500</item>
     </style>
+
     <style name="Widget.TextView.NotoSansKR_GreyScaleBlack14_Bold.TextAppearance" parent="">
         <item name="android:textColor">@color/grey_scale_black</item>
         <item name="android:textSize">@dimen/text_size_14sp</item>
         <item name="android:fontFamily">@font/noto_sans_kr_bold_700</item>
     </style>
+
     <style name="Widget.TextView.NotoSansKR_GreyScaleBlack18_Normal.TextAppearance" parent="">
         <item name="android:textColor">@color/grey_scale_black</item>
         <item name="android:textSize">@dimen/text_size_18sp</item>
         <item name="android:fontFamily">@font/noto_sans_kr_normal_400</item>
     </style>
+
     <style name="Widget.TextView.NotoSansKR_GreyScaleDefault18_Normal.TextAppearance" parent="">
         <item name="android:textColor">@color/grey_scale_default</item>
         <item name="android:textSize">@dimen/text_size_18sp</item>
         <item name="android:fontFamily">@font/noto_sans_kr_normal_400</item>
     </style>
+
     <style name="Widget.TextView.NotoSansKR_PrimaryAccentk18_Bold.TextAppearance" parent="">
         <item name="android:textColor">@color/primary_accent</item>
         <item name="android:textSize">@dimen/text_size_18sp</item>
         <item name="android:fontFamily">@font/noto_sans_kr_bold_700</item>
     </style>
+
     <style name="Widget.TextView.NotoSansKR_GreyScaleBlack18_Medium.TextAppearance" parent="">
         <item name="android:textColor">@color/grey_scale_black</item>
         <item name="android:textSize">@dimen/text_size_18sp</item>
         <item name="android:fontFamily">@font/noto_sans_kr_medium_500</item>
     </style>
+
     <style name="Widget.TextView.NotoSansKR_GreyScaleBlack18_Bold.TextAppearance" parent="">
         <item name="android:textColor">@color/grey_scale_black</item>
         <item name="android:textSize">@dimen/text_size_18sp</item>
         <item name="android:fontFamily">@font/noto_sans_kr_bold_700</item>
     </style>
+
     <style name="Widget.TextView.NotoSansKR_GreyScaleWhite18_Medium.TextAppearance" parent="">
         <item name="android:textColor">@color/grey_scale_white</item>
         <item name="android:textSize">@dimen/text_size_18sp</item>
         <item name="android:fontFamily">@font/noto_sans_kr_medium_500</item>
     </style>
+
     <style name="Widget.TextView.NotoSansKR_GreyScaleBlack32_Normal.TextAppearance" parent="">
         <item name="android:textColor">@color/grey_scale_black</item>
         <item name="android:textSize">@dimen/text_size_32sp</item>
         <item name="android:fontFamily">@font/noto_sans_kr_normal_400</item>
     </style>
+
     <style name="Widget.TextView.NotoSansKR_GreyScaleBlack32_Medium.TextAppearance" parent="">
         <item name="android:textColor">@color/grey_scale_black</item>
         <item name="android:textSize">@dimen/text_size_32sp</item>
@@ -102,6 +126,7 @@
         <item name="android:textSize">@dimen/text_size_14sp</item>
         <item name="android:fontFamily">@font/kopub_world_dotum_pro_bold_700</item>
     </style>
+
     <style name="Widget.TextView.KoPubWorldDotumPro_GreyScaleBlack16_Bold.TextAppearance" parent="">
         <item name="android:textColor">@color/grey_scale_black</item>
         <item name="android:textSize">@dimen/text_size_16sp</item>
@@ -114,11 +139,13 @@
         <item name="android:textSize">@dimen/text_size_14sp</item>
         <item name="android:fontFamily">@font/outfit_bold_700</item>
     </style>
+
     <style name="Widget.TextView.Outfit_GreyScaleBlack20_Bold.TextAppearance" parent="">
         <item name="android:textColor">@color/grey_scale_black</item>
         <item name="android:textSize">@dimen/text_size_20sp</item>
         <item name="android:fontFamily">@font/outfit_bold_700</item>
     </style>
+
     <style name="Widget.TextView.Outfit_GreyScaleBlack24_Bold.TextAppearance" parent="">
         <item name="android:textColor">@color/grey_scale_black</item>
         <item name="android:textSize">@dimen/text_size_24sp</item>
@@ -132,54 +159,63 @@
         </item>
         <item name="android:includeFontPadding">false</item>
     </style>
+
     <style name="Widget.TextView.NotoSansKR_GreyScaleBlack12_Normal.Style" parent="">
         <item name="android:textAppearance">
             @style/Widget.TextView.NotoSansKR_GreyScaleBlack12_Normal.TextAppearance
         </item>
         <item name="android:includeFontPadding">false</item>
     </style>
+
     <style name="Widget.TextView.NotoSansKR_GreyScaleDefault12_Medium.Style" parent="">
         <item name="android:textAppearance">
             @style/Widget.TextView.NotoSansKR_GreyScaleDefault12_Medium.TextAppearance
         </item>
         <item name="android:includeFontPadding">false</item>
     </style>
+
     <style name="Widget.TextView.NotoSansKR_GreyScaleBlack14_Normal.Style" parent="">
         <item name="android:textAppearance">
             @style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Normal.TextAppearance
         </item>
         <item name="android:includeFontPadding">false</item>
     </style>
+
     <style name="Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style" parent="">
         <item name="android:textAppearance">
             @style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.TextAppearance
         </item>
         <item name="android:includeFontPadding">false</item>
     </style>
+
     <style name="Widget.TextView.NotoSansKR_GreyScaleDefault14_Normal.Style" parent="">
         <item name="android:textAppearance">
             @style/Widget.TextView.NotoSansKR_GreyScaleDefault14_Normal.TextAppearance
         </item>
         <item name="android:includeFontPadding">false</item>
     </style>
+
     <style name="Widget.TextView.NotoSansKR_PrimaryAccent14_Medium.Style" parent="">
         <item name="android:textAppearance">
             @style/Widget.TextView.NotoSansKR_PrimaryAccent14_Medium.TextAppearance
         </item>
         <item name="android:includeFontPadding">false</item>
     </style>
+
     <style name="Widget.TextView.NotoSansKR_GreyScaleBlack18_Medium.Style" parent="">
         <item name="android:textAppearance">
             @style/Widget.TextView.NotoSansKR_GreyScaleBlack18_Medium.TextAppearance
         </item>
         <item name="android:includeFontPadding">false</item>
     </style>
+
     <style name="Widget.TextView.NotoSansKR_GreyScaleBlack18_Bold.Style" parent="">
         <item name="android:textAppearance">
             @style/Widget.TextView.NotoSansKR_GreyScaleBlack18_Bold.TextAppearance
         </item>
         <item name="android:includeFontPadding">false</item>
     </style>
+
     <style name="Widget.TextView.NotoSansKR_GreyScaleWhite18_Medium.Style" parent="">
         <item name="android:textAppearance">
             @style/Widget.TextView.NotoSansKR_GreyScaleWhite18_Medium.TextAppearance
@@ -193,30 +229,35 @@
         </item>
         <item name="android:includeFontPadding">false</item>
     </style>
+
     <style name="Widget.TextView.NotoSansKR_GreyScaleBlack14_Bold.Style" parent="">
         <item name="android:textAppearance">
             @style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Bold.TextAppearance
         </item>
         <item name="android:includeFontPadding">false</item>
     </style>
+
     <style name="Widget.TextView.NotoSansKR_GreyScaleDefault18_Normal.Style" parent="">
         <item name="android:textAppearance">
             @style/Widget.TextView.NotoSansKR_GreyScaleDefault18_Normal.TextAppearance
         </item>
         <item name="android:includeFontPadding">false</item>
     </style>
+
     <style name="Widget.TextView.NotoSansKR_PrimaryAccentk18_Bold.Style" parent="">
         <item name="android:textAppearance">
             @style/Widget.TextView.NotoSansKR_PrimaryAccentk18_Bold.TextAppearance
         </item>
         <item name="android:includeFontPadding">false</item>
     </style>
+
     <style name="Widget.TextView.NotoSansKR_GreyScaleBlack32_Normal.Style" parent="">
         <item name="android:textAppearance">
             @style/Widget.TextView.NotoSansKR_GreyScaleBlack32_Normal.TextAppearance
         </item>
         <item name="android:includeFontPadding">false</item>
     </style>
+
     <style name="Widget.TextView.NotoSansKR_GreyScaleBlack32_Medium.Style" parent="">
         <item name="android:textAppearance">
             @style/Widget.TextView.NotoSansKR_GreyScaleBlack32_Medium.TextAppearance
@@ -232,12 +273,14 @@
         </item>
         <item name="android:includeFontPadding">false</item>
     </style>
+
     <style name="Widget.TextView.Outfit_GreyScaleBlack20_Bold.Style" parent="">
         <item name="android:textAppearance">
             @style/Widget.TextView.Outfit_GreyScaleBlack20_Bold.TextAppearance
         </item>
         <item name="android:includeFontPadding">false</item>
     </style>
+
     <style name="Widget.TextView.Outfit_GreyScaleBlack24_Bold.Style" parent="">
         <item name="android:textAppearance">
             @style/Widget.TextView.Outfit_GreyScaleBlack24_Bold.TextAppearance
@@ -252,6 +295,7 @@
         </item>
         <item name="android:includeFontPadding">false</item>
     </style>
+
     <style name="Widget.TextView.KoPubWorldDotumPro_GreyScaleBlack16_Bold.Style" parent="">
         <item name="android:textAppearance">
             @style/Widget.TextView.KoPubWorldDotumPro_GreyScaleBlack16_Bold.TextAppearance
