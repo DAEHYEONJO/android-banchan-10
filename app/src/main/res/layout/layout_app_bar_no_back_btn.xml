@@ -19,6 +19,7 @@
                 android:text="@string/app_bar_no_back_btn_title"
                 android:layout_marginStart="@dimen/base_space_16dp"
                 style="@style/Widget.TextView.Outfit_GreyScaleBlack20_Bold.Style"/>
+
             <ImageView
                 android:id="@+id/app_bar_no_back_btn_iv_user"
                 android:layout_width="wrap_content"

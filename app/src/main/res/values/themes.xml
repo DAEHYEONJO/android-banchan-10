@@ -29,7 +29,11 @@
         <item name="android:textSize">@dimen/text_size_10sp</item>
         <item name="android:fontFamily">@font/noto_sans_kr_medium_500</item>
     </style>
-
+    <style name="Widget.TextView.NotoSansKR_GreyScaleDefault12_Normal.TextAppearance" parent="">
+        <item name="android:textColor">@color/grey_scale_default</item>
+        <item name="android:textSize">@dimen/text_size_12sp</item>
+        <item name="android:fontFamily">@font/noto_sans_kr_normal_400</item>
+    </style>
     <style name="Widget.TextView.NotoSansKR_GreyScaleBlack12_Normal.TextAppearance" parent="">
         <item name="android:textColor">@color/grey_scale_black</item>
         <item name="android:textSize">@dimen/text_size_12sp</item>
@@ -152,6 +156,16 @@
         <item name="android:fontFamily">@font/outfit_bold_700</item>
     </style>
 
+    <style name="cartBtnStyle" >
+        <item name="android:background">"@drawable/btn_cart_32dp"</item>
+        <item name="android:layout_width">@dimen/cart_btn_width_32dp</item>
+        <item name="android:layout_height">@dimen/cart_btn_width_32dp</item>
+        <item name="android:elevation">2dp</item>
+        <item name="android:layout_gravity">bottom|end</item>
+        <item name="android:layout_marginBottom">@dimen/rv_space_8dp</item>
+        <item name="android:layout_marginEnd">@dimen/rv_space_8dp</item>
+    </style>
+
     <!-- Style NotoSansKR -->
     <style name="Widget.TextView.NotoSansKR_GreyScaleBlack10_Medium.Style" parent="">
         <item name="android:textAppearance">
@@ -159,7 +173,12 @@
         </item>
         <item name="android:includeFontPadding">false</item>
     </style>
-
+    <style name="Widget.TextView.NotoSansKR_GreyScaleDefault12_Normal.Style" parent="">
+        <item name="android:textAppearance">
+            @style/Widget.TextView.NotoSansKR_GreyScaleDefault12_Normal.TextAppearance
+        </item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
     <style name="Widget.TextView.NotoSansKR_GreyScaleBlack12_Normal.Style" parent="">
         <item name="android:textAppearance">
             @style/Widget.TextView.NotoSansKR_GreyScaleBlack12_Normal.TextAppearance

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <dimen name="text_size_10sp">10sp</dimen>
     <dimen name="text_size_12sp">12sp</dimen>
     <dimen name="text_size_14sp">14sp</dimen>
@@ -9,6 +9,12 @@
     <dimen name="text_size_24sp">24sp</dimen>
     <dimen name="text_size_32sp">32sp</dimen>
 
+    <dimen name="rv_space_4dp">4dp</dimen>
+    <dimen name="cart_space_7dp">7dp</dimen>
+    <dimen name="rv_space_8dp">8dp</dimen>
     <dimen name="base_space_16dp">16dp</dimen>
+    <dimen name="cart_btn_width_32dp">32dp</dimen>
     <dimen name="base_space_34dp">34dp</dimen>
+    <dimen name="iv_size_160dp">160dp</dimen>
+
 </resources>
