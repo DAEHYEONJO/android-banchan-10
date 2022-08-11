@@ -7,8 +7,10 @@ import com.woowahan.android10.deliverbanchan.domain.repository.remote.DishItemRe
 import com.woowahan.android10.deliverbanchan.presentation.UiState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.job
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.coroutines.coroutineContext
 
 @Singleton
 class GetSoupDishesUseCase @Inject constructor(
