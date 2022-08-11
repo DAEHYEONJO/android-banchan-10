@@ -26,7 +26,7 @@ fun applySaleTextView(view: TextView, nPrice: Int, sPrice: Int) {
     if (nPrice == 0) {
         view.isVisible = false
     } else {
-        val sale = ((nPrice - sPrice) / nPrice * 100).toInt()
+        val sale = ((nPrice - sPrice) / nPrice.toDouble() * 100).toInt()
         val saleStr = view.context.getString(R.string.format_sale_rate, sale)
         view.isVisible = true
         view.text = saleStr

@@ -69,6 +69,8 @@
             android:gravity="center_vertical"
             android:paddingEnd="4dp"
             android:text="10%"
+            nPrice="@{uiDishItem.NPrice}"
+            sPrice="@{uiDishItem.SPrice}"
             android:visibility="visible"
             app:layout_constraintBottom_toTopOf="@id/maindish_tv_nPrice"
             app:layout_constraintStart_toStartOf="@id/maindish_tv_description"

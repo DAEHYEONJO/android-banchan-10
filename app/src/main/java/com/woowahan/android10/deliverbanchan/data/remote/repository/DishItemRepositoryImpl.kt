@@ -1,5 +1,6 @@
 package com.woowahan.android10.deliverbanchan.data.remote.repository
 
+import android.util.Log
 import com.woowahan.android10.deliverbanchan.data.remote.dao.DishApi
 import com.woowahan.android10.deliverbanchan.data.remote.model.DishItem
 import com.woowahan.android10.deliverbanchan.data.remote.model.Exhibition
@@ -7,8 +8,9 @@ import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResu
 import com.woowahan.android10.deliverbanchan.domain.repository.remote.DishItemRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
-class DishItemRepositoryImpl(
+class DishItemRepositoryImpl @Inject constructor(
     private val dishApi: DishApi
 ): DishItemRepository {
 
@@ -40,6 +42,7 @@ class DishItemRepositoryImpl(
         val response = dishApi.getMainDishes()
         with(response) {
             if (isSuccessful) {
+                Log.e("AppTest", "maindish success")
                 val dishList = body()!!.body
                 emit(BaseResult.Success(dishList))
             } else {
