@@ -5,6 +5,21 @@
 
     <data>
 
+        <variable
+            name="itemTitle"
+            type="String" />
+
+        <variable
+            name="nPrice"
+            type="Integer" />
+
+        <variable
+            name="sPrice"
+            type="Integer" />
+
+        <variable
+            name="imageUrl"
+            type="String" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -43,6 +58,7 @@
 
             <ImageView
                 android:id="@+id/iv_food"
+                imageUrl="@{imageUrl}"
                 android:layout_width="60dp"
                 android:layout_height="0dp"
                 android:layout_marginStart="@dimen/base_space_16dp"
@@ -59,6 +75,7 @@
                 android:layout_height="24dp"
                 android:layout_marginStart="@dimen/base_space_16dp"
                 android:gravity="center_vertical"
+                android:text="@{itemTitle}"
                 app:layout_constraintBottom_toTopOf="@id/tv_sprice"
                 app:layout_constraintStart_toEndOf="@id/iv_food"
                 app:layout_constraintTop_toTopOf="@id/iv_food"
@@ -68,6 +85,8 @@
             <TextView
                 android:id="@+id/tv_sale"
                 style="@style/Widget.TextView.NotoSansKR_PrimaryAccent14_Medium.Style"
+                nPrice="@{nPrice}"
+                sPrice="@{sPrice}"
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
                 android:gravity="center_vertical"
@@ -81,6 +100,7 @@
             <TextView
                 android:id="@+id/tv_sprice"
                 style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Bold.Style"
+                sPrice="@{sPrice}"
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
                 android:gravity="center_vertical"
@@ -93,6 +113,7 @@
             <TextView
                 android:id="@+id/tv_nprice"
                 style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault14_Normal.Style"
+                nPrice="@{nPrice}"
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
                 android:gravity="center_vertical"
@@ -139,6 +160,7 @@
             <TextView
                 android:id="@+id/tv_price_total"
                 style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style"
+                sPrice="@{sPrice}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/base_space_16dp"

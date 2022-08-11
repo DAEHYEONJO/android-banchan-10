@@ -55,6 +55,9 @@ class MainDishFragment: BaseFragment<FragmentMaindishBinding>(R.layout.fragment_
             // bottom sheet 에 uiDishItem 전달하기
             Log.e("TAG", "cart icon clicked")
             val cartBottomSheetFragment = CartBottomSheetFragment()
+            val bundle = Bundle()
+            bundle.putParcelable("UiDishItem", it)
+            cartBottomSheetFragment.arguments = bundle
             cartBottomSheetFragment.show(childFragmentManager, "CartBottomSheet")
         }
         binding.maindishRv.apply {
