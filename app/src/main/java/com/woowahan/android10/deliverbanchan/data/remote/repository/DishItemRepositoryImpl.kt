@@ -9,10 +9,16 @@ import com.woowahan.android10.deliverbanchan.domain.repository.remote.DishItemRe
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class DishItemRepositoryImpl @Inject constructor(
     private val dishApi: DishApi
 ): DishItemRepository {
+
+    companion object{
+        const val TAG = "DishItemRepositoryImpl"
+    }
 
     override suspend fun getSideDishes(): Flow<BaseResult<List<DishItem>, Int>> = flow {
         val response = dishApi.getSideDishes()
@@ -42,7 +48,6 @@ class DishItemRepositoryImpl @Inject constructor(
         val response = dishApi.getMainDishes()
         with(response) {
             if (isSuccessful) {
-                Log.e("AppTest", "maindish success")
                 val dishList = body()!!.body
                 emit(BaseResult.Success(dishList))
             } else {
