@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="uiDishItem"
+            type="com.woowahan.android10.deliverbanchan.domain.model.UiDishItem" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -39,7 +41,8 @@
             android:layout_height="@dimen/text_size_24sp"
             android:layout_marginStart="16sp"
             android:gravity="center_vertical"
-            android:text="오리주물럭_반조리"
+            tools:text="오리주물럭_반조리"
+            android:text="@{uiDishItem.title}"
             app:layout_constraintBottom_toTopOf="@id/maindish_tv_description"
             app:layout_constraintStart_toEndOf="@id/maindish_fl"
             app:layout_constraintTop_toTopOf="parent"
@@ -52,7 +55,8 @@
             android:layout_height="@dimen/text_size_24sp"
             android:layout_marginStart="16sp"
             android:gravity="center_vertical"
-            android:text="감칠맛 나는 매콤한 양념"
+            tools:text="감칠맛 나는 매콤한 양념"
+            android:text="@{uiDishItem.description}"
             app:layout_constraintBottom_toTopOf="@id/maindish_tv_sPrice"
             app:layout_constraintStart_toEndOf="@id/maindish_fl"
             app:layout_constraintTop_toBottomOf="@id/maindish_tv_title" />
@@ -76,7 +80,8 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/text_size_24sp"
             android:gravity="center_vertical"
-            android:text="12,640원"
+            tools:text="12,640원"
+            sPrice="@{uiDishItem.SPrice}"
             app:layout_constraintBottom_toTopOf="@id/maindish_tv_nPrice"
             app:layout_constraintStart_toEndOf="@id/maindish_tv_sale"
             app:layout_constraintTop_toBottomOf="@id/maindish_tv_description" />
@@ -84,7 +89,7 @@
         <TextView
             android:id="@+id/maindish_tv_nPrice"
             style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault12_Normal.Style"
-            paintFlag="10000"
+            nPrice="@{uiDishItem.NPrice}"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/text_size_24sp"
             android:layout_marginStart="16dp"

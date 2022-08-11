@@ -15,4 +15,5 @@
             \n정갈한 밑반찬"</string>
 
     <string name="format_nprice">%s원</string>
+    <string name="format_sale_rate">%d%%</string>
 </resources>
