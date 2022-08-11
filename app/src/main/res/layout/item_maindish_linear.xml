@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp">
+
+        <FrameLayout
+            android:id="@+id/maindish_fl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/base_space_16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/maindish_iv_food"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:background="@color/grey_scale_default" />
+
+            <ImageButton
+                android:id="@+id/imageView"
+                style="@style/cartBtnStyle" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/maindish_tv_title"
+            style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/text_size_24sp"
+            android:layout_marginStart="16sp"
+            android:gravity="center_vertical"
+            android:text="오리주물럭_반조리"
+            app:layout_constraintBottom_toTopOf="@id/maindish_tv_description"
+            app:layout_constraintStart_toEndOf="@id/maindish_fl"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/maindish_tv_description"
+            style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault12_Medium.Style"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/text_size_24sp"
+            android:layout_marginStart="16sp"
+            android:gravity="center_vertical"
+            android:text="감칠맛 나는 매콤한 양념"
+            app:layout_constraintBottom_toTopOf="@id/maindish_tv_sPrice"
+            app:layout_constraintStart_toEndOf="@id/maindish_fl"
+            app:layout_constraintTop_toBottomOf="@id/maindish_tv_title" />
+
+        <TextView
+            android:id="@+id/maindish_tv_sale"
+            style="@style/Widget.TextView.NotoSansKR_PrimaryAccent14_Medium.Style"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/text_size_24sp"
+            android:gravity="center_vertical"
+            android:paddingEnd="4dp"
+            android:text="10%"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@id/maindish_tv_nPrice"
+            app:layout_constraintStart_toStartOf="@id/maindish_tv_description"
+            app:layout_constraintTop_toBottomOf="@id/maindish_tv_description" />
+
+        <TextView
+            android:id="@+id/maindish_tv_sPrice"
+            style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Bold.Style"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/text_size_24sp"
+            android:gravity="center_vertical"
+            android:text="12,640원"
+            app:layout_constraintBottom_toTopOf="@id/maindish_tv_nPrice"
+            app:layout_constraintStart_toEndOf="@id/maindish_tv_sale"
+            app:layout_constraintTop_toBottomOf="@id/maindish_tv_description" />
+
+        <TextView
+            android:id="@+id/maindish_tv_nPrice"
+            style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault12_Normal.Style"
+            paintFlag="10000"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/text_size_24sp"
+            android:layout_marginStart="16dp"
+            android:gravity="center_vertical"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/maindish_fl"
+            app:layout_constraintTop_toBottomOf="@id/maindish_tv_sPrice"
+            tools:text="12,640원" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
