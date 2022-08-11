@@ -25,12 +25,7 @@ import java.util.*
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main, "MainActivity") {
 
     private val dishViewModel: DishViewModel by viewModels()
-    private val tabTitleArray = arrayOf(
-        TAB_EXHIBITION,
-        TAB_MAIN_DISH,
-        TAB_SOUP_DISH,
-        TAB_SIDE_DISH
-    )
+    private lateinit var tabTitleArray: Array<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +34,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main, "
     }
 
     private fun initView() {
+        setTabTitleArray()
         setTabWithViewPager()
+    }
+
+    private fun setTabTitleArray() {
+        tabTitleArray = resources.getStringArray(R.array.main_tab_text)
     }
 
     private fun setTabWithViewPager() {
