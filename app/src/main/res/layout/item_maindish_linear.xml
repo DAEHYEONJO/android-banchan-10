@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/base_space_16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/maindish_view_footer"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -105,10 +105,17 @@
             android:layout_marginStart="16dp"
             android:gravity="center_vertical"
             android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/maindish_view_footer"
             app:layout_constraintStart_toEndOf="@id/maindish_fl"
             app:layout_constraintTop_toBottomOf="@id/maindish_tv_sPrice"
             tools:text="12,640원" />
+
+        <View
+            android:id="@+id/maindish_view_footer"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
