@@ -27,7 +27,8 @@
                 android:id="@+id/maindish_iv_food"
                 android:layout_width="130dp"
                 android:layout_height="130dp"
-                android:background="@color/grey_scale_default" />
+                android:background="@color/grey_scale_default"
+                imageUrl="@{uiDishItem.image}"/>
 
             <ImageButton
                 android:id="@+id/imageView"

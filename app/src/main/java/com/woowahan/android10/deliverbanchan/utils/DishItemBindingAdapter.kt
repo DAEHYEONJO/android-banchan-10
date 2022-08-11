@@ -1,9 +1,12 @@
 package com.woowahan.android10.deliverbanchan.utils
 
+import android.annotation.SuppressLint
 import android.graphics.Paint
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
+import com.bumptech.glide.Glide
 import com.woowahan.android10.deliverbanchan.R
 import java.text.DecimalFormat
 
@@ -31,4 +34,11 @@ fun applySaleTextView(view: TextView, nPrice: Int, sPrice: Int) {
         view.isVisible = true
         view.text = saleStr
     }
+}
+
+@BindingAdapter("imageUrl")
+fun applyFoodImageView(imageView: ImageView, imageUrl: String) {
+    Glide.with(imageView.context)
+        .load(imageUrl)
+        .into(imageView)
 }
