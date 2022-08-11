@@ -32,6 +32,8 @@ object Versions {
 
     const val KOTLINX_SERIALIZATION = "1.2.1"
     const val CONVERTER_KOTLINX_SERIALIZATION = "0.8.0"
+
+    const val WINDOW = "1.0.0"
 }
 
 object Kotlin {
@@ -55,6 +57,8 @@ object AndroidX {
     const val ROOM_RUNTIME            = "androidx.room:room-runtime:${Versions.ROOM}"
     const val ROOM_KTX                = "androidx.room:room-ktx:${Versions.ROOM}"
     const val ROOM_COMPILER           = "androidx.room:room-compiler:${Versions.ROOM}"
+
+    const val WINDOW                  = "androidx.window:window:${Versions.WINDOW}"
 }
 
 object Google {

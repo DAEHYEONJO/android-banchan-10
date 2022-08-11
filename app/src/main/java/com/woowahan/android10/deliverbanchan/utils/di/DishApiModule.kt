@@ -12,14 +12,27 @@ import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Converter
 import retrofit2.Retrofit
 import javax.inject.Singleton
+
+private val json = Json {
+    isLenient = true // Json 큰따옴표 느슨하게 체크.
+    ignoreUnknownKeys = true // Field 값이 없는 경우 무시
+    coerceInputValues = true // "null" 이 들어간경우 default Argument 값으로 대체
+}
 
 @Module
 @InstallIn(SingletonComponent::class)
 object DishApiModule {
 
     private const val BASE_URL = "https://api.codesquad.kr/"
+
+    private val json = Json {
+        isLenient = true // Json 큰따옴표 느슨하게 체크.
+        ignoreUnknownKeys = true // Field 값이 없는 경우 무시
+        coerceInputValues = true // "null" 이 들어간경우 default Argument 값으로 대체
+    }
 
     @Provides
     @Singleton
@@ -44,30 +57,29 @@ object DishApiModule {
 
     @Provides
     @Singleton
-    fun providesOkHttpClient(headerInterceptor: Interceptor, loggerInterceptor: Interceptor) =
+    fun providesOkHttpClient(
+        headerInterceptor: Interceptor,
+        loggerInterceptor: HttpLoggingInterceptor
+    ) =
         OkHttpClient.Builder()
             .addInterceptor(headerInterceptor)
             .addInterceptor(loggerInterceptor)
             .build()
 
-    private val json = Json {
-        isLenient = true // Json 큰따옴표 느슨하게 체크.
-        ignoreUnknownKeys = true // Field 값이 없는 경우 무시
-        coerceInputValues = true // "null" 이 들어간경우 default Argument 값으로 대체
-    }
+    @Provides
+    @Singleton
+    fun providesConvertorFactory() = json.asConverterFactory("application/json".toMediaType())
 
     @Provides
     @Singleton
-    fun providesRetrofit(okHttpClient: OkHttpClient) = Retrofit.Builder()
+    fun providesRetrofit(okHttpClient: OkHttpClient, converterFactory: Converter.Factory) = Retrofit.Builder()
         .baseUrl(BASE_URL)
         .client(okHttpClient)
-        .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+        .addConverterFactory(converterFactory)
         .build()
 
     @Provides
     @Singleton
-    fun providesDishApi(okHttpClient: OkHttpClient) = providesRetrofit(
-        okHttpClient
-    ).create(DishApi::class.java)
+    fun providesDishApi(retrofit: Retrofit) = retrofit.create(DishApi::class.java)
 
 }

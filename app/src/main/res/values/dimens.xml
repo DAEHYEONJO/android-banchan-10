@@ -13,6 +13,7 @@
     <dimen name="cart_space_7dp">7dp</dimen>
     <dimen name="rv_space_8dp">8dp</dimen>
     <dimen name="base_space_16dp">16dp</dimen>
+    <dimen name="base_text_space_24dp">24dp</dimen>
     <dimen name="cart_btn_width_32dp">32dp</dimen>
     <dimen name="base_space_34dp">34dp</dimen>
     <dimen name="iv_size_160dp">160dp</dimen>
