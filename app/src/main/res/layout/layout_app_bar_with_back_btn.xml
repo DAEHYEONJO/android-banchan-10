@@ -34,7 +34,7 @@
                 android:layout_gravity="end"
                 android:layout_marginEnd="@dimen/base_space_16dp"
                 android:src="@drawable/ic_reload"
-                android:visibility="invisible"/>
+                android:visibility="visible"/>
         </com.google.android.material.appbar.MaterialToolbar>
     </com.google.android.material.appbar.AppBarLayout>
 </merge>
