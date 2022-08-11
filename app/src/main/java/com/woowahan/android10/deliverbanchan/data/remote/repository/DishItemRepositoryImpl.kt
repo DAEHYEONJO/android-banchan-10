@@ -1,5 +1,6 @@
 package com.woowahan.android10.deliverbanchan.data.remote.repository
 
+import android.util.Log
 import com.woowahan.android10.deliverbanchan.data.remote.dao.DishApi
 import com.woowahan.android10.deliverbanchan.data.remote.model.DishItem
 import com.woowahan.android10.deliverbanchan.data.remote.model.Exhibition
@@ -7,10 +8,17 @@ import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResu
 import com.woowahan.android10.deliverbanchan.domain.repository.remote.DishItemRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class DishItemRepositoryImpl(
+@Singleton
+class DishItemRepositoryImpl @Inject constructor(
     private val dishApi: DishApi
 ): DishItemRepository {
+
+    companion object{
+        const val TAG = "DishItemRepositoryImpl"
+    }
 
     override suspend fun getSideDishes(): Flow<BaseResult<List<DishItem>, Int>> = flow {
         val response = dishApi.getSideDishes()
@@ -29,8 +37,12 @@ class DishItemRepositoryImpl(
         with(response) {
             if (isSuccessful) {
                 val dishList = body()!!.body
+                dishList.forEach {
+                    Log.e(TAG, "getSoupDishes: success : ${it}", )
+                }
                 emit(BaseResult.Success(dishList))
             } else {
+                Log.e(TAG, "getSoupDishes: not Success", )
                 emit(BaseResult.Error(code()))
             }
         }

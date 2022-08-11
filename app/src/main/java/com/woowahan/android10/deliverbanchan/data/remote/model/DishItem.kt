@@ -18,7 +18,7 @@ data class DishItem(
     @SerialName("image")
     val image: String,
     @SerialName("n_price")
-    val nPrice: String = "",
+    val nPrice: String = "0원",
     @SerialName("s_price")
     val sPrice: String,
     @SerialName("title")

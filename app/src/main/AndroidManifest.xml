@@ -8,6 +8,7 @@
     <application
         android:name=".GlobalApplication"
         android:allowBackup="true"
+        android:usesCleartextTraffic="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -17,10 +18,7 @@
         android:theme="@style/Theme.DeliverBanChan"
         tools:targetApi="31">
         <activity
-            android:name=".CartActivity"
-            android:exported="false" />
-        <activity
-            android:name=".RecentlyViewedProductActivity"
+            android:name=".presentation.cart.CartActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.main.MainActivity"

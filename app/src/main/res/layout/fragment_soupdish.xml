@@ -22,11 +22,10 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="24dp">
+                    android:layout_height="wrap_content">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/soupdish_cl_header_text"
+                        android:id="@+id/soup_dish_cl_header_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/primary_surface"
@@ -47,14 +46,14 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/maindish_cl_header_filter"
+                        android:id="@+id/soup_dish_cl_header_filter"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="24dp"
-                        app:layout_constraintTop_toBottomOf="@id/soupdish_cl_header_text">
+                        app:layout_constraintTop_toBottomOf="@id/soup_dish_cl_header_text">
 
                         <TextView
-                            android:id="@+id/soupdish_tv_item_count"
+                            android:id="@+id/soup_dish_tv_item_count"
                             style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack12_Normal.Style"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -73,9 +72,13 @@
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/exhibition_rv"
+            android:id="@+id/soup_dish_rv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/rv_space_8dp"
+            android:layout_marginEnd="@dimen/base_space_16dp"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="2"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
