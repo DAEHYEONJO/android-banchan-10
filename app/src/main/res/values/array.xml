@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="main_tab_text">
+        <item>기획전</item>
+        <item>든든한 메인요리</item>
+        <item>뜨끈한 국물요리</item>
+        <item>정갈한 밑반찬</item>
+    </string-array>
+</resources>
