@@ -37,12 +37,8 @@ class DishItemRepositoryImpl @Inject constructor(
         with(response) {
             if (isSuccessful) {
                 val dishList = body()!!.body
-                dishList.forEach {
-                    Log.e(TAG, "getSoupDishes: success : ${it}", )
-                }
                 emit(BaseResult.Success(dishList))
             } else {
-                Log.e(TAG, "getSoupDishes: not Success", )
                 emit(BaseResult.Error(code()))
             }
         }
