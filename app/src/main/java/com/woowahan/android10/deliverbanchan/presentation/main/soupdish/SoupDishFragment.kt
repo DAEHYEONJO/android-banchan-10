@@ -12,6 +12,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.woowahan.android10.deliverbanchan.R
+import com.woowahan.android10.deliverbanchan.data.local.model.CartInfo
 import com.woowahan.android10.deliverbanchan.databinding.FragmentSoupdishBinding
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
@@ -22,6 +23,7 @@ import com.woowahan.android10.deliverbanchan.presentation.common.dpToPx
 import com.woowahan.android10.deliverbanchan.presentation.common.showToast
 import com.woowahan.android10.deliverbanchan.presentation.common.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.toVisible
+import com.woowahan.android10.deliverbanchan.presentation.state.UiCartState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -80,6 +82,15 @@ class SoupDishFragment: BaseFragment<FragmentSoupdishBinding>(R.layout.fragment_
                     Log.e(TAG, "initObserver: $state", )
                     handleStateChange(state)
                 }.launchIn(lifecycleScope)
+        }
+    }
+
+    private fun handleUiCartStateChange(state: UiCartState) {
+        when(state){
+            is UiCartState.ShowToast -> requireContext().showToast(message = state.message)
+            is UiCartState.Success -> {
+                Log.e(TAG, "handleUiCartStateChange: ${state.uiDishItems}", )
+            }
         }
     }
 

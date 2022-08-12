@@ -41,8 +41,8 @@
                 android:layout_gravity="bottom|end"
                 android:layout_marginEnd="@dimen/rv_space_8dp"
                 android:layout_marginBottom="@dimen/rv_space_8dp"
-                android:background="@drawable/btn_cart_32dp"
-                android:elevation="2dp" />
+                app:setBackgroundIcon = "@{item.inserted}"
+                android:elevation="@{item.inserted ? @dimen/item_elevation_0dp : @dimen/item_elevation_2dp}" />
         </FrameLayout>
 
         <TextView

@@ -1,19 +1,20 @@
 package com.woowahan.android10.deliverbanchan.domain.usecase
 
 import android.util.Log
+import androidx.lifecycle.asLiveData
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.repository.remote.DishItemRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class GetSoupDishesUseCase @Inject constructor(
-    private val dishItemRepository: DishItemRepository
+    private val dishItemRepository: DishItemRepository,
+    private val isExistCartInfoUseCase: IsExistCartInfoUseCase
 ) {
     companion object {
         const val TAG = "GetSoupDishesUseCase"
@@ -27,12 +28,11 @@ class GetSoupDishesUseCase @Inject constructor(
                         response.data.mapIndexed { index, dishItem ->
                             val sPrice = dishItem.sPrice.dropLast(1).replace(",", "").toInt()
                             val nPrice = dishItem.nPrice.dropLast(1).replace(",", "").toInt()
-                            val percentage =
-                                if (nPrice == 0) 0 else 100 - (sPrice.toDouble() / nPrice * 100).toInt()
+                            val percentage = if (nPrice == 0) 0 else 100 - (sPrice.toDouble() / nPrice * 100).toInt()
                             UiDishItem(
                                 hash = dishItem.detailHash,
                                 title = dishItem.title,
-                                isInserted = false,
+                                isInserted =  isExistCartInfoUseCase(dishItem.detailHash),
                                 image = dishItem.image,
                                 description = dishItem.description,
                                 sPrice = sPrice,

@@ -4,8 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.woowahan.android10.deliverbanchan.data.local.model.CartInfo
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
+import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllCartInfoUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetSoupDishesUseCase
+import com.woowahan.android10.deliverbanchan.domain.usecase.InsertCartInfoUseCase
+import com.woowahan.android10.deliverbanchan.presentation.state.UiCartState
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +25,7 @@ class SoupViewModel @Inject constructor(
     companion object {
         const val TAG = "SoupViewModel"
     }
+
 
     private val _soupState = MutableStateFlow<UiState>(UiState.Init)
     val soupState: StateFlow<UiState> get() = _soupState
@@ -78,5 +83,6 @@ class SoupViewModel @Inject constructor(
             }
         }
     }
+
 
 }
