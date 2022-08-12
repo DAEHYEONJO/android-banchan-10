@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.Spinner
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.view.isGone
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
@@ -18,6 +19,9 @@ import com.woowahan.android10.deliverbanchan.presentation.view.CustomSortingSpin
 import com.woowahan.android10.deliverbanchan.presentation.view.SortSpinnerAdapter
 import com.woowahan.android10.deliverbanchan.presentation.main.host.DishViewModel
 import com.woowahan.android10.deliverbanchan.presentation.common.dpToPx
+import com.woowahan.android10.deliverbanchan.presentation.common.showToast
+import com.woowahan.android10.deliverbanchan.presentation.common.toGone
+import com.woowahan.android10.deliverbanchan.presentation.common.toVisible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -26,38 +30,71 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class SoupDishFragment: BaseFragment<FragmentSoupdishBinding>(R.layout.fragment_soupdish, "SoupDishFragment") {
 
-    private val dishViewModel: DishViewModel by activityViewModels()
+    private val soupViewModel: SoupViewModel by activityViewModels()
     @Inject lateinit var soupAdapter: SoupAdapter
     @Inject lateinit var soupSpinnerAdapter: SortSpinnerAdapter
+    private val spinnerEventsListener = object : CustomSortingSpinner.OnSpinnerEventsListener{
+        override fun opPopUpWindowOpened(spinner: Spinner) {
+            spinner.background = AppCompatResources.getDrawable(requireContext(), R.drawable.bg_sort_spinner_up)
+        }
+
+        override fun onPopUpWindowClosed(spinner: Spinner) {
+            spinner.background = AppCompatResources.getDrawable(requireContext(), R.drawable.bg_sort_spinner_down)
+        }
+    }
+    private val itemSelectedListener = object : AdapterView.OnItemSelectedListener{
+        override fun onItemSelected(
+            p0: AdapterView<*>?,
+            p1: View?,
+            position: Int,
+            id: Long
+        ) {
+            with(soupViewModel){
+                sortSoupDishes(position)
+                with(soupSpinnerAdapter){
+                    sortSpinnerList[curSoupSpinnerPosition.value!!].selected = true
+                    if (curSoupSpinnerPosition.value!=preSoupSpinnerPosition.value){
+                        sortSpinnerList[preSoupSpinnerPosition.value!!].selected = false
+                    }
+                    notifyDataSetChanged()
+                }
+            }
+        }
+
+        override fun onNothingSelected(p0: AdapterView<*>?) {
+            // nothing to do
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.e(TAG, "onViewCreated:selectedItemPosition ${binding.soupDishSp.selectedItemPosition}", )
+        binding.vm = soupViewModel
         initLayout()
         initObserver()
-        Log.e(TAG, "onViewCreated binding.soupDishTvItemCount.paintFlags: ${binding.soupDishTvItemCount.paintFlags}", )
     }
 
     private fun initObserver() {
-        with(dishViewModel){
-            getSoupDishes()
+        with(soupViewModel){
             soupState.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
                 .onEach { state ->
                     Log.e(TAG, "initObserver: $state", )
                     handleStateChange(state)
-                }
-                .launchIn(lifecycleScope)
+                }.launchIn(lifecycleScope)
         }
     }
 
     private fun handleStateChange(state: UiState) {
         // todo state 에 따른 처리 추가 구현 필요함
         when(state){
+            is UiState.IsLoading -> binding.soupPb.toVisible()
             is UiState.Success -> {
+                binding.soupPb.toGone()
                 soupAdapter.submitList(state.uiDishItems)
-                binding.soupPb.visibility = View.GONE
             }
-            is UiState.IsLoading -> binding.soupPb.visibility = View.VISIBLE
+            is UiState.ShowToast -> {
+                binding.soupPb.toGone()
+                requireContext().showToast(state.message)
+            }
         }
     }
 
@@ -68,43 +105,8 @@ class SoupDishFragment: BaseFragment<FragmentSoupdishBinding>(R.layout.fragment_
                 dropDownVerticalOffset = dpToPx(requireContext(), 32).toInt()
                 setWillNotDraw(false)
                 adapter = soupSpinnerAdapter.apply {
-                    setSpinnerEventsListener(object : CustomSortingSpinner.OnSpinnerEventsListener{
-                        override fun opPopUpWindowOpened(spinner: Spinner) {
-                            spinner.background = AppCompatResources.getDrawable(requireContext(), R.drawable.bg_sort_spinner_up)
-                        }
-
-                        override fun onPopUpWindowClosed(spinner: Spinner) {
-                            spinner.background = AppCompatResources.getDrawable(requireContext(), R.drawable.bg_sort_spinner_down)
-                        }
-                    })
-                    onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
-                        override fun onItemSelected(
-                            p0: AdapterView<*>?,
-                            p1: View?,
-                            position: Int,
-                            id: Long
-                        ) {
-                            soupSpinnerAdapter.sortSpinnerList.forEach {
-                                Log.e(TAG, "before onItemSelected: $it", )
-                            }
-                            with(dishViewModel){
-                                sortSoupDishes(position)
-                                soupSpinnerAdapter.sortSpinnerList[curSoupSpinnerPosition.value!!].selected = true
-                                if (curSoupSpinnerPosition.value!=preSoupSpinnerPosition.value){
-                                    soupSpinnerAdapter.sortSpinnerList[preSoupSpinnerPosition.value!!].selected = false
-                                }
-                                notifyDataSetChanged()
-                            }
-
-                            soupSpinnerAdapter.sortSpinnerList.forEach {
-                                Log.e(TAG, "after onItemSelected: $it", )
-                            }
-                        }
-
-                        override fun onNothingSelected(p0: AdapterView<*>?) {
-
-                        }
-                    }
+                    setSpinnerEventsListener(spinnerEventsListener)
+                    onItemSelectedListener = itemSelectedListener
                 }
             }
         }

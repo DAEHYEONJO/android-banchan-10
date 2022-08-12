@@ -19,7 +19,7 @@ class TabViewPagerAdapter(fragmentManager: FragmentManager, lifeCycle: Lifecycle
     override fun createFragment(position: Int): Fragment {
         return when(position) {
             0 -> ExhibitionFragment()
-            1 -> MainDishFragment()
+            1 -> SoupDishFragment()
             2 -> SoupDishFragment()
             else -> SideDishFragment()
         }

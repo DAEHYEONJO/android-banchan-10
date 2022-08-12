@@ -32,7 +32,6 @@ class SoupAdapter @Inject constructor(): ListAdapter<UiDishItem, SoupAdapter.Vie
         fun bind(uiDishItem: UiDishItem){
             binding.item = uiDishItem
             binding.executePendingBindings()
-            Log.e(TAG, "bind: ${binding.soupTvNprice.paintFlags}", )
         }
     }
 
