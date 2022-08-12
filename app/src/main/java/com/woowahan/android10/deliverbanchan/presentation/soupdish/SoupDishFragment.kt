@@ -1,19 +1,24 @@
 package com.woowahan.android10.deliverbanchan.presentation.soupdish
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.AdapterView
+import android.widget.Spinner
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.window.layout.WindowMetrics
-import androidx.window.layout.WindowMetricsCalculator
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentSoupdishBinding
-import com.woowahan.android10.deliverbanchan.presentation.UiState
+import com.woowahan.android10.deliverbanchan.presentation.view.model.UiState
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
 import com.woowahan.android10.deliverbanchan.presentation.soupdish.adapter.SoupAdapter
+import com.woowahan.android10.deliverbanchan.presentation.view.CustomSortingSpinner
+import com.woowahan.android10.deliverbanchan.presentation.view.adapter.SortSpinnerAdapter
 import com.woowahan.android10.deliverbanchan.presentation.viewmodel.DishViewModel
+import com.woowahan.android10.deliverbanchan.utils.converter.dpToPx
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -24,10 +29,12 @@ class SoupDishFragment: BaseFragment<FragmentSoupdishBinding>(R.layout.fragment_
 
     private val dishViewModel: DishViewModel by activityViewModels()
     @Inject lateinit var soupAdapter: SoupAdapter
+    @Inject lateinit var soupSpinnerAdapter: SortSpinnerAdapter
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initRecyclerView()
+        initLayout()
         initObserver()
     }
 
@@ -35,7 +42,9 @@ class SoupDishFragment: BaseFragment<FragmentSoupdishBinding>(R.layout.fragment_
         with(dishViewModel){
             getSoupDishes()
             soupState.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
-                .onEach { state -> handleStateChange(state) }
+                .onEach { state ->
+                    handleStateChange(state)
+                }
                 .launchIn(lifecycleScope)
         }
     }
@@ -47,7 +56,43 @@ class SoupDishFragment: BaseFragment<FragmentSoupdishBinding>(R.layout.fragment_
         }
     }
 
-    private fun initRecyclerView() {
-        binding.soupDishRv.adapter = soupAdapter
+    private fun initLayout() {
+        with(binding){
+            soupDishRv.adapter = soupAdapter
+            with(soupDishSp){
+                dropDownVerticalOffset = dpToPx(requireContext(), 32).toInt()
+                adapter = soupSpinnerAdapter.apply {
+                    setSpinnerEventsListener(object : CustomSortingSpinner.OnSpinnerEventsListener{
+                        override fun opPopUpWindowOpened(spinner: Spinner) {
+                            spinner.background = AppCompatResources.getDrawable(requireContext(), R.drawable.bg_sort_spinner_up)
+                        }
+
+                        override fun onPopUpWindowClosed(spinner: Spinner) {
+                            spinner.background = AppCompatResources.getDrawable(requireContext(), R.drawable.bg_sort_spinner_down)
+                        }
+                    })
+                    onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+                        override fun onItemSelected(
+                            p0: AdapterView<*>?,
+                            p1: View?,
+                            position: Int,
+                            id: Long
+                        ) {
+                            sortSpinnerList[position].selected = true
+                            if (preSelectedPosition!=-1)
+                                sortSpinnerList[curSelectedPosition].selected = false
+                            preSelectedPosition = curSelectedPosition
+                            curSelectedPosition = position
+                            dishViewModel.sortSoupDishes(position)
+                            notifyDataSetChanged()
+                        }
+
+                        override fun onNothingSelected(p0: AdapterView<*>?) {
+
+                        }
+                    }
+                }
+            }
+        }
     }
 }

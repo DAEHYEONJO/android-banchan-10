@@ -2,12 +2,10 @@ package com.woowahan.android10.deliverbanchan.presentation.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.woowahan.android10.deliverbanchan.data.local.model.*
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetSoupDishesUseCase
-import com.woowahan.android10.deliverbanchan.presentation.UiState
+import com.woowahan.android10.deliverbanchan.presentation.view.model.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -53,6 +51,17 @@ class DishViewModel @Inject constructor(
             when(result){
                 is BaseResult.Success -> _soupState.value = UiState.Success(result.data)
                 is BaseResult.Error -> _soupState.value = UiState.Error(result.errorCode)
+            }
+        }
+    }
+
+    fun sortSoupDishes(position: Int){
+        if (_soupState.value is UiState.Success){
+            _soupState.value = when(position){
+                1 -> UiState.Success((_soupState.value as UiState.Success).uiDishItems.sortedBy { -it.sPrice })
+                2 -> UiState.Success((_soupState.value as UiState.Success).uiDishItems.sortedBy { it.sPrice })
+                3 -> UiState.Success((_soupState.value as UiState.Success).uiDishItems.sortedBy { -(it.salePercentage.dropLast(1).toInt()) })
+                else -> {UiState.Success((_soupState.value as UiState.Success).uiDishItems.sortedBy { it.index })}
             }
         }
     }

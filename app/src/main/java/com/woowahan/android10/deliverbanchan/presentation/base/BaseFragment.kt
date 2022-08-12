@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment
 
 abstract class BaseFragment<T: ViewDataBinding>(
     @LayoutRes private val layoutResId: Int,
-    private val TAG: String
+    val TAG: String
 ): Fragment() {
 
     private var _binding: T? = null
