@@ -16,14 +16,21 @@ class CreateUiDishItemUseCase @Inject constructor() {
         nPrice = nPrice.replace(",", "")
         nPrice = nPrice.removeRange(nPrice.length - 1, nPrice.length)
 
+        val nPriceInt = nPrice.toInt()
+        val sPriceInt = sPrice.toInt()
+
+        val percentage =
+            if (nPriceInt == 0) 0 else 100 - (sPriceInt.toDouble() / nPriceInt * 100).toInt()
+
         return UiDishItem(
-            dishItem.detailHash,
-            dishItem.title,
-            false,
-            dishItem.image,
-            dishItem.description,
-            sPrice.toInt(),
-            nPrice.toInt()
+            hash = dishItem.detailHash,
+            title = dishItem.title,
+            isInserted = false,
+            image = dishItem.image,
+            description = dishItem.description,
+            sPrice = sPriceInt,
+            nPrice = nPriceInt,
+            salePercentage = "${percentage}%"
         )
     }
 }
