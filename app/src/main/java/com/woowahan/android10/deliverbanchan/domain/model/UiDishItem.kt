@@ -12,6 +12,6 @@ data class UiDishItem(
     val description: String,
     val sPrice: Int,
     val nPrice: Int = 0,
-    val salePercentage: String = "0%",
+    val salePercentage: Int = 0,
     val index: Int = 0
 ) : Parcelable

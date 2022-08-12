@@ -5,7 +5,7 @@
     <data>
         <variable
             name="vm"
-            type="com.woowahan.android10.deliverbanchan.presentation.viewmodel.DishViewModel" />
+            type="com.woowahan.android10.deliverbanchan.presentation.main.host.DishViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

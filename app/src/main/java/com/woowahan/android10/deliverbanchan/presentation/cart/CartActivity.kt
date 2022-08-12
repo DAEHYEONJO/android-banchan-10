@@ -5,7 +5,6 @@ import androidx.activity.viewModels
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.ActivityCartBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseActivity
-import com.woowahan.android10.deliverbanchan.presentation.cart.viewmodel.CartViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
