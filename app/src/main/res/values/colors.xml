@@ -22,5 +22,7 @@
     <color name="primary_disabled">#FCDCB7</color>
     <color name="primary_surface">#FBF5E0</color>
 
+    <color name="progress_indicator">#FFBB56</color>
+
     <!-- Test PR -->
 </resources>

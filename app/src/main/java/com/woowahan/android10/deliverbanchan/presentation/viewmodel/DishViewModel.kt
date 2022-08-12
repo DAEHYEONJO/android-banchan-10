@@ -1,6 +1,8 @@
 package com.woowahan.android10.deliverbanchan.presentation.viewmodel
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
@@ -29,6 +31,8 @@ class DishViewModel @Inject constructor(
 
     private val _soupState = MutableStateFlow<UiState>(UiState.Init)
     val soupState: StateFlow<UiState> get() = _soupState
+    private val _soupSpinnerPosition = MutableLiveData<Int>(0)
+    val soupSpinnerPosition: LiveData<Int> get() = _soupSpinnerPosition
 
     private fun setLoading(){
         _soupState.value = UiState.IsLoading(true)
@@ -56,6 +60,7 @@ class DishViewModel @Inject constructor(
     }
 
     fun sortSoupDishes(position: Int){
+        _soupSpinnerPosition.value = position
         if (_soupState.value is UiState.Success){
             _soupState.value = when(position){
                 1 -> UiState.Success((_soupState.value as UiState.Success).uiDishItems.sortedBy { -it.sPrice })
