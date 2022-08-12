@@ -6,7 +6,6 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.ActivityMainBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseActivity
-import com.woowahan.android10.deliverbanchan.utils.TabViewPagerAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
