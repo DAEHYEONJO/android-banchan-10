@@ -17,8 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/rv_space_8dp"
-        android:paddingTop="@dimen/base_text_space_24dp"
-        android:paddingBottom="@dimen/rv_space_8dp">
+        android:paddingBottom="@dimen/cart_btn_width_32dp">
 
         <FrameLayout
             android:id="@+id/soup_fl"
