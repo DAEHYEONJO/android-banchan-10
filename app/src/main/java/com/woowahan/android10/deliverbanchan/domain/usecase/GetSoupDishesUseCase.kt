@@ -21,7 +21,6 @@ class GetSoupDishesUseCase @Inject constructor(
 
     suspend operator fun invoke(): Flow<BaseResult<List<UiDishItem>, Int>> {
         return dishItemRepository.getSoupDishes().map { response ->
-            Log.e(TAG, "invoke1: ${Thread.currentThread().name}", )
             when (response) {
                 is BaseResult.Success -> {
                     BaseResult.Success(

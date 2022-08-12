@@ -5,7 +5,7 @@
     <data>
         <variable
             name="vm"
-            type="com.woowahan.android10.deliverbanchan.presentation.main.host.DishViewModel" />
+            type="com.woowahan.android10.deliverbanchan.presentation.main.soupdish.SoupViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -56,10 +56,10 @@
                         <TextView
                             android:id="@+id/soup_dish_tv_item_count"
                             style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack12_Normal.Style"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_height="15dp"
                             android:layout_marginStart="@dimen/base_space_16dp"
-                            android:text="총 8개 상품"
+                            android:text="@{`총 `+ String.valueOf(vm.soupListSize) +`개 상품`}"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
