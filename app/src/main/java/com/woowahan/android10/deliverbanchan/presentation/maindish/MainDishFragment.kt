@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentMaindishBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
+import com.woowahan.android10.deliverbanchan.presentation.bottomsheet.CartBottomSheetFragment
 import com.woowahan.android10.deliverbanchan.presentation.maindish.adapter.MainDishLinearAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -53,6 +54,11 @@ class MainDishFragment: BaseFragment<FragmentMaindishBinding>(R.layout.fragment_
         mainDishLinearAdapter = MainDishLinearAdapter {
             // bottom sheet 에 uiDishItem 전달하기
             Log.e("TAG", "cart icon clicked")
+            val cartBottomSheetFragment = CartBottomSheetFragment()
+            val bundle = Bundle()
+            bundle.putParcelable("UiDishItem", it)
+            cartBottomSheetFragment.arguments = bundle
+            cartBottomSheetFragment.show(childFragmentManager, "CartBottomSheet")
         }
         binding.maindishRv.apply {
             adapter = mainDishLinearAdapter

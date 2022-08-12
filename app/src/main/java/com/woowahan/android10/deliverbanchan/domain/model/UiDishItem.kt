@@ -1,5 +1,9 @@
 package com.woowahan.android10.deliverbanchan.domain.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class UiDishItem(
     val hash: String,
     val title: String,
@@ -10,4 +14,4 @@ data class UiDishItem(
     val nPrice: Int = 0,
     val salePercentage: String = "0%",
     val index: Int = 0
-)
+) : Parcelable
