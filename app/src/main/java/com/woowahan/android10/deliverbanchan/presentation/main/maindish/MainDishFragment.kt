@@ -23,7 +23,7 @@ class MainDishFragment :
 
     private val mainDishViewModel: MainDishViewModel by viewModels()
     private lateinit var mainDishLinearAdapter: MainDishLinearAdapter
-    private lateinit var mainDishGridAdapter: SoupAdapter
+    private lateinit var mainDishGridAdapter: MainDishGridAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -62,10 +62,9 @@ class MainDishFragment :
 
     private fun setRecyclerView() {
 
-        mainDishGridAdapter = SoupAdapter()
+        mainDishGridAdapter = MainDishGridAdapter()
 
         mainDishLinearAdapter = MainDishLinearAdapter {
-            // bottom sheet 에 uiDishItem 전달하기
             Log.e("TAG", "cart icon clicked")
             val cartBottomSheetFragment = CartBottomSheetFragment()
             val bundle = Bundle()
