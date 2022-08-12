@@ -77,11 +77,6 @@ class SoupDishFragment: BaseFragment<FragmentSoupdishBinding>(R.layout.fragment_
 
     private fun initObserver() {
         with(soupViewModel){
-            cartInfoState.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
-                .onEach { state ->
-                    handleUiCartStateChange(state)
-                    Log.e(TAG, "initObserver: $state", )
-                }.launchIn(lifecycleScope)
             soupState.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
                 .onEach { state ->
                     Log.e(TAG, "initObserver: $state", )

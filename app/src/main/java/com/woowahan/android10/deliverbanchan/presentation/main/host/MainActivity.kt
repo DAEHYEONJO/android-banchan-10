@@ -1,13 +1,19 @@
 package com.woowahan.android10.deliverbanchan.presentation.main.host
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.tabs.TabLayoutMediator
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.ActivityMainBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseActivity
 import com.woowahan.android10.deliverbanchan.presentation.main.soupdish.SoupViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main, "MainActivity") {
@@ -24,6 +30,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main, "
     private fun initView() {
         setTabTitleArray()
         setTabWithViewPager()
+        initObserver()
+    }
+
+    private fun initObserver() {
+        dishViewModel.cartInfoState.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+            .onEach { state ->
+                Log.e(TAG, "initObserver: $state", )
+            }.launchIn(lifecycleScope)
     }
 
     private fun setTabTitleArray() {

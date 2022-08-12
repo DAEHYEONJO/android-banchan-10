@@ -19,16 +19,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SoupViewModel @Inject constructor(
-    private val getSoupDishesUseCase: GetSoupDishesUseCase,
-    private val getAllCartInfoUseCase: GetAllCartInfoUseCase
+    private val getSoupDishesUseCase: GetSoupDishesUseCase
 ) : ViewModel() {
 
     companion object {
         const val TAG = "SoupViewModel"
     }
 
-    private val _cartInfoState = MutableStateFlow<UiCartState>(UiCartState.Init)
-    val cartInfoState: StateFlow<UiCartState> get() = _cartInfoState
 
     private val _soupState = MutableStateFlow<UiState>(UiState.Init)
     val soupState: StateFlow<UiState> get() = _soupState
@@ -40,7 +37,6 @@ class SoupViewModel @Inject constructor(
 
     init {
         getSoupDishes()
-        getAllCartInfo()
     }
 
     private fun setLoading() {
@@ -88,12 +84,5 @@ class SoupViewModel @Inject constructor(
         }
     }
 
-    private fun getAllCartInfo() = viewModelScope.launch {
-        getAllCartInfoUseCase().catch { exception ->
-            _cartInfoState.value = UiCartState.ShowToast(exception.message.toString())
-        }.collect{
-            _cartInfoState.value = UiCartState.Success(it)
-        }
-    }
 
 }
