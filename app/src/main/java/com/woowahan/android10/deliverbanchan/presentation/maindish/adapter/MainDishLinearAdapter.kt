@@ -2,6 +2,7 @@ package com.woowahan.android10.deliverbanchan.presentation.maindish.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -15,8 +16,9 @@ class MainDishLinearAdapter(
 
     inner class MainDishLinearViewHolder(val binding: ItemMaindishLinearBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(uiDishItem: UiDishItem, cartIconClick: (uiDishItem: UiDishItem) -> Unit) {
+        fun bind(uiDishItem: UiDishItem, cartIconClick: (uiDishItem: UiDishItem) -> Unit, isLast: Boolean) {
             binding.uiDishItem = uiDishItem
+            binding.maindishViewFooter.isVisible = isLast
             binding.maindishIbCart.setOnClickListener {
                 cartIconClick.invoke(uiDishItem)
             }
@@ -34,7 +36,7 @@ class MainDishLinearAdapter(
     }
 
     override fun onBindViewHolder(holder: MainDishLinearViewHolder, position: Int) {
-        holder.bind(getItem(position), cartIconClick)
+        holder.bind(getItem(position), cartIconClick, position == currentList.size - 1)
     }
 
     companion object UiDishItemDiffUtil : DiffUtil.ItemCallback<UiDishItem>() {
