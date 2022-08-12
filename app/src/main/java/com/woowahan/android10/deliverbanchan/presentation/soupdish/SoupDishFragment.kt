@@ -33,7 +33,7 @@ class SoupDishFragment: BaseFragment<FragmentSoupdishBinding>(R.layout.fragment_
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        Log.e(TAG, "onViewCreated:selectedItemPosition ${binding.soupDishSp.selectedItemPosition}", )
         initLayout()
         initObserver()
     }
@@ -52,7 +52,11 @@ class SoupDishFragment: BaseFragment<FragmentSoupdishBinding>(R.layout.fragment_
     private fun handleStateChange(state: UiState) {
         // todo state 에 따른 처리 추가 구현 필요함
         when(state){
-            is UiState.Success -> soupAdapter.submitList(state.uiDishItems)
+            is UiState.Success -> {
+                soupAdapter.submitList(state.uiDishItems)
+                binding.soupPb.visibility = View.GONE
+            }
+            is UiState.IsLoading -> binding.soupPb.visibility = View.VISIBLE
         }
     }
 
@@ -61,6 +65,7 @@ class SoupDishFragment: BaseFragment<FragmentSoupdishBinding>(R.layout.fragment_
             soupDishRv.adapter = soupAdapter
             with(soupDishSp){
                 dropDownVerticalOffset = dpToPx(requireContext(), 32).toInt()
+                setWillNotDraw(false)
                 adapter = soupSpinnerAdapter.apply {
                     setSpinnerEventsListener(object : CustomSortingSpinner.OnSpinnerEventsListener{
                         override fun opPopUpWindowOpened(spinner: Spinner) {
@@ -78,13 +83,23 @@ class SoupDishFragment: BaseFragment<FragmentSoupdishBinding>(R.layout.fragment_
                             position: Int,
                             id: Long
                         ) {
+                            //val pos = if (dishViewModel.soupSpinnerPosition.value!=0) dishViewModel.soupSpinnerPosition.value else position
+                            soupSpinnerAdapter.sortSpinnerList.forEach {
+                                android.util.Log.e(TAG, "before onItemSelected: $it", )
+                            }
+                            Log.e(TAG, "before: vm: ${dishViewModel.soupSpinnerPosition.value} pre: ${preSelectedPosition} cur: ${curSelectedPosition} pos: ${position}", )
                             sortSpinnerList[position].selected = true
                             if (preSelectedPosition!=-1)
                                 sortSpinnerList[curSelectedPosition].selected = false
                             preSelectedPosition = curSelectedPosition
                             curSelectedPosition = position
+                            setSelection(position)
                             dishViewModel.sortSoupDishes(position)
                             notifyDataSetChanged()
+                            soupSpinnerAdapter.sortSpinnerList.forEach {
+                                android.util.Log.e(TAG, "after onItemSelected: $it", )
+                            }
+                            Log.e(TAG, "after: vm: ${dishViewModel.soupSpinnerPosition.value} pre: ${preSelectedPosition} cur: ${curSelectedPosition} pos: ${position}", )
                         }
 
                         override fun onNothingSelected(p0: AdapterView<*>?) {
