@@ -1,4 +1,4 @@
-package com.woowahan.android10.deliverbanchan.presentation
+package com.woowahan.android10.deliverbanchan.presentation.view.model
 
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 

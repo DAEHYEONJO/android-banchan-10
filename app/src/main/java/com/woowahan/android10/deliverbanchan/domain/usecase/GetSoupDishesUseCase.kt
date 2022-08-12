@@ -1,16 +1,12 @@
 package com.woowahan.android10.deliverbanchan.domain.usecase
 
-import android.util.Log
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.repository.remote.DishItemRepository
-import com.woowahan.android10.deliverbanchan.presentation.UiState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.job
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.coroutines.coroutineContext
 
 @Singleton
 class GetSoupDishesUseCase @Inject constructor(
@@ -25,20 +21,21 @@ class GetSoupDishesUseCase @Inject constructor(
             when (response) {
                 is BaseResult.Success -> {
                     BaseResult.Success(
-                        response.data.map {
-                            val sPrice = it.sPrice.dropLast(1).replace(",", "").toInt()
-                            val nPrice = it.nPrice.dropLast(1).replace(",", "").toInt()
+                        response.data.mapIndexed { index, dishItem ->
+                            val sPrice = dishItem.sPrice.dropLast(1).replace(",", "").toInt()
+                            val nPrice = dishItem.nPrice.dropLast(1).replace(",", "").toInt()
                             val percentage =
                                 if (nPrice == 0) 0 else 100 - (sPrice.toDouble() / nPrice * 100).toInt()
                             UiDishItem(
-                                hash = it.detailHash,
-                                title = it.title,
+                                hash = dishItem.detailHash,
+                                title = dishItem.title,
                                 isInserted = false,
-                                image = it.image,
-                                description = it.description,
+                                image = dishItem.image,
+                                description = dishItem.description,
                                 sPrice = sPrice,
                                 nPrice = nPrice,
-                                salePercentage = "${percentage}%"
+                                salePercentage = "${percentage}%",
+                                index = index
                             )
                         }.toList()
                     )

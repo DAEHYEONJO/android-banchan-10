@@ -16,4 +16,10 @@
 
     <string name="format_nprice">%s원</string>
     <string name="format_sale_rate">%d%%</string>
+    <string-array name="sort_spinner_item">
+        <item>기본 정렬순</item>
+        <item>금액 높은순</item>
+        <item>금액 낮은순</item>
+        <item>할인률순</item>
+    </string-array>
 </resources>
