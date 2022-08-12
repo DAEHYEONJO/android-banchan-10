@@ -1,9 +1,12 @@
 package com.woowahan.android10.deliverbanchan.domain.usecase
 
+import android.util.Log
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.repository.remote.DishItemRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -18,6 +21,7 @@ class GetSoupDishesUseCase @Inject constructor(
 
     suspend operator fun invoke(): Flow<BaseResult<List<UiDishItem>, Int>> {
         return dishItemRepository.getSoupDishes().map { response ->
+            Log.e(TAG, "invoke1: ${Thread.currentThread().name}", )
             when (response) {
                 is BaseResult.Success -> {
                     BaseResult.Success(
@@ -34,7 +38,7 @@ class GetSoupDishesUseCase @Inject constructor(
                                 description = dishItem.description,
                                 sPrice = sPrice,
                                 nPrice = nPrice,
-                                salePercentage = "${percentage}%",
+                                salePercentage = percentage,
                                 index = index
                             )
                         }.toList()

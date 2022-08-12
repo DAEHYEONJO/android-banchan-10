@@ -30,7 +30,7 @@ class CreateUiDishItemUseCase @Inject constructor() {
             description = dishItem.description,
             sPrice = sPriceInt,
             nPrice = nPriceInt,
-            salePercentage = "${percentage}%"
+            salePercentage = percentage
         )
     }
 }

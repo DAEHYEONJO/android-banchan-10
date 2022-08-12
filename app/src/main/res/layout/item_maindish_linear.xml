@@ -8,6 +8,7 @@
         <variable
             name="uiDishItem"
             type="com.woowahan.android10.deliverbanchan.domain.model.UiDishItem" />
+        <import type="android.view.View"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,7 +27,7 @@
 
             <ImageView
                 android:id="@+id/maindish_iv_food"
-                imageUrl="@{uiDishItem.image}"
+                app:setStringUrlImage="@{uiDishItem.image}"
                 android:layout_width="130dp"
                 android:layout_height="130dp"
                 tools:background="@color/grey_scale_default" />
@@ -72,14 +73,12 @@
         <TextView
             android:id="@+id/maindish_tv_sale"
             style="@style/Widget.TextView.NotoSansKR_PrimaryAccent14_Medium.Style"
-            nPrice="@{uiDishItem.NPrice}"
-            sPrice="@{uiDishItem.SPrice}"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/text_size_24sp"
             android:gravity="center_vertical"
             android:paddingEnd="4dp"
-            android:text="10%"
-            android:visibility="visible"
+            android:visibility="@{uiDishItem.NPrice==0?View.GONE:View.VISIBLE}"
+            android:text="@{String.valueOf(uiDishItem.salePercentage)+`%`}"
             app:layout_constraintBottom_toTopOf="@id/maindish_tv_nPrice"
             app:layout_constraintStart_toStartOf="@id/maindish_tv_description"
             app:layout_constraintTop_toBottomOf="@id/maindish_tv_description" />
@@ -87,7 +86,8 @@
         <TextView
             android:id="@+id/maindish_tv_sPrice"
             style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Bold.Style"
-            sPrice="@{uiDishItem.SPrice}"
+            isNPrice="@{false}"
+            price="@{uiDishItem.SPrice}"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/text_size_24sp"
             android:gravity="center_vertical"
@@ -99,7 +99,8 @@
         <TextView
             android:id="@+id/maindish_tv_nPrice"
             style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault12_Normal.Style"
-            nPrice="@{uiDishItem.NPrice}"
+            isNPrice="@{true}"
+            price="@{uiDishItem.NPrice}"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/text_size_24sp"
             android:layout_marginStart="16dp"

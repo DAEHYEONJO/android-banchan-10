@@ -4,22 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
-            name="itemTitle"
-            type="String" />
-
-        <variable
-            name="nPrice"
-            type="Integer" />
-
-        <variable
-            name="sPrice"
-            type="Integer" />
-
-        <variable
-            name="imageUrl"
-            type="String" />
+            name="item"
+            type="com.woowahan.android10.deliverbanchan.domain.model.UiDishItem" />
+        <import type="android.view.View"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -58,7 +46,7 @@
 
             <ImageView
                 android:id="@+id/iv_food"
-                imageUrl="@{imageUrl}"
+                app:setStringUrlImage="@{item.image}"
                 android:layout_width="60dp"
                 android:layout_height="0dp"
                 android:layout_marginStart="@dimen/base_space_16dp"
@@ -75,7 +63,7 @@
                 android:layout_height="24dp"
                 android:layout_marginStart="@dimen/base_space_16dp"
                 android:gravity="center_vertical"
-                android:text="@{itemTitle}"
+                android:text="@{item.title}"
                 app:layout_constraintBottom_toTopOf="@id/tv_sprice"
                 app:layout_constraintStart_toEndOf="@id/iv_food"
                 app:layout_constraintTop_toTopOf="@id/iv_food"
@@ -85,13 +73,12 @@
             <TextView
                 android:id="@+id/tv_sale"
                 style="@style/Widget.TextView.NotoSansKR_PrimaryAccent14_Medium.Style"
-                nPrice="@{nPrice}"
-                sPrice="@{sPrice}"
+                android:visibility="@{item.NPrice==0?View.GONE:View.VISIBLE}"
+                android:text="@{String.valueOf(item.salePercentage)+`%`}"
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
                 android:gravity="center_vertical"
                 android:paddingEnd="4dp"
-                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="@id/tv_sprice"
                 app:layout_constraintStart_toStartOf="@id/tv_title"
                 app:layout_constraintTop_toTopOf="@id/tv_sprice"
@@ -100,7 +87,8 @@
             <TextView
                 android:id="@+id/tv_sprice"
                 style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Bold.Style"
-                sPrice="@{sPrice}"
+                isNPrice="@{false}"
+                price="@{item.SPrice}"
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
                 android:gravity="center_vertical"
@@ -113,7 +101,8 @@
             <TextView
                 android:id="@+id/tv_nprice"
                 style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault14_Normal.Style"
-                nPrice="@{nPrice}"
+                isNPrice="@{true}"
+                price="@{item.NPrice}"
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
                 android:gravity="center_vertical"
@@ -160,7 +149,8 @@
             <TextView
                 android:id="@+id/tv_price_total"
                 style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style"
-                sPrice="@{sPrice}"
+                isNPrice="@{false}"
+                price="@{item.SPrice}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/base_space_16dp"
