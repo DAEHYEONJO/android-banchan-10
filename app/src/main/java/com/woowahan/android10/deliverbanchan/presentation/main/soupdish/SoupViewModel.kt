@@ -4,8 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.woowahan.android10.deliverbanchan.data.local.model.CartInfo
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
+import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllCartInfoUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetSoupDishesUseCase
+import com.woowahan.android10.deliverbanchan.domain.usecase.InsertCartInfoUseCase
+import com.woowahan.android10.deliverbanchan.presentation.state.UiCartState
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -15,12 +19,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SoupViewModel @Inject constructor(
-    private val getSoupDishesUseCase: GetSoupDishesUseCase
+    private val getSoupDishesUseCase: GetSoupDishesUseCase,
+    private val getAllCartInfoUseCase: GetAllCartInfoUseCase
 ) : ViewModel() {
 
     companion object {
         const val TAG = "SoupViewModel"
     }
+
+    private val _cartInfoState = MutableStateFlow<UiCartState>(UiCartState.Init)
+    val cartInfoState: StateFlow<UiCartState> get() = _cartInfoState
 
     private val _soupState = MutableStateFlow<UiState>(UiState.Init)
     val soupState: StateFlow<UiState> get() = _soupState
@@ -32,6 +40,7 @@ class SoupViewModel @Inject constructor(
 
     init {
         getSoupDishes()
+        getAllCartInfo()
     }
 
     private fun setLoading() {
@@ -76,6 +85,14 @@ class SoupViewModel @Inject constructor(
                 3 -> UiState.Success((_soupState.value as UiState.Success).uiDishItems.sortedBy { -it.salePercentage }) // 할인률 내림차순
                 else -> UiState.Success((_soupState.value as UiState.Success).uiDishItems.sortedBy { it.index }) // 기본 정렬순
             }
+        }
+    }
+
+    private fun getAllCartInfo() = viewModelScope.launch {
+        getAllCartInfoUseCase().catch { exception ->
+            _cartInfoState.value = UiCartState.ShowToast(exception.message.toString())
+        }.collect{
+            _cartInfoState.value = UiCartState.Success(it)
         }
     }
 

@@ -23,6 +23,6 @@ interface CartDao {
     suspend fun deleteCartInfo(hash: String)
 
     @Query("SELECT EXISTS(SELECT * FROM CART_INFO WHERE hash = :hash)")
-    fun isExistCartInfo(hash: String): Flow<Boolean>
+    fun isExistCartInfo(hash: String): Boolean
 
 }

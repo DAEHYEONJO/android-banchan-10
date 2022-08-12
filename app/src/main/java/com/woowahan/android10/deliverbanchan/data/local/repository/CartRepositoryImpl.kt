@@ -17,5 +17,5 @@ class CartRepositoryImpl @Inject constructor(
 
     override suspend fun deleteCartInfo(hash: String) = cartDao.deleteCartInfo(hash)
 
-    override fun isExistCartInfo(hash: String): Flow<Boolean> = cartDao.isExistCartInfo(hash)
+    override fun isExistCartInfo(hash: String): Boolean = cartDao.isExistCartInfo(hash)
 }

@@ -18,4 +18,7 @@
     <dimen name="base_space_34dp">34dp</dimen>
     <dimen name="iv_size_160dp">160dp</dimen>
 
+    <dimen name="item_elevation_0dp">0dp</dimen>
+    <dimen name="item_elevation_2dp">2dp</dimen>
+
 </resources>

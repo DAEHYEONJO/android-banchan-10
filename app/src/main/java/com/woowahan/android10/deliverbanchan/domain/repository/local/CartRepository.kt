@@ -20,5 +20,5 @@ interface CartRepository {
     suspend fun deleteCartInfo(hash: String)
 
     @WorkerThread
-    fun isExistCartInfo(hash: String): Flow<Boolean>
+    fun isExistCartInfo(hash: String): Boolean
 }
