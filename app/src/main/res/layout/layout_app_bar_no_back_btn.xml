@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_no_back_btn_abl"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary_main">
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/app_bar_no_back_btn_mtb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:contentInsetStart="0dp">
+
+            <TextView
+                android:id="@+id/app_bar_no_back_btn_tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_bar_no_back_btn_title"
+                android:layout_marginStart="@dimen/base_space_16dp"
+                style="@style/Widget.TextView.Outfit_GreyScaleBlack20_Bold.Style"/>
+
+            <ImageView
+                android:id="@+id/app_bar_no_back_btn_iv_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="@dimen/base_space_16dp"
+                android:src="@drawable/ic_user_without_badge"
+                android:visibility="visible"/>
+
+            <ImageView
+                android:id="@+id/app_bar_no_back_btn_iv_cart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="@dimen/base_space_34dp"
+                android:src="@drawable/ic_cart"
+                android:visibility="visible"/>
+
+
+        </com.google.android.material.appbar.MaterialToolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+</merge>

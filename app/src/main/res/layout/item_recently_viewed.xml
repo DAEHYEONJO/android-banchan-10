@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/item_recently_viewed_root"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/base_space_16dp"
+        android:paddingBottom="@dimen/base_space_16dp"
+        android:layout_marginStart="@dimen/rv_space_8dp">
+
+        <FrameLayout
+            android:id="@+id/item_recently_viewed_fl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+            <ImageView
+                android:id="@+id/item_recently_viewed_iv_food"
+                android:layout_width="@dimen/iv_size_160dp"
+                android:background="@color/grey_scale_default"
+                android:layout_height="@dimen/iv_size_160dp" />
+            <ImageButton
+                android:id="@+id/imageView"
+                style="@style/cartBtnStyle" />
+        </FrameLayout>
+        <TextView
+            android:id="@+id/item_recently_viewed_tv_title"
+            android:layout_width="@dimen/iv_size_160dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/item_recently_viewed_fl"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="오리주물럭_반조리"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:layout_marginTop="@dimen/rv_space_8dp"
+            style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style" />
+        <TextView
+            android:id="@+id/item_recently_viewd_tv_sprice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@+id/item_recently_viewed_tv_title"
+            app:layout_constraintTop_toBottomOf="@+id/item_recently_viewed_tv_title"
+            android:text="12,640원"
+            style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style"/>
+        <TextView
+            android:id="@+id/item_recently_viewed_tv_nprice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="15,800원"
+            app:layout_constraintTop_toTopOf="@+id/item_recently_viewd_tv_sprice"
+            app:layout_constraintBottom_toBottomOf="@id/item_recently_viewd_tv_sprice"
+            app:layout_constraintStart_toEndOf="@+id/item_recently_viewd_tv_sprice"
+            android:layout_marginStart="@dimen/rv_space_4dp"
+            style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault12_Normal.Style"/>
+        <TextView
+            android:id="@+id/item_recently_viewd_tv_time"
+            android:layout_width="@dimen/iv_size_160dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@+id/item_recently_viewd_tv_sprice"
+            app:layout_constraintEnd_toEndOf="@+id/item_recently_viewed_tv_title"
+            app:layout_constraintTop_toBottomOf="@+id/item_recently_viewd_tv_sprice"
+            android:text="1분전"
+            style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault12_Normal.Style"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">DeliverBanChan</string>
+    <string name="app_bar_with_back_btn_title">Recently viewed products</string>
+    <string name="app_bar_no_back_btn_title">ORDERING</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="main_header_exhibition">한 번 주문하면
+            \n두 번 반하는 반찬들"</string>
+    <string name="main_header_main_dish">모두가 좋아하는
+            \n든든한 메인 요리"</string>
+    <string name="main_header_soup_dish">정성이 담긴
+            \n뜨끈뜨끈 국물 요리"</string>
+    <string name="main_header_side_dish">식탁을 풍성하게 하는
+            \n정갈한 밑반찬"</string>
+
+    <string name="format_nprice">%s원</string>
+    <string name="format_sale_rate">%d%%</string>
+    <string-array name="sort_spinner_item">
+        <item>기본 정렬순</item>
+        <item>금액 높은순</item>
+        <item>금액 낮은순</item>
+        <item>할인률순</item>
+    </string-array>
 </resources>
