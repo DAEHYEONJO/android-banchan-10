@@ -3,6 +3,7 @@ package com.woowahan.android10.deliverbanchan.presentation.main.sidedish
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.AdapterView
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
@@ -16,6 +17,7 @@ import com.woowahan.android10.deliverbanchan.presentation.common.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.toVisible
 import com.woowahan.android10.deliverbanchan.presentation.main.soupdish.SoupAdapter
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
+import com.woowahan.android10.deliverbanchan.presentation.view.SortSpinnerAdapter
 import com.woowahan.android10.deliverbanchan.presentation.view.SpinnerEventListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -27,6 +29,30 @@ class SideDishFragment: BaseFragment<FragmentSidedishBinding>(R.layout.fragment_
 
     private val sideDishViewModel: SideDishViewModel by activityViewModels()
     @Inject lateinit var sideDishAdapter: SoupAdapter
+    @Inject lateinit var sideDishSpinnerAdapter: SortSpinnerAdapter
+    private val itemSelectedListener = object : AdapterView.OnItemSelectedListener{
+        override fun onItemSelected(
+            p0: AdapterView<*>?,
+            p1: View?,
+            position: Int,
+            id: Long
+        ) {
+            with(sideDishViewModel){
+                sortSoupDishes(position)
+                with(sideDishSpinnerAdapter){
+                    sortSpinnerList[curSideDishSpinnerPosition.value!!].selected = true
+                    if (curSideDishSpinnerPosition.value!=preSideDishSpinnerPosition.value){
+                        sortSpinnerList[preSideDishSpinnerPosition.value!!].selected = false
+                    }
+                    notifyDataSetChanged()
+                }
+            }
+        }
+
+        override fun onNothingSelected(p0: AdapterView<*>?) {
+            // nothing to do
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -62,12 +88,11 @@ class SideDishFragment: BaseFragment<FragmentSidedishBinding>(R.layout.fragment_
         with(binding){
             sideDishRv.adapter = sideDishAdapter
             with(sideDishSp){
-                dropDownVerticalOffset = dpToPx(requireContext(), 32).toInt()
                 setWillNotDraw(false)
-//                adapter = soupSpinnerAdapter.apply {
-//                    setSpinnerEventsListener(SpinnerEventListener(requireContext()))
-//                    onItemSelectedListener = itemSelectedListener
-//                }
+                adapter = sideDishSpinnerAdapter.apply {
+                    setSpinnerEventsListener(SpinnerEventListener(requireContext()))
+                    onItemSelectedListener = itemSelectedListener
+                }
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.main.sidedish
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -20,6 +21,10 @@ class SideDishViewModel @Inject constructor(
     private val _sideState = MutableStateFlow<UiState>(UiState.Init)
     val sideState: StateFlow<UiState> get() = _sideState
     val sideListSize = MutableLiveData(0)
+    private val _curSideDishSpinnerPosition = MutableLiveData<Int>(0)
+    val curSideDishSpinnerPosition: LiveData<Int> get() = _curSideDishSpinnerPosition
+    private val _preSideDishSpinnerPosition = MutableLiveData(0)
+    val preSideDishSpinnerPosition: LiveData<Int> get() = _preSideDishSpinnerPosition
 
     private fun setLoading() {
         _sideState.value = UiState.IsLoading(true)
@@ -54,4 +59,21 @@ class SideDishViewModel @Inject constructor(
             }
         }
     }
+
+
+    fun sortSoupDishes(position: Int) {
+        if (_curSideDishSpinnerPosition.value != _preSideDishSpinnerPosition.value) {
+            _preSideDishSpinnerPosition.value = _curSideDishSpinnerPosition.value
+        }
+        _curSideDishSpinnerPosition.value = position
+        if (_sideState.value is UiState.Success) {
+            _sideState.value = when (_curSideDishSpinnerPosition.value) {
+                1 -> UiState.Success((_sideState.value as UiState.Success).uiDishItems.sortedBy { -it.sPrice }) // 금액 내림차순
+                2 -> UiState.Success((_sideState.value as UiState.Success).uiDishItems.sortedBy { it.sPrice }) // 금액 오름차순
+                3 -> UiState.Success((_sideState.value as UiState.Success).uiDishItems.sortedBy { -it.salePercentage }) // 할인률 내림차순
+                else -> UiState.Success((_sideState.value as UiState.Success).uiDishItems.sortedBy { it.index }) // 기본 정렬순
+            }
+        }
+    }
+
 }

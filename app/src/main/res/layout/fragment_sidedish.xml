@@ -73,6 +73,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="@dimen/base_space_16dp"
                             android:background="@drawable/bg_sort_spinner_down"
+                            app:verticalOffsetDpValue="@dimen/cart_btn_width_32dp"
                             android:popupBackground="@drawable/bg_sort_spinner_pop_up"
                             android:popupElevation="@dimen/rv_space_4dp"
                             app:layout_constraintEnd_toEndOf="parent"
