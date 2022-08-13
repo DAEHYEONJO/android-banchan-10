@@ -16,10 +16,11 @@ import com.woowahan.android10.deliverbanchan.presentation.common.showToast
 import com.woowahan.android10.deliverbanchan.presentation.common.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.toVisible
 import com.woowahan.android10.deliverbanchan.presentation.dialogs.CartBottomSheetFragment
-import com.woowahan.android10.deliverbanchan.presentation.main.soupdish.SoupAdapter
+import com.woowahan.android10.deliverbanchan.presentation.main.common.MainGridAdapter
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainDishFragment :
@@ -27,7 +28,8 @@ class MainDishFragment :
 
     private val mainDishViewModel: MainDishViewModel by viewModels()
     private lateinit var mainDishLinearAdapter: MainDishLinearAdapter
-    private lateinit var mainDishGridAdapter: MainDishGridAdapter
+    //private lateinit var mainDishGridAdapter: MainDishGridAdapter
+    @Inject lateinit var mainDishAdapter: MainGridAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -48,10 +50,10 @@ class MainDishFragment :
             when (checkedId) {
                 R.id.maindish_rb_grid -> {
                     binding.maindishRv.apply {
-                        adapter = mainDishGridAdapter
+                        adapter = mainDishAdapter
                         layoutManager = GridLayoutManager(requireContext(), 2)
                     }
-                    mainDishGridAdapter.submitList(mainDishViewModel.mainDishList.toList())
+                    mainDishAdapter.submitList(mainDishViewModel.mainDishList.toList())
                 }
                 R.id.maindish_rb_linear -> {
                     binding.maindishRv.apply {
@@ -66,13 +68,14 @@ class MainDishFragment :
 
     private fun setRecyclerView() {
 
-        mainDishGridAdapter = MainDishGridAdapter {
-            Log.e("TAG", "cart icon clicked")
-            val cartBottomSheetFragment = CartBottomSheetFragment()
-            val bundle = Bundle()
-            bundle.putParcelable("UiDishItem", it)
-            cartBottomSheetFragment.arguments = bundle
-            cartBottomSheetFragment.show(childFragmentManager, "CartBottomSheet")
+        mainDishAdapter.apply {
+            cartIconClick = {
+                val cartBottomSheetFragment = CartBottomSheetFragment()
+                val bundle = Bundle()
+                bundle.putParcelable("UiDishItem", it)
+                cartBottomSheetFragment.arguments = bundle
+                cartBottomSheetFragment.show(childFragmentManager, "CartBottomSheet")
+            }
         }
 
         mainDishLinearAdapter = MainDishLinearAdapter {
@@ -85,7 +88,7 @@ class MainDishFragment :
         }
 
         binding.maindishRv.apply {
-            adapter = mainDishGridAdapter
+            adapter = mainDishAdapter
             layoutManager = GridLayoutManager(requireContext(), 2)
         }
     }
@@ -105,7 +108,7 @@ class MainDishFragment :
             is UiState.IsLoading -> binding.maindishPb.toVisible()
             is UiState.Success -> {
                 binding.maindishPb.toGone()
-                mainDishGridAdapter.submitList(state.uiDishItems)
+                mainDishAdapter.submitList(state.uiDishItems)
             }
             is UiState.ShowToast -> {
                 binding.maindishPb.toGone()

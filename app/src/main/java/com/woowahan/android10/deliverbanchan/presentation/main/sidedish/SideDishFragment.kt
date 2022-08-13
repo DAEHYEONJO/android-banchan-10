@@ -11,11 +11,11 @@ import androidx.lifecycle.lifecycleScope
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentSidedishBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
-import com.woowahan.android10.deliverbanchan.presentation.common.dpToPx
 import com.woowahan.android10.deliverbanchan.presentation.common.showToast
 import com.woowahan.android10.deliverbanchan.presentation.common.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.toVisible
-import com.woowahan.android10.deliverbanchan.presentation.main.soupdish.SoupAdapter
+import com.woowahan.android10.deliverbanchan.presentation.dialogs.CartBottomSheetFragment
+import com.woowahan.android10.deliverbanchan.presentation.main.common.MainGridAdapter
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import com.woowahan.android10.deliverbanchan.presentation.view.SortSpinnerAdapter
 import com.woowahan.android10.deliverbanchan.presentation.view.SpinnerEventListener
@@ -28,7 +28,7 @@ import javax.inject.Inject
 class SideDishFragment: BaseFragment<FragmentSidedishBinding>(R.layout.fragment_sidedish, "SideDishFragment") {
 
     private val sideDishViewModel: SideDishViewModel by activityViewModels()
-    @Inject lateinit var sideDishAdapter: SoupAdapter
+    @Inject lateinit var sideDishAdapter: MainGridAdapter
     @Inject lateinit var sideDishSpinnerAdapter: SortSpinnerAdapter
     private val itemSelectedListener = object : AdapterView.OnItemSelectedListener{
         override fun onItemSelected(
@@ -87,7 +87,15 @@ class SideDishFragment: BaseFragment<FragmentSidedishBinding>(R.layout.fragment_
 
     private fun initLayout() {
         with(binding){
-            sideDishRv.adapter = sideDishAdapter
+            sideDishRv.adapter = sideDishAdapter.apply {
+                cartIconClick = {
+                    val cartBottomSheetFragment = CartBottomSheetFragment()
+                    val bundle = Bundle()
+                    bundle.putParcelable("UiDishItem", it)
+                    cartBottomSheetFragment.arguments = bundle
+                    cartBottomSheetFragment.show(childFragmentManager, "CartBottomSheet")
+                }
+            }
             with(sideDishSp){
                 setWillNotDraw(false)
                 adapter = sideDishSpinnerAdapter.apply {

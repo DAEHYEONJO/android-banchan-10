@@ -1,6 +1,5 @@
-package com.woowahan.android10.deliverbanchan.presentation.main.soupdish
+package com.woowahan.android10.deliverbanchan.presentation.main.common
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -10,14 +9,16 @@ import com.woowahan.android10.deliverbanchan.databinding.ItemSoupBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import dagger.hilt.android.scopes.FragmentScoped
 import javax.inject.Inject
-import javax.inject.Singleton
 
 @FragmentScoped
-class SoupAdapter @Inject constructor(): ListAdapter<UiDishItem, SoupAdapter.ViewHolder>(diffUtil) {
+class MainGridAdapter @Inject constructor() :
+    ListAdapter<UiDishItem, MainGridAdapter.ViewHolder>(diffUtil) {
 
-    companion object{
-        const val TAG = "SoupAdapter"
-        val diffUtil = object : DiffUtil.ItemCallback<UiDishItem>(){
+    lateinit var cartIconClick: (uiDishItem: UiDishItem) -> Unit
+
+    companion object {
+        const val TAG = "MainGridAdapter"
+        val diffUtil = object : DiffUtil.ItemCallback<UiDishItem>() {
             override fun areItemsTheSame(oldItem: UiDishItem, newItem: UiDishItem): Boolean {
                 return oldItem.hash == newItem.hash
             }
@@ -28,10 +29,14 @@ class SoupAdapter @Inject constructor(): ListAdapter<UiDishItem, SoupAdapter.Vie
         }
     }
 
-    inner class ViewHolder(private val binding: ItemSoupBinding): RecyclerView.ViewHolder(binding.root){
+    inner class ViewHolder(private val binding: ItemSoupBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(uiDishItem: UiDishItem){
+        fun bind(uiDishItem: UiDishItem) {
             binding.item = uiDishItem
+            binding.soupImbCart.setOnClickListener {
+                cartIconClick.invoke(uiDishItem)
+            }
             binding.executePendingBindings()
         }
     }

@@ -4,26 +4,20 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
-import android.widget.Spinner
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.view.isGone
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.woowahan.android10.deliverbanchan.R
-import com.woowahan.android10.deliverbanchan.data.local.model.CartInfo
 import com.woowahan.android10.deliverbanchan.databinding.FragmentSoupdishBinding
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
-import com.woowahan.android10.deliverbanchan.presentation.view.CustomSortingSpinner
 import com.woowahan.android10.deliverbanchan.presentation.view.SortSpinnerAdapter
-import com.woowahan.android10.deliverbanchan.presentation.main.host.DishViewModel
-import com.woowahan.android10.deliverbanchan.presentation.common.dpToPx
 import com.woowahan.android10.deliverbanchan.presentation.common.showToast
 import com.woowahan.android10.deliverbanchan.presentation.common.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.toVisible
-import com.woowahan.android10.deliverbanchan.presentation.state.UiCartState
+import com.woowahan.android10.deliverbanchan.presentation.dialogs.CartBottomSheetFragment
+import com.woowahan.android10.deliverbanchan.presentation.main.common.MainGridAdapter
 import com.woowahan.android10.deliverbanchan.presentation.view.SpinnerEventListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -34,7 +28,7 @@ import javax.inject.Inject
 class SoupDishFragment: BaseFragment<FragmentSoupdishBinding>(R.layout.fragment_soupdish, "SoupDishFragment") {
 
     private val soupViewModel: SoupViewModel by activityViewModels()
-    @Inject lateinit var soupAdapter: SoupAdapter
+    @Inject lateinit var mainGridAdapter: MainGridAdapter
     @Inject lateinit var soupSpinnerAdapter: SortSpinnerAdapter
     private val itemSelectedListener = object : AdapterView.OnItemSelectedListener{
         override fun onItemSelected(
@@ -83,7 +77,7 @@ class SoupDishFragment: BaseFragment<FragmentSoupdishBinding>(R.layout.fragment_
             is UiState.IsLoading -> binding.soupPb.toVisible()
             is UiState.Success -> {
                 binding.soupPb.toGone()
-                soupAdapter.submitList(state.uiDishItems)
+                mainGridAdapter.submitList(state.uiDishItems)
             }
             is UiState.ShowToast -> {
                 binding.soupPb.toGone()
@@ -94,7 +88,15 @@ class SoupDishFragment: BaseFragment<FragmentSoupdishBinding>(R.layout.fragment_
 
     private fun initLayout() {
         with(binding){
-            soupDishRv.adapter = soupAdapter
+            soupDishRv.adapter = mainGridAdapter.apply {
+                cartIconClick = {
+                    val cartBottomSheetFragment = CartBottomSheetFragment()
+                    val bundle = Bundle()
+                    bundle.putParcelable("UiDishItem", it)
+                    cartBottomSheetFragment.arguments = bundle
+                    cartBottomSheetFragment.show(childFragmentManager, "CartBottomSheet")
+                }
+            }
             with(soupDishSp){
                 setWillNotDraw(false)
                 adapter = soupSpinnerAdapter.apply {
