@@ -3,6 +3,7 @@ package com.woowahan.android10.deliverbanchan.domain.usecase
 import android.util.Log
 import androidx.lifecycle.asLiveData
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
+import com.woowahan.android10.deliverbanchan.domain.common.convertPriceToInt
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.repository.remote.DishItemRepository
 import kotlinx.coroutines.Dispatchers
@@ -26,8 +27,8 @@ class GetSoupDishesUseCase @Inject constructor(
                 is BaseResult.Success -> {
                     BaseResult.Success(
                         response.data.mapIndexed { index, dishItem ->
-                            val sPrice = dishItem.sPrice.dropLast(1).replace(",", "").toInt()
-                            val nPrice = dishItem.nPrice.dropLast(1).replace(",", "").toInt()
+                            val sPrice = dishItem.sPrice.convertPriceToInt()
+                            val nPrice = dishItem.nPrice.convertPriceToInt()
                             val percentage = if (nPrice == 0) 0 else 100 - (sPrice.toDouble() / nPrice * 100).toInt()
                             UiDishItem(
                                 hash = dishItem.detailHash,
