@@ -21,8 +21,8 @@ class GetSoupDishListUseCase @Inject constructor(
         const val TAG = "GetSoupDishesUseCase"
     }
 
-    suspend operator fun invoke(): Flow<BaseResult<List<UiDishItem>, Int>> {
-        return dishItemRepository.getSoupDishes().map { response ->
+    suspend operator fun invoke(theme: String): Flow<BaseResult<List<UiDishItem>, Int>> {
+        return dishItemRepository.getDishesByTheme(theme).map { response ->
             when (response) {
                 is BaseResult.Success -> {
                     BaseResult.Success(

@@ -10,7 +10,7 @@ import javax.inject.Singleton
 
 @Singleton
 class CreateUiDishItemsUseCase @Inject constructor(
-    private val getMainDishListUseCase: GetMainDishListUseCase,
+    private val getDishListByThemeUseCase: GetDishListByThemeUseCase,
     private val crateEmptyUiDishItemUseCase: CreateEmptyUiDishItemUseCase,
     private val createUiDishItemUseCase: CreateUiDishItemUseCase,
     private val isExistCartInfoUseCase: IsExistCartInfoUseCase
@@ -66,10 +66,10 @@ class CreateUiDishItemsUseCase @Inject constructor(
 //        return result
 //    }
 
-    suspend operator fun invoke(): Flow<BaseResult<List<UiDishItem>, Int>> {
+    suspend operator fun invoke(theme: String): Flow<BaseResult<List<UiDishItem>, Int>> {
         lateinit var result: Flow<BaseResult<List<UiDishItem>, Int>>
         Log.e("CreateUiDishItemsUseCase", "${Thread.currentThread().name}")
-        result = getMainDishListUseCase()
+        result = getDishListByThemeUseCase(theme)
             .map { result ->
                 when (result) {
                     is BaseResult.Success -> {
