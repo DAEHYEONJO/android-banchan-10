@@ -1,5 +1,6 @@
 package com.woowahan.android10.deliverbanchan.domain.usecase
 
+import android.util.Log
 import com.woowahan.android10.deliverbanchan.data.remote.model.DishItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import javax.inject.Inject
@@ -8,6 +9,7 @@ import javax.inject.Singleton
 @Singleton
 class CreateUiDishItemUseCase @Inject constructor() {
     suspend operator fun invoke(dishItem: DishItem): UiDishItem {
+        Log.e("CreateUiDishItemUseCase", "called")
         var sPrice = dishItem.sPrice
         sPrice = sPrice.replace(",", "")
         sPrice = sPrice.removeRange(sPrice.length - 1, sPrice.length)
