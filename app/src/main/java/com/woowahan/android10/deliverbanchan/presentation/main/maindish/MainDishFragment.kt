@@ -12,8 +12,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentMaindishBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
+import com.woowahan.android10.deliverbanchan.presentation.common.showToast
+import com.woowahan.android10.deliverbanchan.presentation.common.toGone
+import com.woowahan.android10.deliverbanchan.presentation.common.toVisible
 import com.woowahan.android10.deliverbanchan.presentation.dialogs.CartBottomSheetFragment
 import com.woowahan.android10.deliverbanchan.presentation.main.soupdish.SoupAdapter
+import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -29,7 +33,7 @@ class MainDishFragment :
         super.onViewCreated(view, savedInstanceState)
 
         initView()
-        Log.e(TAG, "onViewCreated: ${binding.maindishTvHeader.paintFlags}", )
+        Log.e(TAG, "onViewCreated: ${binding.maindishTvHeader.paintFlags}")
     }
 
     private fun initView() {
@@ -47,14 +51,14 @@ class MainDishFragment :
                         adapter = mainDishGridAdapter
                         layoutManager = GridLayoutManager(requireContext(), 2)
                     }
-                    mainDishGridAdapter.submitList(mainDishViewModel.mainDishListFlow.value.toList())
+                    mainDishGridAdapter.submitList(mainDishViewModel.mainDishList.toList())
                 }
                 R.id.maindish_rb_linear -> {
                     binding.maindishRv.apply {
                         adapter = mainDishLinearAdapter
                         layoutManager = LinearLayoutManager(requireContext())
                     }
-                    mainDishLinearAdapter.submitList(mainDishViewModel.mainDishListFlow.value.toList())
+                    mainDishLinearAdapter.submitList(mainDishViewModel.mainDishList.toList())
                 }
             }
         }
@@ -62,7 +66,14 @@ class MainDishFragment :
 
     private fun setRecyclerView() {
 
-        mainDishGridAdapter = MainDishGridAdapter()
+        mainDishGridAdapter = MainDishGridAdapter {
+            Log.e("TAG", "cart icon clicked")
+            val cartBottomSheetFragment = CartBottomSheetFragment()
+            val bundle = Bundle()
+            bundle.putParcelable("UiDishItem", it)
+            cartBottomSheetFragment.arguments = bundle
+            cartBottomSheetFragment.show(childFragmentManager, "CartBottomSheet")
+        }
 
         mainDishLinearAdapter = MainDishLinearAdapter {
             Log.e("TAG", "cart icon clicked")
@@ -82,9 +93,23 @@ class MainDishFragment :
     private fun collectData() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                mainDishViewModel.mainDishListFlow.collect {
-                    mainDishGridAdapter.submitList(it.toList())
+                mainDishViewModel.mainDishState.collect {
+                    handleStateChange(it)
                 }
+            }
+        }
+    }
+
+    private fun handleStateChange(state: UiState) {
+        when (state) {
+            is UiState.IsLoading -> binding.maindishPb.toVisible()
+            is UiState.Success -> {
+                binding.maindishPb.toGone()
+                mainDishGridAdapter.submitList(state.uiDishItems)
+            }
+            is UiState.ShowToast -> {
+                binding.maindishPb.toGone()
+                requireContext().showToast(state.message)
             }
         }
     }

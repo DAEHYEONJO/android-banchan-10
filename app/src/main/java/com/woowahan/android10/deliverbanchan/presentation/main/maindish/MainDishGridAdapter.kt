@@ -11,7 +11,9 @@ import com.woowahan.android10.deliverbanchan.databinding.ItemSoupBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 
 
-class MainDishGridAdapter : ListAdapter<UiDishItem, MainDishGridAdapter.ViewHolder>(diffUtil) {
+class MainDishGridAdapter(
+    private val cartIconClick: (uiDishItem: UiDishItem) -> Unit
+) : ListAdapter<UiDishItem, MainDishGridAdapter.ViewHolder>(diffUtil) {
 
     companion object {
         const val TAG = "MainDishGridAdapter"
@@ -29,10 +31,13 @@ class MainDishGridAdapter : ListAdapter<UiDishItem, MainDishGridAdapter.ViewHold
     inner class ViewHolder(private val binding: ItemMaindishGridBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(uiDishItem: UiDishItem, position: Int) {
+        fun bind(uiDishItem: UiDishItem, position: Int, cartIconClick: (uiDishItem: UiDishItem) -> Unit) {
             binding.item = uiDishItem
             binding.viewLeft.isVisible = (position % 2 == 0)
             binding.viewRight.isVisible = (position % 2 != 0)
+            binding.maindishImbCart.setOnClickListener {
+                cartIconClick.invoke(uiDishItem)
+            }
             binding.executePendingBindings()
         }
     }
@@ -44,6 +49,6 @@ class MainDishGridAdapter : ListAdapter<UiDishItem, MainDishGridAdapter.ViewHold
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position), position)
+        holder.bind(getItem(position), position, cartIconClick)
     }
 }
