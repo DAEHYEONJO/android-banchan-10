@@ -56,6 +56,7 @@ class SideDishFragment: BaseFragment<FragmentSidedishBinding>(R.layout.fragment_
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.vm = sideDishViewModel
         initLayout()
         initObserver()
     }
