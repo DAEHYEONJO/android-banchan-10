@@ -15,8 +15,8 @@ class GetSideDishListUseCase @Inject constructor(
     private val isExistCartInfoUseCase: IsExistCartInfoUseCase
 ) {
 
-    suspend operator fun invoke(): Flow<BaseResult<List<UiDishItem>, Int>> {
-        return dishItemRepository.getSideDishes().map { response ->
+    suspend operator fun invoke(theme: String): Flow<BaseResult<List<UiDishItem>, Int>> {
+        return dishItemRepository.getDishesByTheme(theme).map { response ->
             when (response) {
                 is BaseResult.Success -> {
                     BaseResult.Success(

@@ -5,7 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class DishSide(
+data class DishResponse(
     @SerialName("body")
     val body: List<DishItem>,
     @SerialName("statusCode")

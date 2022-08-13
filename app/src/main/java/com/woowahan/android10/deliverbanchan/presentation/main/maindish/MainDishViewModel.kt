@@ -28,7 +28,7 @@ class MainDishViewModel @Inject constructor(
     fun getMainDishList() {
         viewModelScope.launch {
             Log.e("MainDishViewModel", "${Thread.currentThread().name}")
-            createUiDishItemsUseCase().onStart {
+            createUiDishItemsUseCase("main").onStart {
                 Log.e("MainDishViewModel", "onStart")
                 Log.e("MainDishViewModel", "${Thread.currentThread().name}")
                 setLoading()

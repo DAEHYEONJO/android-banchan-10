@@ -43,7 +43,7 @@ class SideDishViewModel @Inject constructor(
     }
 
     private fun getSideDishList() = viewModelScope.launch {
-        getSideDishListUseCase().onStart {
+        getSideDishListUseCase("side").onStart {
             setLoading()
         }.catch { exception ->
             hideLoading()

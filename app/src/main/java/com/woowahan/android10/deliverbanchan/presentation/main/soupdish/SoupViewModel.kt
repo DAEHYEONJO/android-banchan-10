@@ -48,7 +48,7 @@ class SoupViewModel @Inject constructor(
     }
 
     private fun getSoupDishes() = viewModelScope.launch {
-        getSoupDishesUseCase().onStart {
+        getSoupDishesUseCase("soup").onStart {
             setLoading()
         }.catch { exception ->
             hideLoading()

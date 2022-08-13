@@ -8,10 +8,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class GetMainDishListUseCase @Inject constructor(
+class GetDishListByThemeUseCase @Inject constructor(
     private val dishItemRepository: DishItemRepository
 ) {
-    suspend operator fun invoke(): Flow<BaseResult<List<DishItem>, Int>> {
-        return dishItemRepository.getMainDishes()
+    suspend operator fun invoke(theme: String): Flow<BaseResult<List<DishItem>, Int>> {
+        return dishItemRepository.getDishesByTheme(theme)
     }
 }
