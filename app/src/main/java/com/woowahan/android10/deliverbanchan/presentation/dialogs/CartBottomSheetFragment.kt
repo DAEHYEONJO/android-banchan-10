@@ -6,12 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentCartBottomSheetBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class CartBottomSheetFragment : BottomSheetDialogFragment() {
@@ -38,11 +42,16 @@ class CartBottomSheetFragment : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentCartBottomSheetBinding.inflate(layoutInflater, container, false)
+        binding.lifecycleOwner = this.viewLifecycleOwner
 
         arguments?.let {
             val uiDishItem = it.getParcelable<UiDishItem>("UiDishItem")
             Log.e("AppTest", "$uiDishItem")
-            binding.item = uiDishItem
+            uiDishItem?.let {
+                cartBottomSheetViewModel.currentUiDishItem.value = it
+                //binding.item = it
+                binding.viewModel = cartBottomSheetViewModel
+            }
         }
 
         return binding.root
@@ -51,6 +60,19 @@ class CartBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
+        initView()
     }
+
+    private fun initView() {
+        setButton()
+        cartBottomSheetViewModel.getCartInfoByHash()
+        //observeItemCount()
+    }
+
+    private fun setButton() {
+        binding.btnGoToCart.setOnClickListener {
+            cartBottomSheetViewModel.getCartInfoByHash()
+        }
+    }
+
 }
