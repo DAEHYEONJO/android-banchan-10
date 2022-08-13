@@ -10,7 +10,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class GetSideDishListUseCase @Inject constructor(
+class GetThemeDishListUseCase @Inject constructor(
     private val dishItemRepository: DishItemRepository,
     private val isExistCartInfoUseCase: IsExistCartInfoUseCase
 ) {
