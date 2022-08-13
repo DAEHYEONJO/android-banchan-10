@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
-import com.woowahan.android10.deliverbanchan.domain.usecase.GetSoupDishListUseCase
+import com.woowahan.android10.deliverbanchan.domain.usecase.GetThemeDishListUseCase
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SoupViewModel @Inject constructor(
-    private val getSoupDishesUseCase: GetSoupDishListUseCase
+    private val getSoupDishesUseCase: GetThemeDishListUseCase
 ) : ViewModel() {
 
     companion object {

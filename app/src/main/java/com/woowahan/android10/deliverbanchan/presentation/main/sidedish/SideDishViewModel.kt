@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
-import com.woowahan.android10.deliverbanchan.domain.usecase.GetSideDishListUseCase
+import com.woowahan.android10.deliverbanchan.domain.usecase.GetThemeDishListUseCase
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SideDishViewModel @Inject constructor(
-    private val getSideDishListUseCase: GetSideDishListUseCase
+    private val getSideDishListUseCase: GetThemeDishListUseCase
 ): ViewModel(){
 
     private val _sideState = MutableStateFlow<UiState>(UiState.Init)
