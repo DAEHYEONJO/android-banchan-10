@@ -10,6 +10,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.ActivityMainBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseActivity
+import com.woowahan.android10.deliverbanchan.presentation.main.sidedish.SideDishViewModel
 import com.woowahan.android10.deliverbanchan.presentation.main.soupdish.SoupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -20,6 +21,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main, "
 
     private val dishViewModel: DishViewModel by viewModels()
     private val soupViewModel: SoupViewModel by viewModels()
+    private val sideDishViewModel: SideDishViewModel by viewModels()
     private lateinit var tabTitleArray: Array<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {

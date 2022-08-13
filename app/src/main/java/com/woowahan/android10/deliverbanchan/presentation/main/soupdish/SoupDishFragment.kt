@@ -24,6 +24,7 @@ import com.woowahan.android10.deliverbanchan.presentation.common.showToast
 import com.woowahan.android10.deliverbanchan.presentation.common.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.toVisible
 import com.woowahan.android10.deliverbanchan.presentation.state.UiCartState
+import com.woowahan.android10.deliverbanchan.presentation.view.SpinnerEventListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -35,15 +36,6 @@ class SoupDishFragment: BaseFragment<FragmentSoupdishBinding>(R.layout.fragment_
     private val soupViewModel: SoupViewModel by activityViewModels()
     @Inject lateinit var soupAdapter: SoupAdapter
     @Inject lateinit var soupSpinnerAdapter: SortSpinnerAdapter
-    private val spinnerEventsListener = object : CustomSortingSpinner.OnSpinnerEventsListener{
-        override fun opPopUpWindowOpened(spinner: Spinner) {
-            spinner.background = AppCompatResources.getDrawable(requireContext(), R.drawable.bg_sort_spinner_up)
-        }
-
-        override fun onPopUpWindowClosed(spinner: Spinner) {
-            spinner.background = AppCompatResources.getDrawable(requireContext(), R.drawable.bg_sort_spinner_down)
-        }
-    }
     private val itemSelectedListener = object : AdapterView.OnItemSelectedListener{
         override fun onItemSelected(
             p0: AdapterView<*>?,
@@ -85,15 +77,6 @@ class SoupDishFragment: BaseFragment<FragmentSoupdishBinding>(R.layout.fragment_
         }
     }
 
-    private fun handleUiCartStateChange(state: UiCartState) {
-        when(state){
-            is UiCartState.ShowToast -> requireContext().showToast(message = state.message)
-            is UiCartState.Success -> {
-                Log.e(TAG, "handleUiCartStateChange: ${state.uiDishItems}", )
-            }
-        }
-    }
-
     private fun handleStateChange(state: UiState) {
         // todo state 에 따른 처리 추가 구현 필요함
         when(state){
@@ -113,10 +96,9 @@ class SoupDishFragment: BaseFragment<FragmentSoupdishBinding>(R.layout.fragment_
         with(binding){
             soupDishRv.adapter = soupAdapter
             with(soupDishSp){
-                dropDownVerticalOffset = dpToPx(requireContext(), 32).toInt()
                 setWillNotDraw(false)
                 adapter = soupSpinnerAdapter.apply {
-                    setSpinnerEventsListener(spinnerEventsListener)
+                    setSpinnerEventsListener(SpinnerEventListener(requireContext()))
                     onItemSelectedListener = itemSelectedListener
                 }
             }

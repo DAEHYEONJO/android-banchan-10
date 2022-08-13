@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllCartInfoUseCase
 import com.woowahan.android10.deliverbanchan.presentation.state.UiCartState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
