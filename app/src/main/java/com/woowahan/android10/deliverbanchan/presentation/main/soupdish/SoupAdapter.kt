@@ -8,10 +8,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.databinding.ItemSoupBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
+import dagger.hilt.android.scopes.FragmentScoped
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
+@FragmentScoped
 class SoupAdapter @Inject constructor(): ListAdapter<UiDishItem, SoupAdapter.ViewHolder>(diffUtil) {
 
     companion object{
