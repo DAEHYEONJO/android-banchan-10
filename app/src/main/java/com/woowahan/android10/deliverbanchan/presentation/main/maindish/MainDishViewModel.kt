@@ -5,10 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
-import com.woowahan.android10.deliverbanchan.domain.usecase.CreateEmptyUiDishItemUseCase
-import com.woowahan.android10.deliverbanchan.domain.usecase.CreateUiDishItemUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.CreateUiDishItemsUseCase
-import com.woowahan.android10.deliverbanchan.domain.usecase.GetMainDishListUseCase
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
@@ -30,9 +27,10 @@ class MainDishViewModel @Inject constructor(
 
     fun getMainDishList() {
         viewModelScope.launch {
-
+            Log.e("MainDishViewModel", "${Thread.currentThread().name}")
             createUiDishItemsUseCase().onStart {
                 Log.e("MainDishViewModel", "onStart")
+                Log.e("MainDishViewModel", "${Thread.currentThread().name}")
                 setLoading()
             }.catch { exception ->
                 hideLoading()

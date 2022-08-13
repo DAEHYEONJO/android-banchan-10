@@ -16,42 +16,90 @@ class CreateUiDishItemsUseCase @Inject constructor(
     private val isExistCartInfoUseCase: IsExistCartInfoUseCase
 ) {
 
-    val supervisorJob = SupervisorJob()
-    val scope = CoroutineScope(Dispatchers.IO + supervisorJob)
+//    val supervisorJob = SupervisorJob()
+//    val scope = CoroutineScope(Dispatchers.IO + supervisorJob)
+
+//    suspend operator fun invoke(): Flow<BaseResult<List<UiDishItem>, Int>> {
+//        lateinit var result: Flow<BaseResult<List<UiDishItem>, Int>>
+//
+//        val supervisorJob = SupervisorJob()
+//        val scope = CoroutineScope(Dispatchers.IO + supervisorJob)
+//
+//        scope.launch {
+//            Log.e("CreateUiDishItemsUseCase", "1 ${Thread.currentThread().name}")
+//            result = getMainDishListUseCase()
+//                .map { result ->
+//                    when (result) {
+//                        is BaseResult.Success -> {
+//                            Log.e("CreateUiDishItemsUseCase", "success")
+//
+//                            val resultUiDishItemList =
+//                                MutableList<UiDishItem>(result.data.size) { crateEmptyUiDishItemUseCase() }
+//
+//                            result.data.mapIndexed { index, dishItem ->
+//                                Log.e("CreateUiDishItemsUseCase", "loop")
+////                                coroutineScope { // 각각 coroutineScope 블록 순차적으로 불림
+////                                    async(Dispatchers.IO) {
+////                                        Log.e("CreateUiDishItemsUseCase", "in async")
+////                                        resultUiDishItemList[index] = createUiDishItemUseCase(dishItem)
+////                                    }
+////                                }
+//                                CoroutineScope(Dispatchers.IO).async {
+//                                    Log.e("CreateUiDishItemsUseCase", "async index : ${index}")
+//                                    Log.e("CreateUiDishItemsUseCase", "2 ${Thread.currentThread().name}")
+//                                    resultUiDishItemList[index] = createUiDishItemUseCase(dishItem)
+//                                }
+//                            }.awaitAll()
+//
+//                            Log.e("CreateUiDishItemsUseCase", "await all")
+//                            BaseResult.Success(resultUiDishItemList)
+//                        }
+//                        is BaseResult.Error -> {
+//                            // Error 처리
+//                            Log.e("CreateUiDishItemsUseCase", "error")
+//                            BaseResult.Error(errorCode = result.errorCode)
+//                        }
+//                    }
+//                }
+//        }.join() // join 없으면 에러
+//
+//        return result
+//    }
 
     suspend operator fun invoke(): Flow<BaseResult<List<UiDishItem>, Int>> {
         lateinit var result: Flow<BaseResult<List<UiDishItem>, Int>>
-        scope.launch {
-            result = getMainDishListUseCase()
-                .map { result ->
-                    when (result) {
-                        is BaseResult.Success -> {
-                            Log.e("CreateUiDishItemsUseCase", "success")
+        Log.e("CreateUiDishItemsUseCase", "${Thread.currentThread().name}")
+        result = getMainDishListUseCase()
+            .map { result ->
+                when (result) {
+                    is BaseResult.Success -> {
+                        Log.e("CreateUiDishItemsUseCase", "success")
 
-                            val resultUiDishItemList =
-                                MutableList<UiDishItem>(result.data.size) { crateEmptyUiDishItemUseCase() }
+                        val resultUiDishItemList =
+                            MutableList<UiDishItem>(result.data.size) { crateEmptyUiDishItemUseCase() }
 
+                        coroutineScope { // coroutineScope 자체가 suspend 함수
+                            Log.e("CreateUiDishItemsUseCase", "${Thread.currentThread().name}")
                             result.data.mapIndexed { index, dishItem ->
                                 Log.e("CreateUiDishItemsUseCase", "loop")
-                                CoroutineScope(Dispatchers.IO).async {
-                                    Log.e("CreateUiDishItemsUseCase", "in async")
+                                async(Dispatchers.IO) {
+                                    Log.e("CreateUiDishItemsUseCase", "async index : ${index}")
                                     resultUiDishItemList[index] = createUiDishItemUseCase(dishItem)
                                 }
                                 //resultUiDishItemList[index] = createUiDishItemUseCase(dishItem)
                             }.awaitAll()
+                        }
 
-                            Log.e("CreateUiDishItemsUseCase", "await all")
-                            BaseResult.Success(resultUiDishItemList)
-                        }
-                        is BaseResult.Error -> {
-                            // Error 처리
-                            Log.e("CreateUiDishItemsUseCase", "error")
-                            BaseResult.Error(errorCode = result.errorCode)
-                        }
+                        Log.e("CreateUiDishItemsUseCase", "await all")
+                        BaseResult.Success(resultUiDishItemList)
+                    }
+                    is BaseResult.Error -> {
+                        // Error 처리
+                        Log.e("CreateUiDishItemsUseCase", "error")
+                        BaseResult.Error(errorCode = result.errorCode)
                     }
                 }
-        }.join() // join 없으면 에러
-
+            }
         return result
     }
 }
