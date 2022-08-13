@@ -92,6 +92,8 @@
             android:id="@+id/maindish_rv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/rv_space_8dp"
+            android:layout_marginEnd="@dimen/base_space_16dp"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
         <ProgressBar

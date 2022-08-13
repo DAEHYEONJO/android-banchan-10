@@ -93,8 +93,9 @@
             android:layout_marginStart="@dimen/rv_space_8dp"
             android:layout_marginEnd="@dimen/base_space_16dp"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:spanCount="2"
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+            app:spanCount="2" />
+
         <ProgressBar
             android:id="@+id/soup_pb"
             android:layout_width="wrap_content"
