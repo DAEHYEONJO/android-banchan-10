@@ -36,7 +36,6 @@ class SoupDishFragment: BaseFragment<FragmentSoupdishBinding>(R.layout.fragment_
     private val soupViewModel: SoupViewModel by activityViewModels()
     @Inject lateinit var soupAdapter: SoupAdapter
     @Inject lateinit var soupSpinnerAdapter: SortSpinnerAdapter
-
     private val itemSelectedListener = object : AdapterView.OnItemSelectedListener{
         override fun onItemSelected(
             p0: AdapterView<*>?,
@@ -97,7 +96,6 @@ class SoupDishFragment: BaseFragment<FragmentSoupdishBinding>(R.layout.fragment_
         with(binding){
             soupDishRv.adapter = soupAdapter
             with(soupDishSp){
-                dropDownVerticalOffset = dpToPx(requireContext(), 32).toInt()
                 setWillNotDraw(false)
                 adapter = soupSpinnerAdapter.apply {
                     setSpinnerEventsListener(SpinnerEventListener(requireContext()))

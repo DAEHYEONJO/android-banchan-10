@@ -10,11 +10,13 @@ import androidx.lifecycle.lifecycleScope
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentSidedishBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
+import com.woowahan.android10.deliverbanchan.presentation.common.dpToPx
 import com.woowahan.android10.deliverbanchan.presentation.common.showToast
 import com.woowahan.android10.deliverbanchan.presentation.common.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.toVisible
 import com.woowahan.android10.deliverbanchan.presentation.main.soupdish.SoupAdapter
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
+import com.woowahan.android10.deliverbanchan.presentation.view.SpinnerEventListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -34,7 +36,7 @@ class SideDishFragment: BaseFragment<FragmentSidedishBinding>(R.layout.fragment_
 
     private fun initObserver() {
         with(sideDishViewModel){
-            sideState.flowWithLifecycle(lifecycle, androidx.lifecycle.Lifecycle.State.STARTED)
+            sideState.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
                 .onEach { state ->
                     Log.e(TAG, "initObserver: $state", )
                     handleStateChange(state)
@@ -59,6 +61,14 @@ class SideDishFragment: BaseFragment<FragmentSidedishBinding>(R.layout.fragment_
     private fun initLayout() {
         with(binding){
             sideDishRv.adapter = sideDishAdapter
+            with(sideDishSp){
+                dropDownVerticalOffset = dpToPx(requireContext(), 32).toInt()
+                setWillNotDraw(false)
+//                adapter = soupSpinnerAdapter.apply {
+//                    setSpinnerEventsListener(SpinnerEventListener(requireContext()))
+//                    onItemSelectedListener = itemSelectedListener
+//                }
+            }
         }
     }
 }
