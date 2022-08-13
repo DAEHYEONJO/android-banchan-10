@@ -66,7 +66,14 @@ class MainDishFragment :
 
     private fun setRecyclerView() {
 
-        mainDishGridAdapter = MainDishGridAdapter()
+        mainDishGridAdapter = MainDishGridAdapter {
+            Log.e("TAG", "cart icon clicked")
+            val cartBottomSheetFragment = CartBottomSheetFragment()
+            val bundle = Bundle()
+            bundle.putParcelable("UiDishItem", it)
+            cartBottomSheetFragment.arguments = bundle
+            cartBottomSheetFragment.show(childFragmentManager, "CartBottomSheet")
+        }
 
         mainDishLinearAdapter = MainDishLinearAdapter {
             Log.e("TAG", "cart icon clicked")
