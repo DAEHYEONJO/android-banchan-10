@@ -6,7 +6,7 @@ import javax.inject.Singleton
 
 @Singleton
 class CreateEmptyUiDishItemUseCase @Inject constructor() {
-    suspend operator fun invoke() = UiDishItem(
+    operator fun invoke() = UiDishItem(
         "", "", false, "", "", 0, 0, 0, 0
     )
 }
