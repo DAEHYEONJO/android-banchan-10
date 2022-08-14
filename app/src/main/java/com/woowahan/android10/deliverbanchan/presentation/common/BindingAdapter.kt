@@ -3,6 +3,7 @@ package com.woowahan.android10.deliverbanchan.presentation.common
 import android.graphics.Paint
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -47,4 +48,9 @@ fun TextView.setCartTextViewVisibility(cartIconText: String){
     Log.e("BindingAdapter", "setCartTextViewVisibility: $cartIconText", )
     visibility = if (cartIconText=="") View.GONE
     else View.VISIBLE
+}
+
+@BindingAdapter("app:setBottomSheetButtonText")
+fun Button.setBottomSheetButtonText(itemCount: Int) {
+    text = "${itemCount}개 담기"
 }

@@ -1,4 +1,4 @@
-package com.woowahan.android10.deliverbanchan.presentation.dialogs
+package com.woowahan.android10.deliverbanchan.presentation.dialogs.bottomsheet
 
 import android.os.Bundle
 import android.util.Log
@@ -14,6 +14,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentCartBottomSheetBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
+import com.woowahan.android10.deliverbanchan.presentation.common.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -61,18 +62,26 @@ class CartBottomSheetFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initView()
+        observeInsertResult()
     }
 
     private fun initView() {
-        setButton()
         cartBottomSheetViewModel.getCartInfoByHash()
-        //observeItemCount()
     }
 
-    private fun setButton() {
-        binding.btnGoToCart.setOnClickListener {
-            cartBottomSheetViewModel.getCartInfoByHash()
+    private fun observeInsertResult() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                cartBottomSheetViewModel.insertSuccessEvent.collect {
+                    if(it) {
+                        // dialog 작업 예정
+                        Log.e("CartBottomSheetFragment", "dialog open")
+
+                    } else {
+                        requireContext().showToast("장바구니 담기에 실패했습니다")
+                    }
+                }
+            }
         }
     }
-
 }

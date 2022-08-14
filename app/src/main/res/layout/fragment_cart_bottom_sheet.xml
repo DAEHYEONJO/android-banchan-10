@@ -12,7 +12,7 @@
 
         <variable
             name="viewModel"
-            type="com.woowahan.android10.deliverbanchan.presentation.dialogs.CartBottomSheetViewModel" />
+            type="com.woowahan.android10.deliverbanchan.presentation.dialogs.bottomsheet.CartBottomSheetViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -175,9 +175,11 @@
                 android:layout_marginTop="24dp"
                 android:backgroundTint="@color/primary_main"
                 android:elevation="2dp"
-                android:text="1개 담기"
+                tools:text="1개 담기"
+                app:setBottomSheetButtonText="@{viewModel.itemCount}"
                 android:textColor="@color/white"
-                app:layout_constraintTop_toBottomOf="@id/ib_plus" />
+                app:layout_constraintTop_toBottomOf="@id/ib_plus"
+                android:onClick="@{() -> viewModel.insertCartInfo()}"/>
 
             <View
                 android:id="@+id/view_bottom"
