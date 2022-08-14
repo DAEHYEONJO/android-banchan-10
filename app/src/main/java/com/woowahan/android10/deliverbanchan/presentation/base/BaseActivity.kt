@@ -20,6 +20,7 @@ abstract class BaseActivity<T: ViewDataBinding>(
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate: ")
         _binding = DataBindingUtil.setContentView(this, layoutResId)
+        binding.lifecycleOwner = this
     }
 
     override fun onStart() {

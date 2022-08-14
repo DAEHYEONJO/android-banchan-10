@@ -151,6 +151,12 @@
     </style>
 
     <!-- Appearance KoPubWorldDotumPro -->
+    <style name="Widget.TextView.KoPubWorldDotumPro_GreyScaleWhite8_Bold.TextAppearance" parent="">
+        <item name="android:textColor">@color/grey_scale_white</item>
+        <item name="android:textSize">@dimen/text_size_8sp</item>
+        <item name="android:fontFamily">@font/kopub_world_dotum_pro_bold_700</item>
+    </style>
+
     <style name="Widget.TextView.KoPubWorldDotumPro_GreyScaleBlack14_Bold.TextAppearance" parent="">
         <item name="android:textColor">@color/grey_scale_black</item>
         <item name="android:textSize">@dimen/text_size_14sp</item>
@@ -334,13 +340,18 @@
     </style>
 
     <!-- Style KoPubWorldDotumPro -->
+    <style name="Widget.TextView.KoPubWorldDotumPro_GreyScaleWhite8_Bold.Style" parent="">
+        <item name="android:textAppearance">
+            @style/Widget.TextView.KoPubWorldDotumPro_GreyScaleWhite8_Bold.TextAppearance
+        </item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
     <style name="Widget.TextView.KoPubWorldDotumPro_GreyScaleBlack14_Bold.Style" parent="">
         <item name="android:textAppearance">
             @style/Widget.TextView.KoPubWorldDotumPro_GreyScaleBlack14_Bold.TextAppearance
         </item>
         <item name="android:includeFontPadding">false</item>
     </style>
-
     <style name="Widget.TextView.KoPubWorldDotumPro_GreyScaleBlack16_Bold.Style" parent="">
         <item name="android:textAppearance">
             @style/Widget.TextView.KoPubWorldDotumPro_GreyScaleBlack16_Bold.TextAppearance
