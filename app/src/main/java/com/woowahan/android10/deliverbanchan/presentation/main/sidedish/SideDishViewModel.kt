@@ -1,9 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.main.sidedish
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetThemeDishListUseCase
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
@@ -48,7 +45,7 @@ class SideDishViewModel @Inject constructor(
         }.catch { exception ->
             hideLoading()
             showToast(exception.message.toString())
-        }.flowOn(Dispatchers.IO).collect { result ->
+        }.collect { result ->
             hideLoading()
             when (result) {
                 is BaseResult.Success -> {

@@ -53,7 +53,7 @@ class SoupViewModel @Inject constructor(
         }.catch { exception ->
             hideLoading()
             showToast(exception.message.toString())
-        }.flowOn(Dispatchers.IO).collect { result ->
+        }.collect { result ->
             hideLoading()
             when (result) {
                 is BaseResult.Success -> {
