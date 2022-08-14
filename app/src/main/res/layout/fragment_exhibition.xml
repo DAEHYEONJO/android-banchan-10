@@ -55,6 +55,7 @@
                     </com.google.android.material.card.MaterialCardView>
 
                     <TextView
+                        style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack32_Normal.Style"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/base_space_16dp"
@@ -62,7 +63,6 @@
                         android:layout_marginBottom="36dp"
                         android:includeFontPadding="false"
                         android:text="@string/main_header_exhibition"
-                        style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack32_Normal.Style"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -77,7 +77,15 @@
             android:id="@+id/exhibition_rv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
+
+        <ProgressBar
+            android:id="@+id/maindish_pb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminateBehavior="repeat"
+            android:indeterminateTint="@color/progress_indicator" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

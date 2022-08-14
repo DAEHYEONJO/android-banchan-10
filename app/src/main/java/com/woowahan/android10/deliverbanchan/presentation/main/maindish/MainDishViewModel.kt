@@ -27,15 +27,11 @@ class MainDishViewModel @Inject constructor(
 
     fun getMainDishList() {
         viewModelScope.launch {
-            Log.e("MainDishViewModel", "${Thread.currentThread().name}")
             createUiDishItemsUseCase("main").onStart {
-                Log.e("MainDishViewModel", "onStart")
-                Log.e("MainDishViewModel", "${Thread.currentThread().name}")
                 setLoading()
             }.catch { exception ->
                 hideLoading()
                 Log.e("MainDishViewModel", "exception : ${exception.message}")
-                Log.e("MainDishViewModel", "${exception}")
                 showToast(exception.message.toString())
             }.flowOn(Dispatchers.IO).collect { result ->
                 hideLoading()

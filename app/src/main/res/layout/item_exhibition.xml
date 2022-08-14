@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="uiExhibitionItem"
+            type="com.woowahan.android10.deliverbanchan.domain.model.UiExhibitionItem" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/exhibition_tv_category_name"
+            style="@style/Widget.TextView.KoPubWorldDotumPro_GreyScaleBlack16_Bold.Style"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_marginStart="@dimen/base_space_16dp"
+            android:gravity="center_vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="풍성한 고기반찬"
+            android:text="@{uiExhibitionItem.categoryName}"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/exhibition_rv_horizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/base_space_16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/exhibition_tv_category_name" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

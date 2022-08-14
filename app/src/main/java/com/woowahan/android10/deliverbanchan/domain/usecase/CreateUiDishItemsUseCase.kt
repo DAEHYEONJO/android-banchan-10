@@ -11,7 +11,7 @@ import javax.inject.Singleton
 @Singleton
 class CreateUiDishItemsUseCase @Inject constructor(
     private val getDishListByThemeUseCase: GetDishListByThemeUseCase,
-    private val crateEmptyUiDishItemUseCase: CreateEmptyUiDishItemUseCase,
+    private val createEmptyUiDishItemUseCase: CreateEmptyUiDishItemUseCase,
     private val createUiDishItemUseCase: CreateUiDishItemUseCase,
     private val isExistCartInfoUseCase: IsExistCartInfoUseCase
 ) {
@@ -34,7 +34,7 @@ class CreateUiDishItemsUseCase @Inject constructor(
 //                            Log.e("CreateUiDishItemsUseCase", "success")
 //
 //                            val resultUiDishItemList =
-//                                MutableList<UiDishItem>(result.data.size) { crateEmptyUiDishItemUseCase() }
+//                                MutableList<UiDishItem>(result.data.size) { createEmptyUiDishItemUseCase() }
 //
 //                            result.data.mapIndexed { index, dishItem ->
 //                                Log.e("CreateUiDishItemsUseCase", "loop")
@@ -76,7 +76,7 @@ class CreateUiDishItemsUseCase @Inject constructor(
                         Log.e("CreateUiDishItemsUseCase", "success")
 
                         val resultUiDishItemList =
-                            MutableList<UiDishItem>(result.data.size) { crateEmptyUiDishItemUseCase() }
+                            MutableList<UiDishItem>(result.data.size) { createEmptyUiDishItemUseCase() }
 
                         coroutineScope { // coroutineScope 자체가 suspend 함수
                             Log.e("CreateUiDishItemsUseCase", "${Thread.currentThread().name}")
@@ -90,7 +90,6 @@ class CreateUiDishItemsUseCase @Inject constructor(
                             }.awaitAll()
                         }
 
-                        Log.e("CreateUiDishItemsUseCase", "await all")
                         BaseResult.Success(resultUiDishItemList)
                     }
                     is BaseResult.Error -> {
