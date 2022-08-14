@@ -1,4 +1,4 @@
-package com.woowahan.android10.deliverbanchan.presentation.main.maindish
+package com.woowahan.android10.deliverbanchan.presentation.main.exhibition
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,14 +6,12 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.woowahan.android10.deliverbanchan.databinding.ItemMaindishGridBinding
-import com.woowahan.android10.deliverbanchan.databinding.ItemSoupBinding
+import com.woowahan.android10.deliverbanchan.databinding.ItemExhibitionHorizontalBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 
-
-class MainDishGridAdapter(
+class ExhibitionHorizontalAdapter(
     private val cartIconClick: (uiDishItem: UiDishItem) -> Unit
-) : ListAdapter<UiDishItem, MainDishGridAdapter.ViewHolder>(diffUtil) {
+) : ListAdapter<UiDishItem, ExhibitionHorizontalAdapter.ViewHolder>(diffUtil) {
 
     companion object {
         const val TAG = "MainDishGridAdapter"
@@ -28,13 +26,13 @@ class MainDishGridAdapter(
         }
     }
 
-    inner class ViewHolder(private val binding: ItemMaindishGridBinding) :
+    inner class ViewHolder(private val binding: ItemExhibitionHorizontalBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(uiDishItem: UiDishItem, position: Int, cartIconClick: (uiDishItem: UiDishItem) -> Unit) {
             binding.item = uiDishItem
-            binding.viewLeft.isVisible = (position % 2 == 0)
-            binding.viewRight.isVisible = (position % 2 != 0)
+            binding.viewLeft.isVisible = (position == 0)
+            binding.viewRight.isVisible = (position == currentList.size - 1)
             binding.maindishImbCart.setOnClickListener {
                 cartIconClick.invoke(uiDishItem)
             }
@@ -44,7 +42,7 @@ class MainDishGridAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
-            ItemMaindishGridBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemExhibitionHorizontalBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 

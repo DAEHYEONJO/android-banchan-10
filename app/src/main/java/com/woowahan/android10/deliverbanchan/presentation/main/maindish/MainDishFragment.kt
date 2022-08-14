@@ -41,7 +41,7 @@ class MainDishFragment :
     private fun initView() {
         setRadioGroupListener()
         setRecyclerView()
-        collectData()
+        initObserver()
         getData()
     }
 
@@ -93,7 +93,7 @@ class MainDishFragment :
         }
     }
 
-    private fun collectData() {
+    private fun initObserver() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mainDishViewModel.mainDishState.collect {
