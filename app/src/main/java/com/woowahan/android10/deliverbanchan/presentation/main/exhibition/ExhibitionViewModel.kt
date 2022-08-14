@@ -3,6 +3,7 @@ package com.woowahan.android10.deliverbanchan.presentation.main.exhibition
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
+import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiExhibitionItem
 import com.woowahan.android10.deliverbanchan.domain.usecase.CreateUiExhibitionItemsUseCase
 import com.woowahan.android10.deliverbanchan.presentation.state.ExhibitionUiState

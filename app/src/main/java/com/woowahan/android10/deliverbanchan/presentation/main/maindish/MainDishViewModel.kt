@@ -58,4 +58,19 @@ class MainDishViewModel @Inject constructor(
         _mainDishState.value = UiState.ShowToast(message)
     }
 
+    fun changeMainDishItemIsInserted(hash: String){
+        ((_mainDishState.value as UiState.Success).uiDishItems).let { uiDishList ->
+            val newList = mutableListOf<UiDishItem>().apply {
+                uiDishList.forEach { uiDishItem ->
+                    if (uiDishItem.hash == hash){
+                        add(uiDishItem.copy(isInserted = true))
+                    }else{
+                        add(uiDishItem)
+                    }
+                }
+            }
+            mainDishList = newList
+            _mainDishState.value = UiState.Success(newList)
+        }
+    }
 }
