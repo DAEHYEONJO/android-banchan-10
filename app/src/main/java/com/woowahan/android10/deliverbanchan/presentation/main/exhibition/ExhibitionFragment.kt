@@ -13,6 +13,7 @@ import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
 import com.woowahan.android10.deliverbanchan.presentation.common.showToast
 import com.woowahan.android10.deliverbanchan.presentation.common.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.toVisible
+import com.woowahan.android10.deliverbanchan.presentation.dialogs.CartBottomSheetFragment
 import com.woowahan.android10.deliverbanchan.presentation.state.ExhibitionUiState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -35,7 +36,13 @@ class ExhibitionFragment: BaseFragment<FragmentExhibitionBinding>(R.layout.fragm
     }
 
     private fun setRecyclerView() {
-        exhibitionAdapter = ExhibitionAdapter()
+        exhibitionAdapter = ExhibitionAdapter{
+            val cartBottomSheetFragment = CartBottomSheetFragment()
+            val bundle = Bundle()
+            bundle.putParcelable("UiDishItem", it)
+            cartBottomSheetFragment.arguments = bundle
+            cartBottomSheetFragment.show(childFragmentManager, "CartBottomSheet")
+        }
         binding.exhibitionRv.apply {
             adapter = exhibitionAdapter
             layoutManager = LinearLayoutManager(requireContext())

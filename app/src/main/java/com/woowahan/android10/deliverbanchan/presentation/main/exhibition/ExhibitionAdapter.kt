@@ -2,13 +2,14 @@ package com.woowahan.android10.deliverbanchan.presentation.main.exhibition
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.*
 import com.woowahan.android10.deliverbanchan.databinding.ItemExhibitionBinding
+import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiExhibitionItem
 
-class ExhibitionAdapter :
+class ExhibitionAdapter(
+    private val cartIconClick: (uiDishItem: UiDishItem) -> Unit
+) :
     ListAdapter<UiExhibitionItem, ExhibitionAdapter.ExhibitionViewHolder>(diffUtil) {
 
     companion object {
@@ -27,8 +28,16 @@ class ExhibitionAdapter :
     inner class ExhibitionViewHolder(private val binding: ItemExhibitionBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(uiExhibitionItem: UiExhibitionItem) {
+        fun bind(uiExhibitionItem: UiExhibitionItem, cartIconClick: (uiDishItem: UiDishItem) -> Unit) {
             binding.uiExhibitionItem = uiExhibitionItem
+            val exhibitonHorizontalAdpater = ExhibitionHorizontalAdapter(cartIconClick)
+            binding.exhibitionRvHorizontal.apply {
+                adapter = exhibitonHorizontalAdpater
+                layoutManager = LinearLayoutManager(binding.root.context).also {
+                    it.orientation = LinearLayoutManager.HORIZONTAL
+                }
+            }
+            exhibitonHorizontalAdpater.submitList(uiExhibitionItem.uiDishItems.toList())
             binding.executePendingBindings()
         }
     }
@@ -39,6 +48,6 @@ class ExhibitionAdapter :
     }
 
     override fun onBindViewHolder(holder: ExhibitionViewHolder, position: Int) {
-        holder.bind(currentList[position])
+        holder.bind(currentList[position], cartIconClick)
     }
 }
