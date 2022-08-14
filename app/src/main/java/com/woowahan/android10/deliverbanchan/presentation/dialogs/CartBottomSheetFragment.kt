@@ -14,7 +14,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentCartBottomSheetBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
+import com.woowahan.android10.deliverbanchan.presentation.common.showToast
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -61,18 +63,24 @@ class CartBottomSheetFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initView()
+        observeInsertResult()
     }
 
     private fun initView() {
-        setButton()
         cartBottomSheetViewModel.getCartInfoByHash()
-        //observeItemCount()
     }
 
-    private fun setButton() {
-        binding.btnGoToCart.setOnClickListener {
-            cartBottomSheetViewModel.getCartInfoByHash()
+    private fun observeInsertResult() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                cartBottomSheetViewModel.insertSuccessEvent.collect {
+                    if(it) {
+                        // dialog 작업 예정
+                    } else {
+                        requireContext().showToast("장바구니 담기에 실패했습니다")
+                    }
+                }
+            }
         }
     }
-
 }
