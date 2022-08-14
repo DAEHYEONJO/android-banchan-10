@@ -31,6 +31,14 @@
         <item name="cornerSizeBottomLeft">0dp</item>
     </style>
 
+    <style name="cardViewDialog">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">14dp</item>
+        <item name="cornerSizeTopRight">14dp</item>
+        <item name="cornerSizeBottomRight">14dp</item>
+        <item name="cornerSizeBottomLeft">14dp</item>
+    </style>
+
     <!-- bottom sheet dialog -->
     <style name="AppBottomSheetDialogTheme"
         parent="Theme.MaterialComponents.Light.BottomSheetDialog">

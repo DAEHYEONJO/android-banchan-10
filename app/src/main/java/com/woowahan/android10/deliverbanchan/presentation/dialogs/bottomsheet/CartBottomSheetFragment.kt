@@ -15,6 +15,7 @@ import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentCartBottomSheetBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.presentation.common.showToast
+import com.woowahan.android10.deliverbanchan.presentation.dialogs.dialog.CartDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -76,7 +77,11 @@ class CartBottomSheetFragment : BottomSheetDialogFragment() {
                     if(it) {
                         // dialog 작업 예정
                         Log.e("CartBottomSheetFragment", "dialog open")
-
+                        dialogDismissWhenInsertSuccessListener.diaogDismissWhenInsertSuccess(
+                            cartBottomSheetViewModel.currentUiDishItem.value.hash,
+                            cartBottomSheetViewModel.currentUiDishItem.value.title
+                        )
+                        dismiss()
                     } else {
                         requireContext().showToast("장바구니 담기에 실패했습니다")
                     }
@@ -84,4 +89,19 @@ class CartBottomSheetFragment : BottomSheetDialogFragment() {
             }
         }
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    interface DialogDismissWhenInsertSuccessListener {
+        fun diaogDismissWhenInsertSuccess(hash: String, title: String)
+    }
+
+    fun setDialogDismissWhenInsertSuccessListener(dialogDismissWhenInsertSuccessListener: DialogDismissWhenInsertSuccessListener) {
+        this.dialogDismissWhenInsertSuccessListener = dialogDismissWhenInsertSuccessListener
+    }
+
+    private lateinit var dialogDismissWhenInsertSuccessListener: DialogDismissWhenInsertSuccessListener
 }

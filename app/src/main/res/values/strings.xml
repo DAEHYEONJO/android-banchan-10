@@ -16,6 +16,9 @@
 
     <string name="format_nprice">%s원</string>
     <string name="format_sale_rate">%d%%</string>
+    <string name="dialog_cart_message">선택한 상품이 장바구니에 담겼습니다.</string>
+    <string name="dialog_cart_dismiss">계속 쇼핑하기</string>
+    <string name="dialog_cart_move_to_cart">장바구니 확인</string>
     <string-array name="sort_spinner_item">
         <item>기본 정렬순</item>
         <item>금액 높은순</item>
