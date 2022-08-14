@@ -5,7 +5,7 @@
             <solid android:color="@color/grey_scale_white"/>
         </shape>
     </item>
-    <item android:drawable="@drawable/ic_cart_without_circle"
+    <item android:drawable="@drawable/ic_cart"
         android:bottom="@dimen/cart_space_7dp"
         android:top="@dimen/cart_space_7dp"
         android:start="@dimen/cart_space_7dp"

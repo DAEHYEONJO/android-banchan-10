@@ -1,44 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:app="http://schemas.android.com/apk/res-auto">
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_bar_no_back_btn_abl"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/primary_main">
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/app_bar_no_back_btn_mtb"
+<layout>
+
+    <data>
+        <variable
+            name="dishViewModel"
+            type="com.woowahan.android10.deliverbanchan.presentation.main.host.DishViewModel" />
+        <import type="android.view.View"/>
+    </data>
+
+    <merge>
+
+        <com.google.android.material.appbar.AppBarLayout android:id="@+id/app_bar_no_back_btn_abl"
+            xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:contentInsetStart="0dp">
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:background="@color/primary_main">
 
-            <TextView
-                android:id="@+id/app_bar_no_back_btn_tv_title"
-                android:layout_width="wrap_content"
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/app_bar_no_back_btn_mtb"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/app_bar_no_back_btn_title"
-                android:layout_marginStart="@dimen/base_space_16dp"
-                style="@style/Widget.TextView.Outfit_GreyScaleBlack20_Bold.Style"/>
+                app:contentInsetStart="0dp">
 
-            <ImageView
-                android:id="@+id/app_bar_no_back_btn_iv_user"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginEnd="@dimen/base_space_16dp"
-                android:src="@drawable/ic_user_without_badge"
-                android:visibility="visible"/>
+                <TextView
+                    android:id="@+id/app_bar_no_back_btn_tv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_bar_no_back_btn_title"
+                    android:layout_marginStart="@dimen/base_space_16dp"
+                    style="@style/Widget.TextView.Outfit_GreyScaleBlack20_Bold.Style" />
 
-            <ImageView
-                android:id="@+id/app_bar_no_back_btn_iv_cart"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginEnd="@dimen/base_space_34dp"
-                android:src="@drawable/ic_cart"
-                android:visibility="visible"/>
+                <ImageView
+                    android:id="@+id/app_bar_no_back_btn_iv_user"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="@dimen/base_space_16dp"
+                    android:src="@drawable/ic_user_without_badge"
+                    android:visibility="visible" />
 
+                <FrameLayout
+                    android:layout_width="@dimen/base_text_space_24dp"
+                    android:layout_height="@dimen/base_text_space_24dp"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="@dimen/base_space_34dp">
 
-        </com.google.android.material.appbar.MaterialToolbar>
-    </com.google.android.material.appbar.AppBarLayout>
-</merge>
+                    <ImageView
+                        android:id="@+id/app_bar_no_back_btn_iv_cart"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:setCartIcon="@{dishViewModel.cartIconText}"
+                        android:layout_gravity="bottom|start"
+                        android:layout_marginBottom="@dimen/item_elevation_2dp"
+                        android:layout_marginStart="@dimen/item_elevation_2dp"
+                        android:visibility="visible" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_cart_count_13dp"
+                        android:gravity="center"
+                        app:setCartTextViewVisibility="@{dishViewModel.cartIconText}"
+                        android:text="@{dishViewModel.cartIconText}"
+                        style="@style/Widget.TextView.KoPubWorldDotumPro_GreyScaleWhite8_Bold.Style"
+                        android:layout_gravity="top|end" />
+                </FrameLayout>
+
+            </com.google.android.material.appbar.MaterialToolbar>
+        </com.google.android.material.appbar.AppBarLayout>
+
+    </merge>
+</layout>
