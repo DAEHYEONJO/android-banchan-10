@@ -16,6 +16,7 @@ import com.woowahan.android10.deliverbanchan.presentation.common.showToast
 import com.woowahan.android10.deliverbanchan.presentation.common.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.toVisible
 import com.woowahan.android10.deliverbanchan.presentation.dialogs.bottomsheet.CartBottomSheetFragment
+import com.woowahan.android10.deliverbanchan.presentation.dialogs.dialog.CartDialogFragment
 import com.woowahan.android10.deliverbanchan.presentation.main.common.MainGridAdapter
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.AndroidEntryPoint
@@ -71,6 +72,15 @@ class MainDishFragment :
         mainDishAdapter.apply {
             cartIconClick = {
                 val cartBottomSheetFragment = CartBottomSheetFragment()
+
+                cartBottomSheetFragment.setDialogDismissWhenInsertSuccessListener(object: CartBottomSheetFragment.DialogDismissWhenInsertSuccessListener{
+                    override fun diaogDismissWhenInsertSuccess(hash: String, title: String) {
+                        val cartDialog = CartDialogFragment()
+                        cartDialog.show(childFragmentManager, "CartDialog")
+                        Log.e("TAG", "현재 선택된 상품명 : ${title}")
+                    }
+                })
+
                 val bundle = Bundle()
                 bundle.putParcelable("UiDishItem", it)
                 cartBottomSheetFragment.arguments = bundle
