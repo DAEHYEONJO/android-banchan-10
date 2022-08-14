@@ -12,7 +12,7 @@
 
         <variable
             name="viewModel"
-            type="com.woowahan.android10.deliverbanchan.presentation.dialogs.CartBottomSheetViewModel" />
+            type="com.woowahan.android10.deliverbanchan.presentation.dialogs.bottomsheet.CartBottomSheetViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

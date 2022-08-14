@@ -1,4 +1,4 @@
-package com.woowahan.android10.deliverbanchan.presentation.dialogs
+package com.woowahan.android10.deliverbanchan.presentation.dialogs.bottomsheet
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -8,7 +8,6 @@ import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.usecase.CreateEmptyUiDishItemUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetCartInfoUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.InsertCartInfoUseCase
-import com.woowahan.android10.deliverbanchan.domain.usecase.IsExistCartInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*

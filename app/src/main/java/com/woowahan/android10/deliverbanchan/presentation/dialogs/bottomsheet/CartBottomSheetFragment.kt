@@ -1,4 +1,4 @@
-package com.woowahan.android10.deliverbanchan.presentation.dialogs
+package com.woowahan.android10.deliverbanchan.presentation.dialogs.bottomsheet
 
 import android.os.Bundle
 import android.util.Log
@@ -16,7 +16,6 @@ import com.woowahan.android10.deliverbanchan.databinding.FragmentCartBottomSheet
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.presentation.common.showToast
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -76,6 +75,8 @@ class CartBottomSheetFragment : BottomSheetDialogFragment() {
                 cartBottomSheetViewModel.insertSuccessEvent.collect {
                     if(it) {
                         // dialog 작업 예정
+                        Log.e("CartBottomSheetFragment", "dialog open")
+
                     } else {
                         requireContext().showToast("장바구니 담기에 실패했습니다")
                     }
