@@ -17,9 +17,6 @@ class MainDishViewModel @Inject constructor(
     private val createUiDishItemsUseCase: CreateUiDishItemsUseCase
 ) : ViewModel() {
 
-//    private val _mainDishListFlow = MutableStateFlow<List<UiDishItem>>(emptyList())
-//    val mainDishListFlow: StateFlow<List<UiDishItem>> = _mainDishListFlow
-
     private val _mainDishState = MutableStateFlow<UiState>(UiState.Init)
     val mainDishState: StateFlow<UiState> get() = _mainDishState
 
@@ -33,7 +30,7 @@ class MainDishViewModel @Inject constructor(
                 hideLoading()
                 Log.e("MainDishViewModel", "exception : ${exception.message}")
                 showToast(exception.message.toString())
-            }.flowOn(Dispatchers.IO).collect { result ->
+            }.collect { result ->
                 hideLoading()
                 withContext(Dispatchers.Main) {
                     when (result) {

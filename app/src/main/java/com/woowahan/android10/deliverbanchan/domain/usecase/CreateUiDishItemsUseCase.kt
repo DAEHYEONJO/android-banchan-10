@@ -12,14 +12,14 @@ import javax.inject.Singleton
 class CreateUiDishItemsUseCase @Inject constructor(
     private val getDishListByThemeUseCase: GetDishListByThemeUseCase,
     private val createEmptyUiDishItemUseCase: CreateEmptyUiDishItemUseCase,
-    private val createUiDishItemUseCase: CreateUiDishItemUseCase,
-    private val isExistCartInfoUseCase: IsExistCartInfoUseCase
+    private val mapUiDishItemUseCase: MapUiDishItemUseCase,
+    private val mapUiDishItemListUseCase: MapUiDishItemListUseCase
 ) {
 
-//    val supervisorJob = SupervisorJob()
-//    val scope = CoroutineScope(Dispatchers.IO + supervisorJob)
+    val supervisorJob = SupervisorJob()
+    val scope = CoroutineScope(Dispatchers.IO + supervisorJob)
 
-//    suspend operator fun invoke(): Flow<BaseResult<List<UiDishItem>, Int>> {
+//    suspend operator fun invoke(theme: String): Flow<BaseResult<List<UiDishItem>, Int>> {
 //        lateinit var result: Flow<BaseResult<List<UiDishItem>, Int>>
 //
 //        val supervisorJob = SupervisorJob()
@@ -27,7 +27,7 @@ class CreateUiDishItemsUseCase @Inject constructor(
 //
 //        scope.launch {
 //            Log.e("CreateUiDishItemsUseCase", "1 ${Thread.currentThread().name}")
-//            result = getMainDishListUseCase()
+//            result = getDishListByThemeUseCase(theme)
 //                .map { result ->
 //                    when (result) {
 //                        is BaseResult.Success -> {
@@ -47,7 +47,7 @@ class CreateUiDishItemsUseCase @Inject constructor(
 //                                CoroutineScope(Dispatchers.IO).async {
 //                                    Log.e("CreateUiDishItemsUseCase", "async index : ${index}")
 //                                    Log.e("CreateUiDishItemsUseCase", "2 ${Thread.currentThread().name}")
-//                                    resultUiDishItemList[index] = createUiDishItemUseCase(dishItem)
+//                                    resultUiDishItemList[index] = mapUiDishItemUseCase(dishItem)
 //                                }
 //                            }.awaitAll()
 //
@@ -67,38 +67,17 @@ class CreateUiDishItemsUseCase @Inject constructor(
 //    }
 
     suspend operator fun invoke(theme: String): Flow<BaseResult<List<UiDishItem>, Int>> {
-        lateinit var result: Flow<BaseResult<List<UiDishItem>, Int>>
-        Log.e("CreateUiDishItemsUseCase", "${Thread.currentThread().name}")
-        result = getDishListByThemeUseCase(theme)
-            .map { result ->
-                when (result) {
+        return getDishListByThemeUseCase(theme)
+            .map { response ->
+                when (response) {
                     is BaseResult.Success -> {
-                        Log.e("CreateUiDishItemsUseCase", "success")
-
-                        val resultUiDishItemList =
-                            MutableList<UiDishItem>(result.data.size) { createEmptyUiDishItemUseCase() }
-
-                        coroutineScope { // coroutineScope 자체가 suspend 함수
-                            Log.e("CreateUiDishItemsUseCase", "${Thread.currentThread().name}")
-                            result.data.mapIndexed { index, dishItem ->
-                                Log.e("CreateUiDishItemsUseCase", "loop")
-                                async(Dispatchers.IO) {
-                                    Log.e("CreateUiDishItemsUseCase", "async index : ${index}")
-                                    resultUiDishItemList[index] = createUiDishItemUseCase(dishItem)
-                                }
-                                //resultUiDishItemList[index] = createUiDishItemUseCase(dishItem)
-                            }.awaitAll()
-                        }
-
+                        val resultUiDishItemList = mapUiDishItemListUseCase(response.data)
                         BaseResult.Success(resultUiDishItemList)
                     }
                     is BaseResult.Error -> {
-                        // Error 처리
-                        Log.e("CreateUiDishItemsUseCase", "error")
-                        BaseResult.Error(errorCode = result.errorCode)
+                        BaseResult.Error(errorCode = response.errorCode)
                     }
                 }
             }
-        return result
     }
 }

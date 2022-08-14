@@ -10,19 +10,20 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CreateUiDishItemListUseCase @Inject constructor(
+class MapUiDishItemListUseCase @Inject constructor(
     private val createEmptyUiDishItemUseCase: CreateEmptyUiDishItemUseCase,
-    private val createUiDishItemUseCase: CreateUiDishItemUseCase,
+    private val mapUiDishItemUseCase: MapUiDishItemUseCase,
     private val isExistCartInfoUseCase: IsExistCartInfoUseCase,
 ) {
     suspend operator fun invoke(dishItemList: List<DishItem>): List<UiDishItem> {
         val uiDishItemList =
             MutableList<UiDishItem>(dishItemList.size) { createEmptyUiDishItemUseCase() }
 
-        coroutineScope {
+        coroutineScope { // coroutineScope = 자체가 suspend 함수
             dishItemList.mapIndexed { index, dishItem ->
                 async(Dispatchers.IO) {
-                    uiDishItemList[index] = createUiDishItemUseCase(dishItem)
+                    // 장바구니에 있는지 체크 후 받은 isInserted(Boolean) 도 createUiDishItemUseCase에 넘겨줄 예정
+                    uiDishItemList[index] = mapUiDishItemUseCase(dishItem)
                 }
             }.awaitAll()
         }
