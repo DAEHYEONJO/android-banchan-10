@@ -75,7 +75,21 @@ class MainDishFragment :
 
                 cartBottomSheetFragment.setDialogDismissWhenInsertSuccessListener(object: CartBottomSheetFragment.DialogDismissWhenInsertSuccessListener{
                     override fun dialogDismissWhenInsertSuccess(hash: String, title: String) {
+                        mainDishViewModel.changeMainDishItemIsInserted(hash)
                         val cartDialog = CartDialogFragment()
+
+                        cartDialog.setTextClickListener(object : CartDialogFragment.TextClickListener {
+                            override fun moveToCartTextClicked(hash: String, title: String) {
+                                Log.e("MainDishFragment", "move to cart, hash : ${hash}, title : ${title}")
+
+                                // CartActivity 이동 하면서 title, hash 전달 예정
+                            }
+                        })
+
+                        val bundle = Bundle()
+                        bundle.putString("hash", hash)
+                        bundle.putString("title", title)
+                        cartDialog.arguments = bundle
                         cartDialog.show(childFragmentManager, "CartDialog")
                         Log.e("TAG", "현재 선택된 상품명 : ${title}")
                     }

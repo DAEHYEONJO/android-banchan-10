@@ -21,7 +21,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class ExhibitionFragment: BaseFragment<FragmentExhibitionBinding>(R.layout.fragment_exhibition, "ExhibitionFragment") {
+class ExhibitionFragment :
+    BaseFragment<FragmentExhibitionBinding>(R.layout.fragment_exhibition, "ExhibitionFragment") {
 
     private val exhibitionViewModel: ExhibitionViewModel by viewModels()
     private lateinit var exhibitionAdapter: ExhibitionAdapter
@@ -38,12 +39,26 @@ class ExhibitionFragment: BaseFragment<FragmentExhibitionBinding>(R.layout.fragm
     }
 
     private fun setRecyclerView() {
-        exhibitionAdapter = ExhibitionAdapter{
+        exhibitionAdapter = ExhibitionAdapter {
             val cartBottomSheetFragment = CartBottomSheetFragment()
 
-            cartBottomSheetFragment.setDialogDismissWhenInsertSuccessListener(object: CartBottomSheetFragment.DialogDismissWhenInsertSuccessListener{
+            cartBottomSheetFragment.setDialogDismissWhenInsertSuccessListener(object :
+                CartBottomSheetFragment.DialogDismissWhenInsertSuccessListener {
                 override fun dialogDismissWhenInsertSuccess(hash: String, title: String) {
                     val cartDialog = CartDialogFragment()
+
+                    cartDialog.setTextClickListener(object : CartDialogFragment.TextClickListener {
+                        override fun moveToCartTextClicked(hash: String, title: String) {
+                            Log.e("ExhibitionFragment", "move to cart, hash : ${hash}, title : ${title}")
+
+                            // CartActivity 이동 하면서 title, hash 전달 예정
+                        }
+                    })
+
+                    val bundle = Bundle()
+                    bundle.putString("hash", hash)
+                    bundle.putString("title", title)
+                    cartDialog.arguments = bundle
                     cartDialog.show(childFragmentManager, "CartDialog")
                     Log.e("TAG", "현재 선택된 상품명 : ${title}")
                 }
