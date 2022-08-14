@@ -8,10 +8,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CreateUiDishItemUseCase @Inject constructor() {
+class MapUiDishItemUseCase @Inject constructor() {
     suspend operator fun invoke(dishItem: DishItem): UiDishItem {
         Log.e("CreateUiDishItemUseCase", "called")
-
         val nPriceInt = dishItem.nPrice.convertPriceToInt()
         val sPriceInt = dishItem.sPrice.convertPriceToInt()
         val percentage =

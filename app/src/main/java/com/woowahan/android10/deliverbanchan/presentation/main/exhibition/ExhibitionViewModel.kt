@@ -35,7 +35,7 @@ class ExhibitionViewModel @Inject constructor(
             }.catch { exception ->
                 hideLoading()
                 showToast(exception.message.toString())
-            }.flowOn(Dispatchers.IO).collect { result ->
+            }.collect { result ->
                 hideLoading()
                 withContext(Dispatchers.Main) {
                     when (result) {
