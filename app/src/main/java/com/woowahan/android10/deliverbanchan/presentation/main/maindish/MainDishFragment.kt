@@ -74,7 +74,7 @@ class MainDishFragment :
                 val cartBottomSheetFragment = CartBottomSheetFragment()
 
                 cartBottomSheetFragment.setDialogDismissWhenInsertSuccessListener(object: CartBottomSheetFragment.DialogDismissWhenInsertSuccessListener{
-                    override fun diaogDismissWhenInsertSuccess(hash: String, title: String) {
+                    override fun dialogDismissWhenInsertSuccess(hash: String, title: String) {
                         val cartDialog = CartDialogFragment()
                         cartDialog.show(childFragmentManager, "CartDialog")
                         Log.e("TAG", "현재 선택된 상품명 : ${title}")

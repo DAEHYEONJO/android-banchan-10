@@ -15,7 +15,6 @@ import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentCartBottomSheetBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.presentation.common.showToast
-import com.woowahan.android10.deliverbanchan.presentation.dialogs.dialog.CartDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -77,7 +76,7 @@ class CartBottomSheetFragment : BottomSheetDialogFragment() {
                     if(it) {
                         // dialog 작업 예정
                         Log.e("CartBottomSheetFragment", "dialog open")
-                        dialogDismissWhenInsertSuccessListener.diaogDismissWhenInsertSuccess(
+                        dialogDismissWhenInsertSuccessListener.dialogDismissWhenInsertSuccess(
                             cartBottomSheetViewModel.currentUiDishItem.value.hash,
                             cartBottomSheetViewModel.currentUiDishItem.value.title
                         )
@@ -96,7 +95,7 @@ class CartBottomSheetFragment : BottomSheetDialogFragment() {
     }
 
     interface DialogDismissWhenInsertSuccessListener {
-        fun diaogDismissWhenInsertSuccess(hash: String, title: String)
+        fun dialogDismissWhenInsertSuccess(hash: String, title: String)
     }
 
     fun setDialogDismissWhenInsertSuccessListener(dialogDismissWhenInsertSuccessListener: DialogDismissWhenInsertSuccessListener) {

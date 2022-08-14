@@ -1,10 +1,12 @@
 package com.woowahan.android10.deliverbanchan.presentation.main.soupdish
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
+import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetThemeDishListUseCase
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -77,6 +79,21 @@ class SoupViewModel @Inject constructor(
                 3 -> UiState.Success((_soupState.value as UiState.Success).uiDishItems.sortedBy { -it.salePercentage }) // 할인률 내림차순
                 else -> UiState.Success((_soupState.value as UiState.Success).uiDishItems.sortedBy { it.index }) // 기본 정렬순
             }
+        }
+    }
+
+    fun changeSoupItemIsInserted(hash: String){
+        ((_soupState.value as UiState.Success).uiDishItems).let { uiDishList ->
+            val newList = mutableListOf<UiDishItem>().apply {
+                uiDishList.forEach { uiDishItem ->
+                    if (uiDishItem.hash == hash){
+                        add(uiDishItem.copy(isInserted = true))
+                    }else{
+                        add(uiDishItem)
+                    }
+                }
+            }
+            _soupState.value = UiState.Success(newList)
         }
     }
 
