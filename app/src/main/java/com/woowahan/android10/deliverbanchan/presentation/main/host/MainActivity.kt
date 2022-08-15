@@ -1,5 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.main.host
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
@@ -14,6 +15,7 @@ import com.woowahan.android10.deliverbanchan.data.local.model.OrderDish
 import com.woowahan.android10.deliverbanchan.data.local.model.OrderInfo
 import com.woowahan.android10.deliverbanchan.databinding.ActivityMainBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseActivity
+import com.woowahan.android10.deliverbanchan.presentation.cart.CartActivity
 import com.woowahan.android10.deliverbanchan.presentation.main.sidedish.SideDishViewModel
 import com.woowahan.android10.deliverbanchan.presentation.main.soupdish.SoupViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,6 +34,18 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main, "
         super.onCreate(savedInstanceState)
         initBinding()
         initView()
+        initBtn()
+    }
+
+    private fun initBtn() {
+        with(binding.mainTb){
+            appBarNoBackBtnFlCart.setOnClickListener {
+                startActivity(Intent(this@MainActivity, CartActivity::class.java))
+            }
+            appBarNoBackBtnIvProfile.setOnClickListener {
+
+            }
+        }
     }
 
     private fun initBinding() {
