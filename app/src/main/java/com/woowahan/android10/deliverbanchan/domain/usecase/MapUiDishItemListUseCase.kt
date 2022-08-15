@@ -23,7 +23,8 @@ class MapUiDishItemListUseCase @Inject constructor(
             dishItemList.mapIndexed { index, dishItem ->
                 async(Dispatchers.IO) {
                     // 장바구니에 있는지 체크 후 받은 isInserted(Boolean) 도 createUiDishItemUseCase에 넘겨줄 예정
-                    uiDishItemList[index] = mapUiDishItemUseCase(dishItem)
+                    val isInserted = isExistCartInfoUseCase(dishItem.detailHash)
+                    uiDishItemList[index] = mapUiDishItemUseCase(dishItem, isInserted)
                 }
             }.awaitAll()
         }

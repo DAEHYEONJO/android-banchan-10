@@ -13,14 +13,15 @@ class CreateUiDishItemsUseCase @Inject constructor(
     private val getDishListByThemeUseCase: GetDishListByThemeUseCase,
     private val createEmptyUiDishItemUseCase: CreateEmptyUiDishItemUseCase,
     private val mapUiDishItemUseCase: MapUiDishItemUseCase,
-    private val mapUiDishItemListUseCase: MapUiDishItemListUseCase
+    private val mapUiDishItemListUseCase: MapUiDishItemListUseCase,
+    private val isExistCartInfoUseCase: IsExistCartInfoUseCase
 ) {
 
-    val supervisorJob = SupervisorJob()
-    val scope = CoroutineScope(Dispatchers.IO + supervisorJob)
+//    val supervisorJob = SupervisorJob()
+//    val scope = CoroutineScope(Dispatchers.IO + supervisorJob)
 
 //    suspend operator fun invoke(theme: String): Flow<BaseResult<List<UiDishItem>, Int>> {
-//        lateinit var result: Flow<BaseResult<List<UiDishItem>, Int>>
+//        var result: Flow<BaseResult<List<UiDishItem>, Int>> = emptyFlow()
 //
 //        val supervisorJob = SupervisorJob()
 //        val scope = CoroutineScope(Dispatchers.IO + supervisorJob)
@@ -46,8 +47,13 @@ class CreateUiDishItemsUseCase @Inject constructor(
 ////                                }
 //                                CoroutineScope(Dispatchers.IO).async {
 //                                    Log.e("CreateUiDishItemsUseCase", "async index : ${index}")
-//                                    Log.e("CreateUiDishItemsUseCase", "2 ${Thread.currentThread().name}")
-//                                    resultUiDishItemList[index] = mapUiDishItemUseCase(dishItem)
+//                                    Log.e(
+//                                        "CreateUiDishItemsUseCase",
+//                                        "2 ${Thread.currentThread().name}"
+//                                    )
+//                                    val isInserted = isExistCartInfoUseCase(dishItem.detailHash)
+//                                    resultUiDishItemList[index] =
+//                                        mapUiDishItemUseCase(dishItem, isInserted)
 //                                }
 //                            }.awaitAll()
 //

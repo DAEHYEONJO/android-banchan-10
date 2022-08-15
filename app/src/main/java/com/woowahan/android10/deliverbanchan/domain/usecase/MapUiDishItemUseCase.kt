@@ -9,8 +9,8 @@ import javax.inject.Singleton
 
 @Singleton
 class MapUiDishItemUseCase @Inject constructor() {
-    suspend operator fun invoke(dishItem: DishItem): UiDishItem {
-        Log.e("CreateUiDishItemUseCase", "called")
+    suspend operator fun invoke(dishItem: DishItem, isInserted: Boolean): UiDishItem {
+        Log.e("MapUiDishItemUseCase", "called")
         val nPriceInt = dishItem.nPrice.convertPriceToInt()
         val sPriceInt = dishItem.sPrice.convertPriceToInt()
         val percentage =
@@ -19,7 +19,7 @@ class MapUiDishItemUseCase @Inject constructor() {
         return UiDishItem(
             hash = dishItem.detailHash,
             title = dishItem.title,
-            isInserted = false,
+            isInserted = isInserted,
             image = dishItem.image,
             description = dishItem.description,
             sPrice = sPriceInt,
