@@ -175,6 +175,7 @@
                 android:layout_marginTop="24dp"
                 android:backgroundTint="@color/primary_main"
                 android:elevation="2dp"
+                app:cornerRadius="0dp"
                 tools:text="1개 담기"
                 app:setBottomSheetButtonText="@{viewModel.itemCount}"
                 android:textColor="@color/white"
