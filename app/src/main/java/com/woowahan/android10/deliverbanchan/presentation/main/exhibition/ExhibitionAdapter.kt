@@ -8,18 +8,25 @@ import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiExhibitionItem
 
 class ExhibitionAdapter(
-    private val cartIconClick: (uiDishItem: UiDishItem) -> Unit
+    private val cartIconClick: (uiDishItem: UiDishItem) -> Unit,
+    private val itemClick: (uiDishItem: UiDishItem) -> Unit
 ) :
     ListAdapter<UiExhibitionItem, ExhibitionAdapter.ExhibitionViewHolder>(diffUtil) {
 
     companion object {
         const val TAG = "ExhibitionAdapter"
         val diffUtil = object : DiffUtil.ItemCallback<UiExhibitionItem>() {
-            override fun areItemsTheSame(oldItem: UiExhibitionItem, newItem: UiExhibitionItem): Boolean {
+            override fun areItemsTheSame(
+                oldItem: UiExhibitionItem,
+                newItem: UiExhibitionItem
+            ): Boolean {
                 return oldItem.categoryId == newItem.categoryId
             }
 
-            override fun areContentsTheSame(oldItem: UiExhibitionItem, newItem: UiExhibitionItem): Boolean {
+            override fun areContentsTheSame(
+                oldItem: UiExhibitionItem,
+                newItem: UiExhibitionItem
+            ): Boolean {
                 return newItem == oldItem
             }
         }
@@ -28,9 +35,12 @@ class ExhibitionAdapter(
     inner class ExhibitionViewHolder(private val binding: ItemExhibitionBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(uiExhibitionItem: UiExhibitionItem, cartIconClick: (uiDishItem: UiDishItem) -> Unit) {
+        fun bind(
+            uiExhibitionItem: UiExhibitionItem, cartIconClick: (uiDishItem: UiDishItem) -> Unit,
+            itemClick: (uiDishItem: UiDishItem) -> Unit
+        ) {
             binding.uiExhibitionItem = uiExhibitionItem
-            val exhibitonHorizontalAdpater = ExhibitionHorizontalAdapter(cartIconClick)
+            val exhibitonHorizontalAdpater = ExhibitionHorizontalAdapter(cartIconClick, itemClick)
             binding.exhibitionRvHorizontal.apply {
                 adapter = exhibitonHorizontalAdpater
                 layoutManager = LinearLayoutManager(binding.root.context).also {
@@ -43,11 +53,12 @@ class ExhibitionAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExhibitionViewHolder {
-        val binding = ItemExhibitionBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemExhibitionBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ExhibitionViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ExhibitionViewHolder, position: Int) {
-        holder.bind(currentList[position], cartIconClick)
+        holder.bind(currentList[position], cartIconClick, itemClick)
     }
 }

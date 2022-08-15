@@ -34,6 +34,8 @@ object Versions {
     const val CONVERTER_KOTLINX_SERIALIZATION = "0.8.0"
 
     const val WINDOW = "1.0.0"
+
+    const val RECYCLERVIEW = "1.2.0-rc01"
 }
 
 object Kotlin {
@@ -59,6 +61,7 @@ object AndroidX {
     const val ROOM_COMPILER           = "androidx.room:room-compiler:${Versions.ROOM}"
 
     const val WINDOW                  = "androidx.window:window:${Versions.WINDOW}"
+    const val RECYCLERVIEW            = "androidx.recyclerview:recyclerview:${Versions.RECYCLERVIEW}"
 }
 
 object Google {

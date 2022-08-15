@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="item"
             type="com.woowahan.android10.deliverbanchan.domain.model.UiDishItem" />
@@ -125,9 +126,9 @@
                 android:layout_marginEnd="@dimen/base_space_16dp"
                 android:background="@drawable/btn_plus_32dp"
                 android:elevation="2dp"
+                android:onClick="@{() -> viewModel.clickPlusBtn()}"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_food"
-                android:onClick="@{() -> viewModel.clickPlusBtn()}"/>
+                app:layout_constraintTop_toBottomOf="@id/iv_food" />
 
             <ImageButton
                 android:id="@+id/ib_minus"
@@ -137,13 +138,13 @@
                 android:layout_marginEnd="60dp"
                 android:background="@drawable/btn_minus_32dp"
                 android:elevation="2dp"
+                android:onClick="@{() -> viewModel.clickMinusBtn()}"
                 app:layout_constraintEnd_toStartOf="@id/ib_plus"
-                app:layout_constraintTop_toBottomOf="@id/iv_food"
-                android:onClick="@{() -> viewModel.clickMinusBtn()}"/>
+                app:layout_constraintTop_toBottomOf="@id/iv_food" />
 
             <TextView
                 android:id="@+id/tv_count"
-                style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack18_Bold.Style"
+                style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack18_Medium.Style"
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
                 android:gravity="center"
@@ -151,7 +152,8 @@
                 app:layout_constraintBottom_toBottomOf="@id/ib_plus"
                 app:layout_constraintEnd_toStartOf="@id/ib_plus"
                 app:layout_constraintStart_toEndOf="@id/ib_minus"
-                app:layout_constraintTop_toTopOf="@id/ib_plus" />
+                app:layout_constraintTop_toTopOf="@id/ib_plus"
+                tools:text="1" />
 
             <TextView
                 android:id="@+id/tv_price_total"
@@ -175,11 +177,11 @@
                 android:layout_marginTop="24dp"
                 android:backgroundTint="@color/primary_main"
                 android:elevation="2dp"
-                tools:text="1개 담기"
-                app:setBottomSheetButtonText="@{viewModel.itemCount}"
+                android:onClick="@{() -> viewModel.insertCartInfo()}"
                 android:textColor="@color/white"
                 app:layout_constraintTop_toBottomOf="@id/ib_plus"
-                android:onClick="@{() -> viewModel.insertCartInfo()}"/>
+                app:setBottomSheetButtonText="@{viewModel.itemCount}"
+                tools:text="1개 담기" />
 
             <View
                 android:id="@+id/view_bottom"

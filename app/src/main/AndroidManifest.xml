@@ -20,8 +20,11 @@
         <activity
             android:name=".presentation.cart.CartActivity"
             android:exported="false" />
+        <activity android:name=".presentation.detail.DetailActivity"
+            android:exported="false"/>
         <activity
             android:name=".presentation.main.host.MainActivity"
+            android:launchMode="singleTask"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
