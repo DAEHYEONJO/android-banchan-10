@@ -11,6 +11,7 @@ import androidx.room.ColumnInfo
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.tabs.TabLayoutMediator
 import com.woowahan.android10.deliverbanchan.R
+import com.woowahan.android10.deliverbanchan.data.local.model.CartInfo
 import com.woowahan.android10.deliverbanchan.data.local.model.OrderDish
 import com.woowahan.android10.deliverbanchan.data.local.model.OrderInfo
 import com.woowahan.android10.deliverbanchan.databinding.ActivityMainBinding
@@ -19,8 +20,11 @@ import com.woowahan.android10.deliverbanchan.presentation.cart.CartActivity
 import com.woowahan.android10.deliverbanchan.presentation.main.sidedish.SideDishViewModel
 import com.woowahan.android10.deliverbanchan.presentation.main.soupdish.SoupViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main, "MainActivity") {
