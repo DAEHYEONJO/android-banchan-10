@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="uiDishItem"
-            type="com.woowahan.android10.deliverbanchan.domain.model.UiDishItem" />
+            name="UiDetailInfo"
+            type="com.woowahan.android10.deliverbanchan.domain.model.UiDetailInfo" />
 
         <import type="android.view.View" />
     </data>
@@ -61,8 +61,8 @@
             android:layout_height="24dp"
             android:gravity="center_vertical"
             android:paddingEnd="4dp"
-            android:text="@{String.valueOf(uiDishItem.salePercentage)+`%`}"
-            android:visibility="@{uiDishItem.NPrice==0?View.GONE:View.VISIBLE}"
+            android:text="@{String.valueOf(UiDetailInfo.salePercentage)+`%`}"
+            android:visibility="@{UiDetailInfo.NPrice==0?View.GONE:View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="@id/tv_sprice"
             app:layout_constraintStart_toStartOf="@id/gl_begin_16dp"
             app:layout_constraintTop_toTopOf="@id/tv_sprice"
@@ -72,7 +72,7 @@
             android:id="@+id/tv_sprice"
             style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack18_Bold.Style"
             isNPrice="@{false}"
-            price="@{uiDishItem.SPrice}"
+            price="@{UiDetailInfo.SPrice}"
             android:layout_width="wrap_content"
             android:layout_height="24dp"
             android:layout_marginTop="8dp"
@@ -86,7 +86,7 @@
             android:id="@+id/tv_nprice"
             style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault14_Normal.Style"
             isNPrice="@{true}"
-            price="@{uiDishItem.NPrice}"
+            price="@{UiDetailInfo.NPrice}"
             android:layout_width="wrap_content"
             android:layout_height="24dp"
             android:gravity="bottom"
