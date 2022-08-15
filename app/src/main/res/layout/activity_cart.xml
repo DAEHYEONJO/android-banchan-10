@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="vm"
+            type="com.woowahan.android10.deliverbanchan.presentation.cart.CartViewModel" />
     </data>
 
     <LinearLayout
@@ -15,6 +17,7 @@
 
         <include
             android:id="@+id/cart_abl"
+            app:vm = "@{vm}"
             layout="@layout/layout_app_bar_with_back_btn"/>
 
         <androidx.fragment.app.FragmentContainerView

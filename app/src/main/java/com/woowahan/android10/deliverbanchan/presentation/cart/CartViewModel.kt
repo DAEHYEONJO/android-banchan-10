@@ -8,14 +8,15 @@ import javax.inject.Inject
 @HiltViewModel
 class CartViewModel @Inject constructor(): ViewModel() {
 
-    val appBarTitle = MutableLiveData<String>()
+    val appBarTitle = MutableLiveData<String>("dd")
+    val orderDetailMode = MutableLiveData(false)
 
     init {
-        setAppBarTitle()
+
     }
 
-    fun setAppBarTitle(){
-
+    fun setAppBarTitle(string: String){
+        appBarTitle.value = string
     }
 
 }
