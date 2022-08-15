@@ -32,7 +32,7 @@
                     style="@style/Widget.TextView.Outfit_GreyScaleBlack20_Bold.Style" />
 
                 <ImageView
-                    android:id="@+id/app_bar_no_back_btn_iv_user"
+                    android:id="@+id/app_bar_no_back_btn_iv_profile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
@@ -42,8 +42,9 @@
                     android:visibility="visible" />
 
                 <FrameLayout
-                    android:layout_width="@dimen/base_text_space_24dp"
-                    android:layout_height="@dimen/base_text_space_24dp"
+                    android:id="@+id/app_bar_no_back_btn_fl_cart"
+                    android:layout_width="@dimen/base_24dp"
+                    android:layout_height="@dimen/base_24dp"
                     android:layout_gravity="end"
                     android:layout_marginEnd="@dimen/base_space_34dp">
 

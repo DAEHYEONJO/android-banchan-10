@@ -11,16 +11,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".presentation.cart.recently.RecentlyViewedFragment">
+        tools:context=".presentation.cart.main.CartMainFragment">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recently_viewed_product_rv"
-            android:layout_marginStart="@dimen/rv_space_8dp"
-            android:layout_marginEnd="@dimen/base_space_16dp"
+            android:id="@+id/cart_main_rv"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:spanCount="2"/>
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:layout_height="match_parent"/>
 
     </LinearLayout>
 </layout>

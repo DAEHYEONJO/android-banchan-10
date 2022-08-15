@@ -61,7 +61,8 @@ class CartBottomSheetViewModel @Inject constructor(
                     CartInfo(
                         currentUiDishItem.value.hash,
                         isCurrentItemChecked,
-                        _itemCount.value,
+                        currentUiDishItem.value.title,
+                        _itemCount.value
                     )
                 )
             }.onSuccess {

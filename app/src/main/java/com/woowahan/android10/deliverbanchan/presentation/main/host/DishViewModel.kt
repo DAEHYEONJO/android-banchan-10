@@ -18,7 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class DishViewModel @Inject constructor(
     private val getAllCartInfoUseCase: GetAllCartInfoUseCase,
-    private val getAllOrderInfoListUseCase: GetAllOrderInfoListUseCase
+    private val getAllOrderInfoListUseCase: GetAllOrderInfoListUseCase,
+    val insertCartInfoUseCase: InsertCartInfoUseCase
 ) : ViewModel() {
 
     companion object {

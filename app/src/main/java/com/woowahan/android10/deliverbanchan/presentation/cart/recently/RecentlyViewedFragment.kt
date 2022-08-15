@@ -1,10 +1,7 @@
-package com.woowahan.android10.deliverbanchan.presentation.recently
+package com.woowahan.android10.deliverbanchan.presentation.cart.recently
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentRecentlyViewedBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment

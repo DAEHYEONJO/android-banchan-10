@@ -9,5 +9,6 @@ data class CartInfo(
     @PrimaryKey
     val hash: String,
     val checked: Boolean,
+    val title: String,
     val amount: Int
 )
