@@ -6,9 +6,12 @@ import androidx.activity.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.room.ColumnInfo
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.tabs.TabLayoutMediator
 import com.woowahan.android10.deliverbanchan.R
+import com.woowahan.android10.deliverbanchan.data.local.model.OrderDish
+import com.woowahan.android10.deliverbanchan.data.local.model.OrderInfo
 import com.woowahan.android10.deliverbanchan.databinding.ActivityMainBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseActivity
 import com.woowahan.android10.deliverbanchan.presentation.main.sidedish.SideDishViewModel
@@ -32,7 +35,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main, "
     }
 
     private fun initBinding() {
-        with(binding){
+        with(binding) {
             vm = dishViewModel
             lifecycleOwner = this@MainActivity
         }
@@ -41,14 +44,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main, "
     private fun initView() {
         setTabTitleArray()
         setTabWithViewPager()
-        initObserver()
-    }
-
-    private fun initObserver() {
-        dishViewModel.cartInfoState.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
-            .onEach { state ->
-                Log.e(TAG, "initObserver: $state", )
-            }.launchIn(lifecycleScope)
     }
 
     private fun setTabTitleArray() {

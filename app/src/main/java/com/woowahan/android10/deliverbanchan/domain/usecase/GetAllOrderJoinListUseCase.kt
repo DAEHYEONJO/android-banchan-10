@@ -5,8 +5,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class GetAllOrderInfoListUseCase @Inject constructor(
+class GetAllOrderJoinListUseCase @Inject constructor(
     private val orderRepository: OrderRepository
 ) {
-    operator fun invoke() = orderRepository.getAllOrderInfo()
+    operator fun invoke() = orderRepository.getAllOrderJoinList()
 }

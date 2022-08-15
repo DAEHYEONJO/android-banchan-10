@@ -37,6 +37,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:layout_marginEnd="@dimen/base_space_16dp"
+                    app:setProfileIcon="@{dishViewModel.isOrderingExist()}"
                     android:src="@drawable/ic_user_without_badge"
                     android:visibility="visible" />
 
