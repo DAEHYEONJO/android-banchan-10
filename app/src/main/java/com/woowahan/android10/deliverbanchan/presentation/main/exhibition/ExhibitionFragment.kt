@@ -1,5 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.main.exhibition
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -14,6 +15,7 @@ import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
 import com.woowahan.android10.deliverbanchan.presentation.common.showToast
 import com.woowahan.android10.deliverbanchan.presentation.common.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.toVisible
+import com.woowahan.android10.deliverbanchan.presentation.detail.DetailActivity
 import com.woowahan.android10.deliverbanchan.presentation.dialogs.bottomsheet.CartBottomSheetFragment
 import com.woowahan.android10.deliverbanchan.presentation.dialogs.dialog.CartDialogFragment
 import com.woowahan.android10.deliverbanchan.presentation.state.ExhibitionUiState
@@ -39,7 +41,7 @@ class ExhibitionFragment :
     }
 
     private fun setRecyclerView() {
-        exhibitionAdapter = ExhibitionAdapter {
+        exhibitionAdapter = ExhibitionAdapter ({
             val cartBottomSheetFragment = CartBottomSheetFragment()
 
             cartBottomSheetFragment.setDialogDismissWhenInsertSuccessListener(object :
@@ -68,7 +70,13 @@ class ExhibitionFragment :
             bundle.putParcelable("UiDishItem", it)
             cartBottomSheetFragment.arguments = bundle
             cartBottomSheetFragment.show(childFragmentManager, "CartBottomSheet")
-        }
+        }, {
+            // item click 시 -> detail 로 이동
+
+            val intent = Intent(requireContext(), DetailActivity::class.java)
+            intent.putExtra("UiDishItem", it)
+            startActivity(intent)
+        })
         binding.exhibitionRv.apply {
             adapter = exhibitionAdapter
             layoutManager = LinearLayoutManager(requireContext())

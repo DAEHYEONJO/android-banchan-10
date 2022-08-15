@@ -8,8 +8,11 @@ import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResu
 import com.woowahan.android10.deliverbanchan.domain.repository.remote.DishDetailRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class DishDetailRepositoryImpl(
+@Singleton
+class DishDetailRepositoryImpl @Inject constructor(
     private val dishApi: DishApi
 ): DishDetailRepository{
 
