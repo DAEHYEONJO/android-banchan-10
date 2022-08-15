@@ -21,7 +21,7 @@ fun ImageView.setStringUrlImage(stringUrl: String) {
         .into(this)
 }
 
-@BindingAdapter("price","isNPrice")
+@BindingAdapter("price", "isNPrice")
 fun TextView.setPriceText(price: Int, isNPrice: Boolean) {
     text = if (price == 0) "" else {
         val formatter = DecimalFormat("###,###")
@@ -31,26 +31,40 @@ fun TextView.setPriceText(price: Int, isNPrice: Boolean) {
 }
 
 @BindingAdapter("app:setBackgroundIcon")
-fun ImageButton.setBackgroundIcon(isInserted: Boolean){
-    background = if (isInserted) ResourcesCompat.getDrawable(resources, R.drawable.btn_cart_inserted_32dp, null) else
+fun ImageButton.setBackgroundIcon(isInserted: Boolean) {
+    background = if (isInserted) ResourcesCompat.getDrawable(
+        resources,
+        R.drawable.btn_cart_inserted_32dp,
+        null
+    ) else
         ResourcesCompat.getDrawable(resources, R.drawable.btn_cart_32dp, null)
 }
 
 @BindingAdapter("app:setCartIcon")
-fun ImageView.setCartIcon(cartIconText: String){
-    Log.e("BindingAdapter", "setCartIcon: $cartIconText", )
-    background = if (cartIconText!="") ResourcesCompat.getDrawable(resources, R.drawable.ic_cart_no_right_top_margin_0, null)
+fun ImageView.setCartIcon(cartIconText: String) {
+    Log.e("BindingAdapter", "setCartIcon: $cartIconText")
+    background = if (cartIconText != "") ResourcesCompat.getDrawable(
+        resources,
+        R.drawable.ic_cart_no_right_top_margin_0,
+        null
+    )
     else ResourcesCompat.getDrawable(resources, R.drawable.ic_cart_margin_0, null)
 }
 
 @BindingAdapter("app:setCartTextViewVisibility")
-fun TextView.setCartTextViewVisibility(cartIconText: String){
-    Log.e("BindingAdapter", "setCartTextViewVisibility: $cartIconText", )
-    visibility = if (cartIconText=="") View.GONE
+fun TextView.setCartTextViewVisibility(cartIconText: String) {
+    Log.e("BindingAdapter", "setCartTextViewVisibility: $cartIconText")
+    visibility = if (cartIconText == "") View.GONE
     else View.VISIBLE
 }
 
 @BindingAdapter("app:setBottomSheetButtonText")
 fun Button.setBottomSheetButtonText(itemCount: Int) {
     text = "${itemCount}개 담기"
+}
+
+@BindingAdapter("app:setProfileIcon")
+fun ImageView.setProfileIcon(isOrderExist: Boolean) {
+    background = if (isOrderExist) ResourcesCompat.getDrawable(resources, R.drawable.ic_user_badge, null)
+        else ResourcesCompat.getDrawable(resources, R.drawable.ic_user_without_badge, null)
 }
