@@ -23,9 +23,11 @@
     <string name="dialog_cart_move_to_cart">장바구니 확인</string>
     <string name="item_cart_header_select_cancel">선택해제</string>
     <string name="item_cart_header_select_delete">선택 삭제</string>
-    <string name="cart_order_product_total_price">상품 주문 금액</string>
-    <string name="cart_order_total_price">총 주문 금액</string>
-    <string name="cart_order_delivery_price">배송료</string>
+    <string name="item_cart_order_product_total_price">상품 주문 금액</string>
+    <string name="item_cart_order_total_price">총 주문 금액</string>
+    <string name="item_cart_order_delivery_price">배송료</string>
+    <string name="item_cart_recently_viewed">최근 본 상품</string>
+    <string name="item_cart_recently_viewed_show_total">전체보기</string>
     <string-array name="sort_spinner_item">
         <item>기본 정렬순</item>
         <item>금액 높은순</item>

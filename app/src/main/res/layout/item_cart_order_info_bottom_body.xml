@@ -15,7 +15,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="@dimen/base_space_16dp"
         android:layout_marginStart="104dp"
-        android:text="@string/cart_order_product_total_price"
+        android:text="@string/item_cart_order_product_total_price"
         style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault14_Normal.Style"/>
 
     <TextView
@@ -38,7 +38,7 @@
         app:layout_constraintStart_toStartOf="@+id/cart_order_bottom_body_tv_product_total_price_hard_code"
         app:layout_constraintTop_toBottomOf="@+id/cart_order_bottom_body_tv_product_total_price_hard_code"
         android:layout_marginTop="@dimen/rv_space_8dp"
-        android:text="@string/cart_order_delivery_price"
+        android:text="@string/item_cart_order_delivery_price"
         style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault14_Normal.Style"/>
 
     <TextView
@@ -70,7 +70,7 @@
         app:layout_constraintStart_toStartOf="@+id/cart_order_bottom_body_view"
         app:layout_constraintTop_toBottomOf="@+id/cart_order_bottom_body_view"
         android:layout_marginTop="@dimen/rv_space_8dp"
-        android:text="@string/cart_order_total_price"
+        android:text="@string/item_cart_order_total_price"
         style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style"/>
 
     <TextView
