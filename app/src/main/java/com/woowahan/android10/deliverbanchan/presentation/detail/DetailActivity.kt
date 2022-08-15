@@ -20,8 +20,10 @@ import com.woowahan.android10.deliverbanchan.presentation.detail.adapter.DetailS
 import com.woowahan.android10.deliverbanchan.presentation.detail.adapter.DetailThumbImageAdapter
 import com.woowahan.android10.deliverbanchan.presentation.state.DetailUiState
 import com.woowahan.android10.deliverbanchan.presentation.state.ExhibitionUiState
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class DetailActivity : BaseActivity<ActivityDetailBinding>(R.layout.activity_detail, "DetailActivity") {
 
     private val detailViewModel: DetailViewModel by viewModels()
@@ -42,6 +44,7 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>(R.layout.activity_det
 
         initView()
         observeApiState()
+        observeDetailData()
     }
 
     private fun initView() {
@@ -84,6 +87,32 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>(R.layout.activity_det
             is DetailUiState.ShowToast -> {
                 //binding.maindishPb.toGone()
                 showToast(state.message)
+            }
+        }
+    }
+
+    private fun observeDetailData() {
+        lifecycleScope.launch{
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                detailViewModel.thumbList.collect{
+                    detailThumbImageAdapter.submitList(listOf(it))
+                }
+            }
+        }
+
+        lifecycleScope.launch{
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                detailViewModel.uiDetailInfo.collect{
+                    detailContentAdapter.submitList(listOf(it))
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                detailViewModel.sectionList.collect{
+                    detailSectionImageAdapter.submitList(it.toList())
+                }
             }
         }
     }

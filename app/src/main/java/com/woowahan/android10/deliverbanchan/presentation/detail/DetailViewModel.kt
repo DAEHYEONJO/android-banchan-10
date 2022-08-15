@@ -3,8 +3,11 @@ package com.woowahan.android10.deliverbanchan.presentation.detail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
+import com.woowahan.android10.deliverbanchan.domain.model.UiDetailInfo
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
+import com.woowahan.android10.deliverbanchan.domain.usecase.CreateEmptyUiDetailInfoUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.CreateEmptyUiDishItemUseCase
+import com.woowahan.android10.deliverbanchan.domain.usecase.CreateUiDetailInfoUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetDetailDishUseCase
 import com.woowahan.android10.deliverbanchan.presentation.state.DetailUiState
 import com.woowahan.android10.deliverbanchan.presentation.state.ExhibitionUiState
@@ -13,11 +16,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.descriptors.StructureKind
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
     private val createEmptyUiDishItemUseCase: CreateEmptyUiDishItemUseCase,
+    private val createEmptyUiDetailInfoUseCase: CreateEmptyUiDetailInfoUseCase,
+    private val createUiDetailInfoUseCase: CreateUiDetailInfoUseCase,
     private val getDetailDishUseCase: GetDetailDishUseCase
 ) : ViewModel() {
 
@@ -31,6 +38,9 @@ class DetailViewModel @Inject constructor(
 
     private val _sectionList = MutableStateFlow<List<String>>(emptyList())
     val sectionList: StateFlow<List<String>> = _sectionList
+
+    private val _uiDetailInfo = MutableStateFlow<UiDetailInfo>(createEmptyUiDetailInfoUseCase())
+    val uiDetailInfo: StateFlow<UiDetailInfo> = _uiDetailInfo
 
     private val _itemCount = MutableStateFlow<Int>(1)
     val itemCount: StateFlow<Int> = _itemCount
@@ -48,6 +58,10 @@ class DetailViewModel @Inject constructor(
                     is BaseResult.Success -> {
                         _thumbList.value = result.data.thumbImages
                         _sectionList.value = result.data.detailSection
+                        _uiDetailInfo.value = createUiDetailInfoUseCase(
+                            currentUiDishItem.value,
+                            result.data
+                        )
                         _detailState.value = DetailUiState.Success(result.data)
                     }
                     is BaseResult.Error -> _detailState.value = DetailUiState.Error(result.errorCode)
