@@ -4,16 +4,15 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.room.ColumnInfo
-import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.tabs.TabLayoutMediator
 import com.woowahan.android10.deliverbanchan.R
-import com.woowahan.android10.deliverbanchan.data.local.model.CartInfo
-import com.woowahan.android10.deliverbanchan.data.local.model.OrderDish
-import com.woowahan.android10.deliverbanchan.data.local.model.OrderInfo
+import com.woowahan.android10.deliverbanchan.data.local.db.FoodRoomDatabase
+import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
+import com.woowahan.android10.deliverbanchan.data.local.model.entity.LocalDish
+import com.woowahan.android10.deliverbanchan.data.local.model.entity.OrderInfo
+import com.woowahan.android10.deliverbanchan.data.local.model.entity.RecentlyViewedInfo
 import com.woowahan.android10.deliverbanchan.databinding.ActivityMainBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseActivity
 import com.woowahan.android10.deliverbanchan.presentation.cart.CartActivity
@@ -42,12 +41,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main, "
     }
 
     private fun initBtn() {
-        with(binding.mainTb){
+        with(binding.mainTb) {
             appBarNoBackBtnFlCart.setOnClickListener {
                 startActivity(Intent(this@MainActivity, CartActivity::class.java))
-            }
-            appBarNoBackBtnIvProfile.setOnClickListener {
-
             }
         }
     }

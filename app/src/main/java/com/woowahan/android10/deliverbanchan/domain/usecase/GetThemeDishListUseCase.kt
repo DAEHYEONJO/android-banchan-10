@@ -1,5 +1,6 @@
 package com.woowahan.android10.deliverbanchan.domain.usecase
 
+import android.util.Log
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.common.convertPriceToInt
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
@@ -14,6 +15,10 @@ class GetThemeDishListUseCase @Inject constructor(
     private val dishItemRepository: DishItemRepository,
     private val isExistCartInfoUseCase: IsExistCartInfoUseCase
 ) {
+
+    companion object{
+        const val TAG = "GetThemeDishListUseCase"
+    }
 
     suspend operator fun invoke(theme: String): Flow<BaseResult<List<UiDishItem>, Int>> {
         return dishItemRepository.getDishesByTheme(theme).map { response ->
@@ -39,6 +44,7 @@ class GetThemeDishListUseCase @Inject constructor(
                     )
                 }
                 is BaseResult.Error -> {
+                    Log.e(TAG, "invoke: ${response.errorCode}", )
                     BaseResult.Error(errorCode = response.errorCode)
                 }
             }

@@ -28,4 +28,16 @@ class DishDetailRepositoryImpl @Inject constructor(
                 }
             }
         }
+
+    override suspend fun getDetailDishBaseResult(hash: String): BaseResult<DishDetail.DishDetailData, Int> {
+        val response = dishApi.getDetailDish(hash)
+        return with(response) {
+            if (isSuccessful) {
+                val dishDetailData = body()!!.data
+                BaseResult.Success(dishDetailData)
+            } else {
+                BaseResult.Error(code())
+            }
+        }
+    }
 }

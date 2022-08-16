@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.woowahan.android10.deliverbanchan.data.local.db.FoodRoomDatabase
 import com.woowahan.android10.deliverbanchan.data.local.dao.CartDao
+import com.woowahan.android10.deliverbanchan.data.local.dao.DishDao
 import com.woowahan.android10.deliverbanchan.data.local.dao.OrderDao
 import com.woowahan.android10.deliverbanchan.data.local.dao.RecentlyViewedDao
 import dagger.Module
@@ -34,5 +35,9 @@ object DatabaseModule {
     @Singleton
     @Provides
     fun providesRecentlyViewedDao(foodRoomDatabase: FoodRoomDatabase): RecentlyViewedDao = foodRoomDatabase.recentlyViewedDao()
+
+    @Singleton
+    @Provides
+    fun providesDishDao(foodRoomDatabase: FoodRoomDatabase): DishDao = foodRoomDatabase.dishDao()
 
 }

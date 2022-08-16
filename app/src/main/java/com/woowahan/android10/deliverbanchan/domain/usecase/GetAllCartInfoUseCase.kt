@@ -1,6 +1,6 @@
 package com.woowahan.android10.deliverbanchan.domain.usecase
 
-import com.woowahan.android10.deliverbanchan.data.local.model.CartInfo
+import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
 import com.woowahan.android10.deliverbanchan.domain.repository.local.CartRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

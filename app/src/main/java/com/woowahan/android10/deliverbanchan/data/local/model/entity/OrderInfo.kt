@@ -1,4 +1,4 @@
-package com.woowahan.android10.deliverbanchan.data.local.model
+package com.woowahan.android10.deliverbanchan.data.local.model.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
