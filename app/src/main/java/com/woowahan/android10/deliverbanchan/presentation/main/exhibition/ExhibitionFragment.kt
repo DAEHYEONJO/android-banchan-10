@@ -8,6 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentExhibitionBinding
@@ -27,6 +28,8 @@ class ExhibitionFragment :
     BaseFragment<FragmentExhibitionBinding>(R.layout.fragment_exhibition, "ExhibitionFragment") {
 
     private val exhibitionViewModel: ExhibitionViewModel by viewModels()
+    private lateinit var concatAdapter: ConcatAdapter
+    private lateinit var exhibitionHeaderAdapter: ExhibitionHeaderAdapter
     private lateinit var exhibitionAdapter: ExhibitionAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -36,11 +39,18 @@ class ExhibitionFragment :
     }
 
     private fun initView() {
+        setExhibitionHeaderAdpater()
+        setExhibitionContentAdapter()
         setRecyclerView()
         initObserver()
     }
 
-    private fun setRecyclerView() {
+    private fun setExhibitionHeaderAdpater() {
+        exhibitionHeaderAdapter = ExhibitionHeaderAdapter()
+        exhibitionHeaderAdapter.submitList(listOf("header").toList())
+    }
+
+    private fun setExhibitionContentAdapter() {
         exhibitionAdapter = ExhibitionAdapter ({
             val cartBottomSheetFragment = CartBottomSheetFragment()
 
@@ -77,8 +87,14 @@ class ExhibitionFragment :
             intent.putExtra("UiDishItem", it)
             startActivity(intent)
         })
+    }
+
+    private fun setRecyclerView() {
+        concatAdapter =
+            ConcatAdapter(exhibitionHeaderAdapter, exhibitionAdapter)
+
         binding.exhibitionRv.apply {
-            adapter = exhibitionAdapter
+            adapter = concatAdapter
             layoutManager = LinearLayoutManager(requireContext())
         }
     }
