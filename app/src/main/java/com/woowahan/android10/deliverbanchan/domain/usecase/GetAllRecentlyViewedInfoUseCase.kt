@@ -1,6 +1,6 @@
 package com.woowahan.android10.deliverbanchan.domain.usecase
 
-import com.woowahan.android10.deliverbanchan.data.local.model.RecentlyViewedInfo
+import com.woowahan.android10.deliverbanchan.data.local.model.entity.RecentlyViewedInfo
 import com.woowahan.android10.deliverbanchan.domain.repository.local.RecentlyViewedRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

@@ -53,6 +53,7 @@ class SoupViewModel @Inject constructor(
         getSoupDishesUseCase("soup").onStart {
             setLoading()
         }.catch { exception ->
+            Log.e(TAG, "getSoupDishes: $exception", )
             hideLoading()
             showToast(exception.message.toString())
         }.flowOn(Dispatchers.IO).collect { result ->

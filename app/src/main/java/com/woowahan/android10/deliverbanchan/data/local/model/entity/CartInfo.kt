@@ -1,4 +1,4 @@
-package com.woowahan.android10.deliverbanchan.data.local.model
+package com.woowahan.android10.deliverbanchan.data.local.model.entity
 
 import androidx.room.Entity
 import androidx.room.Index
@@ -9,6 +9,5 @@ data class CartInfo(
     @PrimaryKey
     val hash: String,
     val checked: Boolean,
-    val title: String,
     val amount: Int
 )

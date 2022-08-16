@@ -1,11 +1,13 @@
 package com.woowahan.android10.deliverbanchan.di
 
 import com.woowahan.android10.deliverbanchan.data.local.repository.CartRepositoryImpl
+import com.woowahan.android10.deliverbanchan.data.local.repository.DishRepositoryImpl
 import com.woowahan.android10.deliverbanchan.data.local.repository.OrderRepositoryImpl
 import com.woowahan.android10.deliverbanchan.data.local.repository.RecentlyViewedRepositoryImpl
 import com.woowahan.android10.deliverbanchan.data.remote.repository.DishDetailRepositoryImpl
 import com.woowahan.android10.deliverbanchan.data.remote.repository.DishItemRepositoryImpl
 import com.woowahan.android10.deliverbanchan.domain.repository.local.CartRepository
+import com.woowahan.android10.deliverbanchan.domain.repository.local.DishRepository
 import com.woowahan.android10.deliverbanchan.domain.repository.local.OrderRepository
 import com.woowahan.android10.deliverbanchan.domain.repository.local.RecentlyViewedRepository
 import com.woowahan.android10.deliverbanchan.domain.repository.remote.DishDetailRepository
@@ -31,6 +33,10 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindsRecentlyViewedRepository(recentlyViewedRepositoryImpl: RecentlyViewedRepositoryImpl): RecentlyViewedRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindsDishRepository(dishRepositoryImpl: DishRepositoryImpl): DishRepository
 
     @Binds
     @Singleton

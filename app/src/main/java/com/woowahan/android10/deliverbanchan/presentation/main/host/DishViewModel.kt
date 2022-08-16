@@ -1,16 +1,23 @@
 package com.woowahan.android10.deliverbanchan.presentation.main.host
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.woowahan.android10.deliverbanchan.data.local.model.CartInfo
-import com.woowahan.android10.deliverbanchan.data.local.model.Order
-import com.woowahan.android10.deliverbanchan.data.local.model.OrderDish
-import com.woowahan.android10.deliverbanchan.data.local.model.OrderInfo
+import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
+import com.woowahan.android10.deliverbanchan.data.local.model.entity.LocalDish
+import com.woowahan.android10.deliverbanchan.data.local.model.entity.OrderInfo
+import com.woowahan.android10.deliverbanchan.data.local.model.join.Cart
+import com.woowahan.android10.deliverbanchan.data.local.model.join.Order
+import com.woowahan.android10.deliverbanchan.data.local.model.join.RecentlyViewed
+import com.woowahan.android10.deliverbanchan.domain.repository.local.CartRepository
+import com.woowahan.android10.deliverbanchan.domain.repository.local.DishRepository
+import com.woowahan.android10.deliverbanchan.domain.repository.local.OrderRepository
+import com.woowahan.android10.deliverbanchan.domain.repository.local.RecentlyViewedRepository
 import com.woowahan.android10.deliverbanchan.domain.usecase.*
 import com.woowahan.android10.deliverbanchan.presentation.state.UiLocalState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,8 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DishViewModel @Inject constructor(
     private val getAllCartInfoUseCase: GetAllCartInfoUseCase,
-    private val getAllOrderInfoListUseCase: GetAllOrderInfoListUseCase,
-    val insertCartInfoUseCase: InsertCartInfoUseCase
+    private val getAllOrderInfoListUseCase: GetAllOrderInfoListUseCase
 ) : ViewModel() {
 
     companion object {
@@ -50,7 +56,7 @@ class DishViewModel @Inject constructor(
     private fun getAllOrderInfo() = viewModelScope.launch {
         getAllOrderInfoListUseCase().catch { exception ->
             _orderState.value = UiLocalState.ShowToast(exception.message.toString())
-        }.collect{
+        }.flowOn(Dispatchers.IO).collect{
             _orderState.value = UiLocalState.Success(it)
             val deliveringOrder: OrderInfo? = it.find { order ->
                 order.isDelivering
@@ -70,4 +76,5 @@ class DishViewModel @Inject constructor(
             }
         }
     }
+
 }
