@@ -6,72 +6,9 @@
 
     </data>
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <com.google.android.material.appbar.AppBarLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/white">
-
-            <com.google.android.material.appbar.CollapsingToolbarLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="24dp"
-                    android:background="@color/primary_surface">
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/base_space_16dp"
-                        android:layout_marginTop="36dp"
-                        android:backgroundTint="@color/grey_scale_surface"
-                        app:cardElevation="0dp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:shapeAppearanceOverlay="@style/cardViewRadius"
-                        app:strokeColor="@color/grey_scale_black"
-                        app:strokeWidth="1dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:fontFamily="@font/noto_sans_kr_medium_500"
-                            android:gravity="center"
-                            android:includeFontPadding="false"
-                            android:paddingHorizontal="14dp"
-                            android:paddingVertical="5dp"
-                            android:text="기획전"
-                            android:textColor="@color/grey_scale_black"
-                            android:textSize="@dimen/text_size_10sp" />
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <TextView
-                        style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack32_Normal.Style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/base_space_16dp"
-                        android:layout_marginTop="70dp"
-                        android:layout_marginBottom="36dp"
-                        android:includeFontPadding="false"
-                        android:text="@string/main_header_exhibition"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-            </com.google.android.material.appbar.CollapsingToolbarLayout>
-
-        </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/exhibition_rv"
@@ -85,7 +22,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:indeterminateBehavior="repeat"
-            android:indeterminateTint="@color/progress_indicator" />
+            android:indeterminateTint="@color/progress_indicator"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
