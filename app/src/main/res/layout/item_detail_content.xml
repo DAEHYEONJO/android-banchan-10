@@ -207,13 +207,12 @@
             android:layout_width="wrap_content"
             android:layout_height="24dp"
             android:gravity="center"
-            android:text="1"
+            android:text="@{String.valueOf(UiDetailInfo.itemCount)}"
             app:layout_constraintBottom_toBottomOf="@id/detail_ib_plus"
             app:layout_constraintEnd_toStartOf="@id/detail_ib_plus"
             app:layout_constraintStart_toEndOf="@id/detail_ib_minus"
             app:layout_constraintTop_toTopOf="@id/detail_ib_plus"
             tools:text="1" />
-        <!-- android:text="@{String.valueOf(viewModel.itemCount)}" -->
 
         <TextView
             android:id="@+id/detail_tv_count_description"
@@ -239,7 +238,7 @@
             android:id="@+id/detail_tv_total_price"
             style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack32_Medium.Style"
             isNPrice="@{false}"
-            price="@{UiDetailInfo.SPrice}"
+            price="@{UiDetailInfo.SPrice * UiDetailInfo.itemCount}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"

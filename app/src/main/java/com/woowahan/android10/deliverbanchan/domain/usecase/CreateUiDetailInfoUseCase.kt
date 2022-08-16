@@ -9,7 +9,7 @@ import javax.inject.Singleton
 
 @Singleton
 class CreateUiDetailInfoUseCase @Inject constructor() {
-    operator fun invoke(uiDishItem: UiDishItem, dishDetailData: DishDetail.DishDetailData) =
+    operator fun invoke(uiDishItem: UiDishItem, dishDetailData: DishDetail.DishDetailData, itemCount: Int) =
         UiDetailInfo(
             hash = uiDishItem.hash,
             title = uiDishItem.title,
@@ -21,6 +21,7 @@ class CreateUiDetailInfoUseCase @Inject constructor() {
             deliveryFee = dishDetailData.deliveryFee,
             sPrice = uiDishItem.sPrice,
             nPrice = uiDishItem.nPrice,
-            salePercentage = uiDishItem.salePercentage
+            salePercentage = uiDishItem.salePercentage,
+            itemCount = itemCount
         )
 }

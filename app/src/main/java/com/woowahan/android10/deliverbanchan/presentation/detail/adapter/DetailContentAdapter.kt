@@ -8,12 +8,23 @@ import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.databinding.ItemDetailContentBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiDetailInfo
 
-class DetailContentAdapter : ListAdapter<UiDetailInfo, DetailContentAdapter.DetailContentViewHolder>(DetailContentDiffUtil) {
+class DetailContentAdapter(
+    private val clickMinus: () -> Unit,
+    private val clickPlus: () -> Unit
+) : ListAdapter<UiDetailInfo, DetailContentAdapter.DetailContentViewHolder>(DetailContentDiffUtil) {
 
     inner class DetailContentViewHolder(private val binding: ItemDetailContentBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(uiDetailInfo: UiDetailInfo) {
+        fun bind(uiDetailInfo: UiDetailInfo, clickMinus: () -> Unit, clickPlus: () -> Unit) {
             binding.uiDetailInfo = uiDetailInfo
+
+            binding.detailIbMinus.setOnClickListener {
+                clickMinus.invoke()
+            }
+
+            binding.detailIbPlus.setOnClickListener {
+                clickPlus.invoke()
+            }
         }
     }
 
@@ -28,7 +39,7 @@ class DetailContentAdapter : ListAdapter<UiDetailInfo, DetailContentAdapter.Deta
     }
 
     override fun onBindViewHolder(holder: DetailContentViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), clickMinus, clickPlus)
     }
 
     companion object DetailContentDiffUtil : DiffUtil.ItemCallback<UiDetailInfo>() {

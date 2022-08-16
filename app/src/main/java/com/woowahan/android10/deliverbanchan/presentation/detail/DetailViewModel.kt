@@ -60,13 +60,27 @@ class DetailViewModel @Inject constructor(
                         _sectionList.value = result.data.detailSection
                         _uiDetailInfo.value = createUiDetailInfoUseCase(
                             currentUiDishItem.value,
-                            result.data
+                            result.data,
+                            _itemCount.value
                         )
                         _detailState.value = DetailUiState.Success(result.data)
                     }
-                    is BaseResult.Error -> _detailState.value = DetailUiState.Error(result.errorCode)
+                    is BaseResult.Error -> _detailState.value =
+                        DetailUiState.Error(result.errorCode)
                 }
             }
+        }
+    }
+
+    fun plusItemCount() {
+        _itemCount.value += 1
+        _uiDetailInfo.value = _uiDetailInfo.value.copy(itemCount = _itemCount.value)
+    }
+
+    fun minusItemCount() {
+        if (_itemCount.value >= 2) {
+            _itemCount.value -= 1
+            _uiDetailInfo.value = _uiDetailInfo.value.copy(itemCount = _itemCount.value)
         }
     }
 
