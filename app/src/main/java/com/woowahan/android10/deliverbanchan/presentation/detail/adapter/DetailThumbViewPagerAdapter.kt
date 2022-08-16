@@ -34,6 +34,8 @@ class DetailThumbViewPagerAdapter :
         holder.bind(getItem(position))
     }
 
+    override fun getItemCount() = currentList.size
+
     companion object DetailThumbViewPagerDiffUtil : DiffUtil.ItemCallback<String>() {
         override fun areItemsTheSame(oldItem: String, newItem: String) =
             oldItem == newItem
