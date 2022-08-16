@@ -11,6 +11,7 @@ data class UiDetailInfo(
     val deliveryFee: String,
     val sPrice: Int,
     val nPrice: Int = 0,
-    val salePercentage: Int = 0
+    val salePercentage: Int = 0,
+    val itemCount: Int = 1
 ) {
 }

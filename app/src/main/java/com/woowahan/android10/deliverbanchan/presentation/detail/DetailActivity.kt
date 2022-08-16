@@ -8,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.ActivityDetailBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
@@ -24,7 +25,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class DetailActivity : BaseActivity<ActivityDetailBinding>(R.layout.activity_detail, "DetailActivity") {
+class DetailActivity :
+    BaseActivity<ActivityDetailBinding>(R.layout.activity_detail, "DetailActivity") {
 
     private val detailViewModel: DetailViewModel by viewModels()
 
@@ -54,16 +56,29 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>(R.layout.activity_det
 
     private fun setReyclerView() {
         detailThumbImageAdapter = DetailThumbImageAdapter()
-        detailContentAdapter = DetailContentAdapter()
+        detailContentAdapter = DetailContentAdapter({
+            // minus click
+            Log.e("DetailActivity", "minus click")
+            detailViewModel.minusItemCount()
+        }, {
+            // plus click
+            Log.e("DetailActivity", "plus click")
+            detailViewModel.plusItemCount()
+        })
         detailSectionImageAdapter = DetailSectionImageAdapter()
 
-        concatAdapter = ConcatAdapter(detailThumbImageAdapter, detailContentAdapter, detailSectionImageAdapter)
+        concatAdapter =
+            ConcatAdapter(detailThumbImageAdapter, detailContentAdapter, detailSectionImageAdapter)
 
         binding.detailRv.apply {
             adapter = concatAdapter
             layoutManager = LinearLayoutManager(this@DetailActivity)
         }
 
+        val animator = binding.detailRv.itemAnimator
+        if (animator is SimpleItemAnimator) {
+            animator.supportsChangeAnimations = false
+        }
     }
 
     private fun observeApiState() {
@@ -80,7 +95,7 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>(R.layout.activity_det
         when (state) {
             is DetailUiState.IsLoading -> {
                 //binding.maindishPb.toVisible()
-                }
+            }
             is DetailUiState.Success -> {
                 //binding.maindishPb.toGone()
             }
@@ -92,17 +107,17 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>(R.layout.activity_det
     }
 
     private fun observeDetailData() {
-        lifecycleScope.launch{
+        lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                detailViewModel.thumbList.collect{
+                detailViewModel.thumbList.collect {
                     detailThumbImageAdapter.submitList(listOf(it))
                 }
             }
         }
 
-        lifecycleScope.launch{
+        lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                detailViewModel.uiDetailInfo.collect{
+                detailViewModel.uiDetailInfo.collect {
                     detailContentAdapter.submitList(listOf(it))
                 }
             }
@@ -110,7 +125,7 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>(R.layout.activity_det
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                detailViewModel.sectionList.collect{
+                detailViewModel.sectionList.collect {
                     detailSectionImageAdapter.submitList(it.toList())
                 }
             }
