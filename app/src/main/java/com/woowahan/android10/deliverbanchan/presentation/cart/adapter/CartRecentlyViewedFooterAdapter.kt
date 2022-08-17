@@ -1,8 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart.adapter
 
-import android.graphics.Rect
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -10,10 +8,8 @@ import com.woowahan.android10.deliverbanchan.databinding.ItemCartRecentlyViewedF
 import com.woowahan.android10.deliverbanchan.domain.model.UiRecentlyJoinItem
 import com.woowahan.android10.deliverbanchan.presentation.cart.common.GridItemDecorator
 import com.woowahan.android10.deliverbanchan.presentation.cart.recently.RecentlyViewedVerticalAdapter
-import com.woowahan.android10.deliverbanchan.presentation.common.dpToPx
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
-import kotlin.math.roundToInt
 
 @ActivityRetainedScoped
 class CartRecentlyViewedFooterAdapter @Inject constructor(): RecyclerView.Adapter<CartRecentlyViewedFooterAdapter.ViewHolder>() {

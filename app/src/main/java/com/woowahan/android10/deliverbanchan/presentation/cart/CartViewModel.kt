@@ -7,6 +7,7 @@ import com.woowahan.android10.deliverbanchan.di.IoDispatcher
 import com.woowahan.android10.deliverbanchan.di.MainDispatcher
 import com.woowahan.android10.deliverbanchan.domain.model.UiCartJoinItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiRecentlyJoinItem
+import com.woowahan.android10.deliverbanchan.domain.usecase.DeleteCartInfoByHashUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetJoinUseCase
 import com.woowahan.android10.deliverbanchan.presentation.state.UiLocalState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,6 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CartViewModel @Inject constructor(
     private val getJoinUseCase: GetJoinUseCase,
+    private val deleteCartInfoByHashUseCase: DeleteCartInfoByHashUseCase,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
@@ -59,6 +61,10 @@ class CartViewModel @Inject constructor(
             _allRecentlyJoinState.value = UiLocalState.IsLoading(false)
             _allRecentlyJoinState.value = UiLocalState.Success(it)
         }
+    }
+
+    fun deleteCart(hash: String) = viewModelScope.launch {
+        deleteCartInfoByHashUseCase(hash)
     }
 
     fun setAppBarTitle(string: String) {

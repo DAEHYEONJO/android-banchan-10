@@ -16,10 +16,10 @@ class CartDishTopBodyAdapter @Inject constructor(
 ): ListAdapter<UiCartJoinItem, CartDishTopBodyAdapter.ViewHolder>(diffUtil) {
 
     interface OnCartItemClickListener{
-        fun onClickDeleteBtn(hash: String){
-
-        }
+        fun onClickDeleteBtn(hash: String)
     }
+
+    var onClickItemClickListener: OnCartItemClickListener? = null
 
     companion object{
         val diffUtil = object : DiffUtil.ItemCallback<UiCartJoinItem>(){
@@ -39,11 +39,14 @@ class CartDishTopBodyAdapter @Inject constructor(
         }
     }
 
-    class ViewHolder(val binding: ItemCartDishTopBodyBinding): RecyclerView.ViewHolder(binding.root){
+    inner class ViewHolder(val binding: ItemCartDishTopBodyBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(uiCartJoinItem: UiCartJoinItem){
             with(binding){
                 item = uiCartJoinItem
                 executePendingBindings()
+                cartSelectTopBodyIbDelete.setOnClickListener {
+                    onClickItemClickListener?.onClickDeleteBtn(uiCartJoinItem.hash)
+                }
             }
         }
     }

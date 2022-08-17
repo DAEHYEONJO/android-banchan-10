@@ -46,8 +46,17 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initInterface()
         initAdapterList()
         initRecyclerView()
+    }
+
+    private fun initInterface() {
+        cartTopBodyAdapter.onClickItemClickListener = object : CartDishTopBodyAdapter.OnCartItemClickListener{
+            override fun onClickDeleteBtn(hash: String) {
+                cartViewModel.deleteCart(hash)
+            }
+        }
     }
 
     private fun initAdapterList() {
