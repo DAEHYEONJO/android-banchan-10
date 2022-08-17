@@ -1,120 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/grey_scale_surface">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:id="@+id/cart_order_bottom_body_tv_product_total_price_hard_code"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/base_24dp"
-        android:gravity="bottom"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="@dimen/base_space_16dp"
-        android:layout_marginStart="104dp"
-        android:text="@string/item_cart_order_product_total_price"
-        style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault14_Normal.Style"/>
+    <data>
+        <variable
+            name="item"
+            type="com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartBottomBody" />
+    </data>
 
-    <TextView
-        android:id="@+id/cart_order_bottom_body_tv_product_total_price"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/base_24dp"
-        android:gravity="bottom"
-        app:layout_constraintTop_toTopOf="@+id/cart_order_bottom_body_tv_product_total_price_hard_code"
-        app:layout_constraintBottom_toBottomOf="@+id/cart_order_bottom_body_tv_product_total_price_hard_code"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="@dimen/base_space_16dp"
-        android:text="18,640원"
-        style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault14_Normal.Style"/>
-
-    <TextView
-        android:id="@+id/cart_order_bottom_body_tv_delivery_price_hard_code"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/base_24dp"
-        android:gravity="bottom"
-        app:layout_constraintStart_toStartOf="@+id/cart_order_bottom_body_tv_product_total_price_hard_code"
-        app:layout_constraintTop_toBottomOf="@+id/cart_order_bottom_body_tv_product_total_price_hard_code"
-        android:layout_marginTop="@dimen/rv_space_8dp"
-        android:text="@string/item_cart_order_delivery_price"
-        style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault14_Normal.Style"/>
-
-    <TextView
-        android:id="@+id/cart_order_bottom_body_tv_product_delivery_price"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/base_24dp"
-        android:gravity="bottom"
-        app:layout_constraintTop_toTopOf="@+id/cart_order_bottom_body_tv_delivery_price_hard_code"
-        app:layout_constraintBottom_toBottomOf="@+id/cart_order_bottom_body_tv_delivery_price_hard_code"
-        app:layout_constraintEnd_toEndOf="@+id/cart_order_bottom_body_tv_product_total_price"
-        android:text="1,640원"
-        style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault14_Normal.Style"/>
-
-    <View
-        android:id="@+id/cart_order_bottom_body_view"
-        android:layout_width="@dimen/item_elevation_0dp"
-        android:layout_height="1dp"
-        app:layout_constraintStart_toStartOf="@+id/cart_order_bottom_body_tv_delivery_price_hard_code"
-        app:layout_constraintEnd_toEndOf="@+id/cart_order_bottom_body_tv_product_delivery_price"
-        app:layout_constraintTop_toBottomOf="@id/cart_order_bottom_body_tv_delivery_price_hard_code"
-        android:layout_marginTop="@dimen/rv_space_8dp"
-        android:background="@color/grey_scale_line"/>
-
-    <TextView
-        android:id="@+id/cart_order_bottom_body_tv_total_price_hard_code"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/base_24dp"
-        android:gravity="bottom"
-        app:layout_constraintStart_toStartOf="@+id/cart_order_bottom_body_view"
-        app:layout_constraintTop_toBottomOf="@+id/cart_order_bottom_body_view"
-        android:layout_marginTop="@dimen/rv_space_8dp"
-        android:text="@string/item_cart_order_total_price"
-        style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style"/>
-
-    <TextView
-        android:id="@+id/cart_order_bottom_body_tv_total_price"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/base_24dp"
-        android:gravity="bottom"
-        app:layout_constraintTop_toTopOf="@+id/cart_order_bottom_body_tv_total_price_hard_code"
-        app:layout_constraintBottom_toBottomOf="@+id/cart_order_bottom_body_tv_total_price_hard_code"
-        app:layout_constraintEnd_toEndOf="@+id/cart_order_bottom_body_view"
-        android:text="22,640원"
-        style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style"/>
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/cart_order_bottom_body_btn_order"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="@+id/cart_order_bottom_body_tv_total_price"
-        app:layout_constraintTop_toBottomOf="@+id/cart_order_bottom_body_tv_total_price"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginStart="@dimen/base_space_16dp"
-        android:backgroundTint="@color/primary_main"
-        android:layout_marginTop="40dp"
-        android:layout_marginBottom="30dp"
-        app:elevation="20dp"
-        app:cornerRadius="0dp"
-        android:paddingTop="@dimen/base_space_16dp"
-        android:paddingBottom="@dimen/base_space_16dp"
-        android:text="21,140원 주문하기"
-        style="@style/Widget.TextView.NotoSansKR_GreyScaleWhite18_Medium.Style"/>
+        android:background="@color/grey_scale_surface">
 
-    <TextView
-        android:id="@+id/cart_order_bottom_body_tv_free_delivery"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/base_24dp"
-        app:layout_constraintTop_toBottomOf="@+id/cart_order_bottom_body_btn_order"
-        app:layout_constraintStart_toStartOf="@+id/cart_order_bottom_body_btn_order"
-        app:layout_constraintEnd_toEndOf="@+id/cart_order_bottom_body_btn_order"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="48dp"
-        android:text="21,360원을 더 담으면 무료배송"
-        android:layout_marginTop="@dimen/base_space_16dp"
-        android:gravity="bottom|center"
-        style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Normal.Style"/>
+        <TextView
+            android:id="@+id/cart_order_bottom_body_tv_product_total_price_hard_code"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/base_24dp"
+            android:gravity="bottom"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="@dimen/base_space_16dp"
+            android:layout_marginStart="104dp"
+            android:text="@string/item_cart_order_product_total_price"
+            style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault14_Normal.Style" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/cart_order_bottom_body_tv_product_total_price"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/base_24dp"
+            android:gravity="bottom"
+            app:layout_constraintTop_toTopOf="@+id/cart_order_bottom_body_tv_product_total_price_hard_code"
+            app:layout_constraintBottom_toBottomOf="@+id/cart_order_bottom_body_tv_product_total_price_hard_code"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="@dimen/base_space_16dp"
+            android:text="18,640원"
+            style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault14_Normal.Style" />
+
+        <TextView
+            android:id="@+id/cart_order_bottom_body_tv_delivery_price_hard_code"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/base_24dp"
+            android:gravity="bottom"
+            app:layout_constraintStart_toStartOf="@+id/cart_order_bottom_body_tv_product_total_price_hard_code"
+            app:layout_constraintTop_toBottomOf="@+id/cart_order_bottom_body_tv_product_total_price_hard_code"
+            android:layout_marginTop="@dimen/rv_space_8dp"
+            android:text="@string/item_cart_order_delivery_price"
+            style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault14_Normal.Style" />
+
+        <TextView
+            android:id="@+id/cart_order_bottom_body_tv_product_delivery_price"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/base_24dp"
+            android:gravity="bottom"
+            app:layout_constraintTop_toTopOf="@+id/cart_order_bottom_body_tv_delivery_price_hard_code"
+            app:layout_constraintBottom_toBottomOf="@+id/cart_order_bottom_body_tv_delivery_price_hard_code"
+            app:layout_constraintEnd_toEndOf="@+id/cart_order_bottom_body_tv_product_total_price"
+            android:text="1,640원"
+            style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault14_Normal.Style" />
+
+        <View
+            android:id="@+id/cart_order_bottom_body_view"
+            android:layout_width="@dimen/item_elevation_0dp"
+            android:layout_height="1dp"
+            app:layout_constraintStart_toStartOf="@+id/cart_order_bottom_body_tv_delivery_price_hard_code"
+            app:layout_constraintEnd_toEndOf="@+id/cart_order_bottom_body_tv_product_delivery_price"
+            app:layout_constraintTop_toBottomOf="@id/cart_order_bottom_body_tv_delivery_price_hard_code"
+            android:layout_marginTop="@dimen/rv_space_8dp"
+            android:background="@color/grey_scale_line" />
+
+        <TextView
+            android:id="@+id/cart_order_bottom_body_tv_total_price_hard_code"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/base_24dp"
+            android:gravity="bottom"
+            app:layout_constraintStart_toStartOf="@+id/cart_order_bottom_body_view"
+            app:layout_constraintTop_toBottomOf="@+id/cart_order_bottom_body_view"
+            android:layout_marginTop="@dimen/rv_space_8dp"
+            android:text="@string/item_cart_order_total_price"
+            style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style" />
+
+        <TextView
+            android:id="@+id/cart_order_bottom_body_tv_total_price"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/base_24dp"
+            android:gravity="bottom"
+            app:layout_constraintTop_toTopOf="@+id/cart_order_bottom_body_tv_total_price_hard_code"
+            app:layout_constraintBottom_toBottomOf="@+id/cart_order_bottom_body_tv_total_price_hard_code"
+            app:layout_constraintEnd_toEndOf="@+id/cart_order_bottom_body_view"
+            android:text="22,640원"
+            style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/cart_order_bottom_body_btn_order"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@+id/cart_order_bottom_body_tv_total_price"
+            app:layout_constraintTop_toBottomOf="@+id/cart_order_bottom_body_tv_total_price"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="@dimen/base_space_16dp"
+            android:backgroundTint="@color/primary_main"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="30dp"
+            app:elevation="20dp"
+            app:cornerRadius="0dp"
+            android:paddingTop="@dimen/base_space_16dp"
+            android:paddingBottom="@dimen/base_space_16dp"
+            android:text="21,140원 주문하기"
+            style="@style/Widget.TextView.NotoSansKR_GreyScaleWhite18_Medium.Style" />
+
+        <TextView
+            android:id="@+id/cart_order_bottom_body_tv_free_delivery"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/base_24dp"
+            app:layout_constraintTop_toBottomOf="@+id/cart_order_bottom_body_btn_order"
+            app:layout_constraintStart_toStartOf="@+id/cart_order_bottom_body_btn_order"
+            app:layout_constraintEnd_toEndOf="@+id/cart_order_bottom_body_btn_order"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="48dp"
+            android:text="21,360원을 더 담으면 무료배송"
+            android:layout_marginTop="@dimen/base_space_16dp"
+            android:gravity="bottom|center"
+            style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Normal.Style" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

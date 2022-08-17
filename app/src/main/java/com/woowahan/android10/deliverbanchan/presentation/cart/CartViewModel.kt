@@ -27,7 +27,7 @@ class CartViewModel @Inject constructor(
     private val _allCartJoinState = MutableStateFlow<UiLocalState<UiCartJoinItem>>(UiLocalState.Init)
     val allCartJoinState: StateFlow<UiLocalState<UiCartJoinItem>> get() = _allCartJoinState
     private val _allRecentlyJoinState = MutableStateFlow<UiLocalState<UiRecentlyJoinItem>>(UiLocalState.Init)
-    val allOrderJoinState: StateFlow<UiLocalState<UiRecentlyJoinItem>> get() = _allRecentlyJoinState
+    val allRecentlyJoinState: StateFlow<UiLocalState<UiRecentlyJoinItem>> get() = _allRecentlyJoinState
     init {
         getAllRecently()
         getAllCartJoinList()
