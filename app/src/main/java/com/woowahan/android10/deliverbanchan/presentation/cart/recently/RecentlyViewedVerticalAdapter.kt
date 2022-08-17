@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.databinding.ItemRecentlyViewedBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiRecentlyJoinItem
+import com.woowahan.android10.deliverbanchan.presentation.common.dpToPx
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 
@@ -35,6 +36,9 @@ class RecentlyViewedVerticalAdapter @Inject constructor(): ListAdapter<UiRecentl
     class ViewHolder(private val binding: ItemRecentlyViewedBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(uiRecentlyJoinItem: UiRecentlyJoinItem){
             with(binding){
+                itemRecentlyViewedRoot.layoutParams.apply {
+                    width = dpToPx(root.context, 120).toInt()
+                }
                 item = uiRecentlyJoinItem
                 executePendingBindings()
             }

@@ -14,6 +14,13 @@ import javax.inject.Inject
 @ActivityRetainedScoped
 class CartDishTopBodyAdapter @Inject constructor(
 ): ListAdapter<UiCartJoinItem, CartDishTopBodyAdapter.ViewHolder>(diffUtil) {
+
+    interface OnCartItemClickListener{
+        fun onClickDeleteBtn(hash: String){
+
+        }
+    }
+
     companion object{
         val diffUtil = object : DiffUtil.ItemCallback<UiCartJoinItem>(){
             override fun areItemsTheSame(

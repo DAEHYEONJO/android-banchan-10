@@ -3,7 +3,6 @@ package com.woowahan.android10.deliverbanchan.data.local.model.join
 import androidx.room.ColumnInfo
 import androidx.room.PrimaryKey
 
-
 data class Order(
     val hash: String,
     val title: String,

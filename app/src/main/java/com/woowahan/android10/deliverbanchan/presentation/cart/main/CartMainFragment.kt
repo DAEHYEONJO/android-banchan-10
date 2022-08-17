@@ -23,6 +23,7 @@ import com.woowahan.android10.deliverbanchan.presentation.cart.adapter.CartOrder
 import com.woowahan.android10.deliverbanchan.presentation.cart.adapter.CartRecentlyViewedFooterAdapter
 import com.woowahan.android10.deliverbanchan.presentation.cart.adapter.CartSelectHeaderAdapter
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartBottomBody
+import com.woowahan.android10.deliverbanchan.presentation.common.showToast
 import com.woowahan.android10.deliverbanchan.presentation.state.UiLocalState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -52,10 +53,12 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
     private fun initAdapterList() {
         with(cartViewModel){
             allCartJoinState.flowWithLifecycle(lifecycle).onEach { uiLocalState ->
+                Log.e(TAG, "initAdapterList: cart join $uiLocalState", )
                 handleState(cartTopBodyAdapter, uiLocalState)
             }.launchIn(lifecycleScope)
 
             allRecentlyJoinState.flowWithLifecycle(lifecycle).onEach { uiLocalState ->
+                Log.e(TAG, "initAdapterList: recently join $uiLocalState", )
                 handleState(cartRecentlyViewedFooterAdapter, uiLocalState)
             }.launchIn(lifecycleScope)
         }
@@ -65,7 +68,7 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
         when(uiLocalState){
             is UiLocalState.IsEmpty -> {}
             is UiLocalState.IsLoading ->{}
-            is UiLocalState.ShowToast -> {}
+            is UiLocalState.ShowToast -> { requireContext().showToast(uiLocalState.message) }
             is UiLocalState.Success -> {
                 when(adapter){
                     is CartDishTopBodyAdapter -> {

@@ -11,6 +11,7 @@ import javax.inject.Inject
 class RecentlyViewedRepositoryImpl @Inject constructor(
     private val recentlyViewedDao: RecentlyViewedDao
 ) : RecentlyViewedRepository {
+    @WorkerThread
     override fun getAllRecentlyViewedInfo(): Flow<List<RecentlyViewedInfo>> =
         recentlyViewedDao.getAllRecentlyViewedInfo()
 
@@ -21,7 +22,7 @@ class RecentlyViewedRepositoryImpl @Inject constructor(
     @WorkerThread
     override suspend fun deleteAllRecentlyViewedInfo() =
         recentlyViewedDao.deleteAllRecentlyViewedInfo()
-
+    @WorkerThread
     override fun getAllRecentlyJoinList(): Flow<List<RecentlyViewed>> = recentlyViewedDao.getAllRecentlyJoinList()
 
 }

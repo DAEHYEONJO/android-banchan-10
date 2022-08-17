@@ -68,3 +68,26 @@ fun ImageView.setProfileIcon(isOrderExist: Boolean) {
     background = if (isOrderExist) ResourcesCompat.getDrawable(resources, R.drawable.ic_user_badge, null)
         else ResourcesCompat.getDrawable(resources, R.drawable.ic_user_without_badge, null)
 }
+
+@BindingAdapter("app:getTimeString")
+fun TextView.getTimeString(beforeTime: Long){
+    val curTime = System.currentTimeMillis()
+    var diffTime = (curTime - beforeTime)/1000
+    val timeUnitArray = intArrayOf(60, 60, 24, 30, 12)
+    val timeSuffixArray = arrayOf("방금전","분전","시간전","일전","달전","년전")
+
+    if (diffTime < timeUnitArray[0]){
+        text = timeSuffixArray[0]
+        return
+    }
+
+    repeat (4){ index ->
+        diffTime /= timeUnitArray[index]
+        if (diffTime < timeUnitArray[index+1]){
+            text = resources.getString(R.string.time_format, diffTime.toString(), timeSuffixArray[index+1])
+            return
+        }
+    }
+
+    text = resources.getString(R.string.time_format, (diffTime/timeUnitArray.last()).toString(), timeSuffixArray.last())
+}

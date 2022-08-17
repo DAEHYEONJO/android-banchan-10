@@ -6,14 +6,12 @@ import com.woowahan.android10.deliverbanchan.data.local.model.join.RecentlyViewe
 import kotlinx.coroutines.flow.Flow
 
 interface RecentlyViewedRepository {
+    @WorkerThread
     fun getAllRecentlyViewedInfo(): Flow<List<RecentlyViewedInfo>>
-
     @WorkerThread
     suspend fun insertRecentlyViewedInfo(recentlyViewedInfo: RecentlyViewedInfo)
-
     @WorkerThread
     suspend fun deleteAllRecentlyViewedInfo()
-
+    @WorkerThread
     fun getAllRecentlyJoinList(): Flow<List<RecentlyViewed>>
-
 }
