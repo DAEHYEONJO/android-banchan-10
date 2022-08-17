@@ -38,10 +38,10 @@ class ExhibitionHorizontalAdapter(
             binding.viewLeft.isVisible = (position == 0)
             binding.viewRight.isVisible = (position == currentList.size - 1)
             binding.maindishImbCart.setOnClickListener {
-                cartIconClick.invoke(uiDishItem)
+                cartIconClick(uiDishItem)
             }
             binding.root.setOnClickListener {
-             itemClick.invoke(uiDishItem)
+                itemClick(uiDishItem)
             }
             binding.executePendingBindings()
         }
