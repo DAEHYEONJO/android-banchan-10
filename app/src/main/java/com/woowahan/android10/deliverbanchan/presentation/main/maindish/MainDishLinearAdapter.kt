@@ -26,10 +26,10 @@ class MainDishLinearAdapter(
             binding.uiDishItem = uiDishItem
             binding.maindishViewFooter.isVisible = isLast
             binding.maindishIbCart.setOnClickListener {
-                cartIconClick.invoke(uiDishItem)
+                cartIconClick(uiDishItem)
             }
             binding.root.setOnClickListener {
-                itemClick.invoke(uiDishItem)
+                itemClick(uiDishItem)
             }
         }
     }

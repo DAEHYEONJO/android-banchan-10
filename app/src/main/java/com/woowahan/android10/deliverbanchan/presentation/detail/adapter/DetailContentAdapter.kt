@@ -10,20 +10,25 @@ import com.woowahan.android10.deliverbanchan.domain.model.UiDetailInfo
 
 class DetailContentAdapter(
     private val clickMinus: () -> Unit,
-    private val clickPlus: () -> Unit
+    private val clickPlus: () -> Unit,
+    private val buttonClick: () -> Unit
 ) : ListAdapter<UiDetailInfo, DetailContentAdapter.DetailContentViewHolder>(DetailContentDiffUtil) {
 
     inner class DetailContentViewHolder(private val binding: ItemDetailContentBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(uiDetailInfo: UiDetailInfo, clickMinus: () -> Unit, clickPlus: () -> Unit) {
+        fun bind(uiDetailInfo: UiDetailInfo, clickMinus: () -> Unit, clickPlus: () -> Unit, buttonClick: () -> Unit) {
             binding.uiDetailInfo = uiDetailInfo
 
             binding.detailIbMinus.setOnClickListener {
-                clickMinus.invoke()
+                clickMinus()
             }
 
             binding.detailIbPlus.setOnClickListener {
-                clickPlus.invoke()
+                clickPlus()
+            }
+
+            binding.detailBtn.setOnClickListener {
+                buttonClick()
             }
         }
     }
@@ -39,7 +44,7 @@ class DetailContentAdapter(
     }
 
     override fun onBindViewHolder(holder: DetailContentViewHolder, position: Int) {
-        holder.bind(getItem(position), clickMinus, clickPlus)
+        holder.bind(getItem(position), clickMinus, clickPlus, buttonClick)
     }
 
     companion object DetailContentDiffUtil : DiffUtil.ItemCallback<UiDetailInfo>() {
