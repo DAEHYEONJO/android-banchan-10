@@ -75,8 +75,10 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
                         adapter.submitList(uiLocalState.uiDishItems as List<UiCartJoinItem>)
                     }
                     is CartRecentlyViewedFooterAdapter -> {
-                        adapter.uiRecentlyJoinList = uiLocalState.uiDishItems as List<UiRecentlyJoinItem>
-                        adapter.notifyDataSetChanged()
+                        with(adapter){
+                            uiRecentlyJoinList = uiLocalState.uiDishItems as List<UiRecentlyJoinItem>
+                            notifyDataSetChanged()
+                        }
                     }
                 }
             }
