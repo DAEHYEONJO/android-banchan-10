@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 class DishRepositoryImpl @Inject constructor(
     private val dishDao: DishDao
-): DishRepository{
+) : DishRepository {
     @WorkerThread
     override suspend fun insertLocalDish(localDish: LocalDish) {
         dishDao.insertLocalDish(localDish)

@@ -1,5 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -17,11 +18,14 @@ class CartDishTopBodyAdapter @Inject constructor(
 
     interface OnCartItemClickListener{
         fun onClickDeleteBtn(hash: String)
+        fun onCheckBoxCheckedChanged(hash: String, checked: Boolean)
+        fun onClickAmountBtn(hash: String, amount: Int)
     }
 
     var onClickItemClickListener: OnCartItemClickListener? = null
 
     companion object{
+        const val TAG = "CartDishTopBodyAdapter"
         val diffUtil = object : DiffUtil.ItemCallback<UiCartJoinItem>(){
             override fun areItemsTheSame(
                 oldItem: UiCartJoinItem,
@@ -43,10 +47,26 @@ class CartDishTopBodyAdapter @Inject constructor(
         fun bind(uiCartJoinItem: UiCartJoinItem){
             with(binding){
                 item = uiCartJoinItem
-                executePendingBindings()
-                cartSelectTopBodyIbDelete.setOnClickListener {
-                    onClickItemClickListener?.onClickDeleteBtn(uiCartJoinItem.hash)
+                val hash = uiCartJoinItem.hash
+                val amount = uiCartJoinItem.amount
+                cartSelectTopBodyCb.setOnCheckedChangeListener { buttonView, isChecked ->
+                    Log.e(TAG, "bind: ${buttonView.id} $isChecked", )
+                    onClickItemClickListener?.onCheckBoxCheckedChanged(hash, isChecked)
                 }
+                cartSelectTopBodyIbDelete.setOnClickListener {
+                    onClickItemClickListener?.onClickDeleteBtn(hash)
+                }
+                cartSelectTopBodyIbMinus.setOnClickListener {
+                    if (amount > 1) {
+                        cartSelectTopBodyIbMinus.isEnabled = true
+                        onClickItemClickListener?.onClickAmountBtn(hash, amount - 1)
+                    }
+                    else cartSelectTopBodyIbMinus.isEnabled = false
+                }
+                cartSelectTopBodyIbPlus.setOnClickListener {
+                    onClickItemClickListener?.onClickAmountBtn(hash, amount + 1)
+                }
+                executePendingBindings()
             }
         }
     }

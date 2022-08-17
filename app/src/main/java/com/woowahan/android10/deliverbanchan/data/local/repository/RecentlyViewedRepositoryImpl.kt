@@ -23,6 +23,7 @@ class RecentlyViewedRepositoryImpl @Inject constructor(
     override suspend fun deleteAllRecentlyViewedInfo() =
         recentlyViewedDao.deleteAllRecentlyViewedInfo()
 
-    override fun getAllRecentlyJoinList(): Flow<List<RecentlyViewed>> = recentlyViewedDao.getAllRecentlyJoinList()
+    override fun getAllRecentlyJoinList(): Flow<List<RecentlyViewed>> =
+        recentlyViewedDao.getAllRecentlyJoinList()
 
 }
