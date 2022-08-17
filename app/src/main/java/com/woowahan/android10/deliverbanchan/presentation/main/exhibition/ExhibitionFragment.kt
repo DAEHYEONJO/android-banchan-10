@@ -82,8 +82,7 @@ class ExhibitionFragment :
             cartBottomSheetFragment.arguments = bundle
             cartBottomSheetFragment.show(childFragmentManager, "CartBottomSheet")
         }, {
-            // item click 시 -> detail 로 이동
-
+            // cart icon 영역을 제외한 다른 곳 누를 시
             val intent = Intent(requireContext(), DetailActivity::class.java)
             intent.putExtra("UiDishItem", it)
             startActivity(intent)

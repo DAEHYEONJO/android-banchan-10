@@ -1,5 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.main.maindish
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -15,6 +16,7 @@ import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
 import com.woowahan.android10.deliverbanchan.presentation.common.showToast
 import com.woowahan.android10.deliverbanchan.presentation.common.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.toVisible
+import com.woowahan.android10.deliverbanchan.presentation.detail.DetailActivity
 import com.woowahan.android10.deliverbanchan.presentation.dialogs.bottomsheet.CartBottomSheetFragment
 import com.woowahan.android10.deliverbanchan.presentation.dialogs.dialog.CartDialogFragment
 import com.woowahan.android10.deliverbanchan.presentation.main.common.MainGridAdapter
@@ -29,8 +31,10 @@ class MainDishFragment :
 
     private val mainDishViewModel: MainDishViewModel by viewModels()
     private lateinit var mainDishLinearAdapter: MainDishLinearAdapter
+
     //private lateinit var mainDishGridAdapter: MainDishGridAdapter
-    @Inject lateinit var mainDishAdapter: MainGridAdapter
+    @Inject
+    lateinit var mainDishAdapter: MainGridAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -73,14 +77,19 @@ class MainDishFragment :
             cartIconClick = {
                 val cartBottomSheetFragment = CartBottomSheetFragment()
 
-                cartBottomSheetFragment.setDialogDismissWhenInsertSuccessListener(object: CartBottomSheetFragment.DialogDismissWhenInsertSuccessListener{
+                cartBottomSheetFragment.setDialogDismissWhenInsertSuccessListener(object :
+                    CartBottomSheetFragment.DialogDismissWhenInsertSuccessListener {
                     override fun dialogDismissWhenInsertSuccess(hash: String, title: String) {
                         mainDishViewModel.changeMainDishItemIsInserted(hash)
                         val cartDialog = CartDialogFragment()
 
-                        cartDialog.setTextClickListener(object : CartDialogFragment.TextClickListener {
+                        cartDialog.setTextClickListener(object :
+                            CartDialogFragment.TextClickListener {
                             override fun moveToCartTextClicked(hash: String, title: String) {
-                                Log.e("MainDishFragment", "move to cart, hash : ${hash}, title : ${title}")
+                                Log.e(
+                                    "MainDishFragment",
+                                    "move to cart, hash : ${hash}, title : ${title}"
+                                )
 
                                 // CartActivity 이동 하면서 title, hash 전달 예정
                             }
@@ -102,14 +111,18 @@ class MainDishFragment :
             }
         }
 
-        mainDishLinearAdapter = MainDishLinearAdapter {
+        mainDishLinearAdapter = MainDishLinearAdapter({
             Log.e("TAG", "cart icon clicked")
             val cartBottomSheetFragment = CartBottomSheetFragment()
             val bundle = Bundle()
             bundle.putParcelable("UiDishItem", it)
             cartBottomSheetFragment.arguments = bundle
             cartBottomSheetFragment.show(childFragmentManager, "CartBottomSheet")
-        }
+        }, {
+            val intent = Intent(requireContext(), DetailActivity::class.java)
+            intent.putExtra("UiDishItem", it)
+            startActivity(intent)
+        })
 
         binding.maindishRv.apply {
             adapter = mainDishAdapter

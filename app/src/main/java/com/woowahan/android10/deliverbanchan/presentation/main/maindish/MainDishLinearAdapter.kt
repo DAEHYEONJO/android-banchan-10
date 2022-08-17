@@ -10,17 +10,26 @@ import com.woowahan.android10.deliverbanchan.databinding.ItemMaindishLinearBindi
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 
 class MainDishLinearAdapter(
-    private val cartIconClick: (uiDishItem: UiDishItem) -> Unit
+    private val cartIconClick: (uiDishItem: UiDishItem) -> Unit,
+    private val itemClick: (uiDishItem: UiDishItem) -> Unit
 ) :
     ListAdapter<UiDishItem, MainDishLinearAdapter.MainDishLinearViewHolder>(UiDishItemDiffUtil) {
 
     inner class MainDishLinearViewHolder(val binding: ItemMaindishLinearBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(uiDishItem: UiDishItem, cartIconClick: (uiDishItem: UiDishItem) -> Unit, isLast: Boolean) {
+        fun bind(
+            uiDishItem: UiDishItem,
+            cartIconClick: (uiDishItem: UiDishItem) -> Unit,
+            isLast: Boolean,
+            itemClick: (uiDishItem: UiDishItem) -> Unit
+        ) {
             binding.uiDishItem = uiDishItem
             binding.maindishViewFooter.isVisible = isLast
             binding.maindishIbCart.setOnClickListener {
                 cartIconClick.invoke(uiDishItem)
+            }
+            binding.root.setOnClickListener {
+                itemClick.invoke(uiDishItem)
             }
         }
     }
@@ -36,7 +45,7 @@ class MainDishLinearAdapter(
     }
 
     override fun onBindViewHolder(holder: MainDishLinearViewHolder, position: Int) {
-        holder.bind(getItem(position), cartIconClick, position == currentList.size - 1)
+        holder.bind(getItem(position), cartIconClick, position == currentList.size - 1, itemClick)
     }
 
     companion object UiDishItemDiffUtil : DiffUtil.ItemCallback<UiDishItem>() {
