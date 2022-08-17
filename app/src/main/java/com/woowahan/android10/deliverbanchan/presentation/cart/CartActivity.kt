@@ -26,11 +26,7 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart, "
     }
 
     private fun initObserver() {
-        with(cartViewModel){
-            allCartJoinState.flowWithLifecycle(lifecycle).onEach {
-                Log.e(TAG, "CartActivity CartJoinState: $it", )
-            }.launchIn(lifecycleScope)
-        }
+
     }
 
     private fun initFragment() {

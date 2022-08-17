@@ -15,6 +15,14 @@ class RecentlyViewedFragment : BaseFragment<FragmentRecentlyViewedBinding>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        initRecyclerView()
+    }
+
+    private fun initRecyclerView() {
+        with(binding.recentlyViewedProductRv){
+
+        }
     }
 
 }

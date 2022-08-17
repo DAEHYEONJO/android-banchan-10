@@ -4,12 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="item"
+            type="com.woowahan.android10.deliverbanchan.domain.model.UiRecentlyJoinItem" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/item_recently_viewed_root"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/base_space_16dp"
         android:paddingBottom="@dimen/base_space_16dp"
@@ -17,23 +19,24 @@
 
         <FrameLayout
             android:id="@+id/item_recently_viewed_fl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
             <ImageView
                 android:id="@+id/item_recently_viewed_iv_food"
-                android:layout_width="@dimen/iv_size_160dp"
+                android:layout_width="match_parent"
                 android:background="@color/grey_scale_default"
-                android:layout_height="@dimen/iv_size_160dp" />
+                android:layout_height="match_parent" />
             <ImageButton
                 android:id="@+id/imageView"
                 style="@style/cartBtnStyle" />
         </FrameLayout>
         <TextView
             android:id="@+id/item_recently_viewed_tv_title"
-            android:layout_width="@dimen/iv_size_160dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/item_recently_viewed_fl"
             app:layout_constraintStart_toStartOf="parent"
@@ -45,7 +48,7 @@
             style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style" />
         <TextView
             android:id="@+id/item_recently_viewd_tv_sprice"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="@+id/item_recently_viewed_tv_title"
             app:layout_constraintTop_toBottomOf="@+id/item_recently_viewed_tv_title"
@@ -53,7 +56,7 @@
             style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style"/>
         <TextView
             android:id="@+id/item_recently_viewed_tv_nprice"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="15,800원"
             app:layout_constraintTop_toTopOf="@+id/item_recently_viewd_tv_sprice"
@@ -63,7 +66,7 @@
             style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault12_Normal.Style"/>
         <TextView
             android:id="@+id/item_recently_viewd_tv_time"
-            android:layout_width="@dimen/iv_size_160dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="@+id/item_recently_viewd_tv_sprice"
             app:layout_constraintEnd_toEndOf="@+id/item_recently_viewed_tv_title"
