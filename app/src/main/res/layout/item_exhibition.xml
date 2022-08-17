@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="uiExhibitionItem"
             type="com.woowahan.android10.deliverbanchan.domain.model.UiExhibitionItem" />
@@ -20,19 +21,24 @@
             android:layout_height="24dp"
             android:layout_marginStart="@dimen/base_space_16dp"
             android:gravity="center_vertical"
+            android:text="@{uiExhibitionItem.categoryName}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="풍성한 고기반찬"
-            android:text="@{uiExhibitionItem.categoryName}"/>
+            tools:text="풍성한 고기반찬" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/exhibition_rv_horizontal"
+        <com.woowahan.android10.deliverbanchan.presentation.main.common.NestedScrollableHost
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/base_space_16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/exhibition_tv_category_name" />
+            app:layout_constraintTop_toBottomOf="@id/exhibition_tv_category_name">
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/exhibition_rv_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.woowahan.android10.deliverbanchan.presentation.main.common.NestedScrollableHost>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
