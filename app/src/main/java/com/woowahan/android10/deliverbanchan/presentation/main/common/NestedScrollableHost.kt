@@ -32,7 +32,6 @@ class NestedScrollableHost : FrameLayout {
 
     init {
         touchSlop = ViewConfiguration.get(context).scaledTouchSlop
-        // Log.e("NestedScrollableHost", " init touchSlop : $touchSlop")
     }
 
     private fun canChildScroll(orientation: Int, delta: Float): Boolean {
@@ -52,8 +51,8 @@ class NestedScrollableHost : FrameLayout {
 
     private fun handleInterceptTouchEvent(e: MotionEvent) {
         val orientation = parentViewPager?.orientation ?: return
-        Log.e("NestedScrollableHost", "handleInterceptTouchEvent orientation : $orientation")
-        // Early return if child can't scroll in same direction as parent
+
+        // 자식뷰가 어느 방향으로도 스크롤 할 수 없는 경우에는 바로 return
         if (!canChildScroll(orientation, -1f) && !canChildScroll(orientation, 1f)) {
             Log.e("NestedScrollableHost", "return")
             return
@@ -63,34 +62,27 @@ class NestedScrollableHost : FrameLayout {
             initialX = e.x
             initialY = e.y
             parent.requestDisallowInterceptTouchEvent(true)
-            // Log.e("NestedScrollableHost", "handleInterceptTouchEvent initialX : $initialX , initialY : $initialY")
         } else if (e.action == MotionEvent.ACTION_MOVE) {
             val dx = e.x - initialX
             val dy = e.y - initialY
             val isVpHorizontal = orientation == ORIENTATION_HORIZONTAL
 
-            // assuming ViewPager2 touch-slop is 2x touch-slop of child
-
+            // ViewPager2의 touch-slop이 자식 뷰의 touch-slop 보다 2배 크다고 가정하는 것을 하기 위함
             val scaledDx = dx.absoluteValue * if (isVpHorizontal) .5f else 1f
             val scaledDy = dy.absoluteValue * if (isVpHorizontal) 1f else .5f
 
-//            Log.e("NestedScrollableHost", "handleInterceptTouchEvent scaledDx : $scaledDx , scaledDy : $scaledDy")
-//            Log.e("NestedScrollableHost", "handleInterceptTouchEvent dx : $dx , dy : $dy")
-//            Log.e("NestedScrollableHost", "handleInterceptTouchEvent ey : ${e.y} , ex : ${e.x}")
-
-
             if (scaledDx > touchSlop || scaledDy > touchSlop) {
                 if (isVpHorizontal == (scaledDy > scaledDx)) {
-                    // Gesture is perpendicular, allow all parents to intercept
+                    // 수직 스크롤인 경우에는 부모뷰가 터치 이벤트 가져가도록 설정
                     parent.requestDisallowInterceptTouchEvent(false)
                 } else {
-                    // Gesture is parallel, query child if movement in that direction is possible
+                    // 수평 스크롤인 경우
                     if (canChildScroll(orientation, if (isVpHorizontal) dx else dy)) {
-                        // Child can scroll, disallow all parents to intercept
+                        // 자식뷰가 현재 방향으로 수평 스크롤 가능 시 이벤트 가져온다
                         Log.e("NestedScrollableHost", "can scroll")
                         parent.requestDisallowInterceptTouchEvent(true)
                     } else {
-                        // Child cannot scroll, allow all parents to intercept
+                        // 반대로 자식뷰에서 현재 방향(우측 or 좌측)으로 스크롤 더 이상 안될 시 부모뷰로 이벤트 넘긴다
                         Log.e("NestedScrollableHost", "cannot scroll")
                         parent.requestDisallowInterceptTouchEvent(false)
                     }
