@@ -11,6 +11,7 @@ import javax.inject.Inject
 class RecentlyViewedRepositoryImpl @Inject constructor(
     private val recentlyViewedDao: RecentlyViewedDao
 ) : RecentlyViewedRepository {
+
     override fun getAllRecentlyViewedInfo(): Flow<List<RecentlyViewedInfo>> =
         recentlyViewedDao.getAllRecentlyViewedInfo()
 

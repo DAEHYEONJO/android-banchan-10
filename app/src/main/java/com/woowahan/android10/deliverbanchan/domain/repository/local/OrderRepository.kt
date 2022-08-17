@@ -7,9 +7,9 @@ import com.woowahan.android10.deliverbanchan.data.local.model.entity.OrderInfo
 import kotlinx.coroutines.flow.Flow
 
 interface OrderRepository {
-
+    @WorkerThread
     fun getAllOrderDish(): Flow<List<LocalDish>>
-
+    @WorkerThread
     fun getAllOrderInfo(): Flow<List<OrderInfo>>
 
     @WorkerThread
@@ -20,6 +20,6 @@ interface OrderRepository {
 
     @WorkerThread
     suspend fun deleteOrderDish(hash: String)
-
+    @WorkerThread
     fun getAllOrderJoinList(): Flow<List<Order>>
 }

@@ -38,7 +38,7 @@ class GetJoinUseCase @Inject constructor(
         }
     }
 
-    fun getRecentlyJoinList(): Flow<List<UiRecentlyJoinItem>> {
+    suspend fun getRecentlyJoinList(): Flow<List<UiRecentlyJoinItem>> {
         return recentlyRepository.getAllRecentlyJoinList().map { recentlyViewedList ->
             recentlyViewedList.map { recentlyViewed ->
                 with(recentlyViewed) {

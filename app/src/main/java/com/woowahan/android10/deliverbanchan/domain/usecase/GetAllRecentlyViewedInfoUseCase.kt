@@ -10,7 +10,7 @@ import javax.inject.Singleton
 class GetAllRecentlyViewedInfoUseCase @Inject constructor(
     private val recentlyViewedRepository: RecentlyViewedRepository
 ) {
-     operator fun invoke(): Flow<List<RecentlyViewedInfo>> {
+    operator fun invoke(): Flow<List<RecentlyViewedInfo>> {
          return recentlyViewedRepository.getAllRecentlyViewedInfo()
      }
 }

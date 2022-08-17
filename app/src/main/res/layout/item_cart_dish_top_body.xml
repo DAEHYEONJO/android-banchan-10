@@ -20,6 +20,7 @@
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="@dimen/base_space_16dp"
             android:layout_marginTop="@dimen/base_space_16dp"
+            android:checked="@{item.checked}"
             android:button="@null"
             android:background="@drawable/selector_cart" />
 
@@ -31,6 +32,7 @@
             app:layout_constraintStart_toEndOf="@+id/cart_select_top_body_cb"
             app:layout_constraintBottom_toTopOf="@+id/cart_select_top_body_view"
             android:layout_marginBottom="56dp"
+            app:setStringUrlImage="@{item.image}"
             android:background="@color/grey_scale_line"
             android:layout_marginStart="@dimen/base_space_16dp" />
 
@@ -42,7 +44,7 @@
             app:layout_constraintTop_toTopOf="@+id/cart_select_top_body_iv_dish"
             app:layout_constraintStart_toEndOf="@+id/cart_select_top_body_iv_dish"
             android:layout_marginStart="@dimen/rv_space_8dp"
-            android:text="새콤달콤 오징어무침"
+            android:text="@{item.title}"
             style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style" />
 
         <TextView
@@ -52,7 +54,8 @@
             android:gravity="bottom"
             app:layout_constraintStart_toStartOf="@+id/cart_select_top_body_tv_title"
             app:layout_constraintTop_toBottomOf="@+id/cart_select_top_body_tv_title"
-            android:text="6,000원"
+            price="@{item.SPrice}"
+            isNPrice="@{false}"
             style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style" />
 
         <ImageButton
@@ -68,7 +71,7 @@
         <TextView
             android:id="@+id/cart_select_top_body_tv_amount"
             android:layout_width="@dimen/cart_btn_width_32dp"
-            android:text="1"
+            android:text="@{String.valueOf(item.amount)}"
             app:layout_constraintStart_toEndOf="@+id/cart_select_top_body_ib_minus"
             app:layout_constraintTop_toTopOf="@+id/cart_select_top_body_ib_minus"
             app:layout_constraintBottom_toBottomOf="@+id/cart_select_top_body_ib_minus"
@@ -101,7 +104,8 @@
             android:id="@+id/cart_select_top_body_tv_total_price"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/base_24dp"
-            android:text="6,000원"
+            price="@{item.totalPrice}"
+            isNPrice="@{false}"
             app:layout_constraintEnd_toEndOf="@+id/cart_select_top_body_ib_delete"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginBottom="@dimen/base_space_16dp"

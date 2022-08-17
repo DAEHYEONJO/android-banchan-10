@@ -6,9 +6,9 @@ import com.woowahan.android10.deliverbanchan.data.local.model.join.Cart
 import kotlinx.coroutines.flow.Flow
 
 interface CartRepository {
-
+    @WorkerThread
     fun getAllCartInfo(): Flow<List<CartInfo>>
-
+    @WorkerThread
     fun getCartInfoById(hash: String): Flow<CartInfo>
 
     @WorkerThread
@@ -18,7 +18,7 @@ interface CartRepository {
     suspend fun deleteCartInfo(hash: String)
 
     @WorkerThread
-    fun isExistCartInfo(hash: String): Boolean
-
+    suspend fun isExistCartInfo(hash: String): Boolean
+    @WorkerThread
     fun getAllCartJoinList(): Flow<List<Cart>>
 }

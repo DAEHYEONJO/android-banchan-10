@@ -12,6 +12,7 @@ import javax.inject.Inject
 class OrderRepositoryImpl @Inject constructor(
     private val orderDao: OrderDao
 ): OrderRepository {
+
     override fun getAllOrderDish(): Flow<List<LocalDish>> = orderDao.getAllOrderDish()
 
     override fun getAllOrderInfo(): Flow<List<OrderInfo>> = orderDao.getAllOrderInfo()

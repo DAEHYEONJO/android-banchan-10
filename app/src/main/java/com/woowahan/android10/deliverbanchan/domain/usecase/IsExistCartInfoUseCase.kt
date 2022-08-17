@@ -8,5 +8,5 @@ import javax.inject.Singleton
 class IsExistCartInfoUseCase @Inject constructor(
     private val cartRepository: CartRepository
 ){
-    operator fun invoke(hash: String) = cartRepository.isExistCartInfo(hash)
+    suspend operator fun invoke(hash: String) = cartRepository.isExistCartInfo(hash)
 }

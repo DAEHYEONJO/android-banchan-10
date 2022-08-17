@@ -34,4 +34,6 @@
         <item>금액 낮은순</item>
         <item>할인률순</item>
     </string-array>
+
+    <string name="time_format">%1$s%2$s</string>
 </resources>
