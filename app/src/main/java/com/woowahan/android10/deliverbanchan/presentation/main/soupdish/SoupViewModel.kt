@@ -98,5 +98,4 @@ class SoupViewModel @Inject constructor(
         }
     }
 
-
 }

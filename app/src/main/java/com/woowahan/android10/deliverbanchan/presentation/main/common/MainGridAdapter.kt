@@ -15,6 +15,7 @@ class MainGridAdapter @Inject constructor() :
     ListAdapter<UiDishItem, MainGridAdapter.ViewHolder>(diffUtil) {
 
     lateinit var cartIconClick: (uiDishItem: UiDishItem) -> Unit
+    lateinit var itemClick: (uiDishItem: UiDishItem) -> Unit
 
     companion object {
         const val TAG = "MainGridAdapter"
@@ -36,6 +37,9 @@ class MainGridAdapter @Inject constructor() :
             binding.item = uiDishItem
             binding.soupImbCart.setOnClickListener {
                 cartIconClick.invoke(uiDishItem)
+            }
+            binding.root.setOnClickListener {
+                itemClick.invoke(uiDishItem)
             }
             binding.executePendingBindings()
         }
