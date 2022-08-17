@@ -1,23 +1,19 @@
 package com.woowahan.android10.deliverbanchan.presentation.detail
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.woowahan.android10.deliverbanchan.data.local.model.entity.LocalDish
+import com.woowahan.android10.deliverbanchan.data.local.model.entity.RecentlyViewedInfo
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.model.UiDetailInfo
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
-import com.woowahan.android10.deliverbanchan.domain.usecase.CreateEmptyUiDetailInfoUseCase
-import com.woowahan.android10.deliverbanchan.domain.usecase.CreateEmptyUiDishItemUseCase
-import com.woowahan.android10.deliverbanchan.domain.usecase.CreateUiDetailInfoUseCase
-import com.woowahan.android10.deliverbanchan.domain.usecase.GetDetailDishUseCase
+import com.woowahan.android10.deliverbanchan.domain.usecase.*
 import com.woowahan.android10.deliverbanchan.presentation.state.DetailUiState
-import com.woowahan.android10.deliverbanchan.presentation.state.ExhibitionUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import kotlinx.serialization.descriptors.StructureKind
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,10 +21,12 @@ class DetailViewModel @Inject constructor(
     private val createEmptyUiDishItemUseCase: CreateEmptyUiDishItemUseCase,
     private val createEmptyUiDetailInfoUseCase: CreateEmptyUiDetailInfoUseCase,
     private val createUiDetailInfoUseCase: CreateUiDetailInfoUseCase,
-    private val getDetailDishUseCase: GetDetailDishUseCase
+    private val getDetailDishUseCase: GetDetailDishUseCase,
+    private val insertRecentlyUseCase: InsertRecentlyUseCase,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    var currentUiDishItem = MutableStateFlow<UiDishItem>(createEmptyUiDishItemUseCase())
+    private val currentUiDishItem: UiDishItem? = savedStateHandle["UiDishItem"]
 
     private val _detailState = MutableStateFlow<DetailUiState>(DetailUiState.Init)
     val detailState: StateFlow<DetailUiState> get() = _detailState
@@ -45,9 +43,30 @@ class DetailViewModel @Inject constructor(
     private val _itemCount = MutableStateFlow<Int>(1)
     val itemCount: StateFlow<Int> = _itemCount
 
-    fun getDetailDishInfo() {
+    init {
+        getDetailDishInfo()
+    }
+
+    private fun insertRecently() {
+        currentUiDishItem?.let { dishItem ->
+            viewModelScope.launch {
+                with(dishItem) {
+                    insertRecentlyUseCase(
+                        LocalDish(
+                            hash, title, image, nPrice, sPrice
+                        ),
+                        RecentlyViewedInfo(
+                            hash, System.currentTimeMillis()
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    private fun getDetailDishInfo() {
         viewModelScope.launch {
-            getDetailDishUseCase(currentUiDishItem.value.hash).onStart {
+            getDetailDishUseCase(currentUiDishItem!!.hash).onStart {
                 setLoading()
             }.catch { exception ->
                 hideLoading()
@@ -59,11 +78,12 @@ class DetailViewModel @Inject constructor(
                         _thumbList.value = result.data.thumbImages
                         _sectionList.value = result.data.detailSection
                         _uiDetailInfo.value = createUiDetailInfoUseCase(
-                            currentUiDishItem.value,
+                            currentUiDishItem,
                             result.data,
                             _itemCount.value
                         )
                         _detailState.value = DetailUiState.Success(result.data)
+                        insertRecently()
                     }
                     is BaseResult.Error -> _detailState.value =
                         DetailUiState.Error(result.errorCode)

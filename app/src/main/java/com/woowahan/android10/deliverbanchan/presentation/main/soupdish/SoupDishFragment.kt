@@ -21,6 +21,7 @@ import com.woowahan.android10.deliverbanchan.presentation.detail.DetailActivity
 import com.woowahan.android10.deliverbanchan.presentation.dialogs.bottomsheet.CartBottomSheetFragment
 import com.woowahan.android10.deliverbanchan.presentation.dialogs.dialog.CartDialogFragment
 import com.woowahan.android10.deliverbanchan.presentation.main.common.MainGridAdapter
+import com.woowahan.android10.deliverbanchan.presentation.main.host.DishViewModel
 import com.woowahan.android10.deliverbanchan.presentation.view.SpinnerEventListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -30,6 +31,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class SoupDishFragment: BaseFragment<FragmentSoupdishBinding>(R.layout.fragment_soupdish, "SoupDishFragment") {
 
+    private val dishViewModel: DishViewModel by activityViewModels()
     private val soupViewModel: SoupViewModel by activityViewModels()
     @Inject lateinit var mainGridAdapter: MainGridAdapter
     @Inject lateinit var soupSpinnerAdapter: SortSpinnerAdapter
@@ -126,6 +128,7 @@ class SoupDishFragment: BaseFragment<FragmentSoupdishBinding>(R.layout.fragment_
                 }
 
                 itemClick = {
+
                     val intent = Intent(requireContext(), DetailActivity::class.java)
                     intent.putExtra("UiDishItem", it)
                     startActivity(intent)

@@ -3,9 +3,12 @@ package com.woowahan.android10.deliverbanchan.presentation.main.maindish
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.woowahan.android10.deliverbanchan.data.local.model.entity.LocalDish
+import com.woowahan.android10.deliverbanchan.data.local.model.entity.RecentlyViewedInfo
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.usecase.CreateUiDishItemsUseCase
+import com.woowahan.android10.deliverbanchan.domain.usecase.InsertRecentlyUseCase
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
@@ -73,4 +76,6 @@ class MainDishViewModel @Inject constructor(
             _mainDishState.value = UiState.Success(newList)
         }
     }
+
+
 }

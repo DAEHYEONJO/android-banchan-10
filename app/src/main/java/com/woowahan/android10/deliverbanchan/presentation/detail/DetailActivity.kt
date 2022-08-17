@@ -1,5 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.detail
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
@@ -23,6 +24,7 @@ import com.woowahan.android10.deliverbanchan.presentation.state.DetailUiState
 import com.woowahan.android10.deliverbanchan.presentation.state.ExhibitionUiState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import kotlin.math.log
 
 @AndroidEntryPoint
 class DetailActivity :
@@ -37,20 +39,12 @@ class DetailActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val intent = intent
-        val currentUiDishItem = intent.getParcelableExtra<UiDishItem>("UiDishItem")
-        currentUiDishItem?.let {
-            detailViewModel.currentUiDishItem.value = currentUiDishItem
-        }
-
         initView()
         observeApiState()
         observeDetailData()
     }
 
     private fun initView() {
-        detailViewModel.getDetailDishInfo()
         setReyclerView()
     }
 
