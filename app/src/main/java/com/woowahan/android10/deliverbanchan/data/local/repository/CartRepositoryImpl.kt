@@ -12,9 +12,9 @@ import javax.inject.Inject
 class CartRepositoryImpl @Inject constructor(
     private val cartDao: CartDao
 ): CartRepository {
-    @WorkerThread
+
     override fun getAllCartInfo(): Flow<List<CartInfo>> = cartDao.getAllCartInfo()
-    @WorkerThread
+
     override fun getCartInfoById(hash: String): Flow<CartInfo> = cartDao.getCartInfoById(hash)
     @WorkerThread
     override suspend fun insertCartInfo(cartInfo: CartInfo) = cartDao.insertCartInfo(cartInfo)
@@ -22,7 +22,7 @@ class CartRepositoryImpl @Inject constructor(
     override suspend fun deleteCartInfo(hash: String) = cartDao.deleteCartInfo(hash)
     @WorkerThread
     override suspend fun isExistCartInfo(hash: String): Boolean = cartDao.isExistCartInfo(hash)
-    @WorkerThread
+
     override fun getAllCartJoinList(): Flow<List<Cart>> = cartDao.getAllCartJoinList()
 
 }

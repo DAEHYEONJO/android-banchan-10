@@ -12,9 +12,9 @@ import javax.inject.Inject
 class OrderRepositoryImpl @Inject constructor(
     private val orderDao: OrderDao
 ): OrderRepository {
-    @WorkerThread
+
     override fun getAllOrderDish(): Flow<List<LocalDish>> = orderDao.getAllOrderDish()
-    @WorkerThread
+
     override fun getAllOrderInfo(): Flow<List<OrderInfo>> = orderDao.getAllOrderInfo()
 
     @WorkerThread
@@ -25,6 +25,6 @@ class OrderRepositoryImpl @Inject constructor(
 
     @WorkerThread
     override suspend fun deleteOrderDish(hash: String) = orderDao.deleteOrderDish(hash)
-    @WorkerThread
+
     override fun getAllOrderJoinList(): Flow<List<Order>> = orderDao.getAllOrderJoinList()
 }

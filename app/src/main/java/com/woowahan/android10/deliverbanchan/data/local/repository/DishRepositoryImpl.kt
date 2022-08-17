@@ -14,7 +14,7 @@ class DishRepositoryImpl @Inject constructor(
     override suspend fun insertLocalDish(localDish: LocalDish) {
         dishDao.insertLocalDish(localDish)
     }
-    @WorkerThread
+
     override fun getAllLocalDish(): Flow<List<LocalDish>> {
         return dishDao.getAllLocalDish()
     }
