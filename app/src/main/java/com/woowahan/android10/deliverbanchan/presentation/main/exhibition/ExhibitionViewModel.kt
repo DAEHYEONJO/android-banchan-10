@@ -52,6 +52,27 @@ class ExhibitionViewModel @Inject constructor(
         }
     }
 
+    fun changeMainDishItemIsInserted(hash: String) {
+        ((_exhibitionState.value as ExhibitionUiState.Success).uiExhibitionItems).let { uiExhibitionItems ->
+            val newList = mutableListOf<UiExhibitionItem>().apply {
+                uiExhibitionItems.forEach { uiExhibitionDishItem ->
+                    val newUiDishItemList = mutableListOf<UiDishItem>().apply {
+                        uiExhibitionDishItem.uiDishItems.forEach { uiDishItem ->
+                            if (uiDishItem.hash == hash) {
+                                add(uiDishItem.copy(isInserted = true))
+                            } else {
+                                add(uiDishItem)
+                            }
+                        }
+                    }
+                    add(uiExhibitionDishItem.copy(uiDishItems = newUiDishItemList))
+                }
+            }
+            exhibitionList = newList
+            _exhibitionState.value = ExhibitionUiState.Success(newList)
+        }
+    }
+
     private fun setLoading() {
         _exhibitionState.value = ExhibitionUiState.IsLoading(true)
     }

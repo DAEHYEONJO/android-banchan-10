@@ -57,6 +57,7 @@ class ExhibitionFragment :
             cartBottomSheetFragment.setDialogDismissWhenInsertSuccessListener(object :
                 CartBottomSheetFragment.DialogDismissWhenInsertSuccessListener {
                 override fun dialogDismissWhenInsertSuccess(hash: String, title: String) {
+                    exhibitionViewModel.changeMainDishItemIsInserted(hash)
                     val cartDialog = CartDialogFragment()
 
                     cartDialog.setTextClickListener(object : CartDialogFragment.TextClickListener {
@@ -103,6 +104,7 @@ class ExhibitionFragment :
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 exhibitionViewModel.exhibitionState.collect {
+                    Log.e("ExhibitionFragment", "collect")
                     handleStateChange(it)
                 }
             }

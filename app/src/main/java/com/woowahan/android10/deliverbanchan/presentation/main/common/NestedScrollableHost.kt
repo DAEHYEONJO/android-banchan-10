@@ -36,7 +36,6 @@ class NestedScrollableHost : FrameLayout {
 
     private fun canChildScroll(orientation: Int, delta: Float): Boolean {
         val direction = -delta.sign.toInt()
-        Log.e("NestedScrollableHost", "canChildScroll direction : $direction")
         return when (orientation) {
             0 -> child?.canScrollHorizontally(direction) ?: false
             1 -> child?.canScrollVertically(direction) ?: false
@@ -54,7 +53,6 @@ class NestedScrollableHost : FrameLayout {
 
         // 자식뷰가 어느 방향으로도 스크롤 할 수 없는 경우에는 바로 return
         if (!canChildScroll(orientation, -1f) && !canChildScroll(orientation, 1f)) {
-            Log.e("NestedScrollableHost", "return")
             return
         }
 
