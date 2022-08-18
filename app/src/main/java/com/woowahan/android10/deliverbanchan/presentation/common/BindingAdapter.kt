@@ -22,6 +22,11 @@ fun ImageView.setStringUrlImage(stringUrl: String) {
         .into(this)
 }
 
+@BindingAdapter("app:setDeliveryPriceText")
+fun TextView.setDeliveryPriceText(price: Int){
+    text = price.convertPriceToString()
+}
+
 @BindingAdapter("price", "isNPrice")
 fun TextView.setPriceText(price: Int, isNPrice: Boolean) {
     text = if (price == 0) "" else {
