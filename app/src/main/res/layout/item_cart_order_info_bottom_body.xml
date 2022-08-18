@@ -58,8 +58,7 @@
             app:layout_constraintTop_toTopOf="@+id/cart_order_bottom_body_tv_delivery_price_hard_code"
             app:layout_constraintBottom_toBottomOf="@+id/cart_order_bottom_body_tv_delivery_price_hard_code"
             app:layout_constraintEnd_toEndOf="@+id/cart_order_bottom_body_tv_product_total_price"
-            price="@{item.deliveryPrice}"
-            isNPrice="@{false}"
+            app:setDeliveryPriceText="@{item.deliveryPrice}"
             style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault14_Normal.Style" />
 
         <View
