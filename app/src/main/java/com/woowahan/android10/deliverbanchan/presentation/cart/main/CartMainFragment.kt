@@ -55,21 +55,21 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
     }
 
     private fun initInterface() {
-        cartHeaderAdapter.onClick = {
-
-        }
         cartTopBodyAdapter.onClickItemClickListener =
-            object : CartDishTopBodyAdapter.OnCartItemClickListener {
-                override fun onClickDeleteBtn(hash: String) {
-                    cartViewModel.deleteCart(hash)
+            object : CartDishTopBodyAdapter.OnCartTopBodyItemClickListener {
+                override fun onClickDeleteBtn(position: Int, hash: String) {
+                    cartViewModel.deleteUiCartItem(position)
+                    cartTopBodyAdapter.notifyDataSetChanged()
                 }
 
-                override fun onCheckBoxCheckedChanged(hash: String, checked: Boolean) {
-                    cartViewModel.updateCartCheckedValue(hash, !checked)
+                override fun onCheckBoxCheckedChanged(position: Int, hash: String, checked: Boolean) {
+                    cartViewModel.updateUiCartCheckedValue(position, !checked)
+                    cartTopBodyAdapter.notifyDataSetChanged()
                 }
 
-                override fun onClickAmountBtn(hash: String, amount: Int) {
-                    cartViewModel.updateCartAmountValue(hash, amount)
+                override fun onClickAmountBtn(position: Int, hash: String, amount: Int) {
+                    cartViewModel.updateUiCartAmountValue(position, amount)
+                    cartTopBodyAdapter.notifyDataSetChanged()
                 }
             }
     }
@@ -77,18 +77,16 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
     private fun initAdapterList() {
         with(cartViewModel) {
             allCartJoinState.flowWithLifecycle(lifecycle).onEach { uiLocalState ->
-                Log.e(TAG, "initAdapterList: cart join $uiLocalState")
                 handleState(cartTopBodyAdapter, uiLocalState)
             }.launchIn(lifecycleScope)
 
             allRecentlyJoinState.flowWithLifecycle(lifecycle).onEach { uiLocalState ->
-                Log.e(TAG, "initAdapterList: recently join $uiLocalState")
                 handleState(cartRecentlyViewedFooterAdapter, uiLocalState)
             }.launchIn(lifecycleScope)
 
-            itemCartHeaderChecked.observe(viewLifecycleOwner) { checked ->
+            itemCartHeaderData.observe(viewLifecycleOwner) { uiCartHeader ->
                 with(cartHeaderAdapter) {
-                    selectHeaderList = listOf(checked)
+                    selectHeaderList = listOf(uiCartHeader)
                     notifyDataSetChanged()
                 }
             }
@@ -97,6 +95,10 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
                     bottomBodyList = listOf(uiCartBottomBody)
                     notifyDataSetChanged()
                 }
+            }
+            uiCartJoinList.observe(viewLifecycleOwner){
+                cartTopBodyAdapter.submitList(it)
+                cartViewModel.calcCartBottomBodyAndHeaderVal(it)
             }
         }
     }
@@ -109,7 +111,10 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
                 requireContext().showToast(uiLocalState.message)
             }
             is UiLocalState.Success -> {
-                when (adapter) {
+                uiLocalState.uiDishItems.forEach {
+                    Log.e(TAG, "handleState: collect$it", )
+                }
+               when (adapter) {
                     is CartDishTopBodyAdapter -> {
                         adapter.submitList(uiLocalState.uiDishItems as List<UiCartJoinItem>)
                     }

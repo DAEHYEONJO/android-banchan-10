@@ -35,8 +35,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/cart_order_bottom_body_tv_product_total_price_hard_code"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="@dimen/base_space_16dp"
-            price="@{item.productTotalPrice}"
-            isNPrice="@{false}"
+            app:setDeliveryPriceText="@{item.productTotalPrice}"
             style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault14_Normal.Style" />
 
         <TextView
@@ -120,7 +119,8 @@
             app:layout_constraintStart_toStartOf="@+id/cart_order_bottom_body_btn_order"
             app:layout_constraintEnd_toEndOf="@+id/cart_order_bottom_body_btn_order"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:visibility="@{item.availableFreeDelivery?View.GONE:View.VISIBLE}"
+            isAvailableDelivery="@{item.availableDelivery}"
+            isAvailableDeliveryFree="@{item.availableFreeDelivery}"
             app:setDeliveryForFreeText="@{item.deliveryFreePrice - item.productTotalPrice}"
             android:layout_marginTop="@dimen/base_space_16dp"
             android:gravity="bottom|center"

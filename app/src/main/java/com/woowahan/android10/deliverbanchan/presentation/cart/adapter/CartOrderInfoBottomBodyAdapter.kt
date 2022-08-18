@@ -1,5 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -12,12 +13,17 @@ import javax.inject.Inject
 class CartOrderInfoBottomBodyAdapter @Inject constructor() :
     RecyclerView.Adapter<CartOrderInfoBottomBodyAdapter.ViewHolder>() {
 
+    companion object{
+        const val TAG = "CartOrderInfoBottomBodyAdapter"
+    }
+
     var bottomBodyList: List<UiCartBottomBody> = List(1){UiCartBottomBody.emptyItem ()}
 
     class ViewHolder(val binding: ItemCartOrderInfoBottomBodyBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(uiCartBottomBody: UiCartBottomBody) {
             with(binding){
+                Log.e(TAG, "bind: ${uiCartBottomBody.isAvailableDelivery} ${uiCartBottomBody.isAvailableFreeDelivery}")
                 item = uiCartBottomBody
                 executePendingBindings()
             }

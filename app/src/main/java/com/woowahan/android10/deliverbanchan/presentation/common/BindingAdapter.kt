@@ -110,3 +110,11 @@ fun TextView.setOrderBtnText(isAvailableDelivery: Boolean, totalPrice: Int){
 fun TextView.setDeliveryForFreeText(price: Int){
     text = resources.getString(R.string.order_form_free_delivery_format, price.convertPriceToString())
 }
+
+@BindingAdapter("isAvailableDelivery","isAvailableDeliveryFree")
+fun TextView.setDeliveryForFreeTextVisibility(isAvailableDelivery: Boolean, isAvailableDeliveryFree: Boolean){
+    val deliveryBit = isAvailableDelivery.toInt()
+    val deliveryFreeBit = isAvailableDeliveryFree.toInt()
+    val bitMask = (deliveryBit shl 1) or deliveryFreeBit
+    if (bitMask == 3 || bitMask == 0) toGone() else toVisible()
+}

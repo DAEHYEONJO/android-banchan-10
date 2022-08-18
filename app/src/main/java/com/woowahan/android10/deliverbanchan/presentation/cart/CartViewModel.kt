@@ -13,6 +13,7 @@ import com.woowahan.android10.deliverbanchan.domain.usecase.GetJoinUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.UpdateCartAmount
 import com.woowahan.android10.deliverbanchan.domain.usecase.UpdateCartChecked
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartBottomBody
+import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartHeader
 import com.woowahan.android10.deliverbanchan.presentation.state.UiLocalState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -49,10 +50,18 @@ class CartViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(5000)
     )
 
-    val itemCartHeaderChecked = MutableLiveData(false)
     private var _itemCartBottomBodyProductTotalPrice = 0
+
+    private val _itemCartHeaderData = MutableLiveData(UiCartHeader.emptyItem())
+    val itemCartHeaderData: LiveData<UiCartHeader> get() = _itemCartHeaderData
+
+    private val _uiCartJoinList = MutableLiveData<List<UiCartJoinItem>>(emptyList())
+    val uiCartJoinList: LiveData<List<UiCartJoinItem>> get() = _uiCartJoinList
+    private val _uiCartJoinArrayList = ArrayList<UiCartJoinItem>()
+
     private val _itemCartBottomBodyData = MutableLiveData(UiCartBottomBody.emptyItem())
     val itemCartBottomBodyData: LiveData<UiCartBottomBody> get() = _itemCartBottomBodyData
+
 
     init {
         getAllRecentlyJoinList()
@@ -64,36 +73,53 @@ class CartViewModel @Inject constructor(
         }.flowOn(dispatcher).catch { exception ->
             _allCartJoinState.value = UiLocalState.IsLoading(false)
             _allCartJoinState.value = UiLocalState.ShowToast(exception.message.toString())
-        }.onEach { uiCartJoinItem ->
-            _itemCartBottomBodyProductTotalPrice = 0
-            val checkedUiJoinCartItem = uiCartJoinItem.filter { it.checked }
-            checkedUiJoinCartItem.forEach { checkedUiCartJoinItem ->
-                _itemCartBottomBodyProductTotalPrice+=checkedUiCartJoinItem.totalPrice
-            }
-            itemCartHeaderChecked.value = checkedUiJoinCartItem.isNotEmpty()
+        }.onEach { uiCartJoinItemList ->
+            calcCartBottomBodyAndHeaderVal(uiCartJoinItemList)
         }.collect{
             _allCartJoinState.value = UiLocalState.IsLoading(false)
             _allCartJoinState.value = UiLocalState.Success(it)
-            setItemCartBottomBodyData(it)
+            _uiCartJoinArrayList.addAll(it)
+            _uiCartJoinList.value = _uiCartJoinArrayList
+            //setItemCartBottomBodyData()
         }
     }
 
-    private fun setItemCartBottomBodyData(uiCartJoinItems: List<UiCartJoinItem>){
+    fun calcCartBottomBodyAndHeaderVal(uiCartJoinItemList: List<UiCartJoinItem>){
+        _itemCartBottomBodyProductTotalPrice = 0
+        val checkedUiJoinCartItem = uiCartJoinItemList.filter { it.checked }
+        checkedUiJoinCartItem.forEach { checkedUiCartJoinItem ->
+            _itemCartBottomBodyProductTotalPrice+=checkedUiCartJoinItem.totalPrice
+        }
+        if (checkedUiJoinCartItem.size == uiCartJoinItemList.size){
+            _itemCartHeaderData.value = UiCartHeader(
+                checkBoxText = UiCartHeader.TEXT_SELECT_RELEASE,
+                checkBoxChecked = true
+            )
+        }else{
+            _itemCartHeaderData.value = UiCartHeader(
+                checkBoxText = UiCartHeader.TEXT_SELECT_ALL,
+                checkBoxChecked = false
+            )
+        }
+        setItemCartBottomBodyData()
+    }
+
+    private fun setItemCartBottomBodyData() {
         var deliveryPrice = 2500
         var totalPrice = _itemCartBottomBodyProductTotalPrice + deliveryPrice
-        val isAvailableDelivery = totalPrice >= UiCartBottomBody.MIN_DELIVERY_PRICE
+        val isAvailableDelivery = _itemCartBottomBodyProductTotalPrice >= UiCartBottomBody.MIN_DELIVERY_PRICE
         var isAvailableFreeDelivery = false
         if (_itemCartBottomBodyProductTotalPrice >= UiCartBottomBody.DELIVERY_FREE_PRICE){
             totalPrice -= deliveryPrice
             deliveryPrice = 0
-            isAvailableFreeDelivery = true
+            if (isAvailableDelivery) isAvailableFreeDelivery = true
         }
         _itemCartBottomBodyData.value = UiCartBottomBody(
             productTotalPrice = _itemCartBottomBodyProductTotalPrice,
             deliveryPrice = deliveryPrice,
             totalPrice = totalPrice,
             isAvailableDelivery = isAvailableDelivery,
-            isAvailableFreeDelivery = isAvailableFreeDelivery,
+            isAvailableFreeDelivery = isAvailableFreeDelivery and isAvailableDelivery,
         )
     }
 
@@ -124,6 +150,22 @@ class CartViewModel @Inject constructor(
 
     fun setAppBarTitle(string: String) {
         appBarTitle.value = string
+    }
+
+    fun updateUiCartCheckedValue(position: Int, checked: Boolean){
+        _uiCartJoinArrayList[position].checked = checked
+        _uiCartJoinList.value = _uiCartJoinArrayList
+    }
+    fun updateUiCartAmountValue(position: Int, amount: Int){
+        _uiCartJoinArrayList[position].apply {
+            this.amount = amount
+            totalPrice = sPrice*amount
+        }
+        _uiCartJoinList.value = _uiCartJoinArrayList
+    }
+    fun deleteUiCartItem(position: Int){
+        _uiCartJoinArrayList.removeAt(position)
+        _uiCartJoinList.value = _uiCartJoinArrayList
     }
 
 }

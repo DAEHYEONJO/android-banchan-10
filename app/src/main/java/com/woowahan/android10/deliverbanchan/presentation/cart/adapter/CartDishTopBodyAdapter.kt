@@ -7,31 +7,30 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.databinding.ItemCartDishTopBodyBinding
-import com.woowahan.android10.deliverbanchan.databinding.ItemCartSelectHeaderBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiCartJoinItem
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 
 @ActivityRetainedScoped
 class CartDishTopBodyAdapter @Inject constructor(
-): ListAdapter<UiCartJoinItem, CartDishTopBodyAdapter.ViewHolder>(diffUtil) {
+) : ListAdapter<UiCartJoinItem, CartDishTopBodyAdapter.ViewHolder>(diffUtil) {
 
-    interface OnCartItemClickListener{
-        fun onClickDeleteBtn(hash: String)
-        fun onCheckBoxCheckedChanged(hash: String, checked: Boolean)
-        fun onClickAmountBtn(hash: String, amount: Int)
+    interface OnCartTopBodyItemClickListener {
+        fun onClickDeleteBtn(position: Int, hash: String)
+        fun onCheckBoxCheckedChanged(position: Int, hash: String, checked: Boolean)
+        fun onClickAmountBtn(position: Int, hash: String, amount: Int)
     }
 
-    var onClickItemClickListener: OnCartItemClickListener? = null
+    var onClickItemClickListener: OnCartTopBodyItemClickListener? = null
 
-    companion object{
+    companion object {
         const val TAG = "CartDishTopBodyAdapter"
-        val diffUtil = object : DiffUtil.ItemCallback<UiCartJoinItem>(){
+        val diffUtil = object : DiffUtil.ItemCallback<UiCartJoinItem>() {
             override fun areItemsTheSame(
                 oldItem: UiCartJoinItem,
                 newItem: UiCartJoinItem
             ): Boolean {
-                return oldItem.hash == newItem.hash
+                return oldItem.hash == newItem.hash && oldItem.checked == newItem.checked && oldItem.amount == newItem.amount
             }
 
             override fun areContentsTheSame(
@@ -43,26 +42,35 @@ class CartDishTopBodyAdapter @Inject constructor(
         }
     }
 
-    inner class ViewHolder(val binding: ItemCartDishTopBodyBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(uiCartJoinItem: UiCartJoinItem){
-            with(binding){
+    inner class ViewHolder(val binding: ItemCartDishTopBodyBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(uiCartJoinItem: UiCartJoinItem) {
+            with(binding) {
                 item = uiCartJoinItem
                 val hash = uiCartJoinItem.hash
                 val amount = uiCartJoinItem.amount
                 cartSelectTopBodyCb.setOnClickListener {
-                    Log.e(TAG, "bind: 체크박스 아이템 클릭=", )
-                    onClickItemClickListener?.onCheckBoxCheckedChanged(hash, uiCartJoinItem.checked)
+                    Log.e(TAG, "bind: 체크박스 아이템 클릭=")
+                    onClickItemClickListener?.onCheckBoxCheckedChanged(
+                        adapterPosition,
+                        hash,
+                        uiCartJoinItem.checked
+                    )
                 }
                 cartSelectTopBodyIbDelete.setOnClickListener {
-                    onClickItemClickListener?.onClickDeleteBtn(hash)
+                    onClickItemClickListener?.onClickDeleteBtn(adapterPosition, hash)
                 }
                 cartSelectTopBodyIbMinus.setOnClickListener {
                     if (amount > 1) {
-                        onClickItemClickListener?.onClickAmountBtn(hash, amount - 1)
+                        onClickItemClickListener?.onClickAmountBtn(
+                            adapterPosition,
+                            hash,
+                            amount - 1
+                        )
                     }
                 }
                 cartSelectTopBodyIbPlus.setOnClickListener {
-                    onClickItemClickListener?.onClickAmountBtn(hash, amount + 1)
+                    onClickItemClickListener?.onClickAmountBtn(adapterPosition, hash, amount + 1)
                 }
                 executePendingBindings()
             }
@@ -70,7 +78,8 @@ class CartDishTopBodyAdapter @Inject constructor(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemCartDishTopBodyBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemCartDishTopBodyBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
