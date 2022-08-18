@@ -9,7 +9,9 @@ import com.woowahan.android10.deliverbanchan.data.local.model.join.Order
 import com.woowahan.android10.deliverbanchan.databinding.ItemOrderListBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiOrderListItem
 
-class OrderListAdapter : ListAdapter<UiOrderListItem, OrderListAdapter.OrderListViewHolder>(
+class OrderListAdapter(
+    private val itemClick: (orderList: List<Order>) -> Unit
+) : ListAdapter<UiOrderListItem, OrderListAdapter.OrderListViewHolder>(
     diffUtil
 ) {
     companion object {
@@ -33,9 +35,12 @@ class OrderListAdapter : ListAdapter<UiOrderListItem, OrderListAdapter.OrderList
 
     inner class OrderListViewHolder(val binding: ItemOrderListBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(orderList: List<Order>) {
+        fun bind(orderList: List<Order>, itemClick: (orderList: List<Order>) -> Unit) {
             binding.listSize = orderList.size
             binding.order = orderList[0]
+            binding.root.setOnClickListener {
+                itemClick(orderList)
+            }
         }
     }
 
@@ -46,6 +51,6 @@ class OrderListAdapter : ListAdapter<UiOrderListItem, OrderListAdapter.OrderList
     }
 
     override fun onBindViewHolder(holder: OrderListViewHolder, position: Int) {
-        holder.bind(currentList[position].orderList)
+        holder.bind(currentList[position].orderList, itemClick)
     }
 }
