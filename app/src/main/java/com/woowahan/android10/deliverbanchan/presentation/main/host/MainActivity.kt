@@ -18,6 +18,7 @@ import com.woowahan.android10.deliverbanchan.presentation.base.BaseActivity
 import com.woowahan.android10.deliverbanchan.presentation.cart.CartActivity
 import com.woowahan.android10.deliverbanchan.presentation.main.sidedish.SideDishViewModel
 import com.woowahan.android10.deliverbanchan.presentation.main.soupdish.SoupViewModel
+import com.woowahan.android10.deliverbanchan.presentation.order.OrderActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -44,6 +45,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main, "
         with(binding.mainTb) {
             appBarNoBackBtnFlCart.setOnClickListener {
                 startActivity(Intent(this@MainActivity, CartActivity::class.java))
+            }
+            appBarNoBackBtnIvProfile.setOnClickListener {
+                startActivity(Intent(this@MainActivity, OrderActivity::class.java))
             }
         }
     }

@@ -5,13 +5,18 @@
         <variable
             name="vm"
             type="com.woowahan.android10.deliverbanchan.presentation.cart.CartViewModel" />
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="vmOrder"
+            type="com.woowahan.android10.deliverbanchan.presentation.order.OrderViewModel" />
     </data>
 
     <merge>
 
-        <com.google.android.material.appbar.AppBarLayout android:id="@+id/app_bar_with_back_btn_abl"
-            xmlns:android="http://schemas.android.com/apk/res/android"
+        <com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/app_bar_with_back_btn_abl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/primary_main">
@@ -31,11 +36,11 @@
 
                 <TextView
                     android:id="@+id/app_bar_with_back_btn_tv_title"
+                    style="@style/Widget.TextView.Outfit_GreyScaleBlack20_Bold.Style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{vm.appBarTitle}"
                     android:layout_marginStart="@dimen/base_space_16dp"
-                    style="@style/Widget.TextView.Outfit_GreyScaleBlack20_Bold.Style" />
+                    android:text="@{vm == null ? vmOrder.appBarTitle : vm.appBarTitle}" />
 
                 <ImageView
                     android:id="@+id/app_bar_with_back_btn_iv_reload"
@@ -44,7 +49,7 @@
                     android:layout_gravity="end"
                     android:layout_marginEnd="@dimen/base_space_16dp"
                     android:src="@drawable/ic_reload"
-                    android:visibility="@{vm.orderDetailMode?View.VISIBLE:View.GONE}" />
+                    android:visibility="@{vm == null ? (vmOrder.orderDetailMode?View.VISIBLE:View.GONE) : (vm.orderDetailMode?View.VISIBLE:View.GONE)}" />
             </com.google.android.material.appbar.MaterialToolbar>
         </com.google.android.material.appbar.AppBarLayout>
     </merge>

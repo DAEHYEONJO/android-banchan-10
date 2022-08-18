@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="order"
+            type="com.woowahan.android10.deliverbanchan.data.local.model.join.Order" />
+        <variable
+            name="listSize"
+            type="Integer" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <View
+            android:id="@+id/order_list_view_top"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey_scale_line"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/order_list_iv_food"
+            android:layout_width="80dp"
+            android:layout_height="0dp"
+            android:layout_marginVertical="16dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toTopOf="@id/order_list_view_bottom"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/order_list_view_top"
+            app:setStringUrlImage="@{order.image}"/>
+
+        <View
+            android:id="@+id/order_list_view_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey_scale_line"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <TextView
+            android:id="@+id/order_list_tv_title"
+            style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style"
+            android:layout_width="0dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="8dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical|left"
+            android:maxLines="1"
+            app:layout_constraintBottom_toTopOf="@id/order_list_tv_sprice"
+            app:layout_constraintEnd_toStartOf="@id/order_list_iv_arrow_icon"
+            app:layout_constraintStart_toEndOf="@id/order_list_iv_food"
+            app:layout_constraintTop_toTopOf="@id/order_list_iv_food"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="새콤달콤 오징어무침 외 1개"
+            app:setOrderListTitle="@{order.title}"
+            app:setOrderItemSize="@{listSize}"/>
+
+        <TextView
+            android:id="@+id/order_list_tv_sprice"
+            style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Normal.Style"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_marginStart="8dp"
+            android:gravity="center_vertical"
+            app:layout_constraintBottom_toTopOf="@id/order_list_tv_isdelivering"
+            app:layout_constraintStart_toEndOf="@id/order_list_iv_food"
+            app:layout_constraintTop_toBottomOf="@id/order_list_tv_title"
+            isNPrice="@{false}"
+            price="@{order.SPrice * order.amount}"
+            tools:text="21,140원" />
+
+        <TextView
+            android:id="@+id/order_list_tv_isdelivering"
+            style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_marginStart="8dp"
+            android:gravity="center_vertical"
+            app:layout_constraintBottom_toBottomOf="@id/order_list_iv_food"
+            app:layout_constraintStart_toEndOf="@id/order_list_iv_food"
+            app:layout_constraintTop_toBottomOf="@id/order_list_tv_sprice"
+            tools:text="배송 준비중"
+            app:setOrderStateText="@{order.delivering}"/>
+
+        <ImageView
+            android:id="@+id/order_list_iv_arrow_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/base_space_16dp"
+            android:layout_marginEnd="@dimen/base_space_16dp"
+            android:src="@drawable/ic_right_arrow"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
