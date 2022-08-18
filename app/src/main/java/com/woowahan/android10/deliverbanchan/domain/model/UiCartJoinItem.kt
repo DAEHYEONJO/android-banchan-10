@@ -4,7 +4,7 @@ data class UiCartJoinItem(
     val hash: String,
     val title: String,
     val amount: Int,
-    val checked: Boolean,
+    var checked: Boolean,
     var nPrice: Int = 0,
     var sPrice: Int,
     val image: String,

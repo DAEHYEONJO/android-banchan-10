@@ -21,4 +21,8 @@ interface CartRepository {
     suspend fun isExistCartInfo(hash: String): Boolean
     @WorkerThread
     fun getAllCartJoinList(): Flow<List<Cart>>
+    @WorkerThread
+    suspend fun updateCartChecked(hash: String, checked: Boolean)
+    @WorkerThread
+    suspend fun updateCartAmount(hash: String, amount: Int)
 }

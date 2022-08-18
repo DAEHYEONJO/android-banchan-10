@@ -64,7 +64,7 @@ class CartBottomSheetViewModel @Inject constructor(
                     insertCartInfoUseCase(
                         CartInfo(
                             hash = hash,
-                            checked = isCurrentItemChecked,
+                            checked = true, // 기본값은 선택된 상태
                             amount = _itemCount.value
                         )
                     )

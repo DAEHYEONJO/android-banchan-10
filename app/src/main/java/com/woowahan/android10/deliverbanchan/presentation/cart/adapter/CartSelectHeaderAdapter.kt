@@ -1,7 +1,9 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.databinding.ItemCartSelectHeaderBinding
 import dagger.hilt.android.scopes.ActivityRetainedScoped
@@ -10,14 +12,24 @@ import javax.inject.Inject
 @ActivityRetainedScoped
 class CartSelectHeaderAdapter @Inject constructor() :
     RecyclerView.Adapter<CartSelectHeaderAdapter.ViewHolder>() {
+    
+    companion object{
+        const val TAG = "CartSelectHeaderAdapter"
+    }
 
-    var selectHeaderList = List(1) { false }
+    var selectHeaderList = arrayListOf<Boolean>(false)
 
-    class ViewHolder(val binding: ItemCartSelectHeaderBinding) :
+    lateinit var onClick: (check: Boolean) -> Unit
+
+    inner class ViewHolder(val binding: ItemCartSelectHeaderBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(check: Boolean) {
             with(binding){
                 checked = check
+                cartSelectHeaderCb.setOnClickListener{
+                    Log.e(TAG, "bind: ${cartSelectHeaderCb.isChecked}", )
+                    onClick.invoke(cartSelectHeaderCb.isChecked)
+                }
                 executePendingBindings()
             }
         }
