@@ -13,7 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".presentation.cart.OrderActivity">
+        tools:context=".presentation.cart.OrderActivity"
+        android:background="@color/grey_scale_surface">
 
         <include
             android:id="@+id/order_abl"
