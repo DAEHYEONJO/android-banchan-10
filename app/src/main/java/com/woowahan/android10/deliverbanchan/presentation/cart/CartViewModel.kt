@@ -19,7 +19,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 @HiltViewModel
 class CartViewModel @Inject constructor(
@@ -62,6 +64,8 @@ class CartViewModel @Inject constructor(
     private val _itemCartBottomBodyData = MutableLiveData(UiCartBottomBody.emptyItem())
     val itemCartBottomBodyData: LiveData<UiCartBottomBody> get() = _itemCartBottomBodyData
 
+    private val _selectedCartItem = mutableSetOf<String>()
+
 
     init {
         getAllRecentlyJoinList()
@@ -86,8 +90,10 @@ class CartViewModel @Inject constructor(
 
     fun calcCartBottomBodyAndHeaderVal(uiCartJoinItemList: List<UiCartJoinItem>){
         _itemCartBottomBodyProductTotalPrice = 0
+        _selectedCartItem.clear()
         val checkedUiJoinCartItem = uiCartJoinItemList.filter { it.checked }
         checkedUiJoinCartItem.forEach { checkedUiCartJoinItem ->
+            _selectedCartItem.add(checkedUiCartJoinItem.hash)
             _itemCartBottomBodyProductTotalPrice+=checkedUiCartJoinItem.totalPrice
         }
         if (checkedUiJoinCartItem.size == uiCartJoinItemList.size){
@@ -140,7 +146,6 @@ class CartViewModel @Inject constructor(
     }
 
     fun updateCartCheckedValue(hash: String, checked: Boolean) = viewModelScope.launch {
-        Log.e(TAG, "updateCartCheckedValue: ", )
         updateCartChecked(hash, checked)
     }
 
@@ -163,9 +168,25 @@ class CartViewModel @Inject constructor(
         }
         _uiCartJoinList.value = _uiCartJoinArrayList
     }
-    fun deleteUiCartItem(position: Int){
+    fun deleteUiCartItemByPos(position: Int){
         _uiCartJoinArrayList.removeAt(position)
         _uiCartJoinList.value = _uiCartJoinArrayList
+    }
+
+    fun deleteUiCartItemByHash(completion: (complete: Boolean) -> Unit){
+        val success = _uiCartJoinArrayList.removeAll(
+            _uiCartJoinArrayList.filter {
+                _selectedCartItem.contains(it.hash)
+            }.toSet()
+        )
+        _uiCartJoinList.value = _uiCartJoinArrayList
+        completion(success)
+    }
+
+    fun changeCheckedState(checkedValue: Boolean){
+        _uiCartJoinList.value =_uiCartJoinArrayList.onEach {
+            it.checked = checkedValue
+        }
     }
 
 }

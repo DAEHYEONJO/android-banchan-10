@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.widget.Spinner
 import androidx.appcompat.widget.AppCompatSpinner
 import com.woowahan.android10.deliverbanchan.R
-import com.woowahan.android10.deliverbanchan.presentation.common.dpToPx
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.dpToPx
 
 class CustomSortingSpinner(context: Context, attrs: AttributeSet?) : AppCompatSpinner(context, attrs)  {
 

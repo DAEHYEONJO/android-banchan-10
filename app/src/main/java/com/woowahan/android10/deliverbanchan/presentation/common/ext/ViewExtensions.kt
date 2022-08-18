@@ -1,8 +1,6 @@
-package com.woowahan.android10.deliverbanchan.presentation.common
+package com.woowahan.android10.deliverbanchan.presentation.common.ext
 
-import android.content.Context
 import android.view.View
-import android.widget.Toast
 
 fun View.toGone(){
     visibility = View.GONE

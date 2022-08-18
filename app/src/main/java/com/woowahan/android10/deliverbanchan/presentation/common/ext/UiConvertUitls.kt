@@ -1,4 +1,4 @@
-package com.woowahan.android10.deliverbanchan.presentation.common
+package com.woowahan.android10.deliverbanchan.presentation.common.ext
 
 import android.content.Context
 import android.util.DisplayMetrics

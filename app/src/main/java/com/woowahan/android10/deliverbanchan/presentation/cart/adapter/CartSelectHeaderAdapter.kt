@@ -19,7 +19,7 @@ class CartSelectHeaderAdapter @Inject constructor() :
 
     interface OnCartTopBodyItemClickListener {
         fun onClickSelectedDelete()
-        fun onClickSelectedState()
+        fun onClickSelectedStateChange(checkedState: Boolean)
     }
     var onCartTopBodyItemClickListener: OnCartTopBodyItemClickListener? = null
     var selectHeaderList = emptyList<UiCartHeader>()
@@ -31,7 +31,7 @@ class CartSelectHeaderAdapter @Inject constructor() :
                 item = uiCartHeader
                 cartSelectHeaderCb.setOnClickListener{
                     Log.e(TAG, "bind: ${cartSelectHeaderCb.isChecked}", )
-                    onCartTopBodyItemClickListener?.onClickSelectedState()
+                    onCartTopBodyItemClickListener?.onClickSelectedStateChange(uiCartHeader.checkBoxChecked)
                 }
                 cartSelectHeaderTvSelectDelete.setOnClickListener {
                     onCartTopBodyItemClickListener?.onClickSelectedDelete()
@@ -40,6 +40,7 @@ class CartSelectHeaderAdapter @Inject constructor() :
             }
         }
     }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =

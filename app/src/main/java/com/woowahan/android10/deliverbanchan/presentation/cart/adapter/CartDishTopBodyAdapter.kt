@@ -84,6 +84,7 @@ class CartDishTopBodyAdapter @Inject constructor(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        Log.e(TAG, "onBindViewHolder: ${currentList[position]}", )
         holder.bind(currentList[position])
     }
 }

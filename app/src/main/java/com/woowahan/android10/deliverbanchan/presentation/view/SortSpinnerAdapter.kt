@@ -9,7 +9,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.ItemSortSpinnerDropDownBinding
 import com.woowahan.android10.deliverbanchan.databinding.ItemSortSpinnerSelectedBinding
-import com.woowahan.android10.deliverbanchan.presentation.common.dpToPx
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.dpToPx
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.FragmentScoped
 import javax.inject.Inject
