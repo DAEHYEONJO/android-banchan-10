@@ -55,21 +55,27 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
     }
 
     private fun initInterface() {
+        cartTopBodyAdapter.currentList.forEach {
+            Log.e(TAG, "initInterface: $it", )
+        }
         cartHeaderAdapter.onClick = {
 
         }
         cartTopBodyAdapter.onClickItemClickListener =
             object : CartDishTopBodyAdapter.OnCartItemClickListener {
-                override fun onClickDeleteBtn(hash: String) {
-                    cartViewModel.deleteCart(hash)
+                override fun onClickDeleteBtn(position: Int, hash: String) {
+                    cartViewModel.deleteUiCartItem(position)
+                    cartTopBodyAdapter.notifyDataSetChanged()
                 }
 
-                override fun onCheckBoxCheckedChanged(hash: String, checked: Boolean) {
-                    cartViewModel.updateCartCheckedValue(hash, !checked)
+                override fun onCheckBoxCheckedChanged(position: Int, hash: String, checked: Boolean) {
+                    cartViewModel.updateUiCartCheckedValue(position, !checked)
+                    cartTopBodyAdapter.notifyDataSetChanged()
                 }
 
-                override fun onClickAmountBtn(hash: String, amount: Int) {
-                    cartViewModel.updateCartAmountValue(hash, amount)
+                override fun onClickAmountBtn(position: Int, hash: String, amount: Int) {
+                    cartViewModel.updateUiCartAmountValue(position, amount)
+                    cartTopBodyAdapter.notifyDataSetChanged()
                 }
             }
     }
@@ -77,7 +83,6 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
     private fun initAdapterList() {
         with(cartViewModel) {
             allCartJoinState.flowWithLifecycle(lifecycle).onEach { uiLocalState ->
-                Log.e(TAG, "initAdapterList: cart join $uiLocalState")
                 handleState(cartTopBodyAdapter, uiLocalState)
             }.launchIn(lifecycleScope)
 
@@ -94,8 +99,16 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
             }
             itemCartBottomBodyData.observe(viewLifecycleOwner){ uiCartBottomBody ->
                 with(cartBottomBodyAdapter){
+                    Log.e(TAG, "uiCartBottomBody: 오브절브바텀바디$uiCartBottomBody", )
                     bottomBodyList = listOf(uiCartBottomBody)
                     notifyDataSetChanged()
+                }
+            }
+            uiCartJoinList.observe(viewLifecycleOwner){
+                cartTopBodyAdapter.submitList(it)
+                cartViewModel.calcCartBottomBodyAndHeaderVal(it)
+                it.forEach {
+                    Log.e(TAG, "initAdapterList: 오브절브변경 $it", )
                 }
             }
         }
@@ -109,6 +122,9 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
                 requireContext().showToast(uiLocalState.message)
             }
             is UiLocalState.Success -> {
+                uiLocalState.uiDishItems.forEach {
+                    Log.e(TAG, "handleState: collect$it", )
+                }
                 when (adapter) {
                     is CartDishTopBodyAdapter -> {
                         adapter.submitList(uiLocalState.uiDishItems as List<UiCartJoinItem>)
