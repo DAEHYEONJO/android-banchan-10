@@ -49,19 +49,17 @@ class CartDishTopBodyAdapter @Inject constructor(
                 item = uiCartJoinItem
                 val hash = uiCartJoinItem.hash
                 val amount = uiCartJoinItem.amount
-                cartSelectTopBodyCb.setOnCheckedChangeListener { buttonView, isChecked ->
-                    Log.e(TAG, "bind: ${buttonView.id} $isChecked", )
-                    onClickItemClickListener?.onCheckBoxCheckedChanged(hash, isChecked)
+                cartSelectTopBodyCb.setOnClickListener {
+                    Log.e(TAG, "bind: 체크박스 아이템 클릭=", )
+                    onClickItemClickListener?.onCheckBoxCheckedChanged(hash, uiCartJoinItem.checked)
                 }
                 cartSelectTopBodyIbDelete.setOnClickListener {
                     onClickItemClickListener?.onClickDeleteBtn(hash)
                 }
                 cartSelectTopBodyIbMinus.setOnClickListener {
                     if (amount > 1) {
-                        cartSelectTopBodyIbMinus.isEnabled = true
                         onClickItemClickListener?.onClickAmountBtn(hash, amount - 1)
                     }
-                    else cartSelectTopBodyIbMinus.isEnabled = false
                 }
                 cartSelectTopBodyIbPlus.setOnClickListener {
                     onClickItemClickListener?.onClickAmountBtn(hash, amount + 1)

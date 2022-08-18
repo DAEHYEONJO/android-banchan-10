@@ -13,6 +13,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:text="@string/item_cart_recently_viewed"
         android:layout_marginStart="@dimen/base_space_16dp"
+        android:layout_marginTop="48dp"
         style="@style/Widget.TextView.KoPubWorldDotumPro_GreyScaleBlack16_Bold.Style"/>
 
     <TextView

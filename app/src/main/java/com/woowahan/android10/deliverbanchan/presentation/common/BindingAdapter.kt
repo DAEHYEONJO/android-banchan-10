@@ -8,6 +8,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.marginTop
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.woowahan.android10.deliverbanchan.R
@@ -24,8 +25,7 @@ fun ImageView.setStringUrlImage(stringUrl: String) {
 @BindingAdapter("price", "isNPrice")
 fun TextView.setPriceText(price: Int, isNPrice: Boolean) {
     text = if (price == 0) "" else {
-        val formatter = DecimalFormat("###,###")
-        "${formatter.format(price)}원"
+        price.convertPriceToString()
     }
     if (isNPrice) paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
 }
@@ -90,4 +90,18 @@ fun TextView.getTimeString(beforeTime: Long){
     }
 
     text = resources.getString(R.string.time_format, (diffTime/timeUnitArray.last()).toString(), timeSuffixArray.last())
+}
+
+@BindingAdapter("isAvailableDelivery", "totalPrice")
+fun TextView.setOrderBtnText(isAvailableDelivery: Boolean, totalPrice: Int){
+    text = if (isAvailableDelivery) {
+        resources.getString(R.string.order_format, totalPrice.convertPriceToString())
+    }else{
+        resources.getString(R.string.item_cart_bottom_body_btn)
+    }
+}
+
+@BindingAdapter("app:setDeliveryForFreeText")
+fun TextView.setDeliveryForFreeText(price: Int){
+    text = resources.getString(R.string.order_form_free_delivery_format, price.convertPriceToString())
 }

@@ -31,16 +31,14 @@ class CartRepositoryImpl @Inject constructor(
     override suspend fun isExistCartInfo(hash: String): Boolean = cartDao.isExistCartInfo(hash)
 
     override fun getAllCartJoinList(): Flow<List<Cart>> = cartDao.getAllCartJoinList()
+    @WorkerThread
     override suspend fun updateCartChecked(hash: String, checked: Boolean) {
-        withContext(dispatcher) {
-            cartDao.updateCartChecked(hash, checked)
-        }
+        cartDao.updateCartChecked(hash, checked)
     }
 
+    @WorkerThread
     override suspend fun updateCartAmount(hash: String, amount: Int) {
-        withContext(dispatcher) {
-            cartDao.updateCartAmount(hash, amount)
-        }
+        cartDao.updateCartAmount(hash, amount)
     }
 
 

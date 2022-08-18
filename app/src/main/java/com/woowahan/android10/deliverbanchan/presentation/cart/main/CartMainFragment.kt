@@ -56,13 +56,7 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
 
     private fun initInterface() {
         cartHeaderAdapter.onClick = {
-            with(cartViewModel) {
-                if (allCartJoinState.value is UiLocalState.Success<UiCartJoinItem>) {
-                    changeAllCartCheckedState(it)
-                } else {
-                    Log.e(TAG, "initInterface: not success state")
-                }
-            }
+
         }
         cartTopBodyAdapter.onClickItemClickListener =
             object : CartDishTopBodyAdapter.OnCartItemClickListener {
@@ -71,7 +65,7 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
                 }
 
                 override fun onCheckBoxCheckedChanged(hash: String, checked: Boolean) {
-                    cartViewModel.updateCartCheckedValue(hash, checked)
+                    cartViewModel.updateCartCheckedValue(hash, !checked)
                 }
 
                 override fun onClickAmountBtn(hash: String, amount: Int) {
@@ -92,10 +86,16 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
                 handleState(cartRecentlyViewedFooterAdapter, uiLocalState)
             }.launchIn(lifecycleScope)
 
-            itemCartHeaderChecked.observe(viewLifecycleOwner) {
+            itemCartHeaderChecked.observe(viewLifecycleOwner) { checked ->
                 with(cartHeaderAdapter) {
-                    selectHeaderList[0] = it
-                    notifyItemChanged(0)
+                    selectHeaderList = listOf(checked)
+                    notifyDataSetChanged()
+                }
+            }
+            itemCartBottomBodyData.observe(viewLifecycleOwner){ uiCartBottomBody ->
+                with(cartBottomBodyAdapter){
+                    bottomBodyList = listOf(uiCartBottomBody)
+                    notifyDataSetChanged()
                 }
             }
         }
