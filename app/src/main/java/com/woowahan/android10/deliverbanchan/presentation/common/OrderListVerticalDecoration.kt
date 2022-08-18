@@ -14,11 +14,11 @@ class OrderListVerticalDecoration : RecyclerView.ItemDecoration() {
         super.getItemOffsets(outRect, view, parent, state)
 
         val position = parent.getChildAdapterPosition(view)
-        val count = state.itemCount
+        val total = parent.layoutManager!!.itemCount
 
         val offset = dpToPx(view.context, 10).toInt()
         outRect.top = offset
 
-        if (position == count - 1) outRect.bottom = offset
+        if (position == total - 1) outRect.bottom = offset
     }
 }
