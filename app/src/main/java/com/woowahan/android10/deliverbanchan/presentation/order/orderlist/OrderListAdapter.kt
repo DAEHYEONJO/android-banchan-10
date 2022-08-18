@@ -7,23 +7,24 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.data.local.model.join.Order
 import com.woowahan.android10.deliverbanchan.databinding.ItemOrderListBinding
+import com.woowahan.android10.deliverbanchan.domain.model.UiOrderListItem
 
-class OrderListAdapter : ListAdapter<Pair<Long, List<Order>>, OrderListAdapter.OrderListViewHolder>(
+class OrderListAdapter : ListAdapter<UiOrderListItem, OrderListAdapter.OrderListViewHolder>(
     diffUtil
 ) {
     companion object {
         const val TAG = "OrderListAdapter"
-        val diffUtil = object : DiffUtil.ItemCallback<Pair<Long, List<Order>>>() {
+        val diffUtil = object : DiffUtil.ItemCallback<UiOrderListItem>() {
             override fun areItemsTheSame(
-                oldItem: Pair<Long, List<Order>>,
-                newItem: Pair<Long, List<Order>>
+                oldItem: UiOrderListItem,
+                newItem: UiOrderListItem
             ): Boolean {
-                return oldItem.first == newItem.first
+                return oldItem.timeStamp == newItem.timeStamp
             }
 
             override fun areContentsTheSame(
-                oldItem: Pair<Long, List<Order>>,
-                newItem: Pair<Long, List<Order>>
+                oldItem: UiOrderListItem,
+                newItem: UiOrderListItem
             ): Boolean {
                 return newItem == oldItem
             }
@@ -45,6 +46,6 @@ class OrderListAdapter : ListAdapter<Pair<Long, List<Order>>, OrderListAdapter.O
     }
 
     override fun onBindViewHolder(holder: OrderListViewHolder, position: Int) {
-        holder.bind(currentList[position].second)
+        holder.bind(currentList[position].orderList)
     }
 }
