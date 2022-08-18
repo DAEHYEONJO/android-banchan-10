@@ -1,6 +1,7 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,12 +12,12 @@ import com.woowahan.android10.deliverbanchan.domain.usecase.DeleteCartInfoByHash
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetJoinUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.UpdateCartAmount
 import com.woowahan.android10.deliverbanchan.domain.usecase.UpdateCartChecked
+import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartBottomBody
 import com.woowahan.android10.deliverbanchan.presentation.state.UiLocalState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -49,6 +50,9 @@ class CartViewModel @Inject constructor(
     )
 
     val itemCartHeaderChecked = MutableLiveData(false)
+    private var _itemCartBottomBodyProductTotalPrice = 0
+    private val _itemCartBottomBodyData = MutableLiveData(UiCartBottomBody.emptyItem())
+    val itemCartBottomBodyData: LiveData<UiCartBottomBody> get() = _itemCartBottomBodyData
 
     init {
         getAllRecentlyJoinList()
@@ -60,17 +64,37 @@ class CartViewModel @Inject constructor(
         }.flowOn(dispatcher).catch { exception ->
             _allCartJoinState.value = UiLocalState.IsLoading(false)
             _allCartJoinState.value = UiLocalState.ShowToast(exception.message.toString())
-        }.onEach {
-            it.forEach { uiCartJoinItem ->
-                if (uiCartJoinItem.checked){
-                    itemCartHeaderChecked.value = true
-                    return@onEach
-                }
+        }.onEach { uiCartJoinItem ->
+            _itemCartBottomBodyProductTotalPrice = 0
+            val checkedUiJoinCartItem = uiCartJoinItem.filter { it.checked }
+            checkedUiJoinCartItem.forEach { checkedUiCartJoinItem ->
+                _itemCartBottomBodyProductTotalPrice+=checkedUiCartJoinItem.totalPrice
             }
+            itemCartHeaderChecked.value = checkedUiJoinCartItem.isNotEmpty()
         }.collect{
             _allCartJoinState.value = UiLocalState.IsLoading(false)
             _allCartJoinState.value = UiLocalState.Success(it)
+            setItemCartBottomBodyData(it)
         }
+    }
+
+    private fun setItemCartBottomBodyData(uiCartJoinItems: List<UiCartJoinItem>){
+        var deliveryPrice = 2500
+        var totalPrice = _itemCartBottomBodyProductTotalPrice + deliveryPrice
+        val isAvailableDelivery = totalPrice >= UiCartBottomBody.MIN_DELIVERY_PRICE
+        var isAvailableFreeDelivery = false
+        if (_itemCartBottomBodyProductTotalPrice >= UiCartBottomBody.DELIVERY_FREE_PRICE){
+            totalPrice -= deliveryPrice
+            deliveryPrice = 0
+            isAvailableFreeDelivery = true
+        }
+        _itemCartBottomBodyData.value = UiCartBottomBody(
+            productTotalPrice = _itemCartBottomBodyProductTotalPrice,
+            deliveryPrice = deliveryPrice,
+            totalPrice = totalPrice,
+            isAvailableDelivery = isAvailableDelivery,
+            isAvailableFreeDelivery = isAvailableFreeDelivery,
+        )
     }
 
     private fun getAllRecentlyJoinList() = viewModelScope.launch {
@@ -89,14 +113,8 @@ class CartViewModel @Inject constructor(
         deleteCartInfoByHashUseCase(hash)
     }
 
-    fun changeAllCartCheckedState(checked: Boolean){
-        Log.e(TAG, "changeAllCartCheckedState: $checked", )
-        _allCartJoinState.value = UiLocalState.Success<UiCartJoinItem>(
-            (_allCartJoinState.value as UiLocalState.Success<UiCartJoinItem>).uiDishItems.onEach { it.checked = checked }
-        )
-    }
-
     fun updateCartCheckedValue(hash: String, checked: Boolean) = viewModelScope.launch {
+        Log.e(TAG, "updateCartCheckedValue: ", )
         updateCartChecked(hash, checked)
     }
 

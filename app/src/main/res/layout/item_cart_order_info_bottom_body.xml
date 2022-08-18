@@ -6,6 +6,7 @@
         <variable
             name="item"
             type="com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartBottomBody" />
+        <import type="android.view.View"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -34,7 +35,8 @@
             app:layout_constraintBottom_toBottomOf="@+id/cart_order_bottom_body_tv_product_total_price_hard_code"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="@dimen/base_space_16dp"
-            android:text="18,640원"
+            price="@{item.productTotalPrice}"
+            isNPrice="@{false}"
             style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault14_Normal.Style" />
 
         <TextView
@@ -56,7 +58,8 @@
             app:layout_constraintTop_toTopOf="@+id/cart_order_bottom_body_tv_delivery_price_hard_code"
             app:layout_constraintBottom_toBottomOf="@+id/cart_order_bottom_body_tv_delivery_price_hard_code"
             app:layout_constraintEnd_toEndOf="@+id/cart_order_bottom_body_tv_product_total_price"
-            android:text="1,640원"
+            price="@{item.deliveryPrice}"
+            isNPrice="@{false}"
             style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault14_Normal.Style" />
 
         <View
@@ -88,7 +91,8 @@
             app:layout_constraintTop_toTopOf="@+id/cart_order_bottom_body_tv_total_price_hard_code"
             app:layout_constraintBottom_toBottomOf="@+id/cart_order_bottom_body_tv_total_price_hard_code"
             app:layout_constraintEnd_toEndOf="@+id/cart_order_bottom_body_view"
-            android:text="22,640원"
+            price="@{item.totalPrice}"
+            isNPrice="@{false}"
             style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style" />
 
         <com.google.android.material.button.MaterialButton
@@ -99,13 +103,14 @@
             app:layout_constraintTop_toBottomOf="@+id/cart_order_bottom_body_tv_total_price"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="@dimen/base_space_16dp"
-            android:backgroundTint="@color/primary_main"
+            android:backgroundTint="@{item.availableDelivery? @color/primary_main : @color/primary_disabled}"
             android:layout_marginTop="40dp"
             app:elevation="20dp"
             app:cornerRadius="0dp"
             android:paddingTop="@dimen/base_space_16dp"
             android:paddingBottom="@dimen/base_space_16dp"
-            android:text="21,140원 주문하기"
+            isAvailableDelivery="@{item.availableDelivery}"
+            totalPrice="@{item.totalPrice}"
             style="@style/Widget.TextView.NotoSansKR_GreyScaleWhite18_Medium.Style" />
 
         <TextView
@@ -116,8 +121,8 @@
             app:layout_constraintStart_toStartOf="@+id/cart_order_bottom_body_btn_order"
             app:layout_constraintEnd_toEndOf="@+id/cart_order_bottom_body_btn_order"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="48dp"
-            android:text="21,360원을 더 담으면 무료배송"
+            android:visibility="@{item.availableFreeDelivery?View.GONE:View.VISIBLE}"
+            app:setDeliveryForFreeText="@{item.deliveryFreePrice - item.productTotalPrice}"
             android:layout_marginTop="@dimen/base_space_16dp"
             android:gravity="bottom|center"
             style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Normal.Style" />

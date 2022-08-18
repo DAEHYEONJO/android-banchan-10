@@ -34,6 +34,10 @@
         <item>금액 낮은순</item>
         <item>할인률순</item>
     </string-array>
+    <string name="item_cart_bottom_body_btn">최소주문금액을 확인해주세요</string>
 
     <string name="time_format">%1$s%2$s</string>
+    <string name="order_format">%1$s 주문하기</string>
+    <string name="order_form_free_delivery_format">%1$s을 더 담으면 무료배송</string>
+
 </resources>

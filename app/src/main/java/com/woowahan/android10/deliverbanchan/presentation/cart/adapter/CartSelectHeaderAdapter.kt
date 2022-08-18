@@ -17,7 +17,7 @@ class CartSelectHeaderAdapter @Inject constructor() :
         const val TAG = "CartSelectHeaderAdapter"
     }
 
-    var selectHeaderList = arrayListOf<Boolean>(false)
+    var selectHeaderList = emptyList<Boolean>()
 
     lateinit var onClick: (check: Boolean) -> Unit
 
