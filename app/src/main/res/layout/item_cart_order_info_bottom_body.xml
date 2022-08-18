@@ -107,6 +107,7 @@
             app:cornerRadius="0dp"
             android:paddingTop="@dimen/base_space_16dp"
             android:paddingBottom="@dimen/base_space_16dp"
+            android:enabled="@{item.availableDelivery}"
             isAvailableDelivery="@{item.availableDelivery}"
             totalPrice="@{item.totalPrice}"
             style="@style/Widget.TextView.NotoSansKR_GreyScaleWhite18_Medium.Style" />
