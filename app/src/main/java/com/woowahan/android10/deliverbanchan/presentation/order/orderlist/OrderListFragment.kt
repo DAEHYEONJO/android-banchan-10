@@ -12,6 +12,7 @@ import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.data.local.model.join.Order
 import com.woowahan.android10.deliverbanchan.databinding.FragmentOrderListBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiCartJoinItem
+import com.woowahan.android10.deliverbanchan.domain.model.UiOrderListItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiRecentlyJoinItem
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
 import com.woowahan.android10.deliverbanchan.presentation.cart.adapter.CartDishTopBodyAdapter
@@ -79,7 +80,7 @@ class OrderListFragment :
             is UiLocalState.Success -> {
                 binding.orderRv.toVisible()
                 binding.orderListTvEmptyMessage.toGone()
-                orderListAdapter.submitList(uiLocalState.uiDishItems as List<Pair<Long, List<Order>>>)
+                orderListAdapter.submitList(uiLocalState.uiDishItems as List<UiOrderListItem>)
             }
             is UiLocalState.Error -> {}
         }

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowahan.android10.deliverbanchan.data.local.model.join.Order
 import com.woowahan.android10.deliverbanchan.di.IoDispatcher
+import com.woowahan.android10.deliverbanchan.domain.model.UiOrderListItem
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllOrderJoinListUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.InsertOrderInfoUseCase
 import com.woowahan.android10.deliverbanchan.presentation.state.UiLocalState
@@ -31,8 +32,8 @@ class OrderViewModel @Inject constructor(
     val currentFragmentName = MutableStateFlow<String>("OrderList")
 
     private val _allOrderJoinState =
-        MutableStateFlow<UiLocalState<Pair<Long, List<Order>>>>(UiLocalState.Init)
-    val allOrderJoinState: StateFlow<UiLocalState<Pair<Long, List<Order>>>> get() = _allOrderJoinState
+        MutableStateFlow<UiLocalState<UiOrderListItem>>(UiLocalState.Init)
+    val allOrderJoinState: StateFlow<UiLocalState<UiOrderListItem>> get() = _allOrderJoinState
 
     init {
         getAllOrderList()
@@ -63,8 +64,14 @@ class OrderViewModel @Inject constructor(
                 if (it.isEmpty()) _allOrderJoinState.value = UiLocalState.IsEmpty(true)
                 else {
                     val map = it.reversed().groupBy { it.timeStamp }
-                    val list = map.toList()
+                    val list = map.toList().map {
+                        UiOrderListItem(
+                            it.first,
+                            it.second
+                        )
+                    }
                     _allOrderJoinState.value = UiLocalState.Success(list)
+
                 }
             }
         }
