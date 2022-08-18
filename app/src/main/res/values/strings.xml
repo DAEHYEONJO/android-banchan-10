@@ -35,6 +35,8 @@
         <item>할인률순</item>
     </string-array>
     <string name="item_cart_bottom_body_btn">최소주문금액을 확인해주세요</string>
+    <string name="item_cart_header_select_all">전체 선택</string>
+    <string name="item_cart_header_select_release">선택 해제</string>
 
     <string name="time_format">%1$s%2$s</string>
     <string name="order_format">%1$s 주문하기</string>

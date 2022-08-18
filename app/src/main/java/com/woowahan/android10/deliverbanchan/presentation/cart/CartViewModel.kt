@@ -13,6 +13,7 @@ import com.woowahan.android10.deliverbanchan.domain.usecase.GetJoinUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.UpdateCartAmount
 import com.woowahan.android10.deliverbanchan.domain.usecase.UpdateCartChecked
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartBottomBody
+import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartHeader
 import com.woowahan.android10.deliverbanchan.presentation.state.UiLocalState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -49,14 +50,17 @@ class CartViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(5000)
     )
 
-    val itemCartHeaderChecked = MutableLiveData(false)
     private var _itemCartBottomBodyProductTotalPrice = 0
-    private val _itemCartBottomBodyData = MutableLiveData(UiCartBottomBody.emptyItem())
-    val itemCartBottomBodyData: LiveData<UiCartBottomBody> get() = _itemCartBottomBodyData
+
+    private val _itemCartHeaderData = MutableLiveData(UiCartHeader.emptyItem())
+    val itemCartHeaderData: LiveData<UiCartHeader> get() = _itemCartHeaderData
 
     private val _uiCartJoinList = MutableLiveData<List<UiCartJoinItem>>(emptyList())
     val uiCartJoinList: LiveData<List<UiCartJoinItem>> get() = _uiCartJoinList
     private val _uiCartJoinArrayList = ArrayList<UiCartJoinItem>()
+
+    private val _itemCartBottomBodyData = MutableLiveData(UiCartBottomBody.emptyItem())
+    val itemCartBottomBodyData: LiveData<UiCartBottomBody> get() = _itemCartBottomBodyData
 
 
     init {
@@ -86,7 +90,17 @@ class CartViewModel @Inject constructor(
         checkedUiJoinCartItem.forEach { checkedUiCartJoinItem ->
             _itemCartBottomBodyProductTotalPrice+=checkedUiCartJoinItem.totalPrice
         }
-        itemCartHeaderChecked.value = checkedUiJoinCartItem.isNotEmpty()
+        if (checkedUiJoinCartItem.size == uiCartJoinItemList.size){
+            _itemCartHeaderData.value = UiCartHeader(
+                checkBoxText = UiCartHeader.TEXT_SELECT_RELEASE,
+                checkBoxChecked = true
+            )
+        }else{
+            _itemCartHeaderData.value = UiCartHeader(
+                checkBoxText = UiCartHeader.TEXT_SELECT_ALL,
+                checkBoxChecked = false
+            )
+        }
         setItemCartBottomBodyData()
     }
 
@@ -107,7 +121,6 @@ class CartViewModel @Inject constructor(
             isAvailableDelivery = isAvailableDelivery,
             isAvailableFreeDelivery = isAvailableFreeDelivery and isAvailableDelivery,
         )
-        Log.e(TAG, "setItemCartBottomBodyData: total: $totalPrice $_itemCartBottomBodyProductTotalPrice $isAvailableDelivery $isAvailableFreeDelivery ${isAvailableFreeDelivery and isAvailableDelivery}", )
     }
 
     private fun getAllRecentlyJoinList() = viewModelScope.launch {

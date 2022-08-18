@@ -55,14 +55,8 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
     }
 
     private fun initInterface() {
-        cartTopBodyAdapter.currentList.forEach {
-            Log.e(TAG, "initInterface: $it", )
-        }
-        cartHeaderAdapter.onClick = {
-
-        }
         cartTopBodyAdapter.onClickItemClickListener =
-            object : CartDishTopBodyAdapter.OnCartItemClickListener {
+            object : CartDishTopBodyAdapter.OnCartTopBodyItemClickListener {
                 override fun onClickDeleteBtn(position: Int, hash: String) {
                     cartViewModel.deleteUiCartItem(position)
                     cartTopBodyAdapter.notifyDataSetChanged()
@@ -87,19 +81,17 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
             }.launchIn(lifecycleScope)
 
             allRecentlyJoinState.flowWithLifecycle(lifecycle).onEach { uiLocalState ->
-                Log.e(TAG, "initAdapterList: recently join $uiLocalState")
                 handleState(cartRecentlyViewedFooterAdapter, uiLocalState)
             }.launchIn(lifecycleScope)
 
-            itemCartHeaderChecked.observe(viewLifecycleOwner) { checked ->
+            itemCartHeaderData.observe(viewLifecycleOwner) { uiCartHeader ->
                 with(cartHeaderAdapter) {
-                    selectHeaderList = listOf(checked)
+                    selectHeaderList = listOf(uiCartHeader)
                     notifyDataSetChanged()
                 }
             }
             itemCartBottomBodyData.observe(viewLifecycleOwner){ uiCartBottomBody ->
                 with(cartBottomBodyAdapter){
-                    Log.e(TAG, "uiCartBottomBody: 오브절브바텀바디$uiCartBottomBody", )
                     bottomBodyList = listOf(uiCartBottomBody)
                     notifyDataSetChanged()
                 }
@@ -107,9 +99,6 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
             uiCartJoinList.observe(viewLifecycleOwner){
                 cartTopBodyAdapter.submitList(it)
                 cartViewModel.calcCartBottomBodyAndHeaderVal(it)
-                it.forEach {
-                    Log.e(TAG, "initAdapterList: 오브절브변경 $it", )
-                }
             }
         }
     }
@@ -125,7 +114,7 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
                 uiLocalState.uiDishItems.forEach {
                     Log.e(TAG, "handleState: collect$it", )
                 }
-                when (adapter) {
+               when (adapter) {
                     is CartDishTopBodyAdapter -> {
                         adapter.submitList(uiLocalState.uiDishItems as List<UiCartJoinItem>)
                     }

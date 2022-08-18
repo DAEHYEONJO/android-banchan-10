@@ -4,8 +4,8 @@
 
     <data>
         <variable
-            name="checked"
-            type="java.lang.Boolean" />
+            name="item"
+            type="com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartHeader" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,7 +24,7 @@
             android:layout_marginTop="@dimen/base_space_16dp"
             android:layout_marginBottom="@dimen/base_space_16dp"
             android:button="@null"
-            android:checked="@{checked}"
+            android:checked="@{item.checkBoxChecked}"
             android:background="@drawable/selector_cart" />
 
         <TextView
@@ -34,7 +34,7 @@
             app:layout_constraintTop_toTopOf="@+id/cart_select_header_cb"
             app:layout_constraintBottom_toBottomOf="@+id/cart_select_header_cb"
             app:layout_constraintStart_toEndOf="@+id/cart_select_header_cb"
-            android:text="@string/item_cart_header_select_cancel"
+            android:text="@{item.checkBoxText}"
             style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Normal.Style" />
 
         <TextView

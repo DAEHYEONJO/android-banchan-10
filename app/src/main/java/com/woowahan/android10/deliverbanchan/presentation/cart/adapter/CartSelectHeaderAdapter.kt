@@ -3,9 +3,9 @@ package com.woowahan.android10.deliverbanchan.presentation.cart.adapter
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.databinding.ItemCartSelectHeaderBinding
+import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartHeader
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 
@@ -17,18 +17,24 @@ class CartSelectHeaderAdapter @Inject constructor() :
         const val TAG = "CartSelectHeaderAdapter"
     }
 
-    var selectHeaderList = emptyList<Boolean>()
-
-    lateinit var onClick: (check: Boolean) -> Unit
+    interface OnCartTopBodyItemClickListener {
+        fun onClickSelectedDelete()
+        fun onClickSelectedState()
+    }
+    var onCartTopBodyItemClickListener: OnCartTopBodyItemClickListener? = null
+    var selectHeaderList = emptyList<UiCartHeader>()
 
     inner class ViewHolder(val binding: ItemCartSelectHeaderBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(check: Boolean) {
+        fun bind(uiCartHeader: UiCartHeader) {
             with(binding){
-                checked = check
+                item = uiCartHeader
                 cartSelectHeaderCb.setOnClickListener{
                     Log.e(TAG, "bind: ${cartSelectHeaderCb.isChecked}", )
-                    onClick.invoke(cartSelectHeaderCb.isChecked)
+                    onCartTopBodyItemClickListener?.onClickSelectedState()
+                }
+                cartSelectHeaderTvSelectDelete.setOnClickListener {
+                    onCartTopBodyItemClickListener?.onClickSelectedDelete()
                 }
                 executePendingBindings()
             }

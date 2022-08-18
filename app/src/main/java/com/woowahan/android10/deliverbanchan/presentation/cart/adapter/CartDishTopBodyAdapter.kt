@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.databinding.ItemCartDishTopBodyBinding
-import com.woowahan.android10.deliverbanchan.databinding.ItemCartSelectHeaderBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiCartJoinItem
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
@@ -16,13 +15,13 @@ import javax.inject.Inject
 class CartDishTopBodyAdapter @Inject constructor(
 ) : ListAdapter<UiCartJoinItem, CartDishTopBodyAdapter.ViewHolder>(diffUtil) {
 
-    interface OnCartItemClickListener {
+    interface OnCartTopBodyItemClickListener {
         fun onClickDeleteBtn(position: Int, hash: String)
         fun onCheckBoxCheckedChanged(position: Int, hash: String, checked: Boolean)
         fun onClickAmountBtn(position: Int, hash: String, amount: Int)
     }
 
-    var onClickItemClickListener: OnCartItemClickListener? = null
+    var onClickItemClickListener: OnCartTopBodyItemClickListener? = null
 
     companion object {
         const val TAG = "CartDishTopBodyAdapter"
