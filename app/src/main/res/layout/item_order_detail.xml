@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="order"
+            type="com.woowahan.android10.deliverbanchan.data.local.model.join.Order" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="16dp">
+
+        <ImageView
+            android:id="@+id/order_detail_iv_food"
+            android:layout_width="80dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:setStringUrlImage="@{order.image}" />
+
+        <TextView
+            android:id="@+id/order_detail_tv_title"
+            style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style"
+            android:layout_width="0dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="8dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical|left"
+            android:maxLines="1"
+            android:text="@{order.title}"
+            app:layout_constraintBottom_toTopOf="@id/order_detail_tv_amount"
+            app:layout_constraintStart_toEndOf="@id/order_detail_iv_food"
+            app:layout_constraintTop_toTopOf="@id/order_detail_iv_food"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="새콤달콤 오징어무침" />
+
+        <TextView
+            android:id="@+id/order_detail_tv_amount"
+            style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Normal.Style"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_marginStart="8dp"
+            android:gravity="center_vertical"
+            app:layout_constraintBottom_toTopOf="@id/order_detail_tv_sprice"
+            app:layout_constraintStart_toEndOf="@id/order_detail_iv_food"
+            app:layout_constraintTop_toBottomOf="@id/order_detail_tv_title"
+            app:setAmount="@{order.amount}"
+            tools:text="1개" />
+
+        <TextView
+            android:id="@+id/order_detail_tv_sprice"
+            style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style"
+            isNPrice="@{false}"
+            price="@{order.SPrice}"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_marginStart="8dp"
+            android:gravity="center_vertical"
+            app:layout_constraintBottom_toBottomOf="@id/order_detail_iv_food"
+            app:layout_constraintStart_toEndOf="@id/order_detail_iv_food"
+            app:layout_constraintTop_toBottomOf="@id/order_detail_tv_amount"
+            tools:text="21,140원" />
+
+        <View
+            android:id="@+id/order_detail_view_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="16dp"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/order_detail_iv_food" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

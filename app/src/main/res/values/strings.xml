@@ -25,6 +25,7 @@
     <string name="item_cart_header_select_delete">선택 삭제</string>
     <string name="item_cart_order_product_total_price">상품 주문 금액</string>
     <string name="item_cart_order_total_price">총 주문 금액</string>
+    <string name="item_order_total_price">총 결제 금액</string>
     <string name="item_cart_order_delivery_price">배송료</string>
     <string name="item_cart_recently_viewed">최근 본 상품</string>
     <string name="item_cart_recently_viewed_show_total">전체보기</string>

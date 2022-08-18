@@ -13,6 +13,7 @@ import com.woowahan.android10.deliverbanchan.presentation.cart.main.CartMainFrag
 import com.woowahan.android10.deliverbanchan.presentation.common.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.toVisible
 import com.woowahan.android10.deliverbanchan.presentation.order.orderlist.OrderListFragment
+import com.woowahan.android10.deliverbanchan.presentation.order.orderlistdetail.OrderDetailFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -28,6 +29,7 @@ class OrderActivity : BaseActivity<ActivityOrderBinding>(R.layout.activity_order
         initAppBar()
         initFragment()
         observeFragment()
+        observeMoveEvent()
     }
 
     private fun initBinding() {
@@ -41,7 +43,7 @@ class OrderActivity : BaseActivity<ActivityOrderBinding>(R.layout.activity_order
         orderViewModel.setAppBarTitle(resources.getString(R.string.app_bar_order_list_title))
         with(binding.orderAbl) {
             appBarWithBackBtnIvLeft.setOnClickListener {
-                finish()
+                onBackPressed()
             }
         }
     }
@@ -75,5 +77,20 @@ class OrderActivity : BaseActivity<ActivityOrderBinding>(R.layout.activity_order
         orderViewModel.setAppBarTitle("")
         orderViewModel.orderDetailMode.value = true
         binding.orderAbl.appBarWithBackBtnIvReload.toVisible()
+    }
+
+    private fun observeMoveEvent() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                orderViewModel.moveToOrderDetailEvent.collect {
+                    if (it) {
+                        supportFragmentManager.commit {
+                            replace(R.id.order_fcv, OrderDetailFragment(), "OrderDetail")
+                            addToBackStack("OrderDetail")
+                        }
+                    }
+                }
+            }
+        }
     }
 }

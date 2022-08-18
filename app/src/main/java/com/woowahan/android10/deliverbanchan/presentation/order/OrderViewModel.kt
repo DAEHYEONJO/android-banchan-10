@@ -4,8 +4,10 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.woowahan.android10.deliverbanchan.data.local.model.entity.OrderInfo
 import com.woowahan.android10.deliverbanchan.data.local.model.join.Order
 import com.woowahan.android10.deliverbanchan.di.IoDispatcher
+import com.woowahan.android10.deliverbanchan.domain.model.UiOrderInfo
 import com.woowahan.android10.deliverbanchan.domain.model.UiOrderListItem
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllOrderJoinListUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.InsertOrderInfoUseCase
@@ -30,13 +32,31 @@ class OrderViewModel @Inject constructor(
     val appBarTitle = MutableLiveData("")
     val orderDetailMode = MutableLiveData(false)
     val currentFragmentName = MutableStateFlow<String>("OrderList")
+    val deliveryFee = 2500
+
+    var selectedOrderList = MutableStateFlow<List<Order>>(emptyList())
+    var selectedOrderInfo = MutableStateFlow<UiOrderInfo>(UiOrderInfo(0, 0, 0))
+
+    private val _moveToOrderDetailEvent = MutableSharedFlow<Boolean>()
+    val moveToOrderDetailEvent = _moveToOrderDetailEvent.asSharedFlow()
 
     private val _allOrderJoinState =
         MutableStateFlow<UiLocalState<UiOrderListItem>>(UiLocalState.Init)
     val allOrderJoinState: StateFlow<UiLocalState<UiOrderListItem>> get() = _allOrderJoinState
 
     init {
+        //tempInsertOrderInfo()
         getAllOrderList()
+    }
+
+    fun selectOrderListItem(orderList: List<Order>) {
+        selectedOrderList.value = orderList
+
+        var itemPrice = 0
+        orderList.forEach {
+            itemPrice += it.sPrice * it.amount
+        }
+        selectedOrderInfo.value = UiOrderInfo(itemPrice, deliveryFee, itemPrice + deliveryFee)
     }
 
     fun tempInsertOrderInfo() { // 지울 예정
@@ -44,6 +64,23 @@ class OrderViewModel @Inject constructor(
             val currentTime = System.currentTimeMillis()
             runCatching {
                 // insertOrderInfoUseCase 활용해서 테스트 데이터 넣기
+                insertOrderInfoUseCase(
+                    OrderInfo(
+                        hash = "HBDEF",
+                        timeStamp = currentTime,
+                        amount = 2,
+                        isDelivering = false
+                    )
+                )
+
+                insertOrderInfoUseCase(
+                    OrderInfo(
+                        hash = "HF778",
+                        timeStamp = currentTime,
+                        amount = 2,
+                        isDelivering = false
+                    )
+                )
             }.onSuccess {
                 Log.e(TAG, "temp order info insert success")
             }.onFailure {
@@ -79,5 +116,11 @@ class OrderViewModel @Inject constructor(
 
     fun setAppBarTitle(string: String) {
         appBarTitle.value = string
+    }
+
+    fun triggerMoveToOrderDetailFragmentEvent() {
+        viewModelScope.launch {
+            _moveToOrderDetailEvent.emit(true)
+        }
     }
 }

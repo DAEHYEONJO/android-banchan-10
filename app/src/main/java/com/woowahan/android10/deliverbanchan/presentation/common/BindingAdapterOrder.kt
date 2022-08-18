@@ -24,3 +24,8 @@ fun TextView.setOrderTitle(orderListTitle: String, orderItemSize: Int) {
         text = "${orderListTitle} 외 ${orderItemSize - 1}개"
     }
 }
+
+@BindingAdapter("app:setAmount")
+fun TextView.setAmount(amount: Int) {
+    text = "총 ${amount}개"
+}
