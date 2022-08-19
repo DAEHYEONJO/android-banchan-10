@@ -72,6 +72,7 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
             object : CartDishTopBodyAdapter.OnCartTopBodyItemClickListener {
                 override fun onClickDeleteBtn(position: Int, hash: String) {
                     cartViewModel.deleteUiCartItemByPos(position, hash)
+                    cartViewModel.deleteCartInDb(hash)
                     cartTopBodyAdapter.notifyItemChanged(position)
                     //cartTopBodyAdapter.notifyDataSetChanged()
                 }
@@ -151,7 +152,7 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
 
     override fun onStop() {
         super.onStop()
-        //cartViewModel.updateAllCartItemChanged()
+        cartViewModel.updateAllCartItemChanged()
     }
 
 }

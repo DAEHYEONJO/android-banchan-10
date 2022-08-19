@@ -35,18 +35,22 @@ class CartViewModel @Inject constructor(
     val appBarTitle = MutableLiveData("")
     val orderDetailMode = MutableLiveData(false)
 
-    private val _allCartJoinState = MutableStateFlow<UiLocalState<UiCartJoinItem>>(UiLocalState.Init)
-    val allCartJoinState: StateFlow<UiLocalState<UiCartJoinItem>> get() = _allCartJoinState.stateIn(
-        initialValue = UiLocalState.Init,
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000)
-    )
-    private val _allRecentlyJoinState = MutableStateFlow<UiLocalState<UiRecentlyJoinItem>>(UiLocalState.Init)
-    val allRecentlyJoinState: StateFlow<UiLocalState<UiRecentlyJoinItem>> get() = _allRecentlyJoinState.stateIn(
-        initialValue = UiLocalState.Init,
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000)
-    )
+    private val _allCartJoinState =
+        MutableStateFlow<UiLocalState<UiCartJoinItem>>(UiLocalState.Init)
+    val allCartJoinState: StateFlow<UiLocalState<UiCartJoinItem>>
+        get() = _allCartJoinState.stateIn(
+            initialValue = UiLocalState.Init,
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000)
+        )
+    private val _allRecentlyJoinState =
+        MutableStateFlow<UiLocalState<UiRecentlyJoinItem>>(UiLocalState.Init)
+    val allRecentlyJoinState: StateFlow<UiLocalState<UiRecentlyJoinItem>>
+        get() = _allRecentlyJoinState.stateIn(
+            initialValue = UiLocalState.Init,
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000)
+        )
 
     private var _itemCartBottomBodyProductTotalPrice = 0
 
@@ -69,6 +73,7 @@ class CartViewModel @Inject constructor(
         getAllRecentlyJoinList()
         getAllCartJoinList()
     }
+
     private fun getAllCartJoinList() = viewModelScope.launch {
         getJoinUseCase.getCartJoinList().onStart {
             _allCartJoinState.value = UiLocalState.IsLoading(true)
@@ -77,29 +82,30 @@ class CartViewModel @Inject constructor(
             _allCartJoinState.value = UiLocalState.ShowToast(exception.message.toString())
         }.onEach { uiCartJoinItemList ->
             calcCartBottomBodyAndHeaderVal(uiCartJoinItemList)
-        }.collect{
+        }.collect {
             _allCartJoinState.value = UiLocalState.IsLoading(false)
             _allCartJoinState.value = UiLocalState.Success(it)
+            _uiCartJoinArrayList.clear()
             _uiCartJoinArrayList.addAll(it)
             _uiCartJoinList.value = _uiCartJoinArrayList
             //setItemCartBottomBodyData()
         }
     }
 
-    fun calcCartBottomBodyAndHeaderVal(uiCartJoinItemList: List<UiCartJoinItem>){
+    fun calcCartBottomBodyAndHeaderVal(uiCartJoinItemList: List<UiCartJoinItem>) {
         _itemCartBottomBodyProductTotalPrice = 0
         _selectedCartItem.clear()
         val checkedUiJoinCartItem = uiCartJoinItemList.filter { it.checked }
         checkedUiJoinCartItem.forEach { checkedUiCartJoinItem ->
             _selectedCartItem.add(checkedUiCartJoinItem.hash)
-            _itemCartBottomBodyProductTotalPrice+=checkedUiCartJoinItem.totalPrice
+            _itemCartBottomBodyProductTotalPrice += checkedUiCartJoinItem.totalPrice
         }
-        if (checkedUiJoinCartItem.size == uiCartJoinItemList.size){
+        if (checkedUiJoinCartItem.size == uiCartJoinItemList.size) {
             _itemCartHeaderData.value = UiCartHeader(
                 checkBoxText = UiCartHeader.TEXT_SELECT_RELEASE,
                 checkBoxChecked = true
             )
-        }else{
+        } else {
             _itemCartHeaderData.value = UiCartHeader(
                 checkBoxText = UiCartHeader.TEXT_SELECT_ALL,
                 checkBoxChecked = false
@@ -111,9 +117,10 @@ class CartViewModel @Inject constructor(
     private fun setItemCartBottomBodyData() {
         var deliveryPrice = 2500
         var totalPrice = _itemCartBottomBodyProductTotalPrice + deliveryPrice
-        val isAvailableDelivery = _itemCartBottomBodyProductTotalPrice >= UiCartBottomBody.MIN_DELIVERY_PRICE
+        val isAvailableDelivery =
+            _itemCartBottomBodyProductTotalPrice >= UiCartBottomBody.MIN_DELIVERY_PRICE
         var isAvailableFreeDelivery = false
-        if (_itemCartBottomBodyProductTotalPrice >= UiCartBottomBody.DELIVERY_FREE_PRICE){
+        if (_itemCartBottomBodyProductTotalPrice >= UiCartBottomBody.DELIVERY_FREE_PRICE) {
             totalPrice -= deliveryPrice
             deliveryPrice = 0
             if (isAvailableDelivery) isAvailableFreeDelivery = true
@@ -133,53 +140,92 @@ class CartViewModel @Inject constructor(
         }.flowOn(dispatcher).catch { exception ->
             _allRecentlyJoinState.value = UiLocalState.IsLoading(false)
             _allRecentlyJoinState.value = UiLocalState.ShowToast(exception.message.toString())
-        }.collect{
+        }.collect {
             _allRecentlyJoinState.value = UiLocalState.IsLoading(false)
             _allRecentlyJoinState.value = UiLocalState.Success(it)
         }
-    }
-
-    fun deleteCart(hash: String) = viewModelScope.launch {
-        deleteCartInfoByHashUseCase(hash)
     }
 
     fun setAppBarTitle(string: String) {
         appBarTitle.value = string
     }
 
-    fun updateUiCartCheckedValue(position: Int, checked: Boolean){
+    fun updateUiCartCheckedValue(position: Int, checked: Boolean) {
         _uiCartJoinArrayList[position].checked = checked
         _uiCartJoinList.value = _uiCartJoinArrayList
     }
-    fun updateUiCartAmountValue(position: Int, amount: Int){
+
+    fun updateUiCartAmountValue(position: Int, amount: Int) {
         _uiCartJoinArrayList[position].apply {
             this.amount = amount
-            totalPrice = sPrice*amount
+            totalPrice = sPrice * amount
         }
         _uiCartJoinList.value = _uiCartJoinArrayList
     }
-    fun deleteUiCartItemByPos(position: Int, hash: String){
+
+    fun deleteUiCartItemByPos(position: Int, hash: String) {
         _toBeDeletedCartItem.add(hash)
         _uiCartJoinArrayList.removeAt(position)
         _uiCartJoinList.value = _uiCartJoinArrayList
-        Log.e(TAG, "deleteUiCartItemByPos: $_toBeDeletedCartItem", )
+        Log.e(TAG, "deleteUiCartItemByPos: $_toBeDeletedCartItem")
     }
 
-    fun deleteUiCartItemByHash(completion: (complete: Boolean) -> Unit){
+    fun deleteUiCartItemByHash(completion: (complete: Boolean) -> Unit) {
+        val deleteCartJoinList = _uiCartJoinArrayList.filter {
+            _selectedCartItem.contains(it.hash)
+        }.toSet()
+        GlobalScope.launch {
+            deleteCartJoinList.forEach {
+                deleteCartInDb(it.hash)
+            }
+        }
         val success = _uiCartJoinArrayList.removeAll(
-            _uiCartJoinArrayList.filter {
-                _selectedCartItem.contains(it.hash)
-            }.toSet()
+            deleteCartJoinList
         )
         _toBeDeletedCartItem.addAll(_selectedCartItem)
         _uiCartJoinList.value = _uiCartJoinArrayList
-        Log.e(TAG, "deleteUiCartItemByPos: $_toBeDeletedCartItem", )
+        Log.e(TAG, "deleteUiCartItemByPos: $_toBeDeletedCartItem")
+
         completion(success)
     }
 
-    fun changeCheckedState(checkedValue: Boolean){
-        _uiCartJoinList.value =_uiCartJoinArrayList.onEach {
+    fun changeCheckedState(checkedValue: Boolean) {
+        _uiCartJoinList.value = _uiCartJoinArrayList.onEach {
             it.checked = checkedValue
+        }
+    }
+
+    fun deleteCartInDb(hash:String)=viewModelScope.launch {
+        deleteCartInfoByHashUseCase(hash)
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    fun updateAllCartItemChanged() = GlobalScope.launch {
+//        launch {
+//            _toBeDeletedCartItem.forEach { hash ->
+//                Log.e(TAG, "deleteQuery: delete hash $hash Thread: ${Thread.currentThread().name}")
+//                try {
+//                    deleteCartInfoByHashUseCase(hash)
+//                } catch (e: CancellationException) {
+//                    Log.e(TAG, "deleteQuery Delete: $e")
+//                }
+//            }
+//        }
+        launch {
+            _uiCartJoinList.value?.forEach { uiCartJoinItem ->
+                Log.e(TAG, "insertQuery: $uiCartJoinItem Thread: ${Thread.currentThread().name}")
+                try {
+                    insertCartInfoUseCase(
+                        CartInfo(
+                            uiCartJoinItem.hash,
+                            uiCartJoinItem.checked,
+                            uiCartJoinItem.amount
+                        )
+                    )
+                } catch (e: CancellationException) {
+                    Log.e(TAG, "insertQuery Insert: $e")
+                }
+            }
         }
     }
 
