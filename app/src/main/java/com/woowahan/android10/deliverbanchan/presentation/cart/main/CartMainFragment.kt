@@ -1,7 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart.main
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.flowWithLifecycle

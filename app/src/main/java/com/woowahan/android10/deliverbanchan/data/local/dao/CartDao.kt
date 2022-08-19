@@ -32,7 +32,25 @@ interface CartDao {
 
     @Query("UPDATE CART_INFO SET checked = :checked WHERE hash = :hash")
     suspend fun updateCartChecked(hash: String, checked: Boolean)
-    @Query("UPDATE CART_INFO SET amount = :amount WHERE hash = :hash")
+    @Query("UPDATE CART_INFO SET amount = amount+:amount WHERE hash = :hash")
     suspend fun updateCartAmount(hash: String, amount: Int)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCartInfoVarArg(vararg cartInfo: CartInfo)
+
+    @Transaction
+    suspend fun deleteVarArgByHash(deleteHashes: List<String>){
+        deleteHashes.forEach { hash ->
+            deleteCartInfo(hash)
+        }
+    }
+
+    @Transaction
+    suspend fun insertAndDeleteAllItems(cartInfo: List<CartInfo>, deleteHashes: List<String>){
+        insertCartInfoVarArg(*cartInfo.toTypedArray())
+        deleteHashes.forEach {
+            deleteCartInfo(it)
+        }
+    }
 
 }

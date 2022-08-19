@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
+import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllCartInfoHashSetUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetThemeDishListUseCase
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,13 +18,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SoupViewModel @Inject constructor(
-    private val getSoupDishesUseCase: GetThemeDishListUseCase
+    private val getSoupDishesUseCase: GetThemeDishListUseCase,
+    private val getAllCartInfoSetUseCase: GetAllCartInfoHashSetUseCase
 ) : ViewModel() {
 
     companion object {
         const val TAG = "SoupViewModel"
     }
-
 
     private val _soupState = MutableStateFlow<UiState>(UiState.Init)
     val soupState: StateFlow<UiState> get() = _soupState
@@ -34,30 +35,46 @@ class SoupViewModel @Inject constructor(
     val soupListSize = MutableLiveData(0)
 
     init {
-        getSoupDishes()
+        setSoupDishesState()
+        setSoupDishCartInserted()
     }
 
-    private fun setLoading() {
+    private fun setSoupDishCartInserted() {
+        // cart flow collect 시 , 장바구니 insert 여부 확인함
+        viewModelScope.launch {
+            getAllCartInfoSetUseCase().collect { cartInfoHashMap ->
+                if (_soupState.value is UiState.Success){
+                    val tempList = mutableListOf<UiDishItem>()
+                    (_soupState.value as UiState.Success).uiDishItems.forEach {
+                        tempList.add(it.copy(isInserted = cartInfoHashMap.contains(it.hash)))
+                    }
+                    _soupState.value = UiState.Success(tempList)
+                }
+            }
+        }
+    }
+
+    private fun setLoadingStateTrue() {
         _soupState.value = UiState.IsLoading(true)
     }
 
-    private fun hideLoading() {
+    private fun setLoadingStateFalse() {
         _soupState.value = UiState.IsLoading(false)
     }
 
-    private fun showToast(message: String) {
+    private fun setToastMessageByException(message: String) {
         _soupState.value = UiState.ShowToast(message)
     }
 
-    private fun getSoupDishes() = viewModelScope.launch {
+    private fun setSoupDishesState() = viewModelScope.launch {
         getSoupDishesUseCase("soup").onStart {
-            setLoading()
+            setLoadingStateTrue()
         }.catch { exception ->
             Log.e(TAG, "getSoupDishes: $exception", )
-            hideLoading()
-            showToast(exception.message.toString())
+            setLoadingStateFalse()
+            setToastMessageByException(exception.message.toString())
         }.flowOn(Dispatchers.IO).collect { result ->
-            hideLoading()
+            setLoadingStateFalse()
             when (result) {
                 is BaseResult.Success -> {
                     _soupState.value = UiState.Success(result.data)
@@ -82,20 +99,4 @@ class SoupViewModel @Inject constructor(
             }
         }
     }
-
-    fun changeSoupItemIsInserted(hash: String){
-        ((_soupState.value as UiState.Success).uiDishItems).let { uiDishList ->
-            val newList = mutableListOf<UiDishItem>().apply {
-                uiDishList.forEach { uiDishItem ->
-                    if (uiDishItem.hash == hash){
-                        add(uiDishItem.copy(isInserted = true))
-                    }else{
-                        add(uiDishItem)
-                    }
-                }
-            }
-            _soupState.value = UiState.Success(newList)
-        }
-    }
-
 }

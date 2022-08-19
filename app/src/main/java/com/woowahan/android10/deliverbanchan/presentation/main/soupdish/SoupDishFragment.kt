@@ -73,6 +73,7 @@ class SoupDishFragment: BaseFragment<FragmentSoupdishBinding>(R.layout.fragment_
                     Log.e(TAG, "initObserver: $state", )
                     handleStateChange(state)
                 }.launchIn(lifecycleScope)
+
         }
     }
 
@@ -98,9 +99,8 @@ class SoupDishFragment: BaseFragment<FragmentSoupdishBinding>(R.layout.fragment_
                     val cartBottomSheetFragment = CartBottomSheetFragment()
                     cartBottomSheetFragment.setDialogDismissWhenInsertSuccessListener(object: CartBottomSheetFragment.DialogDismissWhenInsertSuccessListener{
                         override fun dialogDismissWhenInsertSuccess(hash: String, title: String) {
-                            soupViewModel.changeSoupItemIsInserted(hash)
+                            //soupViewModel.changeSoupItemIsInserted(hash)
                             val cartDialog = CartDialogFragment()
-
                             cartDialog.setTextClickListener(object :
                                 CartDialogFragment.TextClickListener {
                                 override fun moveToCartTextClicked(hash: String, title: String) {

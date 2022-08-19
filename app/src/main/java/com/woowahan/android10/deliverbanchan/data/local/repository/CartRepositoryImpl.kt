@@ -41,5 +41,20 @@ class CartRepositoryImpl @Inject constructor(
         cartDao.updateCartAmount(hash, amount)
     }
 
+    override suspend fun insertCartInfoVarArg(vararg cartInfo: CartInfo) {
+        cartDao.insertCartInfoVarArg(*cartInfo)
+    }
+
+    override suspend fun insertAndDeleteAllItems(
+        cartInfo: List<CartInfo>,
+        deleteHashes: List<String>
+    ) {
+        cartDao.insertAndDeleteAllItems(cartInfo, deleteHashes)
+    }
+
+    override suspend fun deleteVarArgByHash(deleteHashes: List<String>) {
+        cartDao.deleteVarArgByHash(deleteHashes)
+    }
+
 
 }
