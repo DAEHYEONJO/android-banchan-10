@@ -2,19 +2,9 @@ package com.woowahan.android10.deliverbanchan.presentation.main.host
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
-import com.woowahan.android10.deliverbanchan.data.local.model.entity.LocalDish
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.OrderInfo
-import com.woowahan.android10.deliverbanchan.data.local.model.entity.RecentlyViewedInfo
-import com.woowahan.android10.deliverbanchan.data.local.model.join.Cart
-import com.woowahan.android10.deliverbanchan.data.local.model.join.Order
-import com.woowahan.android10.deliverbanchan.data.local.model.join.RecentlyViewed
-import com.woowahan.android10.deliverbanchan.domain.repository.local.CartRepository
-import com.woowahan.android10.deliverbanchan.domain.repository.local.DishRepository
-import com.woowahan.android10.deliverbanchan.domain.repository.local.OrderRepository
-import com.woowahan.android10.deliverbanchan.domain.repository.local.RecentlyViewedRepository
 import com.woowahan.android10.deliverbanchan.domain.usecase.*
 import com.woowahan.android10.deliverbanchan.presentation.state.UiLocalState
 import dagger.hilt.android.lifecycle.HiltViewModel
