@@ -3,6 +3,7 @@ package com.woowahan.android10.deliverbanchan.presentation.detail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.LocalDish
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.RecentViewedInfo
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
@@ -18,12 +19,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
-    private val createEmptyUiDishItemUseCase: CreateEmptyUiDishItemUseCase,
     private val createEmptyUiDetailInfoUseCase: CreateEmptyUiDetailInfoUseCase,
     private val createUiDetailInfoUseCase: CreateUiDetailInfoUseCase,
     private val getDetailDishUseCase: GetDetailDishUseCase,
     private val insertRecentlyUseCase: InsertRecentlyUseCase,
     private val insertCartInfoUseCase: InsertCartInfoUseCase,
+    private val updateCartAmount: UpdateCartAmount,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -97,17 +98,21 @@ class DetailViewModel @Inject constructor(
     }
 
     fun orderDetailItem() {
-        // 현재 상품이 장바구니에 있는지를 알아야 한다
         viewModelScope.launch {
             currentUiDishItem?.let {
                 runCatching {
-                    var itemCount = 0
                     if (it.isInserted) {
                         // 이미 장바구니에 있는 경우
-
+                        updateCartAmount(hash = it.hash, amount = _itemCount.value)
                     } else {
                         // 새로 장바구니에 들어가는 경우
-
+                        insertCartInfoUseCase(
+                            CartInfo(
+                                hash = it.hash,
+                                checked = true,
+                                amount = _itemCount.value
+                            )
+                        )
                     }
                 }.onSuccess {
                     _insertSuccessEvent.emit(true)
