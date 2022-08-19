@@ -36,6 +36,10 @@ object Versions {
     const val WINDOW = "1.0.0"
 
     const val RECYCLERVIEW = "1.2.0-rc01"
+
+    const val WORK_MANAGER = "2.7.1"
+    const val HILT_WORK = "1.0.0"
+    const val HILT_COMPILER = "1.0.0"
 }
 
 object Kotlin {
@@ -62,6 +66,10 @@ object AndroidX {
 
     const val WINDOW                  = "androidx.window:window:${Versions.WINDOW}"
     const val RECYCLERVIEW            = "androidx.recyclerview:recyclerview:${Versions.RECYCLERVIEW}"
+
+    const val WORK_MANAGER            = "androidx.work:work-runtime-ktx:${Versions.WORK_MANAGER}"
+    const val HILT_WORK               = "androidx.hilt:hilt-work:${Versions.HILT_WORK}"
+    const val HILT_COMPILER           = "androidx.hilt:hilt-compiler:${Versions.HILT_COMPILER}"
 }
 
 object Google {

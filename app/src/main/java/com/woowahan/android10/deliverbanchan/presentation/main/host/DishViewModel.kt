@@ -42,7 +42,7 @@ class DishViewModel @Inject constructor(
             _cartInfoState.value = UiLocalState.ShowToast(exception.message.toString())
         }.collect{
             it.forEach {
-                Log.d(TAG, "dishViewModel CartInfo : $it ")
+                Log.e(TAG, "dishViewModel CartInfo : $it ")
             }
             _cartInfoState.value = UiLocalState.Success(it)
             setCartIconText((cartInfoState.value as UiLocalState.Success).uiDishItems.size)
