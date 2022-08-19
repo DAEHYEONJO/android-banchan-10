@@ -1,5 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.detail
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
@@ -12,10 +13,12 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.ActivityDetailBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseActivity
+import com.woowahan.android10.deliverbanchan.presentation.cart.CartActivity
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
 import com.woowahan.android10.deliverbanchan.presentation.detail.adapter.DetailContentAdapter
 import com.woowahan.android10.deliverbanchan.presentation.detail.adapter.DetailSectionImageAdapter
 import com.woowahan.android10.deliverbanchan.presentation.detail.adapter.DetailThumbImageAdapter
+import com.woowahan.android10.deliverbanchan.presentation.dialogs.dialog.CartDialogFragment
 import com.woowahan.android10.deliverbanchan.presentation.state.DetailUiState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -36,6 +39,7 @@ class DetailActivity :
         initView()
         observeApiState()
         observeDetailData()
+        observeInsertSuccess()
     }
 
     private fun initView() {
@@ -117,6 +121,27 @@ class DetailActivity :
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 detailViewModel.sectionList.collect {
                     detailSectionImageAdapter.submitList(it.toList())
+                }
+            }
+        }
+    }
+
+    private fun observeInsertSuccess() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                detailViewModel.insertSuccessEvent.collect {
+                    if(it) {
+                        val cartDialog = CartDialogFragment()
+                        cartDialog.setTextClickListener(object : CartDialogFragment.TextClickListener {
+                            override fun moveToCartTextClicked(hash: String, title: String) {
+                                Log.e("DetailActivity", "move to cart")
+                                startActivity(Intent(this@DetailActivity, CartActivity::class.java))
+                            }
+                        })
+                        cartDialog.show(supportFragmentManager, "CartDialog")
+                    } else {
+                        showToast("장바구니 담기에 실패했습니다.")
+                    }
                 }
             }
         }
