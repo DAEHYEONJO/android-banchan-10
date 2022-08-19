@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentExhibitionBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
+import com.woowahan.android10.deliverbanchan.presentation.cart.CartActivity
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
@@ -63,8 +64,7 @@ class ExhibitionFragment :
                     cartDialog.setTextClickListener(object : CartDialogFragment.TextClickListener {
                         override fun moveToCartTextClicked(hash: String, title: String) {
                             Log.e("ExhibitionFragment", "move to cart, hash : ${hash}, title : ${title}")
-
-                            // CartActivity 이동 하면서 title, hash 전달 예정
+                            startActivity(Intent(requireActivity(), CartActivity::class.java))
                         }
                     })
 

@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentSidedishBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
+import com.woowahan.android10.deliverbanchan.presentation.cart.CartActivity
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
@@ -105,8 +106,7 @@ class SideDishFragment: BaseFragment<FragmentSidedishBinding>(R.layout.fragment_
                                         "SideDishFragment",
                                         "move to cart, hash : ${hash}, title : ${title}"
                                     )
-                                    // CartActivity 이동 하면서 title, hash 전달 예정
-
+                                    startActivity(Intent(requireActivity(), CartActivity::class.java))
                                 }
                             })
 

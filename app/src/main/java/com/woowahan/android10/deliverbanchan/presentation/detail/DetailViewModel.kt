@@ -23,6 +23,7 @@ class DetailViewModel @Inject constructor(
     private val createUiDetailInfoUseCase: CreateUiDetailInfoUseCase,
     private val getDetailDishUseCase: GetDetailDishUseCase,
     private val insertRecentlyUseCase: InsertRecentlyUseCase,
+    private val insertCartInfoUseCase: InsertCartInfoUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -42,6 +43,9 @@ class DetailViewModel @Inject constructor(
 
     private val _itemCount = MutableStateFlow<Int>(1)
     val itemCount: StateFlow<Int> = _itemCount
+
+    private val _insertSuccessEvent = MutableSharedFlow<Boolean>()
+    val insertSuccessEvent = _insertSuccessEvent.asSharedFlow()
 
     init {
         getDetailDishInfo()
@@ -87,6 +91,28 @@ class DetailViewModel @Inject constructor(
                     }
                     is BaseResult.Error -> _detailState.value =
                         DetailUiState.Error(result.errorCode)
+                }
+            }
+        }
+    }
+
+    fun orderDetailItem() {
+        // 현재 상품이 장바구니에 있는지를 알아야 한다
+        viewModelScope.launch {
+            currentUiDishItem?.let {
+                runCatching {
+                    var itemCount = 0
+                    if (it.isInserted) {
+                        // 이미 장바구니에 있는 경우
+
+                    } else {
+                        // 새로 장바구니에 들어가는 경우
+
+                    }
+                }.onSuccess {
+                    _insertSuccessEvent.emit(true)
+                }.onFailure {
+                    _insertSuccessEvent.emit(false)
                 }
             }
         }
