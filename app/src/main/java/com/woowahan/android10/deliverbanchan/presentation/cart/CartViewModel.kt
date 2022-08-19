@@ -5,28 +5,26 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
 import com.woowahan.android10.deliverbanchan.di.IoDispatcher
 import com.woowahan.android10.deliverbanchan.domain.model.UiCartJoinItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiRecentlyJoinItem
-import com.woowahan.android10.deliverbanchan.domain.usecase.DeleteCartInfoByHashUseCase
-import com.woowahan.android10.deliverbanchan.domain.usecase.GetJoinUseCase
-import com.woowahan.android10.deliverbanchan.domain.usecase.UpdateCartAmount
-import com.woowahan.android10.deliverbanchan.domain.usecase.UpdateCartChecked
+import com.woowahan.android10.deliverbanchan.domain.usecase.*
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartBottomBody
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartHeader
 import com.woowahan.android10.deliverbanchan.presentation.state.UiLocalState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 @HiltViewModel
 class CartViewModel @Inject constructor(
     private val getJoinUseCase: GetJoinUseCase,
     private val deleteCartInfoByHashUseCase: DeleteCartInfoByHashUseCase,
-    private val updateCartChecked: UpdateCartChecked,
-    private val updateCartAmount: UpdateCartAmount,
+    private val insertCartInfoUseCase: InsertCartInfoUseCase,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
@@ -62,6 +60,10 @@ class CartViewModel @Inject constructor(
     private val _itemCartBottomBodyData = MutableLiveData(UiCartBottomBody.emptyItem())
     val itemCartBottomBodyData: LiveData<UiCartBottomBody> get() = _itemCartBottomBodyData
 
+    private val _selectedCartItem = mutableSetOf<String>()
+
+    private val _toBeDeletedCartItem = mutableSetOf<String>()
+
 
     init {
         getAllRecentlyJoinList()
@@ -86,8 +88,10 @@ class CartViewModel @Inject constructor(
 
     fun calcCartBottomBodyAndHeaderVal(uiCartJoinItemList: List<UiCartJoinItem>){
         _itemCartBottomBodyProductTotalPrice = 0
+        _selectedCartItem.clear()
         val checkedUiJoinCartItem = uiCartJoinItemList.filter { it.checked }
         checkedUiJoinCartItem.forEach { checkedUiCartJoinItem ->
+            _selectedCartItem.add(checkedUiCartJoinItem.hash)
             _itemCartBottomBodyProductTotalPrice+=checkedUiCartJoinItem.totalPrice
         }
         if (checkedUiJoinCartItem.size == uiCartJoinItemList.size){
@@ -139,15 +143,6 @@ class CartViewModel @Inject constructor(
         deleteCartInfoByHashUseCase(hash)
     }
 
-    fun updateCartCheckedValue(hash: String, checked: Boolean) = viewModelScope.launch {
-        Log.e(TAG, "updateCartCheckedValue: ", )
-        updateCartChecked(hash, checked)
-    }
-
-    fun updateCartAmountValue(hash: String, amount: Int) = viewModelScope.launch {
-        updateCartAmount(hash, amount)
-    }
-
     fun setAppBarTitle(string: String) {
         appBarTitle.value = string
     }
@@ -163,9 +158,29 @@ class CartViewModel @Inject constructor(
         }
         _uiCartJoinList.value = _uiCartJoinArrayList
     }
-    fun deleteUiCartItem(position: Int){
+    fun deleteUiCartItemByPos(position: Int, hash: String){
+        _toBeDeletedCartItem.add(hash)
         _uiCartJoinArrayList.removeAt(position)
         _uiCartJoinList.value = _uiCartJoinArrayList
+        Log.e(TAG, "deleteUiCartItemByPos: $_toBeDeletedCartItem", )
+    }
+
+    fun deleteUiCartItemByHash(completion: (complete: Boolean) -> Unit){
+        val success = _uiCartJoinArrayList.removeAll(
+            _uiCartJoinArrayList.filter {
+                _selectedCartItem.contains(it.hash)
+            }.toSet()
+        )
+        _toBeDeletedCartItem.addAll(_selectedCartItem)
+        _uiCartJoinList.value = _uiCartJoinArrayList
+        Log.e(TAG, "deleteUiCartItemByPos: $_toBeDeletedCartItem", )
+        completion(success)
+    }
+
+    fun changeCheckedState(checkedValue: Boolean){
+        _uiCartJoinList.value =_uiCartJoinArrayList.onEach {
+            it.checked = checkedValue
+        }
     }
 
 }

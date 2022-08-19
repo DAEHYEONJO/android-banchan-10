@@ -17,7 +17,7 @@ import com.woowahan.android10.deliverbanchan.presentation.cart.adapter.CartDishT
 import com.woowahan.android10.deliverbanchan.presentation.cart.adapter.CartOrderInfoBottomBodyAdapter
 import com.woowahan.android10.deliverbanchan.presentation.cart.adapter.CartRecentlyViewedFooterAdapter
 import com.woowahan.android10.deliverbanchan.presentation.cart.adapter.CartSelectHeaderAdapter
-import com.woowahan.android10.deliverbanchan.presentation.common.showToast
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
 import com.woowahan.android10.deliverbanchan.presentation.state.UiLocalState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -55,21 +55,37 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
     }
 
     private fun initInterface() {
+        cartHeaderAdapter.onCartTopBodyItemClickListener =
+            object : CartSelectHeaderAdapter.OnCartTopBodyItemClickListener{
+                override fun onClickSelectedDelete() {
+                    cartViewModel.deleteUiCartItemByHash { success ->
+                        if (success) requireContext().showToast("삭제에 성공했습니다.")
+                        else requireContext().showToast("삭제에 실패했습니다.")
+                    }
+                }
+
+                override fun onClickSelectedStateChange(checkedState: Boolean) {
+                    cartViewModel.changeCheckedState(!checkedState)
+                }
+            }
         cartTopBodyAdapter.onClickItemClickListener =
             object : CartDishTopBodyAdapter.OnCartTopBodyItemClickListener {
                 override fun onClickDeleteBtn(position: Int, hash: String) {
-                    cartViewModel.deleteUiCartItem(position)
-                    cartTopBodyAdapter.notifyDataSetChanged()
+                    cartViewModel.deleteUiCartItemByPos(position, hash)
+                    cartTopBodyAdapter.notifyItemChanged(position)
+                    //cartTopBodyAdapter.notifyDataSetChanged()
                 }
 
                 override fun onCheckBoxCheckedChanged(position: Int, hash: String, checked: Boolean) {
                     cartViewModel.updateUiCartCheckedValue(position, !checked)
-                    cartTopBodyAdapter.notifyDataSetChanged()
+                    cartTopBodyAdapter.notifyItemChanged(position)
+                    //cartTopBodyAdapter.notifyDataSetChanged()
                 }
 
                 override fun onClickAmountBtn(position: Int, hash: String, amount: Int) {
                     cartViewModel.updateUiCartAmountValue(position, amount)
-                    cartTopBodyAdapter.notifyDataSetChanged()
+                    cartTopBodyAdapter.notifyItemChanged(position)
+                    //cartTopBodyAdapter.notifyDataSetChanged()
                 }
             }
     }
@@ -97,7 +113,7 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
                 }
             }
             uiCartJoinList.observe(viewLifecycleOwner){
-                cartTopBodyAdapter.submitList(it)
+                cartTopBodyAdapter.submitList(it.toList())
                 cartViewModel.calcCartBottomBodyAndHeaderVal(it)
             }
         }
@@ -111,17 +127,13 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
                 requireContext().showToast(uiLocalState.message)
             }
             is UiLocalState.Success -> {
-                uiLocalState.uiDishItems.forEach {
-                    Log.e(TAG, "handleState: collect$it", )
-                }
                when (adapter) {
                     is CartDishTopBodyAdapter -> {
                         adapter.submitList(uiLocalState.uiDishItems as List<UiCartJoinItem>)
                     }
                     is CartRecentlyViewedFooterAdapter -> {
                         with(adapter) {
-                            uiRecentlyJoinList =
-                                uiLocalState.uiDishItems as List<UiRecentlyJoinItem>
+                            uiRecentlyJoinList = uiLocalState.uiDishItems as List<UiRecentlyJoinItem>
                             notifyDataSetChanged()
                         }
                     }
@@ -135,6 +147,11 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
         with(binding.cartMainRv) {
             adapter = concatAdapter
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        //cartViewModel.updateAllCartItemChanged()
     }
 
 }

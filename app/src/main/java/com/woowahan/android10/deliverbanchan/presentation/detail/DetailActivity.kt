@@ -1,6 +1,5 @@
 package com.woowahan.android10.deliverbanchan.presentation.detail
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
@@ -12,19 +11,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.ActivityDetailBinding
-import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseActivity
-import com.woowahan.android10.deliverbanchan.presentation.common.showToast
-import com.woowahan.android10.deliverbanchan.presentation.common.toGone
-import com.woowahan.android10.deliverbanchan.presentation.common.toVisible
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
 import com.woowahan.android10.deliverbanchan.presentation.detail.adapter.DetailContentAdapter
 import com.woowahan.android10.deliverbanchan.presentation.detail.adapter.DetailSectionImageAdapter
 import com.woowahan.android10.deliverbanchan.presentation.detail.adapter.DetailThumbImageAdapter
 import com.woowahan.android10.deliverbanchan.presentation.state.DetailUiState
-import com.woowahan.android10.deliverbanchan.presentation.state.ExhibitionUiState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import kotlin.math.log
 
 @AndroidEntryPoint
 class DetailActivity :

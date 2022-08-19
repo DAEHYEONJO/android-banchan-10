@@ -30,8 +30,14 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart, "
     }
 
     private fun initFragment() {
+        var fragment = supportFragmentManager.findFragmentByTag("CartMainFragment")
+        if (fragment == null){
+            fragment = CartMainFragment()
+        }else{
+            fragment as CartMainFragment
+        }
         supportFragmentManager.commit {
-            replace(R.id.cart_fcv, CartMainFragment())
+            replace(R.id.cart_fcv, fragment, "CartMainFragment")
         }
     }
 

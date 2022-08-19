@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.woowahan.android10.deliverbanchan.presentation.common.dpToPx
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.dpToPx
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlin.math.roundToInt
 

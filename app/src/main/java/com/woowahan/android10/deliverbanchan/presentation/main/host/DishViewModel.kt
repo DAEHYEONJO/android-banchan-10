@@ -71,7 +71,7 @@ class DishViewModel @Inject constructor(
             cartIconText.value = if ( this in 1 .. 9 ){
                 toString()
             }else if ( this >= 10){
-                "${toString()}+"
+                "10+"
             }else{
                 ""
             }

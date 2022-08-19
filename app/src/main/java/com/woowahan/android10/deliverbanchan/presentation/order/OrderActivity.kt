@@ -9,9 +9,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.ActivityOrderBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseActivity
-import com.woowahan.android10.deliverbanchan.presentation.cart.main.CartMainFragment
-import com.woowahan.android10.deliverbanchan.presentation.common.toGone
-import com.woowahan.android10.deliverbanchan.presentation.common.toVisible
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
 import com.woowahan.android10.deliverbanchan.presentation.order.orderlist.OrderListFragment
 import com.woowahan.android10.deliverbanchan.presentation.order.orderlistdetail.OrderDetailFragment
 import dagger.hilt.android.AndroidEntryPoint

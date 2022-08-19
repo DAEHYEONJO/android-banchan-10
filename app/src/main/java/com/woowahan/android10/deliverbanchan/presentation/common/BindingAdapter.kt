@@ -8,12 +8,13 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.marginTop
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.woowahan.android10.deliverbanchan.R
-import org.w3c.dom.Text
-import java.text.DecimalFormat
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.convertPriceToString
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.toInt
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
 
 @BindingAdapter("app:setStringUrlImage")
 fun ImageView.setStringUrlImage(stringUrl: String) {
