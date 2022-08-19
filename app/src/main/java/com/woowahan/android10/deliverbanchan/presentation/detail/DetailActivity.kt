@@ -46,15 +46,14 @@ class DetailActivity :
         detailThumbImageAdapter = DetailThumbImageAdapter()
         detailContentAdapter = DetailContentAdapter({
             // minus click
-            Log.e("DetailActivity", "minus click")
             detailViewModel.minusItemCount()
         }, {
             // plus click
-            Log.e("DetailActivity", "plus click")
             detailViewModel.plusItemCount()
         }, {
             // button click
             Log.e("DetailActivity", "button click")
+            detailViewModel.orderDetailItem()
         })
         detailSectionImageAdapter = DetailSectionImageAdapter()
 
