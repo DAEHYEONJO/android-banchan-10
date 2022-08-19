@@ -11,10 +11,7 @@ import com.woowahan.android10.deliverbanchan.di.IoDispatcher
 import com.woowahan.android10.deliverbanchan.domain.model.UiCartJoinItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiRecentlyJoinItem
 import com.woowahan.android10.deliverbanchan.domain.repository.local.CartRepository
-import com.woowahan.android10.deliverbanchan.domain.usecase.DeleteCartInfoByHashUseCase
-import com.woowahan.android10.deliverbanchan.domain.usecase.GetJoinUseCase
-import com.woowahan.android10.deliverbanchan.domain.usecase.InsertCartInfoUseCase
-import com.woowahan.android10.deliverbanchan.domain.usecase.InsertOrderInfoUseCase
+import com.woowahan.android10.deliverbanchan.domain.usecase.*
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.TempOrder
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartBottomBody
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartHeader
@@ -29,7 +26,7 @@ class CartViewModel @Inject constructor(
     private val getJoinUseCase: GetJoinUseCase,
     private val deleteCartInfoByHashUseCase: DeleteCartInfoByHashUseCase,
     private val insertOrderInfoUseCase: InsertOrderInfoUseCase,
-    private val cartRepository: CartRepository,
+    private val insertAndDeleteAllCartUseCase: InsertAndDeleteAllCartUseCase,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
@@ -198,10 +195,11 @@ class CartViewModel @Inject constructor(
             _selectedCartItem.forEach { tempOrder ->
                 insertOrderInfoUseCase(
                     OrderInfo(
-                        tempOrder.hash,
-                        timeStamp,
-                        tempOrder.amount,
-                        true
+                        hash = tempOrder.hash,
+                        timeStamp = timeStamp,
+                        amount = tempOrder.amount,
+                        isDelivering = true,
+                        deliveryPrice = _itemCartBottomBodyData.value!!.deliveryPrice
                     )
                 )
             }
@@ -219,7 +217,7 @@ class CartViewModel @Inject constructor(
     }
 
     fun updateAllCartItemChanged() = CoroutineScope(dispatcher).launch {
-        cartRepository.insertAndDeleteAllItems(
+        insertAndDeleteAllCartUseCase(
             _uiCartJoinList.value!!.map {
                 CartInfo(
                     it.hash,
