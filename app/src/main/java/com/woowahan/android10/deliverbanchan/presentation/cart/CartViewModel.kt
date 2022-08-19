@@ -85,6 +85,7 @@ class CartViewModel @Inject constructor(
         }.collect {
             _allCartJoinState.value = UiLocalState.IsLoading(false)
             _allCartJoinState.value = UiLocalState.Success(it)
+            _uiCartJoinArrayList.clear()
             _uiCartJoinArrayList.addAll(it)
             _uiCartJoinList.value = _uiCartJoinArrayList
             //setItemCartBottomBodyData()
@@ -170,14 +171,21 @@ class CartViewModel @Inject constructor(
     }
 
     fun deleteUiCartItemByHash(completion: (complete: Boolean) -> Unit) {
+        val deleteCartJoinList = _uiCartJoinArrayList.filter {
+            _selectedCartItem.contains(it.hash)
+        }.toSet()
+        GlobalScope.launch {
+            deleteCartJoinList.forEach {
+                deleteCartInDb(it.hash)
+            }
+        }
         val success = _uiCartJoinArrayList.removeAll(
-            _uiCartJoinArrayList.filter {
-                _selectedCartItem.contains(it.hash)
-            }.toSet()
+            deleteCartJoinList
         )
         _toBeDeletedCartItem.addAll(_selectedCartItem)
         _uiCartJoinList.value = _uiCartJoinArrayList
         Log.e(TAG, "deleteUiCartItemByPos: $_toBeDeletedCartItem")
+
         completion(success)
     }
 
@@ -187,18 +195,22 @@ class CartViewModel @Inject constructor(
         }
     }
 
+    fun deleteCartInDb(hash:String)=viewModelScope.launch {
+        deleteCartInfoByHashUseCase(hash)
+    }
+
     @OptIn(DelicateCoroutinesApi::class)
     fun updateAllCartItemChanged() = GlobalScope.launch {
-        launch {
-            _toBeDeletedCartItem.forEach { hash ->
-                Log.e(TAG, "deleteQuery: delete hash $hash Thread: ${Thread.currentThread().name}")
-                try {
-                    deleteCartInfoByHashUseCase(hash)
-                } catch (e: CancellationException) {
-                    Log.e(TAG, "deleteQuery Delete: $e")
-                }
-            }
-        }
+//        launch {
+//            _toBeDeletedCartItem.forEach { hash ->
+//                Log.e(TAG, "deleteQuery: delete hash $hash Thread: ${Thread.currentThread().name}")
+//                try {
+//                    deleteCartInfoByHashUseCase(hash)
+//                } catch (e: CancellationException) {
+//                    Log.e(TAG, "deleteQuery Delete: $e")
+//                }
+//            }
+//        }
         launch {
             _uiCartJoinList.value?.forEach { uiCartJoinItem ->
                 Log.e(TAG, "insertQuery: $uiCartJoinItem Thread: ${Thread.currentThread().name}")
