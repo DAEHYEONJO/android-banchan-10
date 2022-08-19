@@ -171,16 +171,10 @@ class CartViewModel @Inject constructor(
     }
 
     fun deleteUiCartItemByHash(completion: (complete: Boolean) -> Unit) {
-        val deleteCartJoinList = _uiCartJoinArrayList.filter {
-            _selectedCartItem.contains(it.hash)
-        }.toSet()
-        GlobalScope.launch {
-            deleteCartJoinList.forEach {
-                deleteCartInDb(it.hash)
-            }
-        }
         val success = _uiCartJoinArrayList.removeAll(
-            deleteCartJoinList
+            _uiCartJoinArrayList.filter {
+                _selectedCartItem.contains(it.hash)
+            }.toSet()
         )
         _toBeDeletedCartItem.addAll(_selectedCartItem)
         _uiCartJoinList.value = _uiCartJoinArrayList
@@ -195,22 +189,18 @@ class CartViewModel @Inject constructor(
         }
     }
 
-    fun deleteCartInDb(hash:String)=viewModelScope.launch {
-        deleteCartInfoByHashUseCase(hash)
-    }
-
     @OptIn(DelicateCoroutinesApi::class)
-    fun updateAllCartItemChanged() = GlobalScope.launch {
-//        launch {
-//            _toBeDeletedCartItem.forEach { hash ->
-//                Log.e(TAG, "deleteQuery: delete hash $hash Thread: ${Thread.currentThread().name}")
-//                try {
-//                    deleteCartInfoByHashUseCase(hash)
-//                } catch (e: CancellationException) {
-//                    Log.e(TAG, "deleteQuery Delete: $e")
-//                }
-//            }
-//        }
+    fun updateAllCartItemChanged() = CoroutineScope(dispatcher).launch {
+        launch {
+            _toBeDeletedCartItem.forEach { hash ->
+                Log.e(TAG, "deleteQuery: delete hash $hash Thread: ${Thread.currentThread().name}")
+                try {
+                    deleteCartInfoByHashUseCase(hash)
+                } catch (e: CancellationException) {
+                    Log.e(TAG, "deleteQuery Delete: $e")
+                }
+            }
+        }
         launch {
             _uiCartJoinList.value?.forEach { uiCartJoinItem ->
                 Log.e(TAG, "insertQuery: $uiCartJoinItem Thread: ${Thread.currentThread().name}")
