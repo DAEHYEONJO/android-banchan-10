@@ -23,7 +23,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp">
+                    android:layout_marginBottom="24dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/maindish_cl_header_text"
@@ -33,6 +33,7 @@
                         app:layout_constraintTop_toTopOf="parent">
 
                         <TextView
+                            android:id="@+id/maindish_tv_header"
                             style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack32_Normal.Style"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -91,7 +92,17 @@
             android:id="@+id/maindish_rv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/rv_space_8dp"
+            android:layout_marginEnd="@dimen/base_space_16dp"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
+
+        <ProgressBar
+            android:id="@+id/maindish_pb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateBehavior="repeat"
+            android:indeterminateTint="@color/progress_indicator"
+            android:layout_gravity="center"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

@@ -15,13 +15,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DeliverBanChan"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
             android:name=".presentation.cart.CartActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.main.MainActivity"
-            android:exported="true">
+            android:name=".presentation.order.OrderActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.detail.DetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.main.host.MainActivity"
+            android:exported="true"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,6 +1,5 @@
 package com.woowahan.android10.deliverbanchan.data.remote.repository
 
-import android.util.Log
 import com.woowahan.android10.deliverbanchan.data.remote.dao.DishApi
 import com.woowahan.android10.deliverbanchan.data.remote.model.DishItem
 import com.woowahan.android10.deliverbanchan.data.remote.model.Exhibition
@@ -20,32 +19,8 @@ class DishItemRepositoryImpl @Inject constructor(
         const val TAG = "DishItemRepositoryImpl"
     }
 
-    override suspend fun getSideDishes(): Flow<BaseResult<List<DishItem>, Int>> = flow {
-        val response = dishApi.getSideDishes()
-        with(response) {
-            if (isSuccessful) {
-                val dishList = body()!!.body
-                emit(BaseResult.Success(dishList))
-            } else {
-                emit(BaseResult.Error(code()))
-            }
-        }
-    }
-
-    override suspend fun getSoupDishes(): Flow<BaseResult<List<DishItem>, Int>> = flow {
-        val response = dishApi.getSoupDishes()
-        with(response) {
-            if (isSuccessful) {
-                val dishList = body()!!.body
-                emit(BaseResult.Success(dishList))
-            } else {
-                emit(BaseResult.Error(code()))
-            }
-        }
-    }
-
-    override suspend fun getMainDishes(): Flow<BaseResult<List<DishItem>, Int>> = flow {
-        val response = dishApi.getMainDishes()
+    override suspend fun getDishesByTheme(theme: String): Flow<BaseResult<List<DishItem>, Int>> = flow {
+        val response = dishApi.getDishesByTheme(theme)
         with(response) {
             if (isSuccessful) {
                 val dishList = body()!!.body

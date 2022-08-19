@@ -6,11 +6,7 @@ import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResu
 import kotlinx.coroutines.flow.Flow
 
 interface DishItemRepository {
-    suspend fun getSideDishes(): Flow<BaseResult<List<DishItem>, Int>>
-
-    suspend fun getSoupDishes(): Flow<BaseResult<List<DishItem>, Int>>
-
-    suspend fun getMainDishes(): Flow<BaseResult<List<DishItem>, Int>>
+    suspend fun getDishesByTheme(theme: String): Flow<BaseResult<List<DishItem>, Int>>
 
     suspend fun getExhibitionDishes(): Flow<BaseResult<List<Exhibition.CategoryItem>, Int>>
 }

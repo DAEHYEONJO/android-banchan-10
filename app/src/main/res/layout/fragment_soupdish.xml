@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <variable
+            name="vm"
+            type="com.woowahan.android10.deliverbanchan.presentation.main.soupdish.SoupViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -14,10 +16,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white">
-
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/base_24dp"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -55,10 +57,10 @@
                         <TextView
                             android:id="@+id/soup_dish_tv_item_count"
                             style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack12_Normal.Style"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_height="15dp"
                             android:layout_marginStart="@dimen/base_space_16dp"
-                            android:text="총 8개 상품"
+                            android:text="@{`총 `+ String.valueOf(vm.soupListSize) +`개 상품`}"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -68,6 +70,7 @@
                             android:layout_width="145dp"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="@dimen/base_space_16dp"
+                            app:verticalOffsetDpValue="@dimen/cart_btn_width_32dp"
                             android:background="@drawable/bg_sort_spinner_down"
                             android:popupBackground="@drawable/bg_sort_spinner_pop_up"
                             android:popupElevation="@dimen/rv_space_4dp"
@@ -90,8 +93,15 @@
             android:layout_marginStart="@dimen/rv_space_8dp"
             android:layout_marginEnd="@dimen/base_space_16dp"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:spanCount="2"
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+            app:spanCount="2" />
 
+        <ProgressBar
+            android:id="@+id/soup_pb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateBehavior="repeat"
+            android:indeterminateTint="@color/progress_indicator"
+            android:layout_gravity="center"/>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

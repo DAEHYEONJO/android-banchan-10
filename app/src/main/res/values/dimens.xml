@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <dimen name="text_size_8sp">8sp</dimen>
     <dimen name="text_size_10sp">10sp</dimen>
     <dimen name="text_size_12sp">12sp</dimen>
     <dimen name="text_size_14sp">14sp</dimen>
@@ -13,9 +14,16 @@
     <dimen name="cart_space_7dp">7dp</dimen>
     <dimen name="rv_space_8dp">8dp</dimen>
     <dimen name="base_space_16dp">16dp</dimen>
-    <dimen name="base_text_space_24dp">24dp</dimen>
-    <dimen name="cart_btn_width_32dp">32dp</dimen>
+    <dimen name="base_space_40dp">40dp</dimen>
+    <dimen name="base_24dp">24dp</dimen>
     <dimen name="base_space_34dp">34dp</dimen>
     <dimen name="iv_size_160dp">160dp</dimen>
+
+    <dimen name="item_elevation_0dp">0dp</dimen>
+    <dimen name="item_elevation_2dp">2dp</dimen>
+
+    <dimen name="app_bar_icon_bg_size_13dp">13dp</dimen>
+    <dimen name="cart_btn_width_32dp">32dp</dimen>
+    <dimen name="item_cart_iv_size_80dp">80dp</dimen>
 
 </resources>

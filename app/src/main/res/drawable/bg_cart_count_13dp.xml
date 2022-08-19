@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+
+    <solid android:color="@color/grey_scale_black" />
+    <size android:width="@dimen/app_bar_icon_bg_size_13dp" android:height="@dimen/app_bar_icon_bg_size_13dp" />
+    <corners android:radius="18dp" />
+
+</shape>

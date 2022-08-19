@@ -17,8 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/rv_space_8dp"
-        android:paddingTop="@dimen/base_text_space_24dp"
-        android:paddingBottom="@dimen/rv_space_8dp">
+        android:paddingBottom="@dimen/cart_btn_width_32dp">
 
         <FrameLayout
             android:id="@+id/soup_fl"
@@ -42,8 +41,8 @@
                 android:layout_gravity="bottom|end"
                 android:layout_marginEnd="@dimen/rv_space_8dp"
                 android:layout_marginBottom="@dimen/rv_space_8dp"
-                android:background="@drawable/btn_cart_32dp"
-                android:elevation="2dp" />
+                app:setBackgroundIcon = "@{item.inserted}"
+                android:elevation="@{item.inserted ? @dimen/item_elevation_0dp : @dimen/item_elevation_2dp}" />
         </FrameLayout>
 
         <TextView
@@ -80,7 +79,7 @@
             android:layout_height="@dimen/text_size_24sp"
             android:gravity="center_vertical"
             android:paddingEnd="@dimen/rv_space_4dp"
-            android:text="@{item.salePercentage}"
+            android:text="@{String.valueOf(item.salePercentage)+`%`}"
             android:visibility="@{item.NPrice==0?View.GONE:View.VISIBLE}"
             app:layout_constraintStart_toStartOf="@+id/soup_tv_description"
             app:layout_constraintTop_toBottomOf="@+id/soup_tv_description" />

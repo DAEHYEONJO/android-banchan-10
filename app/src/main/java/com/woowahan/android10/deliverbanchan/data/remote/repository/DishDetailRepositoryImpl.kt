@@ -8,8 +8,11 @@ import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResu
 import com.woowahan.android10.deliverbanchan.domain.repository.remote.DishDetailRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class DishDetailRepositoryImpl(
+@Singleton
+class DishDetailRepositoryImpl @Inject constructor(
     private val dishApi: DishApi
 ): DishDetailRepository{
 
@@ -25,4 +28,16 @@ class DishDetailRepositoryImpl(
                 }
             }
         }
+
+    override suspend fun getDetailDishBaseResult(hash: String): BaseResult<DishDetail.DishDetailData, Int> {
+        val response = dishApi.getDetailDish(hash)
+        return with(response) {
+            if (isSuccessful) {
+                val dishDetailData = body()!!.data
+                BaseResult.Success(dishDetailData)
+            } else {
+                BaseResult.Error(code())
+            }
+        }
+    }
 }

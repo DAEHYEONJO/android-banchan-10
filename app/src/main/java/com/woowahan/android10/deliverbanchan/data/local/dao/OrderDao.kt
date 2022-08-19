@@ -1,26 +1,22 @@
 package com.woowahan.android10.deliverbanchan.data.local.dao
 
 import androidx.room.*
-import com.woowahan.android10.deliverbanchan.data.local.model.Order
-import com.woowahan.android10.deliverbanchan.data.local.model.OrderDish
-import com.woowahan.android10.deliverbanchan.data.local.model.OrderInfo
+import com.woowahan.android10.deliverbanchan.data.local.model.join.Order
+import com.woowahan.android10.deliverbanchan.data.local.model.entity.LocalDish
+import com.woowahan.android10.deliverbanchan.data.local.model.entity.OrderInfo
 import kotlinx.coroutines.flow.Flow
-import retrofit2.http.DELETE
 
 @Dao
 interface OrderDao {
 
-    @Query("SELECT * FROM ORDER_DISH")
-    fun getAllOrderDish(): Flow<List<OrderDish>>
+    @Query("SELECT * FROM LOCAL_DISH")
+    fun getAllOrderDish(): Flow<List<LocalDish>>
 
     @Query("SELECT * FROM order_info")
     fun getAllOrderInfo(): Flow<List<OrderInfo>>
 
-    @Query("SELECT * FROM ORDER_DISH NATURAL JOIN ORDER_INFO")
+    @Query("SELECT * FROM LOCAL_DISH NATURAL JOIN ORDER_INFO")
     fun getAllOrderJoinList(): Flow<List<Order>>
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOrderDish(orderDish: OrderDish)
 
     @Insert
     suspend fun insertOrderInfo(orderInfo: OrderInfo)
@@ -28,7 +24,7 @@ interface OrderDao {
     @Query("DELETE FROM ORDER_INFO WHERE hash = :hash")
     suspend fun deleteOrderInfo(hash: String)
 
-    @Query("DELETE FROM ORDER_DISH WHERE hash = :hash")
+    @Query("DELETE FROM LOCAL_DISH WHERE hash = :hash")
     suspend fun deleteOrderDish(hash: String)
 
 }

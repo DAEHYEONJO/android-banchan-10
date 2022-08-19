@@ -1,22 +1,16 @@
 package com.woowahan.android10.deliverbanchan.domain.repository.local
 
 import androidx.annotation.WorkerThread
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import com.woowahan.android10.deliverbanchan.data.local.model.Order
-import com.woowahan.android10.deliverbanchan.data.local.model.OrderDish
-import com.woowahan.android10.deliverbanchan.data.local.model.OrderInfo
+import com.woowahan.android10.deliverbanchan.data.local.model.join.Order
+import com.woowahan.android10.deliverbanchan.data.local.model.entity.LocalDish
+import com.woowahan.android10.deliverbanchan.data.local.model.entity.OrderInfo
 import kotlinx.coroutines.flow.Flow
 
 interface OrderRepository {
-
-    fun getAllOrderDish(): Flow<List<OrderDish>>
-
-    fun getAllOrderInfo(): Flow<List<OrderInfo>>
-
     @WorkerThread
-    suspend fun insertOrderDish(orderDish: OrderDish)
+    fun getAllOrderDish(): Flow<List<LocalDish>>
+    @WorkerThread
+    fun getAllOrderInfo(): Flow<List<OrderInfo>>
 
     @WorkerThread
     suspend fun insertOrderInfo(orderInfo: OrderInfo)
@@ -26,6 +20,6 @@ interface OrderRepository {
 
     @WorkerThread
     suspend fun deleteOrderDish(hash: String)
-
+    @WorkerThread
     fun getAllOrderJoinList(): Flow<List<Order>>
 }

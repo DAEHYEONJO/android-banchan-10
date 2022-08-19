@@ -8,27 +8,29 @@
         <variable
             name="uiDishItem"
             type="com.woowahan.android10.deliverbanchan.domain.model.UiDishItem" />
+
+        <import type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="8dp">
+        android:paddingBottom="8dp">
 
         <FrameLayout
             android:id="@+id/maindish_fl"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/base_space_16dp"
+            android:layout_marginStart="@dimen/rv_space_8dp"
             app:layout_constraintBottom_toTopOf="@id/maindish_view_footer"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:id="@+id/maindish_iv_food"
-                imageUrl="@{uiDishItem.image}"
                 android:layout_width="130dp"
                 android:layout_height="130dp"
+                app:setStringUrlImage="@{uiDishItem.image}"
                 tools:background="@color/grey_scale_default" />
 
             <ImageButton
@@ -39,7 +41,8 @@
                 android:layout_marginEnd="@dimen/rv_space_8dp"
                 android:layout_marginBottom="@dimen/rv_space_8dp"
                 android:background="@drawable/btn_cart_32dp"
-                android:elevation="2dp" />
+                android:elevation="2dp"
+                app:setBackgroundIcon="@{uiDishItem.inserted}" />
         </FrameLayout>
 
         <TextView
@@ -72,14 +75,12 @@
         <TextView
             android:id="@+id/maindish_tv_sale"
             style="@style/Widget.TextView.NotoSansKR_PrimaryAccent14_Medium.Style"
-            nPrice="@{uiDishItem.NPrice}"
-            sPrice="@{uiDishItem.SPrice}"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/text_size_24sp"
             android:gravity="center_vertical"
             android:paddingEnd="4dp"
-            android:text="10%"
-            android:visibility="visible"
+            android:text="@{String.valueOf(uiDishItem.salePercentage)+`%`}"
+            android:visibility="@{uiDishItem.NPrice==0?View.GONE:View.VISIBLE}"
             app:layout_constraintBottom_toTopOf="@id/maindish_tv_nPrice"
             app:layout_constraintStart_toStartOf="@id/maindish_tv_description"
             app:layout_constraintTop_toBottomOf="@id/maindish_tv_description" />
@@ -87,7 +88,8 @@
         <TextView
             android:id="@+id/maindish_tv_sPrice"
             style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Bold.Style"
-            sPrice="@{uiDishItem.SPrice}"
+            isNPrice="@{false}"
+            price="@{uiDishItem.SPrice}"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/text_size_24sp"
             android:gravity="center_vertical"
@@ -99,7 +101,8 @@
         <TextView
             android:id="@+id/maindish_tv_nPrice"
             style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault12_Normal.Style"
-            nPrice="@{uiDishItem.NPrice}"
+            isNPrice="@{true}"
+            price="@{uiDishItem.NPrice}"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/text_size_24sp"
             android:layout_marginStart="16dp"
@@ -113,7 +116,7 @@
         <View
             android:id="@+id/maindish_view_footer"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="32dp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent" />
 
