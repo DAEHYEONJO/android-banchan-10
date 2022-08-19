@@ -56,7 +56,6 @@ class DetailActivity :
             detailViewModel.plusItemCount()
         }, {
             // button click
-            Log.e("DetailActivity", "button click")
             detailViewModel.orderDetailItem()
         })
         detailSectionImageAdapter = DetailSectionImageAdapter()
