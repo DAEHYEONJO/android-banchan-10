@@ -72,21 +72,17 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
             object : CartDishTopBodyAdapter.OnCartTopBodyItemClickListener {
                 override fun onClickDeleteBtn(position: Int, hash: String) {
                     cartViewModel.deleteUiCartItemByPos(position, hash)
-                    cartViewModel.deleteCartInDb(hash)
                     cartTopBodyAdapter.notifyItemChanged(position)
-                    //cartTopBodyAdapter.notifyDataSetChanged()
                 }
 
                 override fun onCheckBoxCheckedChanged(position: Int, hash: String, checked: Boolean) {
                     cartViewModel.updateUiCartCheckedValue(position, !checked)
                     cartTopBodyAdapter.notifyItemChanged(position)
-                    //cartTopBodyAdapter.notifyDataSetChanged()
                 }
 
                 override fun onClickAmountBtn(position: Int, hash: String, amount: Int) {
                     cartViewModel.updateUiCartAmountValue(position, amount)
                     cartTopBodyAdapter.notifyItemChanged(position)
-                    //cartTopBodyAdapter.notifyDataSetChanged()
                 }
             }
     }
