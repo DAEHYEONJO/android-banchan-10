@@ -6,10 +6,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
+import com.woowahan.android10.deliverbanchan.data.local.model.entity.OrderInfo
+import com.woowahan.android10.deliverbanchan.data.local.model.join.Order
 import com.woowahan.android10.deliverbanchan.di.IoDispatcher
 import com.woowahan.android10.deliverbanchan.domain.model.UiCartJoinItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiRecentlyJoinItem
 import com.woowahan.android10.deliverbanchan.domain.usecase.*
+import com.woowahan.android10.deliverbanchan.presentation.cart.model.TempOrder
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartBottomBody
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartHeader
 import com.woowahan.android10.deliverbanchan.presentation.state.UiLocalState
@@ -25,6 +28,7 @@ class CartViewModel @Inject constructor(
     private val getJoinUseCase: GetJoinUseCase,
     private val deleteCartInfoByHashUseCase: DeleteCartInfoByHashUseCase,
     private val insertCartInfoUseCase: InsertCartInfoUseCase,
+    private val insertOrderInfoUseCase: InsertOrderInfoUseCase,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
@@ -64,7 +68,7 @@ class CartViewModel @Inject constructor(
     private val _itemCartBottomBodyData = MutableLiveData(UiCartBottomBody.emptyItem())
     val itemCartBottomBodyData: LiveData<UiCartBottomBody> get() = _itemCartBottomBodyData
 
-    private val _selectedCartItem = mutableSetOf<String>()
+    private val _selectedCartItem = mutableSetOf<TempOrder>()
 
     private val _toBeDeletedCartItem = mutableSetOf<String>()
 
@@ -97,7 +101,7 @@ class CartViewModel @Inject constructor(
         _selectedCartItem.clear()
         val checkedUiJoinCartItem = uiCartJoinItemList.filter { it.checked }
         checkedUiJoinCartItem.forEach { checkedUiCartJoinItem ->
-            _selectedCartItem.add(checkedUiCartJoinItem.hash)
+            _selectedCartItem.add(TempOrder(checkedUiCartJoinItem.hash, checkedUiCartJoinItem.amount))
             _itemCartBottomBodyProductTotalPrice += checkedUiCartJoinItem.totalPrice
         }
         if (checkedUiJoinCartItem.size == uiCartJoinItemList.size) {
@@ -173,10 +177,10 @@ class CartViewModel @Inject constructor(
     fun deleteUiCartItemByHash(completion: (complete: Boolean) -> Unit) {
         val success = _uiCartJoinArrayList.removeAll(
             _uiCartJoinArrayList.filter {
-                _selectedCartItem.contains(it.hash)
+                _selectedCartItem.contains(TempOrder(it.hash,it.amount))
             }.toSet()
         )
-        _toBeDeletedCartItem.addAll(_selectedCartItem)
+        _toBeDeletedCartItem.addAll(_selectedCartItem.map { it.hash })
         _uiCartJoinList.value = _uiCartJoinArrayList
         Log.e(TAG, "deleteUiCartItemByPos: $_toBeDeletedCartItem")
 
@@ -186,6 +190,32 @@ class CartViewModel @Inject constructor(
     fun changeCheckedState(checkedValue: Boolean) {
         _uiCartJoinList.value = _uiCartJoinArrayList.onEach {
             it.checked = checkedValue
+        }
+    }
+
+    fun insertOrderInfo() = CoroutineScope(dispatcher).launch {
+        launch {
+            val timeStamp = System.currentTimeMillis()
+            _selectedCartItem.forEach { tempOrder ->
+                insertOrderInfoUseCase(
+                    OrderInfo(
+                        tempOrder.hash,
+                        timeStamp,
+                        tempOrder.amount,
+                        true
+                    )
+                )
+            }
+        }
+        launch {
+            _selectedCartItem.forEach { tempOrder ->
+                Log.e(TAG, "deleteQuery: delete hash ${tempOrder.hash} Thread: ${Thread.currentThread().name}")
+                try {
+                    deleteCartInfoByHashUseCase(tempOrder.hash)
+                } catch (e: CancellationException) {
+                    Log.e(TAG, "deleteQuery Delete: $e")
+                }
+            }
         }
     }
 

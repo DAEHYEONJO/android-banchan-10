@@ -17,14 +17,22 @@ class CartOrderInfoBottomBodyAdapter @Inject constructor() :
         const val TAG = "CartOrderInfoBottomBodyAdapter"
     }
 
+    interface OnCartBottomBodyItemClickListener{
+        fun onClickOrderBtn()
+    }
+    var onCartBottomBodyItemClickListener: OnCartBottomBodyItemClickListener? = null
+
     var bottomBodyList: List<UiCartBottomBody> = List(1){UiCartBottomBody.emptyItem ()}
 
-    class ViewHolder(val binding: ItemCartOrderInfoBottomBodyBinding) :
+    inner class ViewHolder(val binding: ItemCartOrderInfoBottomBodyBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(uiCartBottomBody: UiCartBottomBody) {
             with(binding){
                 Log.e(TAG, "bind: ${uiCartBottomBody.isAvailableDelivery} ${uiCartBottomBody.isAvailableFreeDelivery}")
                 item = uiCartBottomBody
+                cartOrderBottomBodyBtnOrder.setOnClickListener{
+                    onCartBottomBodyItemClickListener?.onClickOrderBtn()
+                }
                 executePendingBindings()
             }
         }

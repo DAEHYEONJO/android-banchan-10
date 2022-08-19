@@ -55,6 +55,12 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
     }
 
     private fun initInterface() {
+        cartBottomBodyAdapter.onCartBottomBodyItemClickListener =
+            object : CartOrderInfoBottomBodyAdapter.OnCartBottomBodyItemClickListener{
+                override fun onClickOrderBtn() {
+                    cartViewModel.insertOrderInfo()
+                }
+            }
         cartHeaderAdapter.onCartTopBodyItemClickListener =
             object : CartSelectHeaderAdapter.OnCartTopBodyItemClickListener{
                 override fun onClickSelectedDelete() {
