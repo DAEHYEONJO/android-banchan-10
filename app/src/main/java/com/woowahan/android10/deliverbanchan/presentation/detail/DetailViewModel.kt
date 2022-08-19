@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.LocalDish
-import com.woowahan.android10.deliverbanchan.data.local.model.entity.RecentlyViewedInfo
+import com.woowahan.android10.deliverbanchan.data.local.model.entity.RecentViewedInfo
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.model.UiDetailInfo
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
@@ -59,7 +59,7 @@ class DetailViewModel @Inject constructor(
                         LocalDish(
                             hash, title, image, nPrice, sPrice
                         ),
-                        RecentlyViewedInfo(
+                        RecentViewedInfo(
                             hash, System.currentTimeMillis()
                         )
                     )

@@ -3,6 +3,7 @@ package com.woowahan.android10.deliverbanchan.presentation.main.sidedish
 import androidx.lifecycle.*
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
+import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllCartInfoHashSetUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetThemeDishListUseCase
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,7 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SideDishViewModel @Inject constructor(
-    private val getSideDishListUseCase: GetThemeDishListUseCase
+    private val getSideDishListUseCase: GetThemeDishListUseCase,
+    private val getAllCartInfoSetUseCase: GetAllCartInfoHashSetUseCase
 ): ViewModel(){
 
     private val _sideState = MutableStateFlow<UiState>(UiState.Init)
@@ -38,6 +40,22 @@ class SideDishViewModel @Inject constructor(
 
     init {
         getSideDishList()
+        setSideDishCartInserted()
+    }
+
+    private fun setSideDishCartInserted() {
+        // cart flow collect 시 , 장바구니 insert 여부 확인함
+        viewModelScope.launch {
+            getAllCartInfoSetUseCase().collect { cartInfoHashMap ->
+                if (_sideState.value is UiState.Success){
+                    val tempList = mutableListOf<UiDishItem>()
+                    (_sideState.value as UiState.Success).uiDishItems.forEach {
+                        tempList.add(it.copy(isInserted = cartInfoHashMap.contains(it.hash)))
+                    }
+                    _sideState.value = UiState.Success(tempList)
+                }
+            }
+        }
     }
 
     private fun getSideDishList() = viewModelScope.launch {

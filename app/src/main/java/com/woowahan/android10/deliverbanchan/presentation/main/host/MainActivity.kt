@@ -4,15 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.tabs.TabLayoutMediator
 import com.woowahan.android10.deliverbanchan.R
-import com.woowahan.android10.deliverbanchan.data.local.db.FoodRoomDatabase
-import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
-import com.woowahan.android10.deliverbanchan.data.local.model.entity.LocalDish
-import com.woowahan.android10.deliverbanchan.data.local.model.entity.OrderInfo
-import com.woowahan.android10.deliverbanchan.data.local.model.entity.RecentlyViewedInfo
 import com.woowahan.android10.deliverbanchan.databinding.ActivityMainBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseActivity
 import com.woowahan.android10.deliverbanchan.presentation.cart.CartActivity
@@ -20,18 +14,13 @@ import com.woowahan.android10.deliverbanchan.presentation.main.sidedish.SideDish
 import com.woowahan.android10.deliverbanchan.presentation.main.soupdish.SoupViewModel
 import com.woowahan.android10.deliverbanchan.presentation.order.OrderActivity
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main, "MainActivity") {
 
     private val dishViewModel: DishViewModel by viewModels()
-    private val soupViewModel: SoupViewModel by viewModels()
-    private val sideDishViewModel: SideDishViewModel by viewModels()
     private lateinit var tabTitleArray: Array<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,6 +28,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main, "
         initBinding()
         initView()
         initBtn()
+        dishViewModel.cartInfoState.onEach {
+            Log.e("DishViewModel", "onCreate: $it", )
+        }.launchIn(lifecycleScope)
     }
 
     private fun initBtn() {

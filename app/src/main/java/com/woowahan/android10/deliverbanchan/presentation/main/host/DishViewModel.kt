@@ -1,20 +1,12 @@
 package com.woowahan.android10.deliverbanchan.presentation.main.host
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
-import com.woowahan.android10.deliverbanchan.data.local.model.entity.LocalDish
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.OrderInfo
-import com.woowahan.android10.deliverbanchan.data.local.model.entity.RecentlyViewedInfo
-import com.woowahan.android10.deliverbanchan.data.local.model.join.Cart
-import com.woowahan.android10.deliverbanchan.data.local.model.join.Order
-import com.woowahan.android10.deliverbanchan.data.local.model.join.RecentlyViewed
 import com.woowahan.android10.deliverbanchan.domain.repository.local.CartRepository
-import com.woowahan.android10.deliverbanchan.domain.repository.local.DishRepository
-import com.woowahan.android10.deliverbanchan.domain.repository.local.OrderRepository
-import com.woowahan.android10.deliverbanchan.domain.repository.local.RecentlyViewedRepository
 import com.woowahan.android10.deliverbanchan.domain.usecase.*
 import com.woowahan.android10.deliverbanchan.presentation.state.UiLocalState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -49,6 +41,9 @@ class DishViewModel @Inject constructor(
         getAllCartInfoUseCase().catch { exception ->
             _cartInfoState.value = UiLocalState.ShowToast(exception.message.toString())
         }.collect{
+            it.forEach {
+                Log.d(TAG, "dishViewModel CartInfo : $it ")
+            }
             _cartInfoState.value = UiLocalState.Success(it)
             setCartIconText((cartInfoState.value as UiLocalState.Success).uiDishItems.size)
         }

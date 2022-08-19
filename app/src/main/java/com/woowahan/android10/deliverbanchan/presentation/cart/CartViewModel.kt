@@ -7,11 +7,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.OrderInfo
-import com.woowahan.android10.deliverbanchan.data.local.model.join.Order
 import com.woowahan.android10.deliverbanchan.di.IoDispatcher
 import com.woowahan.android10.deliverbanchan.domain.model.UiCartJoinItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiRecentlyJoinItem
-import com.woowahan.android10.deliverbanchan.domain.usecase.*
+import com.woowahan.android10.deliverbanchan.domain.repository.local.CartRepository
+import com.woowahan.android10.deliverbanchan.domain.usecase.DeleteCartInfoByHashUseCase
+import com.woowahan.android10.deliverbanchan.domain.usecase.GetJoinUseCase
+import com.woowahan.android10.deliverbanchan.domain.usecase.InsertCartInfoUseCase
+import com.woowahan.android10.deliverbanchan.domain.usecase.InsertOrderInfoUseCase
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.TempOrder
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartBottomBody
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartHeader
@@ -19,16 +22,14 @@ import com.woowahan.android10.deliverbanchan.presentation.state.UiLocalState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import java.util.*
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 @HiltViewModel
 class CartViewModel @Inject constructor(
     private val getJoinUseCase: GetJoinUseCase,
     private val deleteCartInfoByHashUseCase: DeleteCartInfoByHashUseCase,
-    private val insertCartInfoUseCase: InsertCartInfoUseCase,
     private val insertOrderInfoUseCase: InsertOrderInfoUseCase,
+    private val cartRepository: CartRepository,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
@@ -92,7 +93,6 @@ class CartViewModel @Inject constructor(
             _uiCartJoinArrayList.clear()
             _uiCartJoinArrayList.addAll(it)
             _uiCartJoinList.value = _uiCartJoinArrayList
-            //setItemCartBottomBodyData()
         }
     }
 
@@ -182,7 +182,6 @@ class CartViewModel @Inject constructor(
         )
         _toBeDeletedCartItem.addAll(_selectedCartItem.map { it.hash })
         _uiCartJoinList.value = _uiCartJoinArrayList
-        Log.e(TAG, "deleteUiCartItemByPos: $_toBeDeletedCartItem")
 
         completion(success)
     }
@@ -219,34 +218,16 @@ class CartViewModel @Inject constructor(
         }
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     fun updateAllCartItemChanged() = CoroutineScope(dispatcher).launch {
-        launch {
-            _toBeDeletedCartItem.forEach { hash ->
-                Log.e(TAG, "deleteQuery: delete hash $hash Thread: ${Thread.currentThread().name}")
-                try {
-                    deleteCartInfoByHashUseCase(hash)
-                } catch (e: CancellationException) {
-                    Log.e(TAG, "deleteQuery Delete: $e")
-                }
-            }
-        }
-        launch {
-            _uiCartJoinList.value?.forEach { uiCartJoinItem ->
-                Log.e(TAG, "insertQuery: $uiCartJoinItem Thread: ${Thread.currentThread().name}")
-                try {
-                    insertCartInfoUseCase(
-                        CartInfo(
-                            uiCartJoinItem.hash,
-                            uiCartJoinItem.checked,
-                            uiCartJoinItem.amount
-                        )
-                    )
-                } catch (e: CancellationException) {
-                    Log.e(TAG, "insertQuery Insert: $e")
-                }
-            }
-        }
+        cartRepository.insertAndDeleteAllItems(
+            _uiCartJoinList.value!!.map {
+                CartInfo(
+                    it.hash,
+                    it.checked,
+                    it.amount
+                )
+            }.toList(),  _toBeDeletedCartItem.toList()
+        )
     }
 
 }
