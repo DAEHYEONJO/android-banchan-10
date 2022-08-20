@@ -1,4 +1,4 @@
-package com.woowahan.android10.deliverbanchan.presentation.cart.adapter.complete
+package com.woowahan.android10.deliverbanchan.presentation.cart.complete.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

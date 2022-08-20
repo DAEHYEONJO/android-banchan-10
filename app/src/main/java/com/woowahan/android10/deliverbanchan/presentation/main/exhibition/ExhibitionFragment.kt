@@ -62,8 +62,7 @@ class ExhibitionFragment :
                     val cartDialog = CartDialogFragment()
 
                     cartDialog.setTextClickListener(object : CartDialogFragment.TextClickListener {
-                        override fun moveToCartTextClicked(hash: String, title: String) {
-                            Log.e("ExhibitionFragment", "move to cart, hash : ${hash}, title : ${title}")
+                        override fun moveToCartTextClicked() {
                             startActivity(Intent(requireActivity(), CartActivity::class.java))
                         }
                     })

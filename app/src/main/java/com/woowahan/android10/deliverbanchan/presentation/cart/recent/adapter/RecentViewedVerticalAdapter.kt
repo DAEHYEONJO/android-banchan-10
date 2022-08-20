@@ -1,4 +1,4 @@
-package com.woowahan.android10.deliverbanchan.presentation.cart.recent
+package com.woowahan.android10.deliverbanchan.presentation.cart.recent.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -14,7 +14,8 @@ import javax.inject.Inject
 
 @ActivityRetainedScoped
 class RecentViewedVerticalAdapter @Inject constructor(): ListAdapter<UiRecentJoinItem, RecentViewedVerticalAdapter.ViewHolder>(
-    diffUtil) {
+    diffUtil
+) {
 
     companion object{
         val diffUtil = object : DiffUtil.ItemCallback<UiRecentJoinItem>(){

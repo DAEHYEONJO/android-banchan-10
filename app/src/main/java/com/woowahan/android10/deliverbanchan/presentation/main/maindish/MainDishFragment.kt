@@ -75,45 +75,7 @@ class MainDishFragment :
     private fun setRecyclerView() {
 
         mainDishAdapter.apply {
-            cartIconClick = {
-                val cartBottomSheetFragment = CartBottomSheetFragment()
-
-                cartBottomSheetFragment.setDialogDismissWhenInsertSuccessListener(object :
-                    CartBottomSheetFragment.DialogDismissWhenInsertSuccessListener {
-                    override fun dialogDismissWhenInsertSuccess(hash: String, title: String) {
-                        val cartDialog = CartDialogFragment()
-
-                        cartDialog.setTextClickListener(object :
-                            CartDialogFragment.TextClickListener {
-                            override fun moveToCartTextClicked(hash: String, title: String) {
-                                Log.e(
-                                    "MainDishFragment",
-                                    "move to cart, hash : ${hash}, title : ${title}"
-                                )
-                                startActivity(Intent(requireActivity(), CartActivity::class.java))
-                            }
-                        })
-
-                        val bundle = Bundle()
-                        bundle.putString("hash", hash)
-                        bundle.putString("title", title)
-                        cartDialog.arguments = bundle
-                        cartDialog.show(childFragmentManager, "CartDialog")
-                        Log.e("TAG", "현재 선택된 상품명 : ${title}")
-                    }
-                })
-
-                val bundle = Bundle()
-                bundle.putParcelable("UiDishItem", it)
-                cartBottomSheetFragment.arguments = bundle
-                cartBottomSheetFragment.show(childFragmentManager, "CartBottomSheet")
-            }
-
-            itemClick = {
-                val intent = Intent(requireContext(), DetailActivity::class.java)
-                intent.putExtra("UiDishItem", it)
-                startActivity(intent)
-            }
+            onDishItemClickListener = this@MainDishFragment
         }
 
         mainDishLinearAdapter = MainDishLinearAdapter({

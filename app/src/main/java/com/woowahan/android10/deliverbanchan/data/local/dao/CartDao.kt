@@ -46,7 +46,7 @@ interface CartDao {
     }
 
     @Transaction
-    suspend fun insertAndDeleteAllItems(cartInfo: List<CartInfo>, deleteHashes: List<String>){
+    suspend fun insertAndDeleteCartItems(cartInfo: List<CartInfo>, deleteHashes: List<String>){
         insertCartInfoVarArg(*cartInfo.toTypedArray())
         deleteHashes.forEach {
             deleteCartInfo(it)

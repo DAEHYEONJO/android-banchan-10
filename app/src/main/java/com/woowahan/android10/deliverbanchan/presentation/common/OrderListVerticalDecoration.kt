@@ -18,10 +18,9 @@ class OrderListVerticalDecoration(private val context: Context) : RecyclerView.I
 
         val position = parent.getChildAdapterPosition(view)
         val total = state.itemCount
-//
+
         val offset = dpToPx(context, 16).toInt()
-//        outRect.top = offset
-        Log.e("OrderListVerticalDecoration", "getItemOffsets: $position $total", )
+        outRect.top = offset
         if (position == total - 1) outRect.bottom = offset
     }
 }

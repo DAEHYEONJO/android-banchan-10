@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.databinding.ItemSoupBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
+import com.woowahan.android10.deliverbanchan.presentation.common.OnDishItemClickListener
 import dagger.hilt.android.scopes.FragmentScoped
 import javax.inject.Inject
 
@@ -14,8 +15,7 @@ import javax.inject.Inject
 class MainGridAdapter @Inject constructor() :
     ListAdapter<UiDishItem, MainGridAdapter.ViewHolder>(diffUtil) {
 
-    lateinit var cartIconClick: (uiDishItem: UiDishItem) -> Unit
-    lateinit var itemClick: (uiDishItem: UiDishItem) -> Unit
+    var onDishItemClickListener: OnDishItemClickListener? = null
 
     companion object {
         const val TAG = "MainGridAdapter"
@@ -36,10 +36,10 @@ class MainGridAdapter @Inject constructor() :
         fun bind(uiDishItem: UiDishItem) {
             binding.item = uiDishItem
             binding.soupImbCart.setOnClickListener {
-                cartIconClick.invoke(uiDishItem)
+                onDishItemClickListener?.onClickCartIcon(uiDishItem)
             }
             binding.root.setOnClickListener {
-                itemClick.invoke(uiDishItem)
+                onDishItemClickListener?.onClickDish(uiDishItem)
             }
             binding.executePendingBindings()
         }

@@ -28,7 +28,7 @@ interface CartRepository {
     @WorkerThread
     suspend fun insertCartInfoVarArg(vararg cartInfo: CartInfo)
     @WorkerThread
-    suspend fun insertAndDeleteAllItems(cartInfo: List<CartInfo>, deleteHashes: List<String>)
+    suspend fun insertAndDeleteCartItems(cartInfo: List<CartInfo>, deleteHashes: List<String>)
     @WorkerThread
     suspend fun deleteCartInfoByHashList(deleteHashes: List<String>)
 }

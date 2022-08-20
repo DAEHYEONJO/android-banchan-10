@@ -6,15 +6,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
-import androidx.paging.map
 import androidx.work.*
 import com.google.gson.Gson
-import com.woowahan.android10.deliverbanchan.data.local.background.LocalDBWorker
+import com.woowahan.android10.deliverbanchan.background.CartItemsDbWorker
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.OrderInfo
-import com.woowahan.android10.deliverbanchan.data.local.model.join.RecentViewed
 import com.woowahan.android10.deliverbanchan.di.IoDispatcher
 import com.woowahan.android10.deliverbanchan.domain.model.UiCartJoinItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiOrderInfo
@@ -35,7 +31,7 @@ class CartViewModel @Inject constructor(
     private val getJoinUseCase: GetJoinUseCase,
     private val deleteCartInfoByHashUseCase: DeleteCartInfoByHashUseCase,
     private val insertOrderInfoUseCase: InsertOrderInfoUseCase,
-    private val insertAndDeleteAllCartUseCase: InsertAndDeleteAllCartUseCase,
+    private val insertAndDeleteCartItemsUseCase: InsertAndDeleteCartItemsUseCase,
     private val deleteCartInfoByHashListUseCase: DeleteCartInfoByHashListUseCase,
     private val insertVarArgOrderInfoUseCase: InsertVarArgOrderInfoUseCase,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
@@ -103,17 +99,15 @@ class CartViewModel @Inject constructor(
 
 
     internal fun updateCartDataBase() {
-        val request = OneTimeWorkRequestBuilder<LocalDBWorker>()
+        val request = OneTimeWorkRequestBuilder<CartItemsDbWorker>()
             .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
-            .setInputData(createInputData())
+            .setInputData(getCartWorkerData())
             .build()
 
         workManager.enqueue(request)
     }
 
-    private fun createInputData(): Data {
-        val builder = Data.Builder()
-
+    fun getCartWorkerData(): Data {
         val cartList = _uiCartJoinList.value!!.map {
             CartInfo(
                 it.hash,
@@ -123,13 +117,12 @@ class CartViewModel @Inject constructor(
         }.toList()
 
         val deleteList = _toBeDeletedCartItem.toList()
-
         val gson = Gson()
         val cartListStr = gson.toJson(cartList)
-        //val deleteListStr = gson.toJson(deleteList)
-
-        builder.putString("cartListStr", cartListStr)
-        builder.putStringArray("deleteListStr", deleteList.toTypedArray())
+        val builder = Data.Builder().apply {
+            putString("cartListStr", cartListStr)
+            putStringArray("deleteListStr", deleteList.toTypedArray())
+        }
         return builder.build()
     }
 
@@ -300,7 +293,7 @@ class CartViewModel @Inject constructor(
     }
 
     fun updateAllCartItemChanged() = CoroutineScope(dispatcher).launch {
-        insertAndDeleteAllCartUseCase(
+        insertAndDeleteCartItemsUseCase(
             _uiCartJoinList.value!!.map {
                 CartInfo(
                     it.hash,

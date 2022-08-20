@@ -1,15 +1,25 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart
 
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.fragment.app.commit
+import androidx.work.ExistingWorkPolicy
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import com.woowahan.android10.deliverbanchan.R
+import com.woowahan.android10.deliverbanchan.background.CartItemsDbWorker
+import com.woowahan.android10.deliverbanchan.background.getOneTimeRequestBuilder
 import com.woowahan.android10.deliverbanchan.databinding.ActivityCartBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseActivity
 import com.woowahan.android10.deliverbanchan.presentation.cart.complete.CartDeliveryCompleteFragment
 import com.woowahan.android10.deliverbanchan.presentation.cart.main.CartMainFragment
 import com.woowahan.android10.deliverbanchan.presentation.cart.recent.RecentViewedFragment
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart, "CartActivity") {
@@ -66,8 +76,16 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart, "
         }
     }
 
+    private fun makeWorkRequest(){
+        Log.e(TAG, "makeWorkRequest: 워크매니저콜", )
+        val worker = WorkManager.getInstance(application)
+        val workRequest = getOneTimeRequestBuilder<CartItemsDbWorker>(cartViewModel.getCartWorkerData())
+        worker.enqueue(workRequest)
+    }
+
     override fun onStop() {
         super.onStop()
         cartViewModel.updateAllCartItemChanged()
+        //makeWorkRequest()
     }
 }

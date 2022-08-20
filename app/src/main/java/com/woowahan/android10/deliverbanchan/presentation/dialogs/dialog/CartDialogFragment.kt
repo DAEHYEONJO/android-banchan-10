@@ -50,10 +50,7 @@ class CartDialogFragment : DialogFragment() {
 
     private fun setMoveToCartTextClickEvent() {
         binding.dialogTvMoveToCart.setOnClickListener {
-            textClickListener.moveToCartTextClicked(
-                cartDialogViewModel.currentHash,
-                cartDialogViewModel.currentTitle
-            )
+            textClickListener.moveToCartTextClicked()
             dismiss()
         }
     }
@@ -70,7 +67,7 @@ class CartDialogFragment : DialogFragment() {
     }
 
     interface TextClickListener {
-        fun moveToCartTextClicked(hash: String, title: String)
+        fun moveToCartTextClicked()
     }
 
     fun setTextClickListener(textClickListener: TextClickListener) {
