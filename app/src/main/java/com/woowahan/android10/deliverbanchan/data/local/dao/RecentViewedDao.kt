@@ -13,18 +13,18 @@ import kotlinx.coroutines.flow.Flow
 interface RecentViewedDao {
 
     @Query("SELECT * FROM RECENT_VIEWED_INFO ORDER BY time_stamp DESC")
-    fun getAllRecentlyViewedInfo(): Flow<List<RecentViewedInfo>>
+    fun getAllRecentViewedInfo(): Flow<List<RecentViewedInfo>>
 
     @Query("SELECT * FROM LOCAL_DISH NATURAL JOIN RECENT_VIEWED_INFO ORDER BY time_stamp DESC LIMIT 7")
-    fun getAllRecentlyJoinList(): Flow<List<RecentViewed>>
+    fun getAllRecentJoinList(): Flow<List<RecentViewed>>
 
     @Query("SELECT * FROM LOCAL_DISH NATURAL JOIN RECENT_VIEWED_INFO ORDER BY time_stamp DESC")
-    fun getAllRecentlyJoinPaging(): PagingSource<Int, RecentViewed>
+    fun getAllRecentJoinPaging(): PagingSource<Int, RecentViewed>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRecentViewedInfo(recentViewedInfo: RecentViewedInfo)
 
     @Query("DELETE FROM RECENT_VIEWED_INFO")
-    suspend fun deleteAllRecentlyViewedInfo()
+    suspend fun deleteAllRecentViewedInfo()
 
 }

@@ -61,10 +61,6 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
             object : CartOrderInfoBottomBodyAdapter.OnCartBottomBodyItemClickListener{
                 override fun onClickOrderBtn() {
                     cartViewModel.setOrderCompleteCartItem()
-                    //cartViewModel.insertOrderInfo()
-                    (requireActivity() as CartActivity).supportFragmentManager.commit {
-                        replace(R.id.cart_fcv, CartDeliveryCompleteFragment())
-                    }
                 }
             }
         cartHeaderAdapter.onCartTopBodyItemClickListener =
@@ -95,6 +91,12 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
                 override fun onClickAmountBtn(position: Int, hash: String, amount: Int) {
                     cartViewModel.updateUiCartAmountValue(position, amount)
                     cartTopBodyAdapter.notifyItemChanged(position)
+                }
+            }
+        cartRecentViewedFooterAdapter.onCartFooterItemClickListener =
+            object : CartRecentViewedFooterAdapter.OnCartFooterItemClickListener{
+                override fun onClickShowAllBtn() {
+                    cartViewModel.fragmentArrayIndex.value = 2
                 }
             }
     }

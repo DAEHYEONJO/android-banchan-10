@@ -1,6 +1,8 @@
 package com.woowahan.android10.deliverbanchan.data.local.repository
 
 import androidx.annotation.WorkerThread
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import androidx.paging.PagingSource
 import com.woowahan.android10.deliverbanchan.data.local.dao.RecentViewedDao
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.RecentViewedInfo
@@ -14,7 +16,7 @@ class RecentViewedRepositoryImpl @Inject constructor(
 ) : RecentViewedRepository {
 
     override fun getAllRecentViewedInfo(): Flow<List<RecentViewedInfo>> =
-        recentlyViewedDao.getAllRecentlyViewedInfo()
+        recentlyViewedDao.getAllRecentViewedInfo()
 
     @WorkerThread
     override suspend fun insertRecentViewedInfo(recentViewedInfo: RecentViewedInfo) =
@@ -22,12 +24,20 @@ class RecentViewedRepositoryImpl @Inject constructor(
 
     @WorkerThread
     override suspend fun deleteAllRecentViewedInfo() =
-        recentlyViewedDao.deleteAllRecentlyViewedInfo()
+        recentlyViewedDao.deleteAllRecentViewedInfo()
 
     override fun getAllRecentJoinList(): Flow<List<RecentViewed>> =
-        recentlyViewedDao.getAllRecentlyJoinList()
+        recentlyViewedDao.getAllRecentJoinList()
 
-    override fun getAllRecentJoinPaging(): PagingSource<Int, RecentViewed> =
-        recentlyViewedDao.getAllRecentlyJoinPaging()
+    override fun getAllRecentJoinPager(): Pager<Int, RecentViewed> {
+        return Pager(
+            PagingConfig(
+                pageSize = 8
+            )
+        ){
+            recentlyViewedDao.getAllRecentJoinPaging()
+        }
+    }
+
 
 }

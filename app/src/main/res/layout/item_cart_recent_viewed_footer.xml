@@ -17,7 +17,7 @@
         style="@style/Widget.TextView.KoPubWorldDotumPro_GreyScaleBlack16_Bold.Style"/>
 
     <TextView
-        android:id="@+id/cart_recent_viewed_footer_tv_recently_show_total"
+        android:id="@+id/cart_recent_viewed_footer_tv_recently_show_all"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/base_24dp"
         android:gravity="center"

@@ -1,6 +1,7 @@
 package com.woowahan.android10.deliverbanchan.domain.repository.local
 
 import androidx.annotation.WorkerThread
+import androidx.paging.Pager
 import androidx.paging.PagingSource
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.RecentViewedInfo
 import com.woowahan.android10.deliverbanchan.data.local.model.join.RecentViewed
@@ -16,5 +17,5 @@ interface RecentViewedRepository {
     @WorkerThread
     fun getAllRecentJoinList(): Flow<List<RecentViewed>>
     @WorkerThread
-    fun getAllRecentJoinPaging(): PagingSource<Int, RecentViewed>
+    fun getAllRecentJoinPager(): Pager<Int, RecentViewed>
 }

@@ -19,8 +19,16 @@ class CartRecentViewedFooterAdapter @Inject constructor(): RecyclerView.Adapter<
         const val TAG = "CartRecentViewedFooterAdapter"
     }
 
-    class ViewHolder(val binding: ItemCartRecentViewedFooterBinding): RecyclerView.ViewHolder(binding.root){
+    interface OnCartFooterItemClickListener{
+        fun onClickShowAllBtn()
+    }
+    var onCartFooterItemClickListener: OnCartFooterItemClickListener? = null
+
+    inner class ViewHolder(val binding: ItemCartRecentViewedFooterBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(list: List<UiRecentJoinItem>){
+            binding.cartRecentViewedFooterTvRecentlyShowAll.setOnClickListener {
+                onCartFooterItemClickListener?.onClickShowAllBtn()
+            }
             with(binding.cartRecentViewedFooterRv){
                 layoutManager = LinearLayoutManager(binding.root.context, LinearLayoutManager.HORIZONTAL, false)
                 adapter = RecentViewedVerticalAdapter().apply {

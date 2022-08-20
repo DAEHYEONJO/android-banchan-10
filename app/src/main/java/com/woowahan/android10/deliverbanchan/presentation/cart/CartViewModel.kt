@@ -6,11 +6,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import androidx.paging.map
 import androidx.work.*
 import com.google.gson.Gson
 import com.woowahan.android10.deliverbanchan.data.local.background.LocalDBWorker
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.OrderInfo
+import com.woowahan.android10.deliverbanchan.data.local.model.join.RecentViewed
 import com.woowahan.android10.deliverbanchan.di.IoDispatcher
 import com.woowahan.android10.deliverbanchan.domain.model.UiCartJoinItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiOrderInfo
@@ -95,6 +99,8 @@ class CartViewModel @Inject constructor(
         getAllRecentlyJoinList()
         getAllCartJoinList()
     }
+
+
 
     internal fun updateCartDataBase() {
         val request = OneTimeWorkRequestBuilder<LocalDBWorker>()
