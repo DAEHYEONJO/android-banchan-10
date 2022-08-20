@@ -8,7 +8,7 @@ import com.woowahan.android10.deliverbanchan.databinding.ActivityCartBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseActivity
 import com.woowahan.android10.deliverbanchan.presentation.cart.complete.CartDeliveryCompleteFragment
 import com.woowahan.android10.deliverbanchan.presentation.cart.main.CartMainFragment
-import com.woowahan.android10.deliverbanchan.presentation.cart.recently.RecentlyViewedFragment
+import com.woowahan.android10.deliverbanchan.presentation.cart.recent.RecentViewedFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -36,13 +36,13 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart, "
             fragment = when(tagArrayIndex){
                 0 -> CartMainFragment()
                 1 -> CartDeliveryCompleteFragment()
-                else -> RecentlyViewedFragment()
+                else -> RecentViewedFragment()
             }
         }else{
             when (tagArrayIndex) {
                 0 -> fragment as CartMainFragment
                 1 -> fragment as CartDeliveryCompleteFragment
-                else -> fragment as RecentlyViewedFragment
+                else -> fragment as RecentViewedFragment
             }
         }
         supportFragmentManager.commit {

@@ -6,15 +6,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import androidx.paging.map
 import androidx.work.*
 import com.google.gson.Gson
 import com.woowahan.android10.deliverbanchan.data.local.background.LocalDBWorker
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.OrderInfo
+import com.woowahan.android10.deliverbanchan.data.local.model.join.RecentViewed
 import com.woowahan.android10.deliverbanchan.di.IoDispatcher
 import com.woowahan.android10.deliverbanchan.domain.model.UiCartJoinItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiOrderInfo
-import com.woowahan.android10.deliverbanchan.domain.model.UiRecentlyJoinItem
+import com.woowahan.android10.deliverbanchan.domain.model.UiRecentJoinItem
 import com.woowahan.android10.deliverbanchan.domain.usecase.*
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.TempOrder
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartBottomBody
@@ -57,8 +61,8 @@ class CartViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5000)
         )
     private val _allRecentlyJoinState =
-        MutableStateFlow<UiLocalState<UiRecentlyJoinItem>>(UiLocalState.Init)
-    val allRecentlyJoinState: StateFlow<UiLocalState<UiRecentlyJoinItem>>
+        MutableStateFlow<UiLocalState<UiRecentJoinItem>>(UiLocalState.Init)
+    val allRecentlyJoinState: StateFlow<UiLocalState<UiRecentJoinItem>>
         get() = _allRecentlyJoinState.stateIn(
             initialValue = UiLocalState.Init,
             scope = viewModelScope,
@@ -95,6 +99,8 @@ class CartViewModel @Inject constructor(
         getAllRecentlyJoinList()
         getAllCartJoinList()
     }
+
+
 
     internal fun updateCartDataBase() {
         val request = OneTimeWorkRequestBuilder<LocalDBWorker>()
@@ -198,6 +204,9 @@ class CartViewModel @Inject constructor(
             _allRecentlyJoinState.value = UiLocalState.IsLoading(false)
             _allRecentlyJoinState.value = UiLocalState.ShowToast(exception.message.toString())
         }.collect {
+            it.forEach {
+                Log.e(TAG, "getAllRecentlyJoinList: $it", )
+            }
             _allRecentlyJoinState.value = UiLocalState.IsLoading(false)
             _allRecentlyJoinState.value = UiLocalState.Success(it)
         }

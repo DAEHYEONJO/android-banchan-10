@@ -11,12 +11,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".presentation.cart.recently.RecentlyViewedFragment">
+        tools:context=".presentation.cart.recent.RecentViewedFragment">
+
+        <TextView
+            android:id="@+id/recently_viewed_product_tv_empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="100sp"
+            android:fontFamily="@font/bm_eul_ji_ro"
+            android:textColor="@color/primary_main"
+            android:text="@string/empty_string"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recently_viewed_product_rv"
-            android:layout_marginStart="@dimen/rv_space_8dp"
-            android:layout_marginEnd="@dimen/base_space_16dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"

@@ -6,16 +6,16 @@
     <data>
         <variable
             name="item"
-            type="com.woowahan.android10.deliverbanchan.domain.model.UiRecentlyJoinItem" />
+            type="com.woowahan.android10.deliverbanchan.domain.model.UiRecentJoinItem" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/item_recently_viewed_root"
+        android:id="@+id/item_recent_viewed_root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <FrameLayout
-            android:id="@+id/item_recently_viewed_fl"
+            android:id="@+id/item_recent_viewed_fl"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintDimensionRatio="1:1"
@@ -23,20 +23,28 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
             <ImageView
-                android:id="@+id/item_recently_viewed_iv_food"
+                android:id="@+id/item_recent_viewed_iv_food"
                 android:layout_width="match_parent"
                 app:setStringUrlImage="@{item.image}"
                 android:background="@color/grey_scale_default"
                 android:layout_height="match_parent" />
             <ImageButton
-                android:id="@+id/imageView"
-                style="@style/cartBtnStyle" />
+                android:id="@+id/item_recent_viewed__ib_cart"
+                android:layout_width="@dimen/cart_btn_width_32dp"
+                android:layout_height="@dimen/cart_btn_width_32dp"
+                android:layout_gravity="bottom|end"
+                android:layout_marginEnd="@dimen/rv_space_8dp"
+                android:layout_marginBottom="@dimen/rv_space_8dp"
+                android:background="@drawable/btn_cart_32dp"
+                android:elevation="2dp"
+                app:setBackgroundIcon="@{item.inserted}" />
         </FrameLayout>
         <TextView
-            android:id="@+id/item_recently_viewed_tv_title"
+            android:id="@+id/item_recent_viewed_tv_title"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/item_recently_viewed_fl"
+            android:layout_height="@dimen/base_24dp"
+            android:gravity="start|center"
+            app:layout_constraintTop_toBottomOf="@id/item_recent_viewed_fl"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:text="@{item.title}"
@@ -45,32 +53,35 @@
             android:layout_marginTop="@dimen/rv_space_8dp"
             style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style" />
         <TextView
-            android:id="@+id/item_recently_viewd_tv_sprice"
+            android:id="@+id/item_recent_viewd_tv_sprice"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@+id/item_recently_viewed_tv_title"
-            app:layout_constraintTop_toBottomOf="@+id/item_recently_viewed_tv_title"
+            android:layout_height="@dimen/base_24dp"
+            android:gravity="start|center"
+            app:layout_constraintStart_toStartOf="@+id/item_recent_viewed_tv_title"
+            app:layout_constraintTop_toBottomOf="@+id/item_recent_viewed_tv_title"
             price="@{item.SPrice}"
             isNPrice="@{false}"
             style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style"/>
         <TextView
-            android:id="@+id/item_recently_viewed_tv_nprice"
+            android:id="@+id/item_recent_viewed_tv_nprice"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/base_24dp"
+            android:gravity="start|center"
             price="@{item.SPrice}"
             isNPrice="@{true}"
-            app:layout_constraintTop_toTopOf="@+id/item_recently_viewd_tv_sprice"
-            app:layout_constraintBottom_toBottomOf="@id/item_recently_viewd_tv_sprice"
-            app:layout_constraintStart_toEndOf="@+id/item_recently_viewd_tv_sprice"
+            app:layout_constraintTop_toTopOf="@+id/item_recent_viewd_tv_sprice"
+            app:layout_constraintBottom_toBottomOf="@id/item_recent_viewd_tv_sprice"
+            app:layout_constraintStart_toEndOf="@+id/item_recent_viewd_tv_sprice"
             android:layout_marginStart="@dimen/rv_space_4dp"
             style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault12_Normal.Style"/>
         <TextView
-            android:id="@+id/item_recently_viewd_tv_time"
+            android:id="@+id/item_recent_viewd_tv_time"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@+id/item_recently_viewd_tv_sprice"
-            app:layout_constraintEnd_toEndOf="@+id/item_recently_viewed_tv_title"
-            app:layout_constraintTop_toBottomOf="@+id/item_recently_viewd_tv_sprice"
+            android:layout_height="@dimen/base_24dp"
+            android:gravity="start|center"
+            app:layout_constraintStart_toStartOf="@+id/item_recent_viewd_tv_sprice"
+            app:layout_constraintEnd_toEndOf="@+id/item_recent_viewed_tv_title"
+            app:layout_constraintTop_toBottomOf="@+id/item_recent_viewd_tv_sprice"
             app:getTimeString="@{item.timeStamp}"
             style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault12_Normal.Style"/>
 

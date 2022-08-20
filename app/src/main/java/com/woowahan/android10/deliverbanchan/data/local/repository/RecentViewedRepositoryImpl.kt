@@ -1,29 +1,43 @@
 package com.woowahan.android10.deliverbanchan.data.local.repository
 
 import androidx.annotation.WorkerThread
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingSource
 import com.woowahan.android10.deliverbanchan.data.local.dao.RecentViewedDao
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.RecentViewedInfo
 import com.woowahan.android10.deliverbanchan.data.local.model.join.RecentViewed
-import com.woowahan.android10.deliverbanchan.domain.repository.local.RecentlyViewedRepository
+import com.woowahan.android10.deliverbanchan.domain.repository.local.RecentViewedRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class RecentViewedRepositoryImpl @Inject constructor(
     private val recentlyViewedDao: RecentViewedDao
-) : RecentlyViewedRepository {
+) : RecentViewedRepository {
 
-    override fun getAllRecentlyViewedInfo(): Flow<List<RecentViewedInfo>> =
-        recentlyViewedDao.getAllRecentlyViewedInfo()
-
-    @WorkerThread
-    override suspend fun insertRecentlyViewedInfo(recentViewedInfo: RecentViewedInfo) =
-        recentlyViewedDao.insertRecentlyViewedInfo(recentViewedInfo)
+    override fun getAllRecentViewedInfo(): Flow<List<RecentViewedInfo>> =
+        recentlyViewedDao.getAllRecentViewedInfo()
 
     @WorkerThread
-    override suspend fun deleteAllRecentlyViewedInfo() =
-        recentlyViewedDao.deleteAllRecentlyViewedInfo()
+    override suspend fun insertRecentViewedInfo(recentViewedInfo: RecentViewedInfo) =
+        recentlyViewedDao.insertRecentViewedInfo(recentViewedInfo)
 
-    override fun getAllRecentlyJoinList(): Flow<List<RecentViewed>> =
-        recentlyViewedDao.getAllRecentlyJoinList()
+    @WorkerThread
+    override suspend fun deleteAllRecentViewedInfo() =
+        recentlyViewedDao.deleteAllRecentViewedInfo()
+
+    override fun getAllRecentJoinList(): Flow<List<RecentViewed>> =
+        recentlyViewedDao.getAllRecentJoinList()
+
+    override fun getAllRecentJoinPager(): Pager<Int, RecentViewed> {
+        return Pager(
+            PagingConfig(
+                pageSize = 8
+            )
+        ){
+            recentlyViewedDao.getAllRecentJoinPaging()
+        }
+    }
+
 
 }

@@ -22,7 +22,7 @@ class DetailViewModel @Inject constructor(
     private val createEmptyUiDetailInfoUseCase: CreateEmptyUiDetailInfoUseCase,
     private val createUiDetailInfoUseCase: CreateUiDetailInfoUseCase,
     private val getDetailDishUseCase: GetDetailDishUseCase,
-    private val insertRecentlyUseCase: InsertRecentlyUseCase,
+    private val insertRecentUseCase: InsertRecentUseCase,
     private val insertCartInfoUseCase: InsertCartInfoUseCase,
     private val updateCartAmount: UpdateCartAmount,
     savedStateHandle: SavedStateHandle
@@ -52,16 +52,16 @@ class DetailViewModel @Inject constructor(
         getDetailDishInfo()
     }
 
-    private fun insertRecently() {
+    private fun insertRecent() {
         currentUiDishItem?.let { dishItem ->
             viewModelScope.launch {
                 with(dishItem) {
-                    insertRecentlyUseCase(
+                    insertRecentUseCase(
                         LocalDish(
                             hash, title, image, nPrice, sPrice
                         ),
                         RecentViewedInfo(
-                            hash, System.currentTimeMillis()
+                            hash = hash, timeStamp = System.currentTimeMillis()
                         )
                     )
                 }
@@ -88,7 +88,7 @@ class DetailViewModel @Inject constructor(
                             _itemCount.value
                         )
                         _detailState.value = DetailUiState.Success(result.data)
-                        insertRecently()
+                        insertRecent()
                     }
                     is BaseResult.Error -> _detailState.value =
                         DetailUiState.Error(result.errorCode)

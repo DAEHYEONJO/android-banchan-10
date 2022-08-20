@@ -9,7 +9,7 @@ import com.woowahan.android10.deliverbanchan.data.remote.repository.DishItemRepo
 import com.woowahan.android10.deliverbanchan.domain.repository.local.CartRepository
 import com.woowahan.android10.deliverbanchan.domain.repository.local.DishRepository
 import com.woowahan.android10.deliverbanchan.domain.repository.local.OrderRepository
-import com.woowahan.android10.deliverbanchan.domain.repository.local.RecentlyViewedRepository
+import com.woowahan.android10.deliverbanchan.domain.repository.local.RecentViewedRepository
 import com.woowahan.android10.deliverbanchan.domain.repository.remote.DishDetailRepository
 import com.woowahan.android10.deliverbanchan.domain.repository.remote.DishItemRepository
 import dagger.Binds
@@ -32,7 +32,7 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindsRecentlyViewedRepository(recentViewedRepositoryImpl: RecentViewedRepositoryImpl): RecentlyViewedRepository
+    abstract fun bindsRecentViewedRepository(recentViewedRepositoryImpl: RecentViewedRepositoryImpl): RecentViewedRepository
 
     @Binds
     @Singleton
