@@ -108,6 +108,12 @@ class MainDishFragment :
                 cartBottomSheetFragment.arguments = bundle
                 cartBottomSheetFragment.show(childFragmentManager, "CartBottomSheet")
             }
+
+            itemClick = {
+                val intent = Intent(requireContext(), DetailActivity::class.java)
+                intent.putExtra("UiDishItem", it)
+                startActivity(intent)
+            }
         }
 
         mainDishLinearAdapter = MainDishLinearAdapter({
