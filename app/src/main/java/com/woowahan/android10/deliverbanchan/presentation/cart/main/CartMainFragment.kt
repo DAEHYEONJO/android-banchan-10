@@ -161,7 +161,7 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
 
     override fun onStop() {
         super.onStop()
-        cartViewModel.updateAllCartItemChanged()
+        //cartViewModel.updateAllCartItemChanged()
     }
 
 }

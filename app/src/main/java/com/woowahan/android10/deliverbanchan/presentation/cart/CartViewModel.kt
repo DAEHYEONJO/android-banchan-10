@@ -11,7 +11,6 @@ import com.woowahan.android10.deliverbanchan.di.IoDispatcher
 import com.woowahan.android10.deliverbanchan.domain.model.UiCartJoinItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiOrderInfo
 import com.woowahan.android10.deliverbanchan.domain.model.UiRecentlyJoinItem
-import com.woowahan.android10.deliverbanchan.domain.repository.local.CartRepository
 import com.woowahan.android10.deliverbanchan.domain.usecase.*
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.TempOrder
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartBottomBody
@@ -222,10 +221,10 @@ class CartViewModel @Inject constructor(
         )
         appBarTitle.value = "Cart"
         orderDetailMode.value = true
-        insertOrderInfo()
+        insertOrderInfoDeleteCartInfo()
     }
 
-    fun insertOrderInfo() = CoroutineScope(dispatcher).launch {
+    private fun insertOrderInfoDeleteCartInfo() = CoroutineScope(dispatcher).launch {
         launch {
             val timeStamp = System.currentTimeMillis()
             _selectedCartItem.forEach { tempOrder ->
@@ -239,9 +238,11 @@ class CartViewModel @Inject constructor(
                     )
                 )
             }
-        }
-        launch {
-            deleteVarArgByHashListUseCase(_selectedCartItem.map { it.hash }.toList())
+            try {
+                deleteVarArgByHashListUseCase(_selectedCartItem.map { it.hash }.toList())
+            }catch (e: CancellationException){
+                Log.e(TAG, "insertOrderInfoDeleteCartInfo: $e", )
+            }
         }
     }
 

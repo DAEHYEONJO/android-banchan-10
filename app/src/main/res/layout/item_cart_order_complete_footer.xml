@@ -34,7 +34,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/cart_order_complete_footer_tv_price_total_hard_code"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="@dimen/base_space_16dp"
-            android:text="18,505원"
+            app:setDeliveryPriceText="@{item.itemPrice}"
             style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault14_Normal.Style" />
 
         <TextView
@@ -59,7 +59,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/cart_order_complete_footer_tv_delivery_price_hard_code"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="@dimen/base_space_16dp"
-            android:text="18,505원"
+            app:setDeliveryPriceText="@{item.deliveryFee}"
             style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault14_Normal.Style" />
 
         <View
@@ -95,7 +95,7 @@
             app:layout_constraintTop_toTopOf="@+id/cart_order_complete_footer_tv_order_total_price_hard_code"
             app:layout_constraintBottom_toBottomOf="@+id/cart_order_complete_footer_tv_order_total_price_hard_code"
             app:layout_constraintEnd_toEndOf="@+id/cart_order_complete_footer_view"
-            android:text="32,303원"
+            app:setDeliveryPriceText="@{item.totalPrice}"
             style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

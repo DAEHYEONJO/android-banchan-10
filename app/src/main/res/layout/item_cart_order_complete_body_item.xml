@@ -20,6 +20,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:setStringUrlImage="@{item.image}"
             android:layout_marginTop="@dimen/base_space_16dp"
             android:layout_marginStart="@dimen/base_space_16dp" />
 
@@ -32,7 +33,7 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="20dp"
             android:layout_marginStart="@dimen/rv_space_8dp"
-            android:text="새콤달콤 오징어 무침"
+            android:text="@{item.title}"
             style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style" />
 
         <TextView
@@ -42,7 +43,7 @@
             android:gravity="center"
             app:layout_constraintStart_toStartOf="@+id/cart_complete_body_item_iv_title"
             app:layout_constraintTop_toBottomOf="@+id/cart_complete_body_item_iv_title"
-            android:text="1개"
+            android:text="@{String.valueOf(item.amount)+`개`}"
             style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Normal.Style" />
 
 
@@ -53,7 +54,7 @@
             android:gravity="center"
             app:layout_constraintStart_toStartOf="@+id/cart_complete_body_item_tv_amount"
             app:layout_constraintTop_toBottomOf="@+id/cart_complete_body_item_tv_amount"
-            android:text="6,000원"
+            app:setDeliveryPriceText="@{item.amount*item.SPrice}"
             style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -66,7 +66,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/cart_order_detail_complete_top_tv_order_count_hardcode"
             app:layout_constraintStart_toEndOf="@+id/cart_order_detail_complete_top_tv_order_count_hardcode"
             android:layout_marginStart="@dimen/rv_space_8dp"
-            android:text="총 n개"
+            android:text="@{`총 `+ String.valueOf(item.orderItemCount)+`개`}"
             style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style"/>
 
         <View
