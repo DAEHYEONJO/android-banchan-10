@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="item"
+            type="com.woowahan.android10.deliverbanchan.domain.model.UiCartJoinItem" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/cart_complete_body_item_iv"
+            android:layout_width="@dimen/item_cart_iv_size_80dp"
+            android:layout_height="@dimen/item_cart_iv_size_80dp"
+            android:background="@color/grey_scale_line"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="@dimen/base_space_16dp"
+            android:layout_marginStart="@dimen/base_space_16dp" />
+
+        <TextView
+            android:id="@+id/cart_complete_body_item_iv_title"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/base_24dp"
+            android:gravity="center"
+            app:layout_constraintStart_toEndOf="@+id/cart_complete_body_item_iv"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="@dimen/rv_space_8dp"
+            android:text="새콤달콤 오징어 무침"
+            style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style" />
+
+        <TextView
+            android:id="@+id/cart_complete_body_item_tv_amount"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/base_24dp"
+            android:gravity="center"
+            app:layout_constraintStart_toStartOf="@+id/cart_complete_body_item_iv_title"
+            app:layout_constraintTop_toBottomOf="@+id/cart_complete_body_item_iv_title"
+            android:text="1개"
+            style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Normal.Style" />
+
+
+        <TextView
+            android:id="@+id/cart_complete_body_item_tv_total_price"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/base_24dp"
+            android:gravity="center"
+            app:layout_constraintStart_toStartOf="@+id/cart_complete_body_item_tv_amount"
+            app:layout_constraintTop_toBottomOf="@+id/cart_complete_body_item_tv_amount"
+            android:text="6,000원"
+            style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

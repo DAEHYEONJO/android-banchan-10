@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <variable
+            name="item"
+            type="com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartCompleteHeader" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

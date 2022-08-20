@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="item"
+            type="com.woowahan.android10.deliverbanchan.domain.model.UiOrderInfo" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/grey_scale_surface">
+
+        <TextView
+            android:id="@+id/cart_order_complete_footer_tv_price_total_hard_code"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/base_24dp"
+            android:gravity="center|start"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/cart_order_complete_footer_tv_price_total"
+            android:layout_marginEnd="@dimen/base_space_16dp"
+            android:layout_marginTop="@dimen/base_24dp"
+            android:text="@string/item_cart_order_product_total_price"
+            style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault14_Normal.Style" />
+
+        <TextView
+            android:id="@+id/cart_order_complete_footer_tv_price_total"
+            android:layout_width="140dp"
+            android:layout_height="@dimen/base_24dp"
+            android:gravity="end|center"
+            app:layout_constraintTop_toTopOf="@+id/cart_order_complete_footer_tv_price_total_hard_code"
+            app:layout_constraintBottom_toBottomOf="@+id/cart_order_complete_footer_tv_price_total_hard_code"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="@dimen/base_space_16dp"
+            android:text="18,505원"
+            style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault14_Normal.Style" />
+
+        <TextView
+            android:id="@+id/cart_order_complete_footer_tv_delivery_price_hard_code"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/base_24dp"
+            android:gravity="center|start"
+            app:layout_constraintStart_toStartOf="@+id/cart_order_complete_footer_tv_price_total_hard_code"
+            app:layout_constraintTop_toBottomOf="@+id/cart_order_complete_footer_tv_price_total_hard_code"
+            app:layout_constraintEnd_toStartOf="@+id/cart_order_complete_footer_tv_delivery_price"
+            android:layout_marginEnd="@dimen/base_space_16dp"
+            android:layout_marginTop="@dimen/rv_space_8dp"
+            android:text="@string/item_cart_order_delivery_price"
+            style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault14_Normal.Style" />
+
+        <TextView
+            android:id="@+id/cart_order_complete_footer_tv_delivery_price"
+            android:layout_width="140dp"
+            android:layout_height="@dimen/base_24dp"
+            android:gravity="end|center"
+            app:layout_constraintTop_toTopOf="@+id/cart_order_complete_footer_tv_delivery_price_hard_code"
+            app:layout_constraintBottom_toBottomOf="@+id/cart_order_complete_footer_tv_delivery_price_hard_code"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="@dimen/base_space_16dp"
+            android:text="18,505원"
+            style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault14_Normal.Style" />
+
+        <View
+            android:id="@+id/cart_order_complete_footer_view"
+            android:layout_width="@dimen/item_elevation_0dp"
+            android:layout_height="1dp"
+            android:background="@color/grey_scale_line"
+            app:layout_constraintStart_toStartOf="@+id/cart_order_complete_footer_tv_delivery_price_hard_code"
+            app:layout_constraintEnd_toEndOf="@+id/cart_order_complete_footer_tv_delivery_price"
+            app:layout_constraintTop_toBottomOf="@+id/cart_order_complete_footer_tv_delivery_price_hard_code"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:id="@+id/cart_order_complete_footer_tv_order_total_price_hard_code"
+            android:layout_width="@dimen/item_elevation_0dp"
+            android:layout_height="@dimen/base_24dp"
+            android:gravity="start|center"
+            app:layout_constraintStart_toStartOf="@+id/cart_order_complete_footer_view"
+            app:layout_constraintTop_toBottomOf="@+id/cart_order_complete_footer_view"
+            app:layout_constraintEnd_toStartOf="@+id/cart_order_complete_footer_tv_order_total_price"
+            android:layout_marginEnd="@dimen/rv_space_8dp"
+            android:layout_marginTop="@dimen/rv_space_8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="97dp"
+            android:text="@string/item_order_total_price"
+            style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style" />
+
+        <TextView
+            android:id="@+id/cart_order_complete_footer_tv_order_total_price"
+            android:layout_width="140dp"
+            android:layout_height="24dp"
+            android:gravity="end|center"
+            app:layout_constraintTop_toTopOf="@+id/cart_order_complete_footer_tv_order_total_price_hard_code"
+            app:layout_constraintBottom_toBottomOf="@+id/cart_order_complete_footer_tv_order_total_price_hard_code"
+            app:layout_constraintEnd_toEndOf="@+id/cart_order_complete_footer_view"
+            android:text="32,303원"
+            style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

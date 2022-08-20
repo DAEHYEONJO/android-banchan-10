@@ -3,19 +3,23 @@ package com.woowahan.android10.deliverbanchan.presentation.cart.main
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.commit
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ConcatAdapter
 import com.woowahan.android10.deliverbanchan.R
+import com.woowahan.android10.deliverbanchan.data.local.model.join.Cart
 import com.woowahan.android10.deliverbanchan.databinding.FragmentCartMainBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiCartJoinItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiRecentlyJoinItem
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
+import com.woowahan.android10.deliverbanchan.presentation.cart.CartActivity
 import com.woowahan.android10.deliverbanchan.presentation.cart.CartViewModel
-import com.woowahan.android10.deliverbanchan.presentation.cart.adapter.CartDishTopBodyAdapter
-import com.woowahan.android10.deliverbanchan.presentation.cart.adapter.CartOrderInfoBottomBodyAdapter
-import com.woowahan.android10.deliverbanchan.presentation.cart.adapter.CartRecentlyViewedFooterAdapter
-import com.woowahan.android10.deliverbanchan.presentation.cart.adapter.CartSelectHeaderAdapter
+import com.woowahan.android10.deliverbanchan.presentation.cart.adapter.main.CartDishTopBodyAdapter
+import com.woowahan.android10.deliverbanchan.presentation.cart.adapter.main.CartOrderInfoBottomBodyAdapter
+import com.woowahan.android10.deliverbanchan.presentation.cart.adapter.main.CartRecentlyViewedFooterAdapter
+import com.woowahan.android10.deliverbanchan.presentation.cart.adapter.main.CartSelectHeaderAdapter
+import com.woowahan.android10.deliverbanchan.presentation.cart.complete.CartDeliveryCompleteFragment
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
 import com.woowahan.android10.deliverbanchan.presentation.state.UiLocalState
 import dagger.hilt.android.AndroidEntryPoint
@@ -57,7 +61,11 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
         cartBottomBodyAdapter.onCartBottomBodyItemClickListener =
             object : CartOrderInfoBottomBodyAdapter.OnCartBottomBodyItemClickListener{
                 override fun onClickOrderBtn() {
-                    cartViewModel.insertOrderInfo()
+                    cartViewModel.setOrderCompleteCartItem()
+                    //cartViewModel.insertOrderInfo()
+                    (requireActivity() as CartActivity).supportFragmentManager.commit {
+                        replace(R.id.cart_fcv, CartDeliveryCompleteFragment())
+                    }
                 }
             }
         cartHeaderAdapter.onCartTopBodyItemClickListener =
