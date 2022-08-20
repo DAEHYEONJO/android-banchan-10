@@ -6,10 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.work.Data
-import androidx.work.OneTimeWorkRequest
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
+import androidx.work.*
 import com.google.gson.Gson
 import com.woowahan.android10.deliverbanchan.data.local.background.LocalDBWorker
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
@@ -91,6 +88,7 @@ class CartViewModel @Inject constructor(
 
     internal fun updateCartDataBase() {
         val request = OneTimeWorkRequestBuilder<LocalDBWorker>()
+            .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
             .setInputData(createInputData())
             .build()
 
