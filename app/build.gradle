@@ -88,4 +88,8 @@ dependencies {
     implementation Libraries.RETROFIT_CONVERTER_KOTLINX_SERIALIZATION
 
     implementation AndroidX.RECYCLERVIEW
+
+    implementation AndroidX.WORK_MANAGER
+    implementation AndroidX.HILT_WORK
+    kapt AndroidX.HILT_COMPILER
 }

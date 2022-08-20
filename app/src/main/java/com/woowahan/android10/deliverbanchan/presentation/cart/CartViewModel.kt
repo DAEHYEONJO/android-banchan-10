@@ -1,10 +1,14 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart
 
+import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.*
+import com.google.gson.Gson
+import com.woowahan.android10.deliverbanchan.data.local.background.LocalDBWorker
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.OrderInfo
 import com.woowahan.android10.deliverbanchan.di.IoDispatcher
@@ -30,12 +34,15 @@ class CartViewModel @Inject constructor(
     private val deleteCartInfoByHashUseCase: DeleteCartInfoByHashUseCase,
     private val insertOrderInfoUseCase: InsertOrderInfoUseCase,
     private val cartRepository: CartRepository,
-    @IoDispatcher private val dispatcher: CoroutineDispatcher
+    @IoDispatcher private val dispatcher: CoroutineDispatcher,
+    application: Application
 ) : ViewModel() {
 
     companion object {
         const val TAG = "CartViewModel"
     }
+
+    private val workManager = WorkManager.getInstance(application)
 
     val appBarTitle = MutableLiveData("")
     val orderDetailMode = MutableLiveData(false)
@@ -77,6 +84,37 @@ class CartViewModel @Inject constructor(
     init {
         getAllRecentlyJoinList()
         getAllCartJoinList()
+    }
+
+    internal fun updateCartDataBase() {
+        val request = OneTimeWorkRequestBuilder<LocalDBWorker>()
+            .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+            .setInputData(createInputData())
+            .build()
+
+        workManager.enqueue(request)
+    }
+
+    private fun createInputData(): Data {
+        val builder = Data.Builder()
+
+        val cartList = _uiCartJoinList.value!!.map {
+            CartInfo(
+                it.hash,
+                it.checked,
+                it.amount
+            )
+        }.toList()
+
+        val deleteList = _toBeDeletedCartItem.toList()
+
+        val gson = Gson()
+        val cartListStr = gson.toJson(cartList)
+        //val deleteListStr = gson.toJson(deleteList)
+
+        builder.putString("cartListStr", cartListStr)
+        builder.putStringArray("deleteListStr", deleteList.toTypedArray())
+        return builder.build()
     }
 
     private fun getAllCartJoinList() = viewModelScope.launch {
