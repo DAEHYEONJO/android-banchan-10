@@ -15,6 +15,7 @@ object Versions {
     const val FRAGMENT_KTX = "1.5.0"
     const val LIFECYCLE_KTX = "2.5.0"
     const val ROOM = "2.4.3"
+    const val PAGING_VERSION = "3.2.0-alpha02"
 
     const val HILT = "2.38.1"
     const val MATERIAL = "1.6.1"
@@ -70,6 +71,10 @@ object AndroidX {
     const val WORK_MANAGER            = "androidx.work:work-runtime-ktx:${Versions.WORK_MANAGER}"
     const val HILT_WORK               = "androidx.hilt:hilt-work:${Versions.HILT_WORK}"
     const val HILT_COMPILER           = "androidx.hilt:hilt-compiler:${Versions.HILT_COMPILER}"
+
+    const val PAGING_RUNTIME          = "androidx.paging:paging-runtime:${Versions.PAGING_VERSION}"
+    const val PAGING_RUNTIME_KTX      = "androidx.paging:paging-runtime-ktx:${Versions.PAGING_VERSION}"
+    const val PAGING_COMMON           = "androidx.paging:paging-common:${Versions.PAGING_VERSION}"
 }
 
 object Google {

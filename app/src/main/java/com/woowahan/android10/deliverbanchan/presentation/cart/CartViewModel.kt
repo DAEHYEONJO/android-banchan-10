@@ -34,7 +34,7 @@ class CartViewModel @Inject constructor(
     private val insertAndDeleteAllCartUseCase: InsertAndDeleteAllCartUseCase,
     private val deleteCartInfoByHashListUseCase: DeleteCartInfoByHashListUseCase,
     private val insertVarArgOrderInfoUseCase: InsertVarArgOrderInfoUseCase,
-    @IoDispatcher private val dispatcher: CoroutineDispatcher
+    @IoDispatcher private val dispatcher: CoroutineDispatcher,
     application: Application
 ) : ViewModel() {
 

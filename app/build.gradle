@@ -92,4 +92,8 @@ dependencies {
     implementation AndroidX.WORK_MANAGER
     implementation AndroidX.HILT_WORK
     kapt AndroidX.HILT_COMPILER
+
+    implementation AndroidX.PAGING_RUNTIME
+    implementation AndroidX.PAGING_RUNTIME_KTX
+    testImplementation AndroidX.PAGING_COMMON
 }
