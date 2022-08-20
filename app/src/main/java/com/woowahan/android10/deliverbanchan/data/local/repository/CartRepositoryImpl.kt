@@ -1,7 +1,6 @@
 package com.woowahan.android10.deliverbanchan.data.local.repository
 
 import androidx.annotation.WorkerThread
-import androidx.room.Query
 import com.woowahan.android10.deliverbanchan.data.local.dao.CartDao
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
 import com.woowahan.android10.deliverbanchan.data.local.model.join.Cart
@@ -9,7 +8,6 @@ import com.woowahan.android10.deliverbanchan.di.IoDispatcher
 import com.woowahan.android10.deliverbanchan.domain.repository.local.CartRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class CartRepositoryImpl @Inject constructor(
@@ -52,8 +50,8 @@ class CartRepositoryImpl @Inject constructor(
         cartDao.insertAndDeleteAllItems(cartInfo, deleteHashes)
     }
 
-    override suspend fun deleteVarArgByHash(deleteHashes: List<String>) {
-        cartDao.deleteVarArgByHash(deleteHashes)
+    override suspend fun deleteVarArgByHashList(deleteHashes: List<String>) {
+        cartDao.deleteVarArgByHashList(deleteHashes)
     }
 
 

@@ -18,7 +18,6 @@ class GridItemDecorator(private val context: Context) : RecyclerView.ItemDecorat
     ) {
         val position = parent.getChildLayoutPosition(view)
         val totalItemCount = state.itemCount
-        val scrollPosition = state.targetScrollPosition
         if (position == 0) {
             outRect.left = dpToPx(context, 16).roundToInt()
         } else {

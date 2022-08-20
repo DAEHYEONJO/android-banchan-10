@@ -1,11 +1,13 @@
 package com.woowahan.android10.deliverbanchan.presentation.common
 
+import android.content.Context
 import android.graphics.Rect
+import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.dpToPx
 
-class OrderListVerticalDecoration : RecyclerView.ItemDecoration() {
+class OrderListVerticalDecoration(private val context: Context) : RecyclerView.ItemDecoration() {
     override fun getItemOffsets(
         outRect: Rect,
         view: View,
@@ -15,11 +17,11 @@ class OrderListVerticalDecoration : RecyclerView.ItemDecoration() {
         super.getItemOffsets(outRect, view, parent, state)
 
         val position = parent.getChildAdapterPosition(view)
-        val total = parent.layoutManager!!.itemCount
-
-        val offset = dpToPx(view.context, 10).toInt()
-        outRect.top = offset
-
+        val total = state.itemCount
+//
+        val offset = dpToPx(context, 16).toInt()
+//        outRect.top = offset
+        Log.e("OrderListVerticalDecoration", "getItemOffsets: $position $total", )
         if (position == total - 1) outRect.bottom = offset
     }
 }

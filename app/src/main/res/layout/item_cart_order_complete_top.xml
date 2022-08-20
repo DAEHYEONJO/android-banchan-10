@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/grey_scale_surface">
+
+        <TextView
+            android:id="@+id/cart_order_detail_complete_top_tv_hardcode"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/base_24dp"
+
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="@dimen/base_space_16dp"
+            android:layout_marginTop="22dp"
+            android:text="@string/order_complete_enqueue"
+            style="@style/Widget.TextView.KoPubWorldDotumPro_GreyScaleBlack16_Bold.Style"/>
+
+        <TextView
+            android:id="@+id/cart_order_detail_complete_top_tv_lim_time_hardcode"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/base_24dp"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@+id/cart_order_detail_complete_top_tv_hardcode"
+            app:layout_constraintStart_toStartOf="@+id/cart_order_detail_complete_top_tv_hardcode"
+            android:layout_marginTop="@dimen/rv_space_8dp"
+            android:text="@string/limit_time_to_order_complete"/>
+
+        <TextView
+            android:id="@+id/cart_order_detail_complete_top_tv_lim_time"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/base_24dp"
+            android:gravity="center"
+            app:layout_constraintTop_toTopOf="@+id/cart_order_detail_complete_top_tv_lim_time_hardcode"
+            app:layout_constraintBottom_toBottomOf="@+id/cart_order_detail_complete_top_tv_lim_time_hardcode"
+            app:layout_constraintStart_toEndOf="@+id/cart_order_detail_complete_top_tv_lim_time_hardcode"
+            android:layout_marginStart="@dimen/rv_space_8dp"
+            android:text="20분"
+            style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style"/>
+
+        <TextView
+            android:id="@+id/cart_order_detail_complete_top_tv_order_count_hardcode"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/base_24dp"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@+id/cart_order_detail_complete_top_tv_lim_time_hardcode"
+            app:layout_constraintStart_toStartOf="@+id/cart_order_detail_complete_top_tv_lim_time_hardcode"
+            android:layout_marginTop="@dimen/rv_space_8dp"
+            android:text="@string/order_count"/>
+
+        <TextView
+            android:id="@+id/cart_order_detail_complete_top_tv_order_count"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/base_24dp"
+            android:gravity="center"
+            app:layout_constraintTop_toTopOf="@+id/cart_order_detail_complete_top_tv_order_count_hardcode"
+            app:layout_constraintBottom_toBottomOf="@+id/cart_order_detail_complete_top_tv_order_count_hardcode"
+            app:layout_constraintStart_toEndOf="@+id/cart_order_detail_complete_top_tv_order_count_hardcode"
+            android:layout_marginStart="@dimen/rv_space_8dp"
+            android:text="총 n개"
+            style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style"/>
+
+        <View
+            android:id="@+id/cart_order_detail_complete_view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey_scale_line"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cart_order_detail_complete_top_tv_order_count_hardcode"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="@dimen/base_space_16dp"
+            android:layout_marginTop="22dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

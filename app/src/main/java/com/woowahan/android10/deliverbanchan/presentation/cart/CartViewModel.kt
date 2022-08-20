@@ -27,6 +27,7 @@ class CartViewModel @Inject constructor(
     private val deleteCartInfoByHashUseCase: DeleteCartInfoByHashUseCase,
     private val insertOrderInfoUseCase: InsertOrderInfoUseCase,
     private val insertAndDeleteAllCartUseCase: InsertAndDeleteAllCartUseCase,
+    private val deleteVarArgByHashListUseCase: DeleteVarArgByHashListUseCase,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
@@ -205,14 +206,15 @@ class CartViewModel @Inject constructor(
             }
         }
         launch {
-            _selectedCartItem.forEach { tempOrder ->
-                Log.e(TAG, "deleteQuery: delete hash ${tempOrder.hash} Thread: ${Thread.currentThread().name}")
-                try {
-                    deleteCartInfoByHashUseCase(tempOrder.hash)
-                } catch (e: CancellationException) {
-                    Log.e(TAG, "deleteQuery Delete: $e")
-                }
-            }
+            deleteVarArgByHashListUseCase(_selectedCartItem.map { it.hash }.toList())
+//            _selectedCartItem.forEach { tempOrder ->
+//                Log.e(TAG, "deleteQuery: delete hash ${tempOrder.hash} Thread: ${Thread.currentThread().name}")
+//                try {
+//                    deleteCartInfoByHashUseCase(tempOrder.hash)
+//                } catch (e: CancellationException) {
+//                    Log.e(TAG, "deleteQuery Delete: $e")
+//                }
+//            }
         }
     }
 

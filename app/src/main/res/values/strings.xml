@@ -42,5 +42,8 @@
     <string name="time_format">%1$s%2$s</string>
     <string name="order_format">%1$s 주문하기</string>
     <string name="order_form_free_delivery_format">%1$s을 더 담으면 무료배송</string>
+    <string name="order_complete_enqueue">주문이 접수되었습니다.</string>
+    <string name="limit_time_to_order_complete">배송까지 남은 시간</string>
+    <string name="order_count">주문한 상품</string>
 
 </resources>
