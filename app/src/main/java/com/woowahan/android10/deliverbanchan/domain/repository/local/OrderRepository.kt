@@ -22,4 +22,6 @@ interface OrderRepository {
     suspend fun deleteOrderDish(hash: String)
     @WorkerThread
     fun getAllOrderJoinList(): Flow<List<Order>>
+    @WorkerThread
+    suspend fun insertVarArgOrderInfo(orderInfoList: List<OrderInfo>)
 }

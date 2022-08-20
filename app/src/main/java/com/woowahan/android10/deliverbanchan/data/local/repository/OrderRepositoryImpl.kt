@@ -27,4 +27,6 @@ class OrderRepositoryImpl @Inject constructor(
     override suspend fun deleteOrderDish(hash: String) = orderDao.deleteOrderDish(hash)
 
     override fun getAllOrderJoinList(): Flow<List<Order>> = orderDao.getAllOrderJoinList()
+    override suspend fun insertVarArgOrderInfo(orderInfoList: List<OrderInfo>) =
+        orderDao.insertVarArgOrderInfo(*orderInfoList.toTypedArray())
 }

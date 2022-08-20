@@ -3,6 +3,7 @@
     <string name="app_bar_with_back_btn_title">Recently viewed products</string>
     <string name="app_bar_no_back_btn_title">ORDERING</string>
     <string name="app_bar_cart_title">Cart</string>
+    <string name="app_bar_cart_order_empty" />
     <string name="app_bar_order_list_title">Order List</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -34,6 +35,11 @@
         <item>금액 높은순</item>
         <item>금액 낮은순</item>
         <item>할인률순</item>
+    </string-array>
+    <string-array name="cart_fragment_tag_array">
+        <item>CartMainFragment</item>
+        <item>CartDeliveryCompleteFragment</item>
+        <item>RecentlyViewedFragment</item>
     </string-array>
     <string name="item_cart_bottom_body_btn">최소주문금액을 확인해주세요</string>
     <string name="item_cart_header_select_all">전체 선택</string>

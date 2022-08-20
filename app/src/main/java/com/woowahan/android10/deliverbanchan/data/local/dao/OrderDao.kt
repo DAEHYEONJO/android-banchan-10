@@ -27,4 +27,7 @@ interface OrderDao {
     @Query("DELETE FROM LOCAL_DISH WHERE hash = :hash")
     suspend fun deleteOrderDish(hash: String)
 
+    @Insert
+    suspend fun insertVarArgOrderInfo(vararg orderInfo: OrderInfo)
+
 }
