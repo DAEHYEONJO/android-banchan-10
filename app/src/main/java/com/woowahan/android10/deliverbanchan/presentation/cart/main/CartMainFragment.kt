@@ -159,8 +159,4 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
         }
     }
 
-    override fun onStop() {
-        super.onStop()
-    }
-
 }

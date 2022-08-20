@@ -13,6 +13,7 @@ import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentSoupdishBinding
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
+import com.woowahan.android10.deliverbanchan.presentation.cart.CartActivity
 import com.woowahan.android10.deliverbanchan.presentation.view.SortSpinnerAdapter
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
@@ -108,8 +109,7 @@ class SoupDishFragment: BaseFragment<FragmentSoupdishBinding>(R.layout.fragment_
                                         "SoupDishFragment",
                                         "move to cart, hash : ${hash}, title : ${title}"
                                     )
-                                    // CartActivity 이동 하면서 title, hash 전달 예정
-
+                                    startActivity(Intent(requireActivity(), CartActivity::class.java))
                                 }
                             })
 
