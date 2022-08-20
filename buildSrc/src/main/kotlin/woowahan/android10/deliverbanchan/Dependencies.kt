@@ -15,7 +15,7 @@ object Versions {
     const val FRAGMENT_KTX = "1.5.0"
     const val LIFECYCLE_KTX = "2.5.0"
     const val ROOM = "2.4.3"
-    const val PAGING_VERSION = "3.2.0-alpha02"
+    const val PAGING_VERSION = "3.1.1"
 
     const val HILT = "2.38.1"
     const val MATERIAL = "1.6.1"
