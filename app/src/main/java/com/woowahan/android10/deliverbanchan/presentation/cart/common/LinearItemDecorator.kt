@@ -9,7 +9,7 @@ import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlin.math.roundToInt
 
 @ActivityRetainedScoped
-class GridItemDecorator(private val context: Context) : RecyclerView.ItemDecoration() {
+class LinearItemDecorator(private val context: Context) : RecyclerView.ItemDecoration() {
     override fun getItemOffsets(
         outRect: Rect,
         view: View,
@@ -18,13 +18,8 @@ class GridItemDecorator(private val context: Context) : RecyclerView.ItemDecorat
     ) {
         val position = parent.getChildLayoutPosition(view)
         val totalItemCount = state.itemCount
-        if (position == 0) {
-            outRect.left = dpToPx(context, 16).roundToInt()
-        } else {
-            outRect.left = dpToPx(context, 8).roundToInt()
-        }
-        if (position == totalItemCount - 1) {
-            outRect.right = dpToPx(context, 16).roundToInt()
+        if (position == totalItemCount - 1){
+            outRect.bottom = dpToPx(context, 16).roundToInt()
         }
     }
 }

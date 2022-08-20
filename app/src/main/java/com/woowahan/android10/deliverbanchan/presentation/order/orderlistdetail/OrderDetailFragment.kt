@@ -13,7 +13,6 @@ import com.woowahan.android10.deliverbanchan.databinding.FragmentOrderDetailBind
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
 import com.woowahan.android10.deliverbanchan.presentation.order.OrderViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint

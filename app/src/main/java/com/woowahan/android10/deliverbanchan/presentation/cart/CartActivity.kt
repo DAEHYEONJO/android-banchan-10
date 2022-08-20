@@ -6,33 +6,47 @@ import androidx.fragment.app.commit
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.ActivityCartBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseActivity
+import com.woowahan.android10.deliverbanchan.presentation.cart.complete.CartDeliveryCompleteFragment
 import com.woowahan.android10.deliverbanchan.presentation.cart.main.CartMainFragment
+import com.woowahan.android10.deliverbanchan.presentation.cart.recently.RecentlyViewedFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart, "CartActivity") {
     private val cartViewModel: CartViewModel by viewModels()
+    private val fragmentTagArray: Array<String> by lazy {
+        resources.getStringArray(R.array.cart_fragment_tag_array)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initBinding()
         initAppBar()
-        initFragment()
         initObserver()
     }
 
     private fun initObserver() {
-
+        cartViewModel.fragmentArrayIndex.observe(this){ fragmentArrayIndex ->
+            initFragment(fragmentArrayIndex)
+        }
     }
 
-    private fun initFragment() {
-        var fragment = supportFragmentManager.findFragmentByTag("CartMainFragment")
+    private fun initFragment(tagArrayIndex: Int) {
+        var fragment = supportFragmentManager.findFragmentByTag(fragmentTagArray[tagArrayIndex])
         if (fragment == null){
-            fragment = CartMainFragment()
+            fragment = when(tagArrayIndex){
+                0 -> CartMainFragment()
+                1 -> CartDeliveryCompleteFragment()
+                else -> RecentlyViewedFragment()
+            }
         }else{
-            fragment as CartMainFragment
+            when (tagArrayIndex) {
+                0 -> fragment as CartMainFragment
+                1 -> fragment as CartDeliveryCompleteFragment
+                else -> fragment as RecentlyViewedFragment
+            }
         }
         supportFragmentManager.commit {
-            replace(R.id.cart_fcv, fragment, "CartMainFragment")
+            replace(R.id.cart_fcv, fragment, fragmentTagArray[tagArrayIndex])
         }
     }
 
@@ -50,5 +64,10 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart, "
                 finish()
             }
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        cartViewModel.updateAllCartItemChanged()
     }
 }

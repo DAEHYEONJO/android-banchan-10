@@ -56,37 +56,7 @@ class OrderViewModel @Inject constructor(
         orderList.forEach {
             itemPrice += it.sPrice * it.amount
         }
-        selectedOrderInfo.value = UiOrderInfo(itemPrice, deliveryFee, itemPrice + deliveryFee)
-    }
-
-    fun tempInsertOrderInfo() { // 지울 예정
-        viewModelScope.launch {
-            val currentTime = System.currentTimeMillis()
-            runCatching {
-                // insertOrderInfoUseCase 활용해서 테스트 데이터 넣기
-                insertOrderInfoUseCase(
-                    OrderInfo(
-                        hash = "HBDEF",
-                        timeStamp = currentTime,
-                        amount = 2,
-                        isDelivering = false
-                    )
-                )
-
-                insertOrderInfoUseCase(
-                    OrderInfo(
-                        hash = "HF778",
-                        timeStamp = currentTime,
-                        amount = 2,
-                        isDelivering = false
-                    )
-                )
-            }.onSuccess {
-                Log.e(TAG, "temp order info insert success")
-            }.onFailure {
-                Log.e(TAG, "temp order info insert error")
-            }
-        }
+        selectedOrderInfo.value = UiOrderInfo(itemPrice, orderList.first().deliveryPrice, itemPrice + deliveryFee)
     }
 
     fun getAllOrderList() {

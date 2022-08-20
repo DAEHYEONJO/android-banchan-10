@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.data.local.model.join.Order
 import com.woowahan.android10.deliverbanchan.databinding.ItemOrderDetailBinding
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
 
 class OrderDetailAdapter : ListAdapter<Order, OrderDetailAdapter.OrderDetailViewHolder>(diffUtil) {
     companion object {
@@ -33,7 +35,11 @@ class OrderDetailAdapter : ListAdapter<Order, OrderDetailAdapter.OrderDetailView
         RecyclerView.ViewHolder(binding.root) {
         fun bind(order: Order, position: Int) {
             binding.order = order
-            binding.orderDetailViewBottom.isVisible = position == currentList.size - 1
+            if (adapterPosition == currentList.size - 1){
+                binding.orderDetailViewBottom.toVisible()
+            }else{
+                binding.orderDetailViewBottom.toGone()
+            }
         }
     }
 

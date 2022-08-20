@@ -50,7 +50,7 @@ class OrderListFragment :
         binding.orderRv.apply {
             adapter = orderListAdapter
             layoutManager = LinearLayoutManager(requireContext())
-            addItemDecoration(OrderListVerticalDecoration())
+            addItemDecoration(OrderListVerticalDecoration(requireContext()))
         }
     }
 

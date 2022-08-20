@@ -13,14 +13,12 @@ import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.OrderInfo
 import com.woowahan.android10.deliverbanchan.di.IoDispatcher
 import com.woowahan.android10.deliverbanchan.domain.model.UiCartJoinItem
+import com.woowahan.android10.deliverbanchan.domain.model.UiOrderInfo
 import com.woowahan.android10.deliverbanchan.domain.model.UiRecentlyJoinItem
-import com.woowahan.android10.deliverbanchan.domain.repository.local.CartRepository
-import com.woowahan.android10.deliverbanchan.domain.usecase.DeleteCartInfoByHashUseCase
-import com.woowahan.android10.deliverbanchan.domain.usecase.GetJoinUseCase
-import com.woowahan.android10.deliverbanchan.domain.usecase.InsertCartInfoUseCase
-import com.woowahan.android10.deliverbanchan.domain.usecase.InsertOrderInfoUseCase
+import com.woowahan.android10.deliverbanchan.domain.usecase.*
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.TempOrder
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartBottomBody
+import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartCompleteHeader
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartHeader
 import com.woowahan.android10.deliverbanchan.presentation.state.UiLocalState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,8 +31,10 @@ class CartViewModel @Inject constructor(
     private val getJoinUseCase: GetJoinUseCase,
     private val deleteCartInfoByHashUseCase: DeleteCartInfoByHashUseCase,
     private val insertOrderInfoUseCase: InsertOrderInfoUseCase,
-    private val cartRepository: CartRepository,
-    @IoDispatcher private val dispatcher: CoroutineDispatcher,
+    private val insertAndDeleteAllCartUseCase: InsertAndDeleteAllCartUseCase,
+    private val deleteCartInfoByHashListUseCase: DeleteCartInfoByHashListUseCase,
+    private val insertVarArgOrderInfoUseCase: InsertVarArgOrderInfoUseCase,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
     application: Application
 ) : ViewModel() {
 
@@ -42,6 +42,7 @@ class CartViewModel @Inject constructor(
         const val TAG = "CartViewModel"
     }
 
+    val fragmentArrayIndex = MutableLiveData(0)
     private val workManager = WorkManager.getInstance(application)
 
     val appBarTitle = MutableLiveData("")
@@ -79,6 +80,15 @@ class CartViewModel @Inject constructor(
     private val _selectedCartItem = mutableSetOf<TempOrder>()
 
     private val _toBeDeletedCartItem = mutableSetOf<String>()
+
+    private val _orderCompleteTopItem = MutableLiveData<UiCartCompleteHeader>()
+    val orderCompleteTopItem: LiveData<UiCartCompleteHeader> get() = _orderCompleteTopItem
+
+    private val _orderCompleteBodyItem = MutableLiveData<List<UiCartJoinItem>>(emptyList())
+    val orderCompleteBodyItem: LiveData<List<UiCartJoinItem>> get() = _orderCompleteBodyItem
+
+    private val _orderCompleteFooterItem = MutableLiveData<UiOrderInfo>()
+    val orderCompleteFooterItem: LiveData<UiOrderInfo> get() = _orderCompleteFooterItem
 
 
     init {
@@ -139,7 +149,12 @@ class CartViewModel @Inject constructor(
         _selectedCartItem.clear()
         val checkedUiJoinCartItem = uiCartJoinItemList.filter { it.checked }
         checkedUiJoinCartItem.forEach { checkedUiCartJoinItem ->
-            _selectedCartItem.add(TempOrder(checkedUiCartJoinItem.hash, checkedUiCartJoinItem.amount))
+            _selectedCartItem.add(
+                TempOrder(
+                    checkedUiCartJoinItem.hash,
+                    checkedUiCartJoinItem.amount
+                )
+            )
             _itemCartBottomBodyProductTotalPrice += checkedUiCartJoinItem.totalPrice
         }
         if (checkedUiJoinCartItem.size == uiCartJoinItemList.size) {
@@ -215,7 +230,7 @@ class CartViewModel @Inject constructor(
     fun deleteUiCartItemByHash(completion: (complete: Boolean) -> Unit) {
         val success = _uiCartJoinArrayList.removeAll(
             _uiCartJoinArrayList.filter {
-                _selectedCartItem.contains(TempOrder(it.hash,it.amount))
+                _selectedCartItem.contains(TempOrder(it.hash, it.amount))
             }.toSet()
         )
         _toBeDeletedCartItem.addAll(_selectedCartItem.map { it.hash })
@@ -230,41 +245,60 @@ class CartViewModel @Inject constructor(
         }
     }
 
-    fun insertOrderInfo() = CoroutineScope(dispatcher).launch {
-        launch {
-            val timeStamp = System.currentTimeMillis()
-            _selectedCartItem.forEach { tempOrder ->
-                insertOrderInfoUseCase(
-                    OrderInfo(
-                        tempOrder.hash,
-                        timeStamp,
-                        tempOrder.amount,
-                        true
-                    )
-                )
-            }
+    fun setOrderCompleteCartItem() {
+        // 주문 완료 화면에 대한 리스트 세팅
+        val tempHashList = _selectedCartItem.map { it.hash }.toList()
+        _orderCompleteBodyItem.value =
+            _uiCartJoinArrayList.filter { tempHashList.contains(it.hash) }.toList()
+        var priceTotal = 0
+        val deliveryPrice = _itemCartBottomBodyData.value!!.deliveryPrice
+        _orderCompleteBodyItem.value!!.forEach { uiCartJoinItem ->
+            priceTotal += uiCartJoinItem.sPrice * uiCartJoinItem.amount
         }
+        val totalPrice = priceTotal + deliveryPrice
+        _orderCompleteTopItem.value = UiCartCompleteHeader(
+            orderTimeStamp = System.currentTimeMillis(),
+            orderItemCount = _orderCompleteBodyItem.value!!.size
+        )
+        _orderCompleteFooterItem.value = UiOrderInfo(
+            itemPrice = priceTotal,
+            deliveryFee = deliveryPrice,
+            totalPrice = totalPrice
+        )
+        orderDetailMode.value = true
+        insertOrderInfoDeleteCartInfo()
+    }
+
+    private fun insertOrderInfoDeleteCartInfo() = CoroutineScope(dispatcher).launch {
         launch {
-            _selectedCartItem.forEach { tempOrder ->
-                Log.e(TAG, "deleteQuery: delete hash ${tempOrder.hash} Thread: ${Thread.currentThread().name}")
-                try {
-                    deleteCartInfoByHashUseCase(tempOrder.hash)
-                } catch (e: CancellationException) {
-                    Log.e(TAG, "deleteQuery Delete: $e")
-                }
+            withContext(viewModelScope.coroutineContext) {
+                fragmentArrayIndex.value = 1
             }
+            val timeStamp = System.currentTimeMillis()
+            insertVarArgOrderInfoUseCase(
+                _selectedCartItem.map { tempOrder ->
+                    OrderInfo(
+                        hash = tempOrder.hash,
+                        timeStamp = timeStamp,
+                        amount = tempOrder.amount,
+                        isDelivering = true,
+                        deliveryPrice = _itemCartBottomBodyData.value!!.deliveryPrice
+                    )
+                }
+            )
+            deleteCartInfoByHashListUseCase(_selectedCartItem.map { it.hash }.toList())
         }
     }
 
     fun updateAllCartItemChanged() = CoroutineScope(dispatcher).launch {
-        cartRepository.insertAndDeleteAllItems(
+        insertAndDeleteAllCartUseCase(
             _uiCartJoinList.value!!.map {
                 CartInfo(
                     it.hash,
                     it.checked,
                     it.amount
                 )
-            }.toList(),  _toBeDeletedCartItem.toList()
+            }.toList(), _toBeDeletedCartItem.toList()
         )
     }
 
