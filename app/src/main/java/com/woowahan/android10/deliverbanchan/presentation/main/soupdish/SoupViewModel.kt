@@ -42,11 +42,11 @@ class SoupViewModel @Inject constructor(
     private fun setSoupDishCartInserted() {
         // cart flow collect 시 , 장바구니 insert 여부 확인함
         viewModelScope.launch {
-            getAllCartInfoSetUseCase().collect { cartInfoHashMap ->
+            getAllCartInfoSetUseCase().collect { cartInfoHashSet ->
                 if (_soupState.value is UiState.Success){
                     val tempList = mutableListOf<UiDishItem>()
                     (_soupState.value as UiState.Success).uiDishItems.forEach {
-                        tempList.add(it.copy(isInserted = cartInfoHashMap.contains(it.hash)))
+                        tempList.add(it.copy(isInserted = cartInfoHashSet.contains(it.hash)))
                     }
                     _soupState.value = UiState.Success(tempList)
                 }
