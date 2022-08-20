@@ -1,6 +1,6 @@
 package com.woowahan.android10.deliverbanchan.domain.model
 
-data class UiRecentlyJoinItem(
+data class UiRecentJoinItem(
     val hash: String,
     val title: String,
     val image: String,
@@ -10,7 +10,7 @@ data class UiRecentlyJoinItem(
     val isInserted: Boolean
 ) {
     companion object{
-        fun emptyItem() = UiRecentlyJoinItem(
+        fun emptyItem() = UiRecentJoinItem(
              hash = "",
              title = "",
              image = "",

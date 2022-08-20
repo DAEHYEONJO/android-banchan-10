@@ -3,6 +3,7 @@ package com.woowahan.android10.deliverbanchan.data.local.model.join
 import androidx.room.ColumnInfo
 
 data class RecentViewed(
+    val _id: Int,
     val hash: String,
     val title: String,
     val image: String,

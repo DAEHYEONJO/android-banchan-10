@@ -1,16 +1,16 @@
 package com.woowahan.android10.deliverbanchan.domain.usecase
 
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.RecentViewedInfo
-import com.woowahan.android10.deliverbanchan.domain.repository.local.RecentlyViewedRepository
+import com.woowahan.android10.deliverbanchan.domain.repository.local.RecentViewedRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class GetAllRecentlyViewedInfoUseCase @Inject constructor(
-    private val recentlyViewedRepository: RecentlyViewedRepository
+class GetAllRecentViewedInfoUseCase @Inject constructor(
+    private val recentViewedRepository: RecentViewedRepository
 ) {
     operator fun invoke(): Flow<List<RecentViewedInfo>> {
-         return recentlyViewedRepository.getAllRecentlyViewedInfo()
+         return recentViewedRepository.getAllRecentViewedInfo()
      }
 }

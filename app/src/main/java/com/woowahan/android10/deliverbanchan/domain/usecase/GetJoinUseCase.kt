@@ -1,10 +1,10 @@
 package com.woowahan.android10.deliverbanchan.domain.usecase
 
 import com.woowahan.android10.deliverbanchan.domain.model.UiCartJoinItem
-import com.woowahan.android10.deliverbanchan.domain.model.UiRecentlyJoinItem
+import com.woowahan.android10.deliverbanchan.domain.model.UiRecentJoinItem
 import com.woowahan.android10.deliverbanchan.domain.repository.local.CartRepository
 import com.woowahan.android10.deliverbanchan.domain.repository.local.OrderRepository
-import com.woowahan.android10.deliverbanchan.domain.repository.local.RecentlyViewedRepository
+import com.woowahan.android10.deliverbanchan.domain.repository.local.RecentViewedRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -14,7 +14,7 @@ import javax.inject.Singleton
 class GetJoinUseCase @Inject constructor(
     private val cartRepository: CartRepository,
     private val orderRepository: OrderRepository,
-    private val recentlyRepository: RecentlyViewedRepository
+    private val recentRepository: RecentViewedRepository
 ) {
     fun getOrderJoinList() = orderRepository.getAllOrderJoinList()
 
@@ -38,12 +38,12 @@ class GetJoinUseCase @Inject constructor(
         }
     }
 
-    suspend fun getRecentlyJoinList(): Flow<List<UiRecentlyJoinItem>> {
-        return recentlyRepository.getAllRecentlyJoinList().map { recentlyViewedList ->
+    suspend fun getRecentlyJoinList(): Flow<List<UiRecentJoinItem>> {
+        return recentRepository.getAllRecentJoinList().map { recentlyViewedList ->
             recentlyViewedList.map { recentlyViewed ->
                 with(recentlyViewed) {
                     val inInserted = cartRepository.isExistCartInfo(hash)
-                    UiRecentlyJoinItem(
+                    UiRecentJoinItem(
                         hash = hash,
                         title = title,
                         image = image,

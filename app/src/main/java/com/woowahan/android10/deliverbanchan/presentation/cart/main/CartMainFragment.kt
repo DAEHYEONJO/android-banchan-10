@@ -8,16 +8,15 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ConcatAdapter
 import com.woowahan.android10.deliverbanchan.R
-import com.woowahan.android10.deliverbanchan.data.local.model.join.Cart
 import com.woowahan.android10.deliverbanchan.databinding.FragmentCartMainBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiCartJoinItem
-import com.woowahan.android10.deliverbanchan.domain.model.UiRecentlyJoinItem
+import com.woowahan.android10.deliverbanchan.domain.model.UiRecentJoinItem
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
 import com.woowahan.android10.deliverbanchan.presentation.cart.CartActivity
 import com.woowahan.android10.deliverbanchan.presentation.cart.CartViewModel
 import com.woowahan.android10.deliverbanchan.presentation.cart.adapter.main.CartDishTopBodyAdapter
 import com.woowahan.android10.deliverbanchan.presentation.cart.adapter.main.CartOrderInfoBottomBodyAdapter
-import com.woowahan.android10.deliverbanchan.presentation.cart.adapter.main.CartRecentlyViewedFooterAdapter
+import com.woowahan.android10.deliverbanchan.presentation.cart.adapter.main.CartRecentViewedFooterAdapter
 import com.woowahan.android10.deliverbanchan.presentation.cart.adapter.main.CartSelectHeaderAdapter
 import com.woowahan.android10.deliverbanchan.presentation.cart.complete.CartDeliveryCompleteFragment
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
@@ -39,13 +38,13 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
     @Inject
     lateinit var cartBottomBodyAdapter: CartOrderInfoBottomBodyAdapter
     @Inject
-    lateinit var cartRecentlyViewedFooterAdapter: CartRecentlyViewedFooterAdapter
+    lateinit var cartRecentViewedFooterAdapter: CartRecentViewedFooterAdapter
     private val concatAdapter: ConcatAdapter by lazy {
         ConcatAdapter(
             cartHeaderAdapter,
             cartTopBodyAdapter,
             cartBottomBodyAdapter,
-            cartRecentlyViewedFooterAdapter
+            cartRecentViewedFooterAdapter
         )
     }
     private val cartViewModel: CartViewModel by activityViewModels()
@@ -107,7 +106,7 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
             }.launchIn(lifecycleScope)
 
             allRecentlyJoinState.flowWithLifecycle(lifecycle).onEach { uiLocalState ->
-                handleState(cartRecentlyViewedFooterAdapter, uiLocalState)
+                handleState(cartRecentViewedFooterAdapter, uiLocalState)
             }.launchIn(lifecycleScope)
 
             itemCartHeaderData.observe(viewLifecycleOwner) { uiCartHeader ->
@@ -141,9 +140,9 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
                     is CartDishTopBodyAdapter -> {
                         adapter.submitList(uiLocalState.uiDishItems as List<UiCartJoinItem>)
                     }
-                    is CartRecentlyViewedFooterAdapter -> {
+                    is CartRecentViewedFooterAdapter -> {
                         with(adapter) {
-                            uiRecentlyJoinList = uiLocalState.uiDishItems as List<UiRecentlyJoinItem>
+                            uiRecentJoinList = uiLocalState.uiDishItems as List<UiRecentJoinItem>
                             notifyDataSetChanged()
                         }
                     }

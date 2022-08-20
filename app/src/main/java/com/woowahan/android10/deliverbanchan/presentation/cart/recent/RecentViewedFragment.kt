@@ -1,15 +1,15 @@
-package com.woowahan.android10.deliverbanchan.presentation.cart.recently
+package com.woowahan.android10.deliverbanchan.presentation.cart.recent
 
 import android.os.Bundle
 import android.view.View
 import com.woowahan.android10.deliverbanchan.R
-import com.woowahan.android10.deliverbanchan.databinding.FragmentRecentlyViewedBinding
+import com.woowahan.android10.deliverbanchan.databinding.FragmentRecentViewedBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class RecentlyViewedFragment : BaseFragment<FragmentRecentlyViewedBinding>(
-    R.layout.fragment_recently_viewed,
+class RecentViewedFragment : BaseFragment<FragmentRecentViewedBinding>(
+    R.layout.fragment_recent_viewed,
     "RecentlyViewedFragment"
 ) {
 

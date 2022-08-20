@@ -1,29 +1,33 @@
 package com.woowahan.android10.deliverbanchan.data.local.repository
 
 import androidx.annotation.WorkerThread
+import androidx.paging.PagingSource
 import com.woowahan.android10.deliverbanchan.data.local.dao.RecentViewedDao
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.RecentViewedInfo
 import com.woowahan.android10.deliverbanchan.data.local.model.join.RecentViewed
-import com.woowahan.android10.deliverbanchan.domain.repository.local.RecentlyViewedRepository
+import com.woowahan.android10.deliverbanchan.domain.repository.local.RecentViewedRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class RecentViewedRepositoryImpl @Inject constructor(
     private val recentlyViewedDao: RecentViewedDao
-) : RecentlyViewedRepository {
+) : RecentViewedRepository {
 
-    override fun getAllRecentlyViewedInfo(): Flow<List<RecentViewedInfo>> =
+    override fun getAllRecentViewedInfo(): Flow<List<RecentViewedInfo>> =
         recentlyViewedDao.getAllRecentlyViewedInfo()
 
     @WorkerThread
-    override suspend fun insertRecentlyViewedInfo(recentViewedInfo: RecentViewedInfo) =
-        recentlyViewedDao.insertRecentlyViewedInfo(recentViewedInfo)
+    override suspend fun insertRecentViewedInfo(recentViewedInfo: RecentViewedInfo) =
+        recentlyViewedDao.insertRecentViewedInfo(recentViewedInfo)
 
     @WorkerThread
-    override suspend fun deleteAllRecentlyViewedInfo() =
+    override suspend fun deleteAllRecentViewedInfo() =
         recentlyViewedDao.deleteAllRecentlyViewedInfo()
 
-    override fun getAllRecentlyJoinList(): Flow<List<RecentViewed>> =
+    override fun getAllRecentJoinList(): Flow<List<RecentViewed>> =
         recentlyViewedDao.getAllRecentlyJoinList()
+
+    override fun getAllRecentJoinPaging(): PagingSource<Int, RecentViewed> =
+        recentlyViewedDao.getAllRecentlyJoinPaging()
 
 }

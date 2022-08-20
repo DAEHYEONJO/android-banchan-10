@@ -6,7 +6,7 @@
     <data>
         <variable
             name="item"
-            type="com.woowahan.android10.deliverbanchan.domain.model.UiRecentlyJoinItem" />
+            type="com.woowahan.android10.deliverbanchan.domain.model.UiRecentJoinItem" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -16,6 +16,7 @@ object Versions {
     const val LIFECYCLE_KTX = "2.5.0"
     const val ROOM = "2.4.3"
     const val PAGING_VERSION = "3.1.1"
+    const val ROOM_PAGING_VERSION = "2.5.0-alpha02"
 
     const val HILT = "2.38.1"
     const val MATERIAL = "1.6.1"
@@ -75,6 +76,7 @@ object AndroidX {
     const val PAGING_RUNTIME          = "androidx.paging:paging-runtime:${Versions.PAGING_VERSION}"
     const val PAGING_RUNTIME_KTX      = "androidx.paging:paging-runtime-ktx:${Versions.PAGING_VERSION}"
     const val PAGING_COMMON           = "androidx.paging:paging-common:${Versions.PAGING_VERSION}"
+    const val ROOM_PAGING             = "androidx.room:room-paging:${Versions.ROOM}"
 }
 
 object Google {
