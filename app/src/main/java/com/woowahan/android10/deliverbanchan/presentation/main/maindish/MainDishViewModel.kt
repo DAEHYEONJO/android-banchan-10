@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.usecase.CreateUiDishItemsUseCase
+import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllCartInfoHashSetUseCase
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
@@ -14,13 +15,32 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainDishViewModel @Inject constructor(
-    private val createUiDishItemsUseCase: CreateUiDishItemsUseCase
+    private val createUiDishItemsUseCase: CreateUiDishItemsUseCase,
+    private val getAllCartInfoSetUseCase: GetAllCartInfoHashSetUseCase
 ) : ViewModel() {
 
     private val _mainDishState = MutableStateFlow<UiState>(UiState.Init)
     val mainDishState: StateFlow<UiState> get() = _mainDishState
 
     var mainDishList = listOf<UiDishItem>()
+
+    init {
+        setMainDishCartInserted()
+    }
+
+    private fun setMainDishCartInserted() { // 카트 DB 변화 시 자동 감지
+        viewModelScope.launch {
+            getAllCartInfoSetUseCase().collect { cartInfoHashSet ->
+                if (_mainDishState.value is UiState.Success) {
+                    val tempList = mutableListOf<UiDishItem>()
+                    (_mainDishState.value as UiState.Success).uiDishItems.forEach {
+                        tempList.add(it.copy(isInserted = cartInfoHashSet.contains(it.hash)))
+                    }
+                    _mainDishState.value = UiState.Success(tempList)
+                }
+            }
+        }
+    }
 
     fun getMainDishList() {
         viewModelScope.launch {
@@ -57,22 +77,4 @@ class MainDishViewModel @Inject constructor(
     private fun showToast(message: String) {
         _mainDishState.value = UiState.ShowToast(message)
     }
-
-    fun changeMainDishItemIsInserted(hash: String){
-        ((_mainDishState.value as UiState.Success).uiDishItems).let { uiDishList ->
-            val newList = mutableListOf<UiDishItem>().apply {
-                uiDishList.forEach { uiDishItem ->
-                    if (uiDishItem.hash == hash){
-                        add(uiDishItem.copy(isInserted = true))
-                    }else{
-                        add(uiDishItem)
-                    }
-                }
-            }
-            mainDishList = newList
-            _mainDishState.value = UiState.Success(newList)
-        }
-    }
-
-
 }

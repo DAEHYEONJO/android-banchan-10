@@ -81,7 +81,6 @@ class MainDishFragment :
                 cartBottomSheetFragment.setDialogDismissWhenInsertSuccessListener(object :
                     CartBottomSheetFragment.DialogDismissWhenInsertSuccessListener {
                     override fun dialogDismissWhenInsertSuccess(hash: String, title: String) {
-                        mainDishViewModel.changeMainDishItemIsInserted(hash)
                         val cartDialog = CartDialogFragment()
 
                         cartDialog.setTextClickListener(object :
