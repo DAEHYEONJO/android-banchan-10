@@ -28,7 +28,7 @@ class CartViewModel @Inject constructor(
     private val deleteCartInfoByHashUseCase: DeleteCartInfoByHashUseCase,
     private val insertOrderInfoUseCase: InsertOrderInfoUseCase,
     private val insertAndDeleteAllCartUseCase: InsertAndDeleteAllCartUseCase,
-    private val deleteVarArgByHashListUseCase: DeleteVarArgByHashListUseCase,
+    private val deleteCartInfoByHashListUseCase: DeleteCartInfoByHashListUseCase,
     private val insertVarArgOrderInfoUseCase: InsertVarArgOrderInfoUseCase,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
@@ -248,7 +248,7 @@ class CartViewModel @Inject constructor(
                     )
                 }
             )
-            deleteVarArgByHashListUseCase(_selectedCartItem.map { it.hash }.toList())
+            deleteCartInfoByHashListUseCase(_selectedCartItem.map { it.hash }.toList())
         }
     }
 

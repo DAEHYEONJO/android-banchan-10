@@ -15,7 +15,8 @@
         <ImageView
             android:id="@+id/cart_complete_body_item_iv"
             android:layout_width="@dimen/item_cart_iv_size_80dp"
-            android:layout_height="@dimen/item_cart_iv_size_80dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="1:1"
             android:background="@color/grey_scale_line"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"

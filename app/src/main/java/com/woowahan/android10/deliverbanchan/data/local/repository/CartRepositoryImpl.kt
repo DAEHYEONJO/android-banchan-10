@@ -51,9 +51,9 @@ class CartRepositoryImpl @Inject constructor(
         cartDao.insertAndDeleteAllItems(cartInfo, deleteHashes)
     }
 
-    override suspend fun deleteVarArgByHashList(deleteHashes: List<String>) {
+    override suspend fun deleteCartInfoByHashList(deleteHashes: List<String>) {
         Log.e("repo impl", "deleteVarArgByHashList: $deleteHashes", )
-        cartDao.deleteVarArgByHashList(deleteHashes)
+        cartDao.deleteCartInfoByHashList(deleteHashes)
     }
 
 

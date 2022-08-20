@@ -39,7 +39,7 @@ interface CartDao {
     suspend fun insertCartInfoVarArg(vararg cartInfo: CartInfo)
 
     @Transaction
-    suspend fun deleteVarArgByHashList(deleteHashes: List<String>){
+    suspend fun deleteCartInfoByHashList(deleteHashes: List<String>){
         deleteHashes.forEach { hash ->
             deleteCartInfo(hash)
         }

@@ -30,5 +30,5 @@ interface CartRepository {
     @WorkerThread
     suspend fun insertAndDeleteAllItems(cartInfo: List<CartInfo>, deleteHashes: List<String>)
     @WorkerThread
-    suspend fun deleteVarArgByHashList(deleteHashes: List<String>)
+    suspend fun deleteCartInfoByHashList(deleteHashes: List<String>)
 }

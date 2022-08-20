@@ -5,10 +5,10 @@ import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 
 @ActivityRetainedScoped
-class DeleteVarArgByHashListUseCase @Inject constructor(
+class DeleteCartInfoByHashListUseCase @Inject constructor(
     private val cartRepository: CartRepository
 ){
     suspend operator fun invoke(hashList: List<String>){
-        cartRepository.deleteVarArgByHashList(hashList)
+        cartRepository.deleteCartInfoByHashList(hashList)
     }
 }
