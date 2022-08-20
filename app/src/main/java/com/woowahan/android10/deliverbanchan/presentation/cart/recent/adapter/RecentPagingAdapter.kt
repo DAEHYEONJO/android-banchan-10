@@ -1,19 +1,19 @@
-package com.woowahan.android10.deliverbanchan.presentation.cart.adapter.recent
+package com.woowahan.android10.deliverbanchan.presentation.cart.recent.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.woowahan.android10.deliverbanchan.data.local.model.entity.RecentViewedInfo
-import com.woowahan.android10.deliverbanchan.data.local.model.join.RecentViewed
 import com.woowahan.android10.deliverbanchan.databinding.ItemRecentViewedBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiRecentJoinItem
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 
 @ActivityRetainedScoped
-class RecentPagingAdapter @Inject constructor(): PagingDataAdapter<UiRecentJoinItem, RecentPagingAdapter.ViewHolder>(diffUtil) {
+class RecentPagingAdapter @Inject constructor(): PagingDataAdapter<UiRecentJoinItem, RecentPagingAdapter.ViewHolder>(
+    diffUtil
+) {
 
     companion object{
         val diffUtil = object : DiffUtil.ItemCallback<UiRecentJoinItem>(){

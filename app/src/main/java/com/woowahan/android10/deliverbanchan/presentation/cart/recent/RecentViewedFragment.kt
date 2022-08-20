@@ -11,8 +11,8 @@ import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentRecentViewedBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
 import com.woowahan.android10.deliverbanchan.presentation.cart.CartViewModel
-import com.woowahan.android10.deliverbanchan.presentation.cart.adapter.recent.RecentPagingAdapter
-import com.woowahan.android10.deliverbanchan.presentation.cart.common.GridRecentDecorator
+import com.woowahan.android10.deliverbanchan.presentation.cart.recent.adapter.RecentPagingAdapter
+import com.woowahan.android10.deliverbanchan.presentation.common.decorator.GridSpanCountTwoDecorator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -60,7 +60,7 @@ class RecentViewedFragment : BaseFragment<FragmentRecentViewedBinding>(
                 }
             }
             if (itemDecorationCount == 0) {
-                addItemDecoration(GridRecentDecorator(requireContext()))
+                addItemDecoration(GridSpanCountTwoDecorator(requireContext()))
             }
         }
     }

@@ -1,7 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart.complete
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.ConcatAdapter
@@ -10,9 +9,9 @@ import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentCartDeliveryCompleteBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
 import com.woowahan.android10.deliverbanchan.presentation.cart.CartViewModel
-import com.woowahan.android10.deliverbanchan.presentation.cart.adapter.complete.CartDeliveryBodyAdapter
-import com.woowahan.android10.deliverbanchan.presentation.cart.adapter.complete.CartDeliveryFooterAdapter
-import com.woowahan.android10.deliverbanchan.presentation.cart.adapter.complete.CartDeliveryTopAdapter
+import com.woowahan.android10.deliverbanchan.presentation.cart.complete.adapter.CartDeliveryBodyAdapter
+import com.woowahan.android10.deliverbanchan.presentation.cart.complete.adapter.CartDeliveryFooterAdapter
+import com.woowahan.android10.deliverbanchan.presentation.cart.complete.adapter.CartDeliveryTopAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

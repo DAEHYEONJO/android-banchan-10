@@ -1,4 +1,4 @@
-package com.woowahan.android10.deliverbanchan.presentation.view
+package com.woowahan.android10.deliverbanchan.presentation.view.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -10,6 +10,7 @@ import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.ItemSortSpinnerDropDownBinding
 import com.woowahan.android10.deliverbanchan.databinding.ItemSortSpinnerSelectedBinding
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.dpToPx
+import com.woowahan.android10.deliverbanchan.presentation.view.SortSpinnerItem
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.FragmentScoped
 import javax.inject.Inject

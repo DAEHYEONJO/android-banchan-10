@@ -6,10 +6,10 @@ import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 
 @ActivityRetainedScoped
-class InsertAndDeleteAllCartUseCase @Inject constructor(
+class InsertAndDeleteCartItemsUseCase @Inject constructor(
     private val cartRepository: CartRepository
 ){
     suspend operator fun invoke(cartInfo: List<CartInfo>, deleteHashes: List<String>){
-        cartRepository.insertAndDeleteAllItems(cartInfo, deleteHashes)
+        cartRepository.insertAndDeleteCartItems(cartInfo, deleteHashes)
     }
 }

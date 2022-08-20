@@ -1,6 +1,5 @@
 package com.woowahan.android10.deliverbanchan.presentation.main.soupdish
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -13,14 +12,11 @@ import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentSoupdishBinding
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
-import com.woowahan.android10.deliverbanchan.presentation.cart.CartActivity
-import com.woowahan.android10.deliverbanchan.presentation.view.SortSpinnerAdapter
+import com.woowahan.android10.deliverbanchan.presentation.common.decorator.GridSpanCountTwoDecorator
+import com.woowahan.android10.deliverbanchan.presentation.view.adapter.SortSpinnerAdapter
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
-import com.woowahan.android10.deliverbanchan.presentation.detail.DetailActivity
-import com.woowahan.android10.deliverbanchan.presentation.dialogs.bottomsheet.CartBottomSheetFragment
-import com.woowahan.android10.deliverbanchan.presentation.dialogs.dialog.CartDialogFragment
 import com.woowahan.android10.deliverbanchan.presentation.main.common.MainGridAdapter
 import com.woowahan.android10.deliverbanchan.presentation.main.host.DishViewModel
 import com.woowahan.android10.deliverbanchan.presentation.view.SpinnerEventListener
@@ -36,6 +32,7 @@ class SoupDishFragment: BaseFragment<FragmentSoupdishBinding>(R.layout.fragment_
     private val soupViewModel: SoupViewModel by activityViewModels()
     @Inject lateinit var mainGridAdapter: MainGridAdapter
     @Inject lateinit var soupSpinnerAdapter: SortSpinnerAdapter
+    @Inject lateinit var gridSpanCountTwoDecorator: GridSpanCountTwoDecorator
     private val itemSelectedListener = object : AdapterView.OnItemSelectedListener{
         override fun onItemSelected(
             p0: AdapterView<*>?,
@@ -95,44 +92,11 @@ class SoupDishFragment: BaseFragment<FragmentSoupdishBinding>(R.layout.fragment_
 
     private fun initLayout() {
         with(binding){
-            soupDishRv.adapter = mainGridAdapter.apply {
-                cartIconClick = {
-                    val cartBottomSheetFragment = CartBottomSheetFragment()
-                    cartBottomSheetFragment.setDialogDismissWhenInsertSuccessListener(object: CartBottomSheetFragment.DialogDismissWhenInsertSuccessListener{
-                        override fun dialogDismissWhenInsertSuccess(hash: String, title: String) {
-                            //soupViewModel.changeSoupItemIsInserted(hash)
-                            val cartDialog = CartDialogFragment()
-                            cartDialog.setTextClickListener(object :
-                                CartDialogFragment.TextClickListener {
-                                override fun moveToCartTextClicked(hash: String, title: String) {
-                                    Log.e(
-                                        "SoupDishFragment",
-                                        "move to cart, hash : ${hash}, title : ${title}"
-                                    )
-                                    startActivity(Intent(requireActivity(), CartActivity::class.java))
-                                }
-                            })
-
-                            val bundle = Bundle()
-                            bundle.putString("hash", hash)
-                            bundle.putString("title", title)
-                            cartDialog.arguments = bundle
-                            cartDialog.show(childFragmentManager, "CartDialog")
-                            Log.e(TAG, "현재 선택된 상품명 : ${title}")
-                        }
-                    })
-                    val bundle = Bundle()
-                    bundle.putParcelable("UiDishItem", it)
-                    cartBottomSheetFragment.arguments = bundle
-                    cartBottomSheetFragment.show(childFragmentManager, "CartBottomSheet")
+            with(soupDishRv){
+                adapter = mainGridAdapter.apply {
+                    onDishItemClickListener = this@SoupDishFragment
                 }
-
-                itemClick = {
-
-                    val intent = Intent(requireContext(), DetailActivity::class.java)
-                    intent.putExtra("UiDishItem", it)
-                    startActivity(intent)
-                }
+                if (itemDecorationCount == 0) addItemDecoration(gridSpanCountTwoDecorator)
             }
             with(soupDishSp){
                 setWillNotDraw(false)

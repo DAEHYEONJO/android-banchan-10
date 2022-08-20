@@ -1,4 +1,4 @@
-package com.woowahan.android10.deliverbanchan.presentation.cart.adapter.main
+package com.woowahan.android10.deliverbanchan.presentation.cart.main.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.databinding.ItemCartRecentViewedFooterBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiRecentJoinItem
 import com.woowahan.android10.deliverbanchan.presentation.cart.common.GridItemDecorator
-import com.woowahan.android10.deliverbanchan.presentation.cart.recent.RecentViewedVerticalAdapter
+import com.woowahan.android10.deliverbanchan.presentation.cart.recent.adapter.RecentViewedVerticalAdapter
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 

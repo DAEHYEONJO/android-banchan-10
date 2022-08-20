@@ -54,7 +54,7 @@
             style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style" />
         <TextView
             android:id="@+id/item_recent_viewd_tv_sprice"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="@dimen/base_24dp"
             android:gravity="start|center"
             app:layout_constraintStart_toStartOf="@+id/item_recent_viewed_tv_title"
@@ -64,7 +64,7 @@
             style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style"/>
         <TextView
             android:id="@+id/item_recent_viewed_tv_nprice"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="@dimen/base_24dp"
             android:gravity="start|center"
             price="@{item.SPrice}"
