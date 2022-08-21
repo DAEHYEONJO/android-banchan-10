@@ -96,7 +96,7 @@ class SoupDishFragment: BaseFragment<FragmentSoupdishBinding>(R.layout.fragment_
                 adapter = mainGridAdapter.apply {
                     onDishItemClickListener = this@SoupDishFragment
                 }
-                if (itemDecorationCount == 0) addItemDecoration(gridSpanCountTwoDecorator)
+                //if (itemDecorationCount == 0) addItemDecoration(gridSpanCountTwoDecorator)
             }
             with(soupDishSp){
                 setWillNotDraw(false)

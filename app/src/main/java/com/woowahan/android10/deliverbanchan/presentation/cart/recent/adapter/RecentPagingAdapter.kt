@@ -1,5 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart.recent.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
@@ -16,9 +17,14 @@ class RecentPagingAdapter @Inject constructor(): PagingDataAdapter<UiDishItem, R
     diffUtil
 ) {
 
+    interface OnRecentItemClickListener: OnDishItemClickListener{
+        fun onClickDish(uiDishItem: UiDishItem, position: Int)
+    }
     var onDishItemClickListener: OnDishItemClickListener? = null
 
+
     companion object{
+        const val TAG = "RecentPagingAdapter"
         val diffUtil = object : DiffUtil.ItemCallback<UiDishItem>(){
             override fun areItemsTheSame(oldItem: UiDishItem, newItem: UiDishItem): Boolean {
                 return oldItem.hash == newItem.hash
@@ -38,6 +44,8 @@ class RecentPagingAdapter @Inject constructor(): PagingDataAdapter<UiDishItem, R
                     onDishItemClickListener?.onClickDish(uiDishItem)
                 }
                 itemRecentViewedIbCart.setOnClickListener {
+                    Log.e(TAG, "RecentPagingAdapter: $adapterPosition", )
+                    getItem(adapterPosition)?.isInserted = true
                     onDishItemClickListener?.onClickCartIcon(uiDishItem)
                 }
                 executePendingBindings()

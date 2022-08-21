@@ -46,7 +46,7 @@ abstract class BaseFragment<T : ViewDataBinding>(
                             startActivity(Intent(requireActivity(), CartActivity::class.java))
                         }
                     })
-                    arguments= Bundle().apply {
+                    arguments = Bundle().apply {
                         putString("hash", hash)
                         putString("title", title)
                     }

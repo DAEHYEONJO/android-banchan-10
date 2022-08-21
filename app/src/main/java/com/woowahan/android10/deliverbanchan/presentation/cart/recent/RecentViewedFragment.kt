@@ -25,6 +25,8 @@ class RecentViewedFragment : BaseFragment<FragmentRecentViewedBinding>(
 ) {
     @Inject
     lateinit var recentPagingDataAdapter: RecentPagingAdapter
+    @Inject
+    lateinit var gridSpanCountTwoDecorator: GridSpanCountTwoDecorator
     private val cartViewModel: CartViewModel by activityViewModels()
     private val recentViewModel: RecentViewModel by activityViewModels()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -36,11 +38,16 @@ class RecentViewedFragment : BaseFragment<FragmentRecentViewedBinding>(
 
     private fun initObserver() {
         recentViewModel.recentJoinItem.observe(viewLifecycleOwner) {
-            lifecycleScope.launch {
+            lifecycleScope.launchWhenResumed {
+                Log.e(TAG, "Paging Data: ${it}", )
                 recentPagingDataAdapter.submitData(it)
             }
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
     }
 
     private fun initRecyclerView() {
@@ -61,7 +68,7 @@ class RecentViewedFragment : BaseFragment<FragmentRecentViewedBinding>(
                 }
             }
             if (itemDecorationCount == 0) {
-                addItemDecoration(GridSpanCountTwoDecorator(requireContext()))
+                addItemDecoration(gridSpanCountTwoDecorator)
             }
         }
     }
