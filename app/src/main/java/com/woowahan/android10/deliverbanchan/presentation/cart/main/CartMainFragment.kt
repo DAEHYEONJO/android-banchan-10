@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.ConcatAdapter
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentCartMainBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiCartJoinItem
-import com.woowahan.android10.deliverbanchan.domain.model.UiRecentJoinItem
+import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
 import com.woowahan.android10.deliverbanchan.presentation.cart.CartViewModel
 import com.woowahan.android10.deliverbanchan.presentation.cart.main.adapter.CartDishTopBodyAdapter
@@ -141,7 +141,7 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
                     }
                     is CartRecentViewedFooterAdapter -> {
                         with(adapter) {
-                            uiRecentJoinList = uiLocalState.uiDishItems as List<UiRecentJoinItem>
+                            uiRecentJoinList = uiLocalState.uiDishItems as List<UiDishItem>
                             notifyDataSetChanged()
                         }
                     }

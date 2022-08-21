@@ -6,30 +6,30 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.databinding.ItemRecentViewedBinding
-import com.woowahan.android10.deliverbanchan.domain.model.UiRecentJoinItem
+import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 
 @ActivityRetainedScoped
-class RecentPagingAdapter @Inject constructor(): PagingDataAdapter<UiRecentJoinItem, RecentPagingAdapter.ViewHolder>(
+class RecentPagingAdapter @Inject constructor(): PagingDataAdapter<UiDishItem, RecentPagingAdapter.ViewHolder>(
     diffUtil
 ) {
 
     companion object{
-        val diffUtil = object : DiffUtil.ItemCallback<UiRecentJoinItem>(){
-            override fun areItemsTheSame(oldItem: UiRecentJoinItem, newItem: UiRecentJoinItem): Boolean {
+        val diffUtil = object : DiffUtil.ItemCallback<UiDishItem>(){
+            override fun areItemsTheSame(oldItem: UiDishItem, newItem: UiDishItem): Boolean {
                 return oldItem.hash == newItem.hash
             }
 
-            override fun areContentsTheSame(oldItem: UiRecentJoinItem, newItem: UiRecentJoinItem): Boolean {
+            override fun areContentsTheSame(oldItem: UiDishItem, newItem: UiDishItem): Boolean {
                 return oldItem == newItem
             }
         }
     }
 
     class ViewHolder(val binding: ItemRecentViewedBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bind(uiRecentJoinItem: UiRecentJoinItem){
-            binding.item = uiRecentJoinItem
+        fun bind(uiDishItem: UiDishItem){
+            binding.item = uiDishItem
             binding.executePendingBindings()
         }
     }

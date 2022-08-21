@@ -58,7 +58,7 @@ class DetailViewModel @Inject constructor(
                 with(dishItem) {
                     insertRecentUseCase(
                         LocalDish(
-                            hash, title, image, nPrice, sPrice
+                            hash, title, image, description, nPrice, sPrice
                         ),
                         RecentViewedInfo(
                             hash = hash, timeStamp = System.currentTimeMillis()

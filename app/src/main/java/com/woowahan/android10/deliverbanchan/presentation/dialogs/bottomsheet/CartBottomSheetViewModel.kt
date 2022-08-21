@@ -73,6 +73,7 @@ class CartBottomSheetViewModel @Inject constructor(
                             hash = hash,
                             title = title,
                             image = image,
+                            description = description,
                             nPrice = nPrice,
                             sPrice = sPrice
                         )
