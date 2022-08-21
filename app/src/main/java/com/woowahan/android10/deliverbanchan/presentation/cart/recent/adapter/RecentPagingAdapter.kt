@@ -27,7 +27,7 @@ class RecentPagingAdapter @Inject constructor(): PagingDataAdapter<UiDishItem, R
         const val TAG = "RecentPagingAdapter"
         val diffUtil = object : DiffUtil.ItemCallback<UiDishItem>(){
             override fun areItemsTheSame(oldItem: UiDishItem, newItem: UiDishItem): Boolean {
-                return oldItem.hash == newItem.hash
+                return oldItem._id == newItem._id
             }
 
             override fun areContentsTheSame(oldItem: UiDishItem, newItem: UiDishItem): Boolean {
@@ -39,12 +39,13 @@ class RecentPagingAdapter @Inject constructor(): PagingDataAdapter<UiDishItem, R
     inner class ViewHolder(val binding: ItemRecentViewedBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(uiDishItem: UiDishItem){
             with(binding){
+                Log.e(TAG, "RecentPagingAdapter: $adapterPosition", )
                 item = uiDishItem
                 itemRecentViewedRoot.setOnClickListener {
                     onDishItemClickListener?.onClickDish(uiDishItem)
                 }
                 itemRecentViewedIbCart.setOnClickListener {
-                    Log.e(TAG, "RecentPagingAdapter: $adapterPosition", )
+
                     getItem(adapterPosition)?.isInserted = true
                     onDishItemClickListener?.onClickCartIcon(uiDishItem)
                 }
@@ -54,7 +55,11 @@ class RecentPagingAdapter @Inject constructor(): PagingDataAdapter<UiDishItem, R
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        getItem(position)?.let { holder.bind(it) }
+        Log.e(TAG, "onBindViewHolder: pos: $position", )
+        getItem(position)?.let {
+            Log.e(TAG, "onBindViewHolder: pos: $position $it", )
+            holder.bind(it)
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

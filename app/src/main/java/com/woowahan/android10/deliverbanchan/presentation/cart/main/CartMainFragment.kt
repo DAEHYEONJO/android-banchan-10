@@ -141,6 +141,7 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
                     }
                     is CartRecentViewedFooterAdapter -> {
                         with(adapter) {
+                            recentOnDishItemClickListener = this@CartMainFragment
                             uiRecentJoinList = uiLocalState.uiDishItems as List<UiDishItem>
                             notifyDataSetChanged()
                         }

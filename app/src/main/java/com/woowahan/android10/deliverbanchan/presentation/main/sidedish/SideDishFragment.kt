@@ -48,7 +48,6 @@ class SideDishFragment :
                     if (curSideDishSpinnerPosition.value != preSideDishSpinnerPosition.value) {
                         sortSpinnerList[preSideDishSpinnerPosition.value!!].selected = false
                     }
-                    notifyDataSetChanged()
                 }
             }
         }
@@ -95,7 +94,7 @@ class SideDishFragment :
                 adapter = sideDishAdapter.apply {
                     onDishItemClickListener = this@SideDishFragment
                 }
-                //if (itemDecorationCount == 0) addItemDecoration(gridSpanCountTwoDecorator)
+                if (itemDecorationCount == 0) addItemDecoration(gridSpanCountTwoDecorator)
             }
             with(sideDishSp) {
                 setWillNotDraw(false)

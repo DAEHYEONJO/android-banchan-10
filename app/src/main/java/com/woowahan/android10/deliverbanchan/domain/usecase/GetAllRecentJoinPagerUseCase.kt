@@ -24,6 +24,7 @@ class GetAllRecentJoinPagerUseCase @Inject constructor(
                 withContext(dispatcher){
                     val isInserted = isExistCartInfoUseCase(recentViewed.hash)
                     UiDishItem(
+                        _id = recentViewed._id,
                         hash = recentViewed.hash,
                         title = recentViewed.title,
                         image = recentViewed.image,

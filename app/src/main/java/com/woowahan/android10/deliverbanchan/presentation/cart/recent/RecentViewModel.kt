@@ -1,5 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart.recent
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,17 +19,23 @@ class RecentViewModel @Inject constructor(
     private val getAllRecentJoinPagerUseCase: GetAllRecentJoinPagerUseCase
 ) : ViewModel() {
 
-    private val _recentJoinState = MutableLiveData<PagingData<UiDishItem>>()
-    val recentJoinItem: LiveData<PagingData<UiDishItem>> get() = _recentJoinState
-
+    private val _recentJoinState = MutableStateFlow<PagingData<UiDishItem>>(PagingData.empty())
+    val recentJoinItem: StateFlow<PagingData<UiDishItem>> get() = _recentJoinState
+    companion object{
+        const val TAG = "RecentViewModel"
+    }
     init {
         testPagingFlow()
     }
 
+//    fun getPagingFlow(): Flow<PagingData<UiDishItem>> {
+//        return getAllRecentJoinPagerUseCase().cachedIn(viewModelScope)
+//    }
     private fun testPagingFlow() {
         viewModelScope.launch {
             getAllRecentJoinPagerUseCase().cachedIn(viewModelScope)
                 .collectLatest { recentViewedPagingData ->
+                    Log.e(TAG, "testPagingFlow: $recentViewedPagingData", )
                     _recentJoinState.value = recentViewedPagingData
                 }
         }
