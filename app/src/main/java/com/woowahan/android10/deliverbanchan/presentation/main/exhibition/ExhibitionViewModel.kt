@@ -6,8 +6,8 @@ import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResu
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiExhibitionItem
 import com.woowahan.android10.deliverbanchan.domain.usecase.CreateUiExhibitionItemsUseCase
+import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllCartInfoHashSetUseCase
 import com.woowahan.android10.deliverbanchan.presentation.state.ExhibitionUiState
-import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -17,7 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ExhibitionViewModel @Inject constructor(
-    private val createUiExhibitionItemsUseCase: CreateUiExhibitionItemsUseCase
+    private val createUiExhibitionItemsUseCase: CreateUiExhibitionItemsUseCase,
+    private val getAllCartInfoSetUseCase: GetAllCartInfoHashSetUseCase
 ) : ViewModel() {
 
     private val _exhibitionState = MutableStateFlow<ExhibitionUiState>(ExhibitionUiState.Init)
@@ -27,6 +28,7 @@ class ExhibitionViewModel @Inject constructor(
 
     init {
         getExhibitionList()
+        setExhibitionCartInserted()
     }
 
     fun getExhibitionList() {
@@ -47,6 +49,25 @@ class ExhibitionViewModel @Inject constructor(
                         is BaseResult.Error -> _exhibitionState.value =
                             ExhibitionUiState.Error(result.errorCode)
                     }
+                }
+            }
+        }
+    }
+
+    private fun setExhibitionCartInserted() { // 카트 DB 변화 시 자동 감지
+        viewModelScope.launch {
+            getAllCartInfoSetUseCase().collect { cartInfoHashSet ->
+                if (_exhibitionState.value is ExhibitionUiState.Success) {
+                    val tempList = mutableListOf<UiExhibitionItem>()
+                    (_exhibitionState.value as ExhibitionUiState.Success).uiExhibitionItems.forEach { uiExhibitionDishItem ->
+                        val newUiDishItemList = mutableListOf<UiDishItem>().apply {
+                            uiExhibitionDishItem.uiDishItems.forEach { uiDishItem ->
+                                add(uiDishItem.copy(isInserted = cartInfoHashSet.contains(uiDishItem.hash)))
+                            }
+                        }
+                        tempList.add(uiExhibitionDishItem.copy(uiDishItems = newUiDishItemList))
+                    }
+                    _exhibitionState.value = ExhibitionUiState.Success(tempList)
                 }
             }
         }
