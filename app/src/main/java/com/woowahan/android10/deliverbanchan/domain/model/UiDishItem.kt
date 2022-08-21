@@ -13,5 +13,6 @@ data class UiDishItem(
     val sPrice: Int,
     val nPrice: Int = 0,
     val salePercentage: Int = 0,
-    val index: Int = 0
+    val index: Int = 0,
+    val timeStamp: Long = 0L
 ) : Parcelable

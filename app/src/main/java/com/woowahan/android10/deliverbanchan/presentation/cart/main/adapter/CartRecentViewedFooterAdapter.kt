@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.databinding.ItemCartRecentViewedFooterBinding
-import com.woowahan.android10.deliverbanchan.domain.model.UiRecentJoinItem
+import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.presentation.cart.common.GridItemDecorator
 import com.woowahan.android10.deliverbanchan.presentation.cart.recent.adapter.RecentViewedVerticalAdapter
 import dagger.hilt.android.scopes.ActivityRetainedScoped
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @ActivityRetainedScoped
 class CartRecentViewedFooterAdapter @Inject constructor(): RecyclerView.Adapter<CartRecentViewedFooterAdapter.ViewHolder>() {
-    var uiRecentJoinList: List<UiRecentJoinItem> = emptyList()
+    var uiRecentJoinList: List<UiDishItem> = emptyList()
 
     companion object{
         const val TAG = "CartRecentViewedFooterAdapter"
@@ -25,7 +25,7 @@ class CartRecentViewedFooterAdapter @Inject constructor(): RecyclerView.Adapter<
     var onCartFooterItemClickListener: OnCartFooterItemClickListener? = null
 
     inner class ViewHolder(val binding: ItemCartRecentViewedFooterBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(list: List<UiRecentJoinItem>){
+        fun bind(list: List<UiDishItem>){
             binding.cartRecentViewedFooterTvRecentlyShowAll.setOnClickListener {
                 onCartFooterItemClickListener?.onClickShowAllBtn()
             }

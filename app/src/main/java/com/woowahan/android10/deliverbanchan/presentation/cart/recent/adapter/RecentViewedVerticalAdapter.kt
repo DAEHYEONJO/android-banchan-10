@@ -6,29 +6,29 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.databinding.ItemRecentViewedBinding
-import com.woowahan.android10.deliverbanchan.domain.model.UiRecentJoinItem
+import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.dpToPx
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 
 @ActivityRetainedScoped
-class RecentViewedVerticalAdapter @Inject constructor(): ListAdapter<UiRecentJoinItem, RecentViewedVerticalAdapter.ViewHolder>(
+class RecentViewedVerticalAdapter @Inject constructor(): ListAdapter<UiDishItem, RecentViewedVerticalAdapter.ViewHolder>(
     diffUtil
 ) {
 
     companion object{
-        val diffUtil = object : DiffUtil.ItemCallback<UiRecentJoinItem>(){
+        val diffUtil = object : DiffUtil.ItemCallback<UiDishItem>(){
             override fun areItemsTheSame(
-                oldItem: UiRecentJoinItem,
-                newItem: UiRecentJoinItem
+                oldItem: UiDishItem,
+                newItem: UiDishItem
             ): Boolean {
                 return oldItem.hash == newItem.hash
             }
 
             override fun areContentsTheSame(
-                oldItem: UiRecentJoinItem,
-                newItem: UiRecentJoinItem
+                oldItem: UiDishItem,
+                newItem: UiDishItem
             ): Boolean {
                 return oldItem == newItem
             }
@@ -36,13 +36,13 @@ class RecentViewedVerticalAdapter @Inject constructor(): ListAdapter<UiRecentJoi
     }
 
     class ViewHolder(private val binding: ItemRecentViewedBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(uiRecentJoinItem: UiRecentJoinItem){
+        fun bind(uiDishItem: UiDishItem){
             with(binding){
                 itemRecentViewedIbCart.toGone()
                 itemRecentViewedRoot.layoutParams.apply {
                     width = dpToPx(root.context, 120).toInt()
                 }
-                item = uiRecentJoinItem
+                item = uiDishItem
                 executePendingBindings()
             }
         }

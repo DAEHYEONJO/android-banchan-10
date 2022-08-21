@@ -1,7 +1,7 @@
 package com.woowahan.android10.deliverbanchan.domain.usecase
 
 import com.woowahan.android10.deliverbanchan.domain.model.UiCartJoinItem
-import com.woowahan.android10.deliverbanchan.domain.model.UiRecentJoinItem
+import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.repository.local.CartRepository
 import com.woowahan.android10.deliverbanchan.domain.repository.local.OrderRepository
 import com.woowahan.android10.deliverbanchan.domain.repository.local.RecentViewedRepository
@@ -29,6 +29,7 @@ class GetJoinUseCase @Inject constructor(
                         amount = amount,
                         checked = checked,
                         nPrice = nPrice,
+                        description = description,
                         sPrice = sPrice,
                         image = image,
                         totalPrice = totalPrice
@@ -38,17 +39,18 @@ class GetJoinUseCase @Inject constructor(
         }
     }
 
-    suspend fun getRecentlyJoinList(): Flow<List<UiRecentJoinItem>> {
+    suspend fun getRecentlyJoinList(): Flow<List<UiDishItem>> {
         return recentRepository.getAllRecentJoinList().map { recentlyViewedList ->
             recentlyViewedList.map { recentlyViewed ->
                 with(recentlyViewed) {
                     val inInserted = cartRepository.isExistCartInfo(hash)
-                    UiRecentJoinItem(
+                    UiDishItem(
                         hash = hash,
                         title = title,
                         image = image,
                         nPrice = nPrice,
                         sPrice = sPrice,
+                        description = description,
                         timeStamp = timeStamp,
                         isInserted = inInserted
                     )

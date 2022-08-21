@@ -13,8 +13,8 @@ import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.OrderInfo
 import com.woowahan.android10.deliverbanchan.di.IoDispatcher
 import com.woowahan.android10.deliverbanchan.domain.model.UiCartJoinItem
+import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiOrderInfo
-import com.woowahan.android10.deliverbanchan.domain.model.UiRecentJoinItem
 import com.woowahan.android10.deliverbanchan.domain.usecase.*
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.TempOrder
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartBottomBody
@@ -57,8 +57,8 @@ class CartViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5000)
         )
     private val _allRecentlyJoinState =
-        MutableStateFlow<UiLocalState<UiRecentJoinItem>>(UiLocalState.Init)
-    val allRecentlyJoinState: StateFlow<UiLocalState<UiRecentJoinItem>>
+        MutableStateFlow<UiLocalState<UiDishItem>>(UiLocalState.Init)
+    val allRecentlyJoinState: StateFlow<UiLocalState<UiDishItem>>
         get() = _allRecentlyJoinState.stateIn(
             initialValue = UiLocalState.Init,
             scope = viewModelScope,

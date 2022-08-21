@@ -11,6 +11,7 @@ data class LocalDish(
     val hash: String,
     val title: String,
     val image: String,
+    val description: String,
     @ColumnInfo(name = "n_price")val nPrice: Int,
     @ColumnInfo(name = "s_price")val sPrice: Int
 )

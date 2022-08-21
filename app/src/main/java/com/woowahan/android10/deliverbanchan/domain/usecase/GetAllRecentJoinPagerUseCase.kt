@@ -3,7 +3,7 @@ package com.woowahan.android10.deliverbanchan.domain.usecase
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.woowahan.android10.deliverbanchan.di.IoDispatcher
-import com.woowahan.android10.deliverbanchan.domain.model.UiRecentJoinItem
+import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.repository.local.RecentViewedRepository
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.CoroutineDispatcher
@@ -18,15 +18,16 @@ class GetAllRecentJoinPagerUseCase @Inject constructor(
     private val isExistCartInfoUseCase: IsExistCartInfoUseCase,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) {
-    operator fun invoke(): Flow<PagingData<UiRecentJoinItem>> {
+    operator fun invoke(): Flow<PagingData<UiDishItem>> {
         return recentViewedRepository.getAllRecentJoinPager().flow.map { pagingData ->
             pagingData.map { recentViewed ->
                 withContext(dispatcher){
                     val isInserted = isExistCartInfoUseCase(recentViewed.hash)
-                    UiRecentJoinItem(
+                    UiDishItem(
                         hash = recentViewed.hash,
                         title = recentViewed.title,
                         image = recentViewed.image,
+                        description = recentViewed.description,
                         nPrice = recentViewed.nPrice,
                         sPrice = recentViewed.sPrice,
                         timeStamp = recentViewed.timeStamp,

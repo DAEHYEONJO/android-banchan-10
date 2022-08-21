@@ -8,6 +8,7 @@ data class Cart(
     val amount: Int,
     val title: String,
     val image: String,
+    val description: String,
     @ColumnInfo(name = "n_price")val nPrice: Int,
     @ColumnInfo(name = "s_price")val sPrice: Int
 )
