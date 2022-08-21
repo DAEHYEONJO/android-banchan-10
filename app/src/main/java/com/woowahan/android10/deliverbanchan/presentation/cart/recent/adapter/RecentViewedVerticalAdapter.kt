@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.databinding.ItemRecentViewedBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
+import com.woowahan.android10.deliverbanchan.presentation.common.OnDishItemClickListener
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.dpToPx
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
 import dagger.hilt.android.scopes.ActivityRetainedScoped
@@ -35,10 +36,15 @@ class RecentViewedVerticalAdapter @Inject constructor(): ListAdapter<UiDishItem,
         }
     }
 
-    class ViewHolder(private val binding: ItemRecentViewedBinding): RecyclerView.ViewHolder(binding.root){
+    var onDishItemClickListener: OnDishItemClickListener? = null
+
+    inner class ViewHolder(private val binding: ItemRecentViewedBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(uiDishItem: UiDishItem){
             with(binding){
                 itemRecentViewedIbCart.toGone()
+                binding.itemRecentViewedRoot.setOnClickListener {
+                    onDishItemClickListener?.onClickDish(uiDishItem)
+                }
                 itemRecentViewedRoot.layoutParams.apply {
                     width = dpToPx(root.context, 120).toInt()
                 }

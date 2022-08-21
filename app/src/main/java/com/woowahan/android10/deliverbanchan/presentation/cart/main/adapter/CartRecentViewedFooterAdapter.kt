@@ -8,6 +8,7 @@ import com.woowahan.android10.deliverbanchan.databinding.ItemCartRecentViewedFoo
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.presentation.cart.common.GridItemDecorator
 import com.woowahan.android10.deliverbanchan.presentation.cart.recent.adapter.RecentViewedVerticalAdapter
+import com.woowahan.android10.deliverbanchan.presentation.common.OnDishItemClickListener
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 
@@ -23,6 +24,7 @@ class CartRecentViewedFooterAdapter @Inject constructor(): RecyclerView.Adapter<
         fun onClickShowAllBtn()
     }
     var onCartFooterItemClickListener: OnCartFooterItemClickListener? = null
+    var recentOnDishItemClickListener: OnDishItemClickListener? = null
 
     inner class ViewHolder(val binding: ItemCartRecentViewedFooterBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(list: List<UiDishItem>){
@@ -32,6 +34,7 @@ class CartRecentViewedFooterAdapter @Inject constructor(): RecyclerView.Adapter<
             with(binding.cartRecentViewedFooterRv){
                 layoutManager = LinearLayoutManager(binding.root.context, LinearLayoutManager.HORIZONTAL, false)
                 adapter = RecentViewedVerticalAdapter().apply {
+                    this.onDishItemClickListener = recentOnDishItemClickListener
                     if(itemDecorationCount == 0) addItemDecoration(GridItemDecorator(context))
                     submitList(list)
                 }

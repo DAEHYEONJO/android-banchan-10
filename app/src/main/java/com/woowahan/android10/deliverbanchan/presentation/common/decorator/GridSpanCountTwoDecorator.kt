@@ -6,11 +6,12 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.dpToPx
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.scopes.FragmentScoped
 import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.math.roundToInt
 
-@Singleton
+
+@FragmentScoped
 class GridSpanCountTwoDecorator @Inject constructor(
     @ApplicationContext private val context: Context
 ) : RecyclerView.ItemDecoration() {
@@ -20,13 +21,10 @@ class GridSpanCountTwoDecorator @Inject constructor(
         parent: RecyclerView,
         state: RecyclerView.State
     ) {
-        val position = parent.getChildLayoutPosition(view)
-        val totalItemCount = state.itemCount
-        if (position == 0 || position == 1) {
-            outRect.top = dpToPx(context, 16).roundToInt()
-        } else {
-            outRect.top = dpToPx(context, 32).roundToInt()
-        }
+        super.getItemOffsets(outRect, view, parent, state)
+        val position = parent.getChildAdapterPosition(view)
+        val totalItemCount = parent.adapter!!.itemCount
+
         if (position % 2 == 0) {
             outRect.left = dpToPx(context, 16).roundToInt()
             outRect.right = dpToPx(context, 4).roundToInt()
@@ -34,15 +32,9 @@ class GridSpanCountTwoDecorator @Inject constructor(
             outRect.left = dpToPx(context, 4).roundToInt()
             outRect.right = dpToPx(context, 16).roundToInt()
         }
-
-        if (totalItemCount % 2 == 0) {
-            if (position == totalItemCount - 1 || position == totalItemCount - 2) {
-                outRect.bottom = dpToPx(context, 40).roundToInt()
-            }
-        } else {
-            if (position == totalItemCount - 1) {
-                outRect.bottom = dpToPx(context, 40).roundToInt()
-            }
+        outRect.bottom = dpToPx(context, 32).roundToInt()
+        if (position == 0 || position == 1) {
+            outRect.top = dpToPx(context, 16).roundToInt()
         }
     }
 }

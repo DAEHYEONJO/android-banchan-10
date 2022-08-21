@@ -48,7 +48,6 @@ class SideDishFragment :
                     if (curSideDishSpinnerPosition.value != preSideDishSpinnerPosition.value) {
                         sortSpinnerList[preSideDishSpinnerPosition.value!!].selected = false
                     }
-                    notifyDataSetChanged()
                 }
             }
         }

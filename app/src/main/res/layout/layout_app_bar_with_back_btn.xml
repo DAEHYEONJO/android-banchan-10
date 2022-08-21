@@ -19,6 +19,7 @@
             android:id="@+id/app_bar_with_back_btn_abl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:elevation="0dp"
             android:background="@color/primary_main">
 
             <com.google.android.material.appbar.MaterialToolbar

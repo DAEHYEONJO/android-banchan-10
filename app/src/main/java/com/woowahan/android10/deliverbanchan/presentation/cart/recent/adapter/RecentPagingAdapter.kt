@@ -1,5 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart.recent.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
@@ -7,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.databinding.ItemRecentViewedBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
+import com.woowahan.android10.deliverbanchan.presentation.common.OnDishItemClickListener
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 
@@ -15,10 +17,17 @@ class RecentPagingAdapter @Inject constructor(): PagingDataAdapter<UiDishItem, R
     diffUtil
 ) {
 
+    interface OnRecentItemClickListener: OnDishItemClickListener{
+        fun onClickDish(uiDishItem: UiDishItem, position: Int)
+    }
+    var onDishItemClickListener: OnDishItemClickListener? = null
+
+
     companion object{
+        const val TAG = "RecentPagingAdapter"
         val diffUtil = object : DiffUtil.ItemCallback<UiDishItem>(){
             override fun areItemsTheSame(oldItem: UiDishItem, newItem: UiDishItem): Boolean {
-                return oldItem.hash == newItem.hash
+                return oldItem._id == newItem._id
             }
 
             override fun areContentsTheSame(oldItem: UiDishItem, newItem: UiDishItem): Boolean {
@@ -27,15 +36,30 @@ class RecentPagingAdapter @Inject constructor(): PagingDataAdapter<UiDishItem, R
         }
     }
 
-    class ViewHolder(val binding: ItemRecentViewedBinding): RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(val binding: ItemRecentViewedBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(uiDishItem: UiDishItem){
-            binding.item = uiDishItem
-            binding.executePendingBindings()
+            with(binding){
+                Log.e(TAG, "RecentPagingAdapter: $adapterPosition", )
+                item = uiDishItem
+                itemRecentViewedRoot.setOnClickListener {
+                    onDishItemClickListener?.onClickDish(uiDishItem)
+                }
+                itemRecentViewedIbCart.setOnClickListener {
+
+                    getItem(adapterPosition)?.isInserted = true
+                    onDishItemClickListener?.onClickCartIcon(uiDishItem)
+                }
+                executePendingBindings()
+            }
         }
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        getItem(position)?.let { holder.bind(it) }
+        Log.e(TAG, "onBindViewHolder: pos: $position", )
+        getItem(position)?.let {
+            Log.e(TAG, "onBindViewHolder: pos: $position $it", )
+            holder.bind(it)
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
