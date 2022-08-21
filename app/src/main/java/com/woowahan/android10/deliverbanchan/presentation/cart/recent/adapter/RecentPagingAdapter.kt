@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.databinding.ItemRecentViewedBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
+import com.woowahan.android10.deliverbanchan.presentation.common.OnDishItemClickListener
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 
@@ -14,6 +15,8 @@ import javax.inject.Inject
 class RecentPagingAdapter @Inject constructor(): PagingDataAdapter<UiDishItem, RecentPagingAdapter.ViewHolder>(
     diffUtil
 ) {
+
+    var onDishItemClickListener: OnDishItemClickListener? = null
 
     companion object{
         val diffUtil = object : DiffUtil.ItemCallback<UiDishItem>(){
@@ -27,10 +30,18 @@ class RecentPagingAdapter @Inject constructor(): PagingDataAdapter<UiDishItem, R
         }
     }
 
-    class ViewHolder(val binding: ItemRecentViewedBinding): RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(val binding: ItemRecentViewedBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(uiDishItem: UiDishItem){
-            binding.item = uiDishItem
-            binding.executePendingBindings()
+            with(binding){
+                item = uiDishItem
+                itemRecentViewedRoot.setOnClickListener {
+                    onDishItemClickListener?.onClickDish(uiDishItem)
+                }
+                itemRecentViewedIbCart.setOnClickListener {
+                    onDishItemClickListener?.onClickCartIcon(uiDishItem)
+                }
+                executePendingBindings()
+            }
         }
     }
 

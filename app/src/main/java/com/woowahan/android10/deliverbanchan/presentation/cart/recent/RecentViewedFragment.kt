@@ -46,6 +46,7 @@ class RecentViewedFragment : BaseFragment<FragmentRecentViewedBinding>(
     private fun initRecyclerView() {
         with(binding.recentlyViewedProductRv) {
             adapter = recentPagingDataAdapter.apply {
+                onDishItemClickListener = this@RecentViewedFragment
                 lifecycleScope.launch {
                     loadStateFlow.collectLatest { loadState ->
                         binding.recentlyViewedProductTvEmpty.isVisible =
