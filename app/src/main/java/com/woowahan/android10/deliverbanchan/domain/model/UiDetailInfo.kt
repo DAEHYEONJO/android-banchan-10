@@ -14,4 +14,17 @@ data class UiDetailInfo(
     val salePercentage: Int = 0,
     val itemCount: Int = 1
 ) {
+    companion object {
+        fun returnEmptyItem() = UiDetailInfo(
+            hash = "",
+            title = "",
+            isInserted = false,
+            image = "",
+            description = "",
+            point = "",
+            deliveryInfo = "",
+            deliveryFee = "",
+            sPrice = 0
+        )
+    }
 }

@@ -13,13 +13,12 @@ import kotlin.math.log
 
 @Singleton
 class MapUiDishItemListUseCase @Inject constructor(
-    private val createEmptyUiDishItemUseCase: CreateEmptyUiDishItemUseCase,
     private val mapUiDishItemUseCase: MapUiDishItemUseCase,
     private val isExistCartInfoUseCase: IsExistCartInfoUseCase,
 ) {
     suspend operator fun invoke(dishItemList: List<DishItem>): List<UiDishItem> {
         val uiDishItemList =
-            MutableList<UiDishItem>(dishItemList.size) { createEmptyUiDishItemUseCase() }
+            MutableList<UiDishItem>(dishItemList.size) { UiDishItem.returnEmptyItem() }
         coroutineScope { // coroutineScope = 자체가 suspend 함수
             dishItemList.mapIndexed { index, dishItem ->
                 async(Dispatchers.IO) {

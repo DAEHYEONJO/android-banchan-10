@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.LocalDish
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
-import com.woowahan.android10.deliverbanchan.domain.usecase.CreateEmptyUiDishItemUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetCartInfoUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.InsertCartInfoUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.InsertLocalDishUseCase
@@ -18,13 +17,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CartBottomSheetViewModel @Inject constructor(
-    private val createEmptyUiDishItemUseCase: CreateEmptyUiDishItemUseCase,
     private val getCartInfoUseCase: GetCartInfoUseCase,
     private val insertCartInfoUseCase: InsertCartInfoUseCase,
     private val insertLocalDishUseCase: InsertLocalDishUseCase
 ) : ViewModel() {
 
-    var currentUiDishItem = MutableStateFlow<UiDishItem>(createEmptyUiDishItemUseCase())
+    var currentUiDishItem = MutableStateFlow<UiDishItem>(UiDishItem.returnEmptyItem())
 
     private val _itemCount = MutableStateFlow<Int>(1)
     val itemCount: StateFlow<Int> = _itemCount
