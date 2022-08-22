@@ -11,7 +11,6 @@ import javax.inject.Singleton
 @Singleton
 class CreateUiDishItemsUseCase @Inject constructor(
     private val getDishListByThemeUseCase: GetDishListByThemeUseCase,
-    private val createEmptyUiDishItemUseCase: CreateEmptyUiDishItemUseCase,
     private val mapUiDishItemUseCase: MapUiDishItemUseCase,
     private val mapUiDishItemListUseCase: MapUiDishItemListUseCase,
     private val isExistCartInfoUseCase: IsExistCartInfoUseCase
@@ -35,7 +34,7 @@ class CreateUiDishItemsUseCase @Inject constructor(
 //                            Log.e("CreateUiDishItemsUseCase", "success")
 //
 //                            val resultUiDishItemList =
-//                                MutableList<UiDishItem>(result.data.size) { createEmptyUiDishItemUseCase() }
+//                                MutableList<UiDishItem>(result.data.size) { UiDishItem.returnEmptyItem() }
 //
 //                            result.data.mapIndexed { index, dishItem ->
 //                                Log.e("CreateUiDishItemsUseCase", "loop")

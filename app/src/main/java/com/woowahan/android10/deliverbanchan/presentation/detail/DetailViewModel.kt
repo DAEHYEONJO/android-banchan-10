@@ -19,7 +19,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
-    private val createEmptyUiDetailInfoUseCase: CreateEmptyUiDetailInfoUseCase,
     private val createUiDetailInfoUseCase: CreateUiDetailInfoUseCase,
     private val getDetailDishUseCase: GetDetailDishUseCase,
     private val insertRecentUseCase: InsertRecentUseCase,
@@ -39,7 +38,7 @@ class DetailViewModel @Inject constructor(
     private val _sectionList = MutableStateFlow<List<String>>(emptyList())
     val sectionList: StateFlow<List<String>> = _sectionList
 
-    private val _uiDetailInfo = MutableStateFlow<UiDetailInfo>(createEmptyUiDetailInfoUseCase())
+    private val _uiDetailInfo = MutableStateFlow<UiDetailInfo>(UiDetailInfo.returnEmptyItem())
     val uiDetailInfo: StateFlow<UiDetailInfo> = _uiDetailInfo
 
     private val _itemCount = MutableStateFlow<Int>(1)
