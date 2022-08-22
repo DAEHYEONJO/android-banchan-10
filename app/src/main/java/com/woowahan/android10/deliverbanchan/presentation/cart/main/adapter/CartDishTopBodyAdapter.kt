@@ -3,12 +3,16 @@ package com.woowahan.android10.deliverbanchan.presentation.cart.main.adapter
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.findViewTreeLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.databinding.ItemCartDishTopBodyBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiCartJoinItem
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEventWithDuration
 import dagger.hilt.android.scopes.ActivityRetainedScoped
+import kotlinx.coroutines.CoroutineScope
 import javax.inject.Inject
 
 @ActivityRetainedScoped
@@ -21,7 +25,7 @@ class CartDishTopBodyAdapter @Inject constructor(
         fun onClickAmountBtn(position: Int, hash: String, amount: Int)
     }
 
-    var onClickItemClickListener: OnCartTopBodyItemClickListener? = null
+    var onCartTopBodyItemClickListener: OnCartTopBodyItemClickListener? = null
 
     companion object {
         const val TAG = "CartDishTopBodyAdapter"
@@ -42,7 +46,7 @@ class CartDishTopBodyAdapter @Inject constructor(
         }
     }
 
-    inner class ViewHolder(val binding: ItemCartDishTopBodyBinding) :
+    inner class ViewHolder(val binding: ItemCartDishTopBodyBinding, private val coroutineScope: CoroutineScope) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(uiCartJoinItem: UiCartJoinItem) {
             with(binding) {
@@ -51,18 +55,18 @@ class CartDishTopBodyAdapter @Inject constructor(
                 val amount = uiCartJoinItem.amount
                 cartSelectTopBodyCb.setOnClickListener {
                     Log.e(TAG, "bind: 체크박스 아이템 클릭=")
-                    onClickItemClickListener?.onCheckBoxCheckedChanged(
+                    onCartTopBodyItemClickListener?.onCheckBoxCheckedChanged(
                         adapterPosition,
                         hash,
                         uiCartJoinItem.checked
                     )
                 }
-                cartSelectTopBodyIbDelete.setOnClickListener {
-                    onClickItemClickListener?.onClickDeleteBtn(adapterPosition, hash)
+                cartSelectTopBodyIbDelete.setClickEventWithDuration(coroutineScope) {
+                    onCartTopBodyItemClickListener?.onClickDeleteBtn(adapterPosition, hash)
                 }
                 cartSelectTopBodyIbMinus.setOnClickListener {
                     if (amount > 1) {
-                        onClickItemClickListener?.onClickAmountBtn(
+                        onCartTopBodyItemClickListener?.onClickAmountBtn(
                             adapterPosition,
                             hash,
                             amount - 1
@@ -70,7 +74,7 @@ class CartDishTopBodyAdapter @Inject constructor(
                     }
                 }
                 cartSelectTopBodyIbPlus.setOnClickListener {
-                    onClickItemClickListener?.onClickAmountBtn(adapterPosition, hash, amount + 1)
+                    onCartTopBodyItemClickListener?.onClickAmountBtn(adapterPosition, hash, amount + 1)
                 }
                 executePendingBindings()
             }
@@ -80,7 +84,7 @@ class CartDishTopBodyAdapter @Inject constructor(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
             ItemCartDishTopBodyBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding)
+        return ViewHolder(binding, parent.findViewTreeLifecycleOwner()!!.lifecycleScope)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

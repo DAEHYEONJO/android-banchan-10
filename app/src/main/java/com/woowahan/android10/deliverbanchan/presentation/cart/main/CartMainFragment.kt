@@ -73,7 +73,7 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
                     cartViewModel.changeCheckedState(!checkedState)
                 }
             }
-        cartTopBodyAdapter.onClickItemClickListener =
+        cartTopBodyAdapter.onCartTopBodyItemClickListener =
             object : CartDishTopBodyAdapter.OnCartTopBodyItemClickListener {
                 override fun onClickDeleteBtn(position: Int, hash: String) {
                     cartViewModel.deleteUiCartItemByPos(position, hash)
