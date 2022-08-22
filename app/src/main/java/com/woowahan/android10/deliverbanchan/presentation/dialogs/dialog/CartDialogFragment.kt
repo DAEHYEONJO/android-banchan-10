@@ -1,5 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.dialogs.dialog
 
+import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -19,6 +20,11 @@ class CartDialogFragment : DialogFragment() {
     private var _binding: FragmentCartDialogBinding? = null
     private val binding: FragmentCartDialogBinding get() = checkNotNull(_binding)
     private val cartDialogViewModel: CartDialogFragmentViewModel by viewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        isCancelable = false
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
