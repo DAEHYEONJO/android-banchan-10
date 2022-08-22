@@ -223,6 +223,7 @@ class CartViewModel @Inject constructor(
     }
 
     fun deleteUiCartItemByPos(position: Int, hash: String) {
+        if (position == -1) return // 클릭했을때, 없어진 view의 경우 position == -1
         _toBeDeletedCartItem.add(hash)
         _uiCartJoinArrayList.removeAt(position)
         _uiCartJoinList.value = _uiCartJoinArrayList
