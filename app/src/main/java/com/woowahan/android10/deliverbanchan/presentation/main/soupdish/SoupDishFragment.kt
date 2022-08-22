@@ -57,6 +57,12 @@ class SoupDishFragment: BaseFragment<FragmentSoupdishBinding>(R.layout.fragment_
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        Log.e(TAG, "viewLifecycleOwner: ${viewLifecycleOwner}", )
+        Log.e(TAG, "lifecycleScope: ${viewLifecycleOwner.lifecycleScope}", )
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = soupViewModel

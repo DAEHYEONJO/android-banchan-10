@@ -10,10 +10,13 @@ import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.ActivityMainBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseActivity
 import com.woowahan.android10.deliverbanchan.presentation.cart.CartActivity
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEventWithDuration
 import com.woowahan.android10.deliverbanchan.presentation.main.sidedish.SideDishViewModel
 import com.woowahan.android10.deliverbanchan.presentation.main.soupdish.SoupViewModel
 import com.woowahan.android10.deliverbanchan.presentation.order.OrderActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -29,17 +32,20 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main, "
         initView()
         initBtn()
         dishViewModel.cartInfoState.onEach {
-            Log.e("DishViewModel", "onCreate: $it", )
+            Log.e("DishViewModel", "onCreate: $it")
         }.launchIn(lifecycleScope)
     }
 
+    @OptIn(FlowPreview::class)
     private fun initBtn() {
         with(binding.mainTb) {
-            appBarNoBackBtnFlCart.setOnClickListener {
-                startActivity(Intent(this@MainActivity, CartActivity::class.java))
-            }
-            appBarNoBackBtnIvProfile.setOnClickListener {
-                startActivity(Intent(this@MainActivity, OrderActivity::class.java))
+            lifecycleScope.launchWhenCreated {
+                appBarNoBackBtnFlCart.setClickEventWithDuration(lifecycleScope) {
+                    startActivity(Intent(this@MainActivity, CartActivity::class.java))
+                }
+                appBarNoBackBtnIvProfile.setClickEventWithDuration(lifecycleScope) {
+                    startActivity(Intent(this@MainActivity, OrderActivity::class.java))
+                }
             }
         }
     }

@@ -51,6 +51,12 @@ class MainDishFragment :
         getData()
     }
 
+    override fun onResume() {
+        super.onResume()
+        Log.e(TAG, "viewLifecycleOwner: ${viewLifecycleOwner}", )
+        Log.e(TAG, "lifecycleScope: ${viewLifecycleOwner.lifecycleScope}", )
+    }
+
     private fun setRadioGroupListener() {
         binding.maindishRg.setOnCheckedChangeListener { group, checkedId ->
             when (checkedId) {
