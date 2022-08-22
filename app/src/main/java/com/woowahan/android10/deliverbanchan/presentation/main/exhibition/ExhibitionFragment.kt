@@ -52,40 +52,9 @@ class ExhibitionFragment :
     }
 
     private fun setExhibitionContentAdapter() {
-        exhibitionAdapter = ExhibitionAdapter ({
-            val cartBottomSheetFragment = CartBottomSheetFragment()
-
-            cartBottomSheetFragment.setDialogDismissWhenInsertSuccessListener(object :
-                CartBottomSheetFragment.DialogDismissWhenInsertSuccessListener {
-                override fun dialogDismissWhenInsertSuccess(hash: String, title: String) {
-                    //exhibitionViewModel.changeMainDishItemIsInserted(hash)
-                    val cartDialog = CartDialogFragment()
-
-                    cartDialog.setTextClickListener(object : CartDialogFragment.TextClickListener {
-                        override fun moveToCartTextClicked() {
-                            startActivity(Intent(requireActivity(), CartActivity::class.java))
-                        }
-                    })
-
-                    val bundle = Bundle()
-                    bundle.putString("hash", hash)
-                    bundle.putString("title", title)
-                    cartDialog.arguments = bundle
-                    cartDialog.show(childFragmentManager, "CartDialog")
-                    Log.e("TAG", "현재 선택된 상품명 : ${title}")
-                }
-            })
-
-            val bundle = Bundle()
-            bundle.putParcelable("UiDishItem", it)
-            cartBottomSheetFragment.arguments = bundle
-            cartBottomSheetFragment.show(childFragmentManager, "CartBottomSheet")
-        }, {
-            // cart icon 영역을 제외한 다른 곳 누를 시
-            val intent = Intent(requireContext(), DetailActivity::class.java)
-            intent.putExtra("UiDishItem", it)
-            startActivity(intent)
-        })
+        exhibitionAdapter = ExhibitionAdapter ().apply {
+            dishItemClickListener = this@ExhibitionFragment
+        }
     }
 
     private fun setRecyclerView() {

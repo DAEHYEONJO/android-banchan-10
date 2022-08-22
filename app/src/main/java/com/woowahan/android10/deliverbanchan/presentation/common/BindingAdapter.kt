@@ -64,11 +64,6 @@ fun TextView.setCartTextViewVisibility(cartIconText: String) {
     else View.VISIBLE
 }
 
-@BindingAdapter("app:setBottomSheetButtonText")
-fun Button.setBottomSheetButtonText(itemCount: Int) {
-    text = "${itemCount}개 담기"
-}
-
 @BindingAdapter("app:setProfileIcon")
 fun ImageView.setProfileIcon(isOrderExist: Boolean) {
     background = if (isOrderExist) ResourcesCompat.getDrawable(resources, R.drawable.ic_user_badge, null)

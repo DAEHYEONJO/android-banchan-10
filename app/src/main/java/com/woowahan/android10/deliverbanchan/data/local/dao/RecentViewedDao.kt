@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.test.services.events.TimeStamp
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.RecentViewedInfo
 import com.woowahan.android10.deliverbanchan.data.local.model.join.RecentViewed
 import kotlinx.coroutines.flow.Flow
@@ -26,5 +27,8 @@ interface RecentViewedDao {
 
     @Query("DELETE FROM RECENT_VIEWED_INFO")
     suspend fun deleteAllRecentViewedInfo()
+
+    @Query("UPDATE RECENT_VIEWED_INFO SET time_stamp = :timeStamp WHERE hash = :hash")
+    suspend fun updateTimeStampRecentViewedByHash(hash: String, timeStamp: Long)
 
 }

@@ -10,13 +10,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.databinding.ItemExhibitionHorizontalBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
+import com.woowahan.android10.deliverbanchan.presentation.common.OnDishItemClickListener
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEventWithDuration
 import kotlinx.coroutines.CoroutineScope
 
-class ExhibitionHorizontalAdapter(
-    private val cartIconClick: (uiDishItem: UiDishItem) -> Unit,
-    private val itemClick: (uiDishItem: UiDishItem) -> Unit
-) : ListAdapter<UiDishItem, ExhibitionHorizontalAdapter.ViewHolder>(diffUtil) {
+class ExhibitionHorizontalAdapter() : ListAdapter<UiDishItem, ExhibitionHorizontalAdapter.ViewHolder>(diffUtil) {
 
     companion object {
         const val TAG = "MainDishGridAdapter"
@@ -31,21 +29,20 @@ class ExhibitionHorizontalAdapter(
         }
     }
 
+    var onDishItemClickListener: OnDishItemClickListener? = null
+
     inner class ViewHolder(private val binding: ItemExhibitionHorizontalBinding, private val coroutineScope: CoroutineScope) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(
-            uiDishItem: UiDishItem, position: Int, cartIconClick: (uiDishItem: UiDishItem) -> Unit,
-            itemClick: (uiDishItem: UiDishItem) -> Unit
-        ) {
+        fun bind(uiDishItem: UiDishItem, position: Int) {
             binding.item = uiDishItem
             binding.viewLeft.isVisible = (position == 0)
             binding.viewRight.isVisible = (position == currentList.size - 1)
             binding.maindishImbCart.setClickEventWithDuration(coroutineScope) {
-                cartIconClick(uiDishItem)
+                onDishItemClickListener?.onClickCartIcon(uiDishItem)
             }
             binding.root.setClickEventWithDuration(coroutineScope) {
-                itemClick(uiDishItem)
+                onDishItemClickListener?.onClickDish(uiDishItem)
             }
             binding.executePendingBindings()
         }
@@ -62,6 +59,6 @@ class ExhibitionHorizontalAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position), position, cartIconClick, itemClick)
+        holder.bind(getItem(position), position)
     }
 }
