@@ -1,14 +1,13 @@
 package com.woowahan.android10.deliverbanchan.presentation.dialogs.bottomsheet
 
 import android.util.Log
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.LocalDish
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
-import com.woowahan.android10.deliverbanchan.domain.usecase.GetCartInfoUseCase
-import com.woowahan.android10.deliverbanchan.domain.usecase.InsertCartInfoUseCase
-import com.woowahan.android10.deliverbanchan.domain.usecase.InsertLocalDishUseCase
+import com.woowahan.android10.deliverbanchan.domain.usecase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -19,10 +18,12 @@ import javax.inject.Inject
 class CartBottomSheetViewModel @Inject constructor(
     private val getCartInfoUseCase: GetCartInfoUseCase,
     private val insertCartInfoUseCase: InsertCartInfoUseCase,
-    private val insertLocalDishUseCase: InsertLocalDishUseCase
+    private val insertLocalDishUseCase: InsertLocalDishUseCase,
+    private val updateTimeStampRecentViewedByHashUseCase: UpdateTimeStampRecentViewedByHashUseCase,
+    stateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    var currentUiDishItem = MutableStateFlow<UiDishItem>(UiDishItem.returnEmptyItem())
+    val uiDishItem: UiDishItem? = stateHandle["UiDishItem"]
 
     private val _itemCount = MutableStateFlow<Int>(1)
     val itemCount: StateFlow<Int> = _itemCount
@@ -35,7 +36,7 @@ class CartBottomSheetViewModel @Inject constructor(
 
     fun getCartInfoByHash() {
         viewModelScope.launch {
-            getCartInfoUseCase(currentUiDishItem.value.hash).onStart {
+            getCartInfoUseCase(uiDishItem!!.hash).onStart {
 
             }.catch { exception ->
                 Log.e("CartBottomSheetViewModel", "${exception.message}")
@@ -58,7 +59,8 @@ class CartBottomSheetViewModel @Inject constructor(
     fun insertCartInfo() {
         viewModelScope.launch {
             runCatching {
-                with(currentUiDishItem.value) {
+                with(uiDishItem!!) {
+                    updateTimeStampRecentViewedByHashUseCase(hash, System.currentTimeMillis())
                     insertCartInfoUseCase(
                         CartInfo(
                             hash = hash,

@@ -44,17 +44,7 @@ class CartBottomSheetFragment : BottomSheetDialogFragment() {
     ): View? {
         _binding = FragmentCartBottomSheetBinding.inflate(layoutInflater, container, false)
         binding.lifecycleOwner = this.viewLifecycleOwner
-
-        arguments?.let {
-            val uiDishItem = it.getParcelable<UiDishItem>("UiDishItem")
-            Log.e("AppTest", "$uiDishItem")
-            uiDishItem?.let {
-                cartBottomSheetViewModel.currentUiDishItem.value = it
-                //binding.item = it
-                binding.viewModel = cartBottomSheetViewModel
-            }
-        }
-
+        binding.viewModel = cartBottomSheetViewModel
         return binding.root
     }
 
@@ -67,6 +57,9 @@ class CartBottomSheetFragment : BottomSheetDialogFragment() {
 
     private fun initView() {
         cartBottomSheetViewModel.getCartInfoByHash()
+        binding.tvCancel.setOnClickListener {
+            dismiss()
+        }
     }
 
     private fun observeInsertResult() {
@@ -77,8 +70,8 @@ class CartBottomSheetFragment : BottomSheetDialogFragment() {
                         // dialog 작업 예정
                         Log.e("CartBottomSheetFragment", "dialog open")
                         dialogDismissWhenInsertSuccessListener.dialogDismissWhenInsertSuccess(
-                            cartBottomSheetViewModel.currentUiDishItem.value.hash,
-                            cartBottomSheetViewModel.currentUiDishItem.value.title
+                            cartBottomSheetViewModel.uiDishItem!!.hash,
+                            cartBottomSheetViewModel.uiDishItem!!.title
                         )
                         dismiss()
                     } else {

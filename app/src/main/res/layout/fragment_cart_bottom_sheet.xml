@@ -60,7 +60,7 @@
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_cart_description"
-                app:setStringUrlImage="@{viewModel.currentUiDishItem.image}" />
+                app:setStringUrlImage="@{viewModel.uiDishItem.image}" />
 
             <TextView
                 android:id="@+id/tv_title"
@@ -69,7 +69,7 @@
                 android:layout_height="24dp"
                 android:layout_marginStart="@dimen/base_space_16dp"
                 android:gravity="center_vertical"
-                android:text="@{viewModel.currentUiDishItem.title}"
+                android:text="@{viewModel.uiDishItem.title}"
                 app:layout_constraintBottom_toTopOf="@id/tv_sprice"
                 app:layout_constraintStart_toEndOf="@id/iv_food"
                 app:layout_constraintTop_toTopOf="@id/iv_food"
@@ -83,8 +83,8 @@
                 android:layout_height="24dp"
                 android:gravity="center_vertical"
                 android:paddingEnd="4dp"
-                android:text="@{String.valueOf(viewModel.currentUiDishItem.salePercentage)+`%`}"
-                android:visibility="@{viewModel.currentUiDishItem.NPrice==0?View.GONE:View.VISIBLE}"
+                android:text="@{String.valueOf(viewModel.uiDishItem.salePercentage)+`%`}"
+                android:visibility="@{viewModel.uiDishItem.NPrice==0?View.GONE:View.VISIBLE}"
                 app:layout_constraintBottom_toBottomOf="@id/tv_sprice"
                 app:layout_constraintStart_toStartOf="@id/tv_title"
                 app:layout_constraintTop_toTopOf="@id/tv_sprice"
@@ -94,7 +94,7 @@
                 android:id="@+id/tv_sprice"
                 style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Bold.Style"
                 isNPrice="@{false}"
-                price="@{viewModel.currentUiDishItem.SPrice}"
+                price="@{viewModel.uiDishItem.SPrice}"
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
                 android:gravity="center_vertical"
@@ -108,7 +108,7 @@
                 android:id="@+id/tv_nprice"
                 style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault14_Normal.Style"
                 isNPrice="@{true}"
-                price="@{viewModel.currentUiDishItem.NPrice}"
+                price="@{viewModel.uiDishItem.NPrice}"
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
                 android:gravity="center_vertical"
@@ -159,7 +159,7 @@
                 android:id="@+id/tv_price_total"
                 style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style"
                 isNPrice="@{false}"
-                price="@{viewModel.currentUiDishItem.SPrice * viewModel.itemCount}"
+                price="@{viewModel.uiDishItem.SPrice * viewModel.itemCount}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/base_space_16dp"
@@ -172,7 +172,10 @@
                 android:id="@+id/btn_go_to_cart"
                 style="@style/Widget.TextView.NotoSansKR_GreyScaleWhite18_Medium.Style"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/base_space_16dp"
+                android:paddingBottom="@dimen/base_space_16dp"
+                android:padding="@dimen/base_space_16dp"
                 android:layout_marginHorizontal="@dimen/base_space_16dp"
                 android:layout_marginTop="24dp"
                 android:backgroundTint="@color/primary_main"
@@ -181,8 +184,7 @@
                 android:onClick="@{() -> viewModel.insertCartInfo()}"
                 android:textColor="@color/white"
                 app:layout_constraintTop_toBottomOf="@id/ib_plus"
-                app:setBottomSheetButtonText="@{viewModel.itemCount}"
-                tools:text="1개 담기" />
+                tools:text="@{String.valueOf(viewModel.itemCount)+`개 담기`}" />
 
             <View
                 android:id="@+id/view_bottom"

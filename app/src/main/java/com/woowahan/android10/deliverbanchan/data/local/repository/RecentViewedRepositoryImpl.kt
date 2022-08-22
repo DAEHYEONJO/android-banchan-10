@@ -39,5 +39,9 @@ class RecentViewedRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun updateTimeStampRecentViewedByHash(hash: String, timeStamp: Long) {
+        recentlyViewedDao.updateTimeStampRecentViewedByHash(hash, timeStamp)
+    }
+
 
 }

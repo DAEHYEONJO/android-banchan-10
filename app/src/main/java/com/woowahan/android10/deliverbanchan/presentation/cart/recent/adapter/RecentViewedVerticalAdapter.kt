@@ -45,12 +45,12 @@ class RecentViewedVerticalAdapter @Inject constructor(): ListAdapter<UiDishItem,
 
     var onDishItemClickListener: OnDishItemClickListener? = null
 
-    inner class ViewHolder(private val binding: ItemRecentViewedBinding, private val coroutineScope: CoroutineScope): RecyclerView.ViewHolder(binding.root){
+    inner class ViewHolder(private val binding: ItemRecentViewedBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(uiDishItem: UiDishItem){
             with(binding){
                 item = uiDishItem
                 itemRecentViewedIbCart.toGone()
-                binding.itemRecentViewedRoot.setClickEventWithDuration(coroutineScope) {
+                binding.itemRecentViewedRoot.setOnClickListener {
                     onDishItemClickListener?.onClickDish(uiDishItem)
                 }
 
@@ -64,7 +64,7 @@ class RecentViewedVerticalAdapter @Inject constructor(): ListAdapter<UiDishItem,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemRecentViewedBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding, parent.findViewTreeLifecycleOwner()!!.lifecycleScope)
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

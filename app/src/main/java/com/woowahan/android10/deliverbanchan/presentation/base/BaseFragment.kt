@@ -34,6 +34,7 @@ abstract class BaseFragment<T : ViewDataBinding>(
             arguments = Bundle().apply {
                 putParcelable("UiDishItem", uiDishItem)
             }
+            isCancelable = false
         }
 
         cartBottomSheetFragment.setDialogDismissWhenInsertSuccessListener(object :

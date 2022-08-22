@@ -31,7 +31,7 @@ fun View.onClickCallBackFlow(): Flow<Unit> = callbackFlow {
 
 inline fun View.setClickEventWithDuration(
     coroutineScope: CoroutineScope,
-    duration: Long = 1000,
+    duration: Long = 2000,
     crossinline onClick: () -> Unit,
 ) {
     onClickCallBackFlow()

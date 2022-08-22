@@ -18,4 +18,6 @@ interface RecentViewedRepository {
     fun getAllRecentJoinList(): Flow<List<RecentViewed>>
     @WorkerThread
     fun getAllRecentJoinPager(): Pager<Int, RecentViewed>
+    @WorkerThread
+    suspend fun updateTimeStampRecentViewedByHash(hash: String, timeStamp: Long)
 }
