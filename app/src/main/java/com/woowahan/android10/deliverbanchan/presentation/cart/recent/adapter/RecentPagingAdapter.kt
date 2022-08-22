@@ -3,13 +3,20 @@ package com.woowahan.android10.deliverbanchan.presentation.cart.recent.adapter
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.findViewTreeLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.databinding.ItemRecentViewedBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.presentation.common.OnDishItemClickListener
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEventWithDuration
 import dagger.hilt.android.scopes.ActivityRetainedScoped
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @ActivityRetainedScoped
@@ -17,9 +24,6 @@ class RecentPagingAdapter @Inject constructor(): PagingDataAdapter<UiDishItem, R
     diffUtil
 ) {
 
-    interface OnRecentItemClickListener: OnDishItemClickListener{
-        fun onClickDish(uiDishItem: UiDishItem, position: Int)
-    }
     var onDishItemClickListener: OnDishItemClickListener? = null
 
 
@@ -36,17 +40,14 @@ class RecentPagingAdapter @Inject constructor(): PagingDataAdapter<UiDishItem, R
         }
     }
 
-    inner class ViewHolder(val binding: ItemRecentViewedBinding): RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(val binding: ItemRecentViewedBinding, private val coroutineScope: CoroutineScope): RecyclerView.ViewHolder(binding.root) {
         fun bind(uiDishItem: UiDishItem){
             with(binding){
-                Log.e(TAG, "RecentPagingAdapter: $adapterPosition", )
                 item = uiDishItem
-                itemRecentViewedRoot.setOnClickListener {
+                itemRecentViewedRoot.setClickEventWithDuration(coroutineScope){
                     onDishItemClickListener?.onClickDish(uiDishItem)
                 }
-                itemRecentViewedIbCart.setOnClickListener {
-
-                    getItem(adapterPosition)?.isInserted = true
+                itemRecentViewedIbCart.setClickEventWithDuration(coroutineScope) {
                     onDishItemClickListener?.onClickCartIcon(uiDishItem)
                 }
                 executePendingBindings()
@@ -63,7 +64,8 @@ class RecentPagingAdapter @Inject constructor(): PagingDataAdapter<UiDishItem, R
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+
         val binding = ItemRecentViewedBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding)
+        return ViewHolder(binding, parent.findViewTreeLifecycleOwner()!!.lifecycleScope)
     }
 }

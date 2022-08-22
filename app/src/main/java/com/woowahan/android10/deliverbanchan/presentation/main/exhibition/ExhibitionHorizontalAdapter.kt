@@ -3,11 +3,15 @@ package com.woowahan.android10.deliverbanchan.presentation.main.exhibition
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.lifecycle.findViewTreeLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.databinding.ItemExhibitionHorizontalBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEventWithDuration
+import kotlinx.coroutines.CoroutineScope
 
 class ExhibitionHorizontalAdapter(
     private val cartIconClick: (uiDishItem: UiDishItem) -> Unit,
@@ -27,7 +31,7 @@ class ExhibitionHorizontalAdapter(
         }
     }
 
-    inner class ViewHolder(private val binding: ItemExhibitionHorizontalBinding) :
+    inner class ViewHolder(private val binding: ItemExhibitionHorizontalBinding, private val coroutineScope: CoroutineScope) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
@@ -37,10 +41,10 @@ class ExhibitionHorizontalAdapter(
             binding.item = uiDishItem
             binding.viewLeft.isVisible = (position == 0)
             binding.viewRight.isVisible = (position == currentList.size - 1)
-            binding.maindishImbCart.setOnClickListener {
+            binding.maindishImbCart.setClickEventWithDuration(coroutineScope) {
                 cartIconClick(uiDishItem)
             }
-            binding.root.setOnClickListener {
+            binding.root.setClickEventWithDuration(coroutineScope) {
                 itemClick(uiDishItem)
             }
             binding.executePendingBindings()
@@ -54,7 +58,7 @@ class ExhibitionHorizontalAdapter(
                 parent,
                 false
             )
-        return ViewHolder(binding)
+        return ViewHolder(binding, parent.findViewTreeLifecycleOwner()!!.lifecycleScope)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
