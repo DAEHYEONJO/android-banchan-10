@@ -15,6 +15,7 @@ import com.woowahan.android10.deliverbanchan.presentation.common.KEY_ORDER_REQUE
 import com.woowahan.android10.deliverbanchan.presentation.common.KEY_SHARED_PREFERENCES
 import com.woowahan.android10.deliverbanchan.presentation.common.ORDER_REQUEST_CODE
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEventWithDuration
+import com.woowahan.android10.deliverbanchan.presentation.dialogs.dialog.CartDialogFragment
 import com.woowahan.android10.deliverbanchan.presentation.main.sidedish.SideDishViewModel
 import com.woowahan.android10.deliverbanchan.presentation.main.soupdish.SoupViewModel
 import com.woowahan.android10.deliverbanchan.presentation.order.OrderActivity
@@ -25,7 +26,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
-class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main, "MainActivity") {
+class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main, "MainActivity"){
 
     private val dishViewModel: DishViewModel by viewModels()
     private lateinit var tabTitleArray: Array<String>

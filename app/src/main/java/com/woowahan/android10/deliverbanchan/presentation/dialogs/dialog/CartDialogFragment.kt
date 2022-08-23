@@ -1,6 +1,7 @@
 package com.woowahan.android10.deliverbanchan.presentation.dialogs.dialog
 
 import android.app.Dialog
+import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -13,13 +14,28 @@ import androidx.fragment.app.viewModels
 import com.woowahan.android10.deliverbanchan.databinding.FragmentCartDialogBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+import javax.inject.Singleton
 
-@AndroidEntryPoint
-class CartDialogFragment : DialogFragment() {
+@Singleton
+class CartDialogFragment @Inject constructor(): DialogFragment() {
+
+    interface TextClickListener {
+        fun moveToCartTextClicked()
+    }
 
     private var _binding: FragmentCartDialogBinding? = null
     private val binding: FragmentCartDialogBinding get() = checkNotNull(_binding)
-    private val cartDialogViewModel: CartDialogFragmentViewModel by viewModels()
+    private lateinit var textClickListener: TextClickListener
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        try {
+            textClickListener = context as TextClickListener
+        }catch (e: ClassCastException){
+            throw ClassCastException("dialog Fragment cast exception")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,21 +51,11 @@ class CartDialogFragment : DialogFragment() {
         binding.lifecycleOwner = this.viewLifecycleOwner
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        arguments?.let {
-            val hash = it.getString("hash", "")
-            val title = it.getString("title", "")
-            Log.e("CartDialogFragment", "hash : ${hash}, title : ${title}")
-
-            cartDialogViewModel.currentHash = hash
-            cartDialogViewModel.currentTitle = title
-        }
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setMoveToCartTextClickEvent()
         setDismissTextClickEvent()
     }
@@ -71,14 +77,4 @@ class CartDialogFragment : DialogFragment() {
         super.onDestroyView()
         _binding = null
     }
-
-    interface TextClickListener {
-        fun moveToCartTextClicked()
-    }
-
-    fun setTextClickListener(textClickListener: TextClickListener) {
-        this.textClickListener = textClickListener
-    }
-
-    private lateinit var textClickListener: TextClickListener
 }
