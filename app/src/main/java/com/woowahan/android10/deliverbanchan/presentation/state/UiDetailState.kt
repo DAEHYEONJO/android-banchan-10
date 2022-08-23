@@ -1,11 +1,11 @@
 package com.woowahan.android10.deliverbanchan.presentation.state
 
-import com.woowahan.android10.deliverbanchan.data.remote.model.DishDetail
+import com.woowahan.android10.deliverbanchan.domain.model.UiDetailInfo
 
-sealed class DetailUiState {
-    object Init : DetailUiState()
-    data class IsLoading(val isLoading: Boolean) : DetailUiState()
-    data class ShowToast(val message: String) : DetailUiState()
-    data class Success(val uiDishItems: DishDetail.DishDetailData) : DetailUiState()
-    data class Error(val errorCode: Int) : DetailUiState()
+sealed class UiDetailState {
+    object Init : UiDetailState()
+    data class Loading(val isLoading: Boolean) : UiDetailState()
+    data class ShowToast(val message: String) : UiDetailState()
+    data class Success(val uiDishItems: UiDetailInfo) : UiDetailState()
+    data class Error(val errorCode: Int) : UiDetailState()
 }

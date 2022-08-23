@@ -8,6 +8,6 @@ import androidx.room.PrimaryKey
 data class CartInfo(
     @PrimaryKey
     val hash: String,
-    val checked: Boolean,
+    val checked: Boolean = true,
     val amount: Int
 )
