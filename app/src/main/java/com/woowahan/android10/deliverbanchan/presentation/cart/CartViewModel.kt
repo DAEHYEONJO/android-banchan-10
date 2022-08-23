@@ -249,13 +249,13 @@ class CartViewModel @Inject constructor(
     fun setOrderCompleteCartItem() {
         // 주문 완료 화면에 대한 리스트 세팅z`z`
         val tempHashList = _selectedCartItem.map { it.hash }.toList()
-        _orderCompleteBodyItem.value =
-            _uiCartJoinArrayList.filter { tempHashList.contains(it.hash) }.toList()
-        var priceTotal = 0
+        _orderCompleteBodyItem.value = _uiCartJoinArrayList.filter { tempHashList.contains(it.hash) }.toList()
         val deliveryPrice = _itemCartBottomBodyData.value!!.deliveryPrice
-        _orderCompleteBodyItem.value!!.forEach { uiCartJoinItem ->
-            priceTotal += uiCartJoinItem.sPrice * uiCartJoinItem.amount
-        }
+        val priceTotal = _orderCompleteBodyItem.value!!
+            .map { Pair(it.sPrice, it.amount) }
+            .fold(0) { acc, pair ->
+                acc + pair.first * pair.second
+            }
         val totalPrice = priceTotal + deliveryPrice
         _orderCompleteTopItem.value = UiCartCompleteHeader(
             orderTimeStamp = System.currentTimeMillis(),

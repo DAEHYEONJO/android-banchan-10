@@ -63,11 +63,9 @@ class NumberDialogFragment : DialogFragment() {
     private fun initView() {
         with(binding){
             with(numberPickerDialogNpAmount){
-                Log.e("NumberDialogFragment", "initView: $curNumberPickerValue", )
-                minValue = 0
+                minValue = 1
                 maxValue = 20
                 value = curNumberPickerValue
-                Log.e("NumberDialogFragment", "initView: $curNumberPickerValue $value", )
             }
             btnGoToCart.setOnClickListener {
                 onNumberDialogClickListener?.onClickAmountChangeBtn(cartPosition, numberPickerDialogNpAmount.value)
