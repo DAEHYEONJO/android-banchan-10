@@ -90,6 +90,10 @@ class CartViewModel @Inject constructor(
     private val _orderCompleteFooterItem = MutableLiveData<UiOrderInfo>()
     val orderCompleteFooterItem: LiveData<UiOrderInfo> get() = _orderCompleteFooterItem
 
+    private val _orderButtonClicked = MutableSharedFlow<Boolean>()
+    val orderButtonClicked = _orderButtonClicked.asSharedFlow()
+
+    val orderHashList = ArrayList<String>()
 
     init {
         getAllRecentlyJoinList()
@@ -278,8 +282,10 @@ class CartViewModel @Inject constructor(
                 fragmentArrayIndex.value = 1
             }
             val timeStamp = System.currentTimeMillis()
+            orderHashList.clear()
             insertVarArgOrderInfoUseCase(
                 _selectedCartItem.map { tempOrder ->
+                    orderHashList.add(tempOrder.hash)
                     OrderInfo(
                         hash = tempOrder.hash,
                         timeStamp = timeStamp,
@@ -289,6 +295,9 @@ class CartViewModel @Inject constructor(
                     )
                 }
             )
+            Log.e("CartViewModel", "button clicked")
+            _orderButtonClicked.emit(true)
+
             deleteCartInfoByHashListUseCase(_selectedCartItem.map { it.hash }.toList())
         }
     }
