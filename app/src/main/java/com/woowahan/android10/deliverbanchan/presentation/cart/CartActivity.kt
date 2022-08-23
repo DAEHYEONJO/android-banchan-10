@@ -1,7 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
@@ -15,17 +14,11 @@ import com.woowahan.android10.deliverbanchan.presentation.base.BaseActivity
 import com.woowahan.android10.deliverbanchan.presentation.cart.complete.CartDeliveryCompleteFragment
 import com.woowahan.android10.deliverbanchan.presentation.cart.main.CartMainFragment
 import com.woowahan.android10.deliverbanchan.presentation.cart.recent.RecentViewedFragment
-import com.woowahan.android10.deliverbanchan.presentation.dialogs.dialog.NumberDialogFragment
-import dagger.hilt.android.AndroidEntryPoint
-import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
-import com.woowahan.android10.deliverbanchan.presentation.main.host.MainActivity
-import com.woowahan.android10.deliverbanchan.presentation.dialogs.dialog.CartDialogFragment
-import dagger.assisted.AssistedInject
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 import com.woowahan.android10.deliverbanchan.presentation.common.KEY_ORDER_REQUEST_CODE
 import com.woowahan.android10.deliverbanchan.presentation.common.KEY_SHARED_PREFERENCES
 import com.woowahan.android10.deliverbanchan.presentation.common.ORDER_REQUEST_CODE
+import com.woowahan.android10.deliverbanchan.presentation.dialogs.dialog.NumberDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
