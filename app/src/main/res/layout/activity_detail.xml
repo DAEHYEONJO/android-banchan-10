@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <variable
+            name="vm"
+            type="com.woowahan.android10.deliverbanchan.presentation.detail.DetailViewModel" />
     </data>
 
     <LinearLayout
@@ -12,15 +15,11 @@
         android:orientation="vertical"
         tools:context=".presentation.detail.DetailActivity">
 
-<!--        <include-->
-<!--            android:id="@+id/main_tb"-->
+        <include
+            android:id="@+id/detail_tb"
+            app:detailViewModel="@{vm}"
+            layout="@layout/layout_app_bar_no_back_btn" />
 
-<!--            layout="@layout/layout_app_bar_no_back_btn" />-->
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/primary_main"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/detail_rv"

@@ -2,6 +2,7 @@ package com.woowahan.android10.deliverbanchan.presentation.detail
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
@@ -43,16 +44,17 @@ class DetailActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding.vm = detailViewModel
+        binding.lifecycleOwner = this
         initView()
-        observeDetailData()
-        observeInsertSuccess()
+        initObservers()
     }
 
     private fun initView() {
-        setReyclerView()
+        setRecyclerView()
     }
 
-    private fun setReyclerView() {
+    private fun setRecyclerView() {
         detailThumbImageAdapter = DetailThumbImageAdapter()
         detailContentAdapter = DetailContentAdapter({
             // minus click
@@ -80,7 +82,7 @@ class DetailActivity :
         }
     }
 
-    private fun observeDetailData() {
+    private fun initObservers() {
 
         detailViewModel.uiDetailInfo.flowWithLifecycle(lifecycle).onEach { uiDetailState ->
             when (uiDetailState) {
@@ -101,23 +103,17 @@ class DetailActivity :
             }
         }.launchIn(lifecycleScope)
 
-    }
-
-
-    private fun observeInsertSuccess() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                detailViewModel.insertSuccessEvent.collect {
-                    Log.e(TAG, "인서트이벤트 $it: ")
-                    if (it) {
-                        cartDialog.show(supportFragmentManager, "CartDialog")
-                    } else {
-                        showToast("장바구니 담기에 실패했습니다.")
-                    }
-                }
+        detailViewModel.insertSuccessEvent.flowWithLifecycle(lifecycle).onEach {
+            Log.e(TAG, "인서트이벤트 $it: ")
+            if (it) {
+                cartDialog.show(supportFragmentManager, "CartDialog")
+            } else {
+                showToast("장바구니 담기에 실패했습니다.")
             }
-        }
+        }.launchIn(lifecycleScope)
+
     }
+
 
 
 }

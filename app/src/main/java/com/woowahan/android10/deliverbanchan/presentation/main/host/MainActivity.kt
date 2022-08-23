@@ -29,9 +29,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main, "
         initBinding()
         initView()
         initBtn()
-        dishViewModel.cartInfoState.onEach {
-            Log.e("DishViewModel", "onCreate: $it")
-        }.launchIn(lifecycleScope)
     }
 
     @OptIn(FlowPreview::class)
