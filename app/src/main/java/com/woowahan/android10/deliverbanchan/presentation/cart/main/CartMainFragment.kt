@@ -34,6 +34,8 @@ import com.woowahan.android10.deliverbanchan.presentation.state.UiLocalState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import java.security.SecureRandom
+import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -164,7 +166,8 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
 
     private fun observeOrderButtonClickEvent() {
         with(cartViewModel) {
-            orderButtonClicked.flowWithLifecycle(lifecycle).onEach {
+            orderButtonClicked.observe(viewLifecycleOwner) {
+                Log.e(TAG, "observeOrderButtonClickEvent: orderBtnClickFlow $it", )
                 if (it) {
                     Log.e("CartMainFragment", "button clicked observed in CartMainFragment")
                     val alarmManager =
@@ -172,10 +175,10 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
                     val intent = Intent(requireContext(), DeliveryReceiver::class.java)
                     intent.putStringArrayListExtra("orderHashList", cartViewModel.orderHashList)
                     intent.putExtra("firstItemTitle", cartViewModel.orderFirstItemTitle)
-
+                    Log.e(TAG, "observeOrderButtonClickEvent ORDER_REQUEST_CODE: $ORDER_REQUEST_CODE", )
                     val pendingIntent = PendingIntent.getBroadcast(
                         requireContext(),
-                        ORDER_REQUEST_CODE++,
+                        SecureRandom().nextInt(Int.MAX_VALUE),
                         intent,
                         PendingIntent.FLAG_MUTABLE
                     )
@@ -196,7 +199,7 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
                     }
                     Log.e("CartmainFragment", "Alarm Register")
                 }
-            }.launchIn(lifecycleScope)
+            }
         }
     }
 

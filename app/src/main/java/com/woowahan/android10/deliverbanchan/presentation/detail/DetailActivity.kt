@@ -144,21 +144,6 @@ class DetailActivity :
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-//        cartDialog.setTextClickListener(object :
-//            CartDialogFragment.TextClickListener {
-//            override fun moveToCartTextClicked() {
-//                Log.e("DetailActivity", "move to cart")
-//                startActivity(
-//                    Intent(
-//                        this@DetailActivity,
-//                        CartActivity::class.java
-//                    )
-//                )
-//            }
-//        })
-    }
 
 
 }

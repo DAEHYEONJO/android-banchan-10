@@ -15,6 +15,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.presentation.order.OrderActivity
+import java.security.SecureRandom
 import kotlin.random.Random
 
 class DeliveryReceiver : BroadcastReceiver() {
@@ -56,7 +57,7 @@ class DeliveryReceiver : BroadcastReceiver() {
 
     private fun getNotificationTitle(firstItemTitle: String, listSize: Int): String {
         if (listSize <= 1) return firstItemTitle
-        else return "${firstItemTitle} 외 ${listSize - 1}개"
+        else return "$firstItemTitle 외 ${listSize - 1}개"
     }
 
     private fun createNotificationChannel(context: Context) {
@@ -84,7 +85,7 @@ class DeliveryReceiver : BroadcastReceiver() {
         )
 
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_food_2) // 아이콘
+            .setSmallIcon(R.drawable.ic_cart) // 아이콘
             .setContentTitle(contentTitle) // 제목
             .setContentText("배송이 완료되었습니다") // 내용
             .setContentIntent(contentPendingIntent)
@@ -92,6 +93,6 @@ class DeliveryReceiver : BroadcastReceiver() {
             .setAutoCancel(true)
 
         Log.e("AppTest", "alarm notify")
-        NotificationManagerCompat.from(context).notify(NOTIFICATION_ID, builder.build())
+        NotificationManagerCompat.from(context).notify((System.currentTimeMillis()/1000).toInt(), builder.build())
     }
 }

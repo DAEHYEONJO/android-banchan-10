@@ -90,8 +90,8 @@ class CartViewModel @Inject constructor(
     private val _orderCompleteFooterItem = MutableLiveData<UiOrderInfo>()
     val orderCompleteFooterItem: LiveData<UiOrderInfo> get() = _orderCompleteFooterItem
 
-    private val _orderButtonClicked = MutableSharedFlow<Boolean>()
-    val orderButtonClicked = _orderButtonClicked.asSharedFlow()
+    private val _orderButtonClicked = MutableLiveData(false)
+    val orderButtonClicked: LiveData<Boolean> = _orderButtonClicked
 
     val orderHashList = ArrayList<String>()
     var orderFirstItemTitle = "Title"
@@ -254,7 +254,7 @@ class CartViewModel @Inject constructor(
     }
 
     fun setOrderCompleteCartItem() {
-        // 주문 완료 화면에 대한 리스트 세팅
+        // 주문 완료 화면에 대한 리스트 세팅z`z`
         val tempHashList = _selectedCartItem.map { it.hash }.toList()
         _orderCompleteBodyItem.value =
             _uiCartJoinArrayList.filter { tempHashList.contains(it.hash) }.toList()
@@ -278,10 +278,8 @@ class CartViewModel @Inject constructor(
     }
 
     private fun insertOrderInfoDeleteCartInfo() = CoroutineScope(dispatcher).launch {
+        Log.e(TAG, "insertOrderInfoDeleteCartInfo: ", )
         launch {
-            withContext(viewModelScope.coroutineContext) {
-                fragmentArrayIndex.value = 1
-            }
             val timeStamp = System.currentTimeMillis()
             orderHashList.clear()
             orderFirstItemTitle = "Title"
@@ -298,7 +296,10 @@ class CartViewModel @Inject constructor(
                     )
                 }
             )
-            _orderButtonClicked.emit(true)
+            withContext(viewModelScope.coroutineContext) {
+                fragmentArrayIndex.value = 1
+                _orderButtonClicked.value = true
+            }
 
             deleteCartInfoByHashListUseCase(_selectedCartItem.map { it.hash }.toList())
         }
