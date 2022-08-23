@@ -3,7 +3,9 @@ package com.woowahan.android10.deliverbanchan.presentation.main.exhibition
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -43,6 +45,7 @@ class ExhibitionFragment :
         setExhibitionHeaderAdpater()
         setExhibitionContentAdapter()
         setRecyclerView()
+        setErrorBtn()
         initObserver()
     }
 
@@ -52,7 +55,7 @@ class ExhibitionFragment :
     }
 
     private fun setExhibitionContentAdapter() {
-        exhibitionAdapter = ExhibitionAdapter ().apply {
+        exhibitionAdapter = ExhibitionAdapter().apply {
             dishItemClickListener = this@ExhibitionFragment
         }
     }
@@ -80,15 +83,27 @@ class ExhibitionFragment :
 
     private fun handleStateChange(state: ExhibitionUiState) {
         when (state) {
-            is ExhibitionUiState.IsLoading -> binding.maindishPb.toVisible()
+            is ExhibitionUiState.IsLoading -> {
+                binding.maindishPb.toVisible()
+                binding.errorCl.toGone()
+            }
             is ExhibitionUiState.Success -> {
                 binding.maindishPb.toGone()
+                binding.exhibitionRv.toVisible()
                 exhibitionAdapter.submitList(state.uiExhibitionItems)
             }
             is ExhibitionUiState.ShowToast -> {
                 binding.maindishPb.toGone()
+                binding.exhibitionRv.toGone()
+                binding.errorCl.toVisible()
                 requireContext().showToast(state.message)
             }
+        }
+    }
+
+    private fun setErrorBtn() {
+        binding.errorBtn.setOnClickListener {
+            exhibitionViewModel.getExhibitionList()
         }
     }
 }
