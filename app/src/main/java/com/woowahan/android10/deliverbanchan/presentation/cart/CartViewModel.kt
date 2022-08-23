@@ -90,8 +90,8 @@ class CartViewModel @Inject constructor(
     private val _orderCompleteFooterItem = MutableLiveData<UiOrderInfo>()
     val orderCompleteFooterItem: LiveData<UiOrderInfo> get() = _orderCompleteFooterItem
 
-    private val _orderButtonClicked = MutableLiveData(false)
-    val orderButtonClicked: LiveData<Boolean> = _orderButtonClicked
+    private val _orderButtonClicked = MutableSharedFlow<Boolean>()
+    val orderButtonClicked: SharedFlow<Boolean> = _orderButtonClicked.asSharedFlow()
 
     val orderHashList = ArrayList<String>()
     var orderFirstItemTitle = "Title"
@@ -202,9 +202,6 @@ class CartViewModel @Inject constructor(
             _allRecentlyJoinState.value = UiLocalState.IsLoading(false)
             _allRecentlyJoinState.value = UiLocalState.ShowToast(exception.message.toString())
         }.collect {
-            it.forEach {
-                Log.e(TAG, "getAllRecentlyJoinList: $it")
-            }
             _allRecentlyJoinState.value = UiLocalState.IsLoading(false)
             _allRecentlyJoinState.value = UiLocalState.Success(it)
         }
@@ -232,7 +229,6 @@ class CartViewModel @Inject constructor(
         _toBeDeletedCartItem.add(hash)
         _uiCartJoinArrayList.removeAt(position)
         _uiCartJoinList.value = _uiCartJoinArrayList
-        Log.e(TAG, "deleteUiCartItemByPos: $_toBeDeletedCartItem")
     }
 
     fun deleteUiCartItemByHash(completion: (complete: Boolean) -> Unit) {
@@ -278,31 +274,24 @@ class CartViewModel @Inject constructor(
     }
 
     private fun insertOrderInfoDeleteCartInfo() = CoroutineScope(dispatcher).launch {
-        Log.e(TAG, "insertOrderInfoDeleteCartInfo: ", )
-        launch {
-            val timeStamp = System.currentTimeMillis()
-            orderHashList.clear()
-            orderFirstItemTitle = "Title"
-            insertVarArgOrderInfoUseCase(
-                _selectedCartItem.mapIndexed { inx, tempOrder ->
-                    if (inx == 0) orderFirstItemTitle = tempOrder.title
-                    orderHashList.add(tempOrder.hash)
-                    OrderInfo(
-                        hash = tempOrder.hash,
-                        timeStamp = timeStamp,
-                        amount = tempOrder.amount,
-                        isDelivering = true,
-                        deliveryPrice = _itemCartBottomBodyData.value!!.deliveryPrice
-                    )
-                }
-            )
-            withContext(viewModelScope.coroutineContext) {
-                fragmentArrayIndex.value = 1
-                _orderButtonClicked.value = true
+        val timeStamp = System.currentTimeMillis()
+        orderHashList.clear()
+        orderFirstItemTitle = "Title"
+        insertVarArgOrderInfoUseCase(
+            _selectedCartItem.mapIndexed { inx, tempOrder ->
+                if (inx == 0) orderFirstItemTitle = tempOrder.title
+                orderHashList.add(tempOrder.hash)
+                OrderInfo(
+                    hash = tempOrder.hash,
+                    timeStamp = timeStamp,
+                    amount = tempOrder.amount,
+                    isDelivering = true,
+                    deliveryPrice = _itemCartBottomBodyData.value!!.deliveryPrice
+                )
             }
-
-            deleteCartInfoByHashListUseCase(_selectedCartItem.map { it.hash }.toList())
-        }
+        )
+        _orderButtonClicked.emit(true)
+        deleteCartInfoByHashListUseCase(_selectedCartItem.map { it.hash }.toList())
     }
 
     fun updateAllCartItemChanged() = CoroutineScope(dispatcher).launch {

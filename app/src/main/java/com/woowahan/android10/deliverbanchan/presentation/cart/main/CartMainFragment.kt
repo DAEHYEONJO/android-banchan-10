@@ -166,16 +166,13 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
 
     private fun observeOrderButtonClickEvent() {
         with(cartViewModel) {
-            orderButtonClicked.observe(viewLifecycleOwner) {
-                Log.e(TAG, "observeOrderButtonClickEvent: orderBtnClickFlow $it", )
-                if (it) {
-                    Log.e("CartMainFragment", "button clicked observed in CartMainFragment")
+            orderButtonClicked.flowWithLifecycle(lifecycle).onEach{ btnClicked ->
+                if (btnClicked) {
                     val alarmManager =
                         (requireContext().getSystemService(Context.ALARM_SERVICE)) as AlarmManager
                     val intent = Intent(requireContext(), DeliveryReceiver::class.java)
                     intent.putStringArrayListExtra("orderHashList", cartViewModel.orderHashList)
                     intent.putExtra("firstItemTitle", cartViewModel.orderFirstItemTitle)
-                    Log.e(TAG, "observeOrderButtonClickEvent ORDER_REQUEST_CODE: $ORDER_REQUEST_CODE", )
                     val pendingIntent = PendingIntent.getBroadcast(
                         requireContext(),
                         SecureRandom().nextInt(Int.MAX_VALUE),
@@ -197,9 +194,9 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
                             pendingIntent
                         )
                     }
-                    Log.e("CartmainFragment", "Alarm Register")
+                    cartViewModel.fragmentArrayIndex.value = 1 // fragment 전환 -> 주문 디테일 화면
                 }
-            }
+            }.launchIn(lifecycleScope)
         }
     }
 
