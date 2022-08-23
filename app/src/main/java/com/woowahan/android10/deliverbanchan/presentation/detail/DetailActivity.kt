@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.ConcatAdapter
@@ -18,8 +19,10 @@ import com.woowahan.android10.deliverbanchan.presentation.detail.adapter.DetailC
 import com.woowahan.android10.deliverbanchan.presentation.detail.adapter.DetailSectionImageAdapter
 import com.woowahan.android10.deliverbanchan.presentation.detail.adapter.DetailThumbImageAdapter
 import com.woowahan.android10.deliverbanchan.presentation.dialogs.dialog.CartDialogFragment
-import com.woowahan.android10.deliverbanchan.presentation.state.DetailUiState
+import com.woowahan.android10.deliverbanchan.presentation.state.UiDetailState
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -41,7 +44,6 @@ class DetailActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initView()
-        observeApiState()
         observeDetailData()
         observeInsertSuccess()
     }
@@ -78,56 +80,29 @@ class DetailActivity :
         }
     }
 
-    private fun observeApiState() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                detailViewModel.detailState.collect {
-                    handleStateChange(it)
-                }
-            }
-        }
-    }
-
-    private fun handleStateChange(state: DetailUiState) {
-        when (state) {
-            is DetailUiState.IsLoading -> {
-                //binding.maindishPb.toVisible()
-            }
-            is DetailUiState.Success -> {
-                //binding.maindishPb.toGone()
-            }
-            is DetailUiState.ShowToast -> {
-                //binding.maindishPb.toGone()
-                showToast(state.message)
-            }
-        }
-    }
-
     private fun observeDetailData() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                detailViewModel.thumbList.collect {
-                    detailThumbImageAdapter.submitList(listOf(it))
-                }
-            }
-        }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                detailViewModel.uiDetailInfo.collect {
-                    detailContentAdapter.submitList(listOf(it))
-                }
-            }
-        }
+        detailViewModel.uiDetailInfo.flowWithLifecycle(lifecycle).onEach { uiDetailState ->
+            when (uiDetailState) {
+                is UiDetailState.Loading -> {
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                detailViewModel.sectionList.collect {
-                    detailSectionImageAdapter.submitList(it.toList())
+                }
+                is UiDetailState.Success -> {
+                    detailThumbImageAdapter.submitList(listOf(uiDetailState.uiDishItems.thumbList))
+                    detailContentAdapter.submitList(listOf(uiDetailState.uiDishItems))
+                    detailSectionImageAdapter.submitList(uiDetailState.uiDishItems.detailSection)
+                }
+                is UiDetailState.ShowToast -> {
+                    showToast(uiDetailState.message)
+                }
+                is UiDetailState.Error -> {
+                    showToast(uiDetailState.errorCode.toString() + "에러 에러 삐용 삐용")
                 }
             }
-        }
+        }.launchIn(lifecycleScope)
+
     }
+
 
     private fun observeInsertSuccess() {
         lifecycleScope.launch {
@@ -143,7 +118,6 @@ class DetailActivity :
             }
         }
     }
-
 
 
 }

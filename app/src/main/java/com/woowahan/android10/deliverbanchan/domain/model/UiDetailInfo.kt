@@ -9,6 +9,8 @@ data class UiDetailInfo(
     val point: String,
     val deliveryInfo: String,
     val deliveryFee: String,
+    val thumbList: List<String>,
+    val detailSection: List<String>,
     val sPrice: Int,
     val nPrice: Int = 0,
     val salePercentage: Int = 0,
@@ -24,6 +26,7 @@ data class UiDetailInfo(
             point = "",
             deliveryInfo = "",
             deliveryFee = "",
+            emptyList(), emptyList(),
             sPrice = 0
         )
     }

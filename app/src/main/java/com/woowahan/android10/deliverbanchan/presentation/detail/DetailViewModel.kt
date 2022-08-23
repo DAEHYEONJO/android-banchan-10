@@ -7,10 +7,9 @@ import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.LocalDish
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.RecentViewedInfo
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
-import com.woowahan.android10.deliverbanchan.domain.model.UiDetailInfo
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.usecase.*
-import com.woowahan.android10.deliverbanchan.presentation.state.DetailUiState
+import com.woowahan.android10.deliverbanchan.presentation.state.UiDetailState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -19,7 +18,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
-    private val createUiDetailInfoUseCase: CreateUiDetailInfoUseCase,
     private val getDetailDishUseCase: GetDetailDishUseCase,
     private val insertRecentUseCase: InsertRecentUseCase,
     private val insertCartInfoUseCase: InsertCartInfoUseCase,
@@ -27,19 +25,12 @@ class DetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
+    // Cart Flow 감지하고(어차피 app bar 용도로 만들어 주어야함.) 현재 hash에 해당하는 isInserted값 업데이트하기
+
     private val currentUiDishItem: UiDishItem? = savedStateHandle["UiDishItem"]
 
-    private val _detailState = MutableStateFlow<DetailUiState>(DetailUiState.Init)
-    val detailState: StateFlow<DetailUiState> get() = _detailState
-
-    private val _thumbList = MutableStateFlow<List<String>>(emptyList())
-    val thumbList: StateFlow<List<String>> = _thumbList
-
-    private val _sectionList = MutableStateFlow<List<String>>(emptyList())
-    val sectionList: StateFlow<List<String>> = _sectionList
-
-    private val _uiDetailInfo = MutableStateFlow<UiDetailInfo>(UiDetailInfo.returnEmptyItem())
-    val uiDetailInfo: StateFlow<UiDetailInfo> = _uiDetailInfo
+    private val _uiDetailInfo = MutableStateFlow<UiDetailState>(UiDetailState.Init)
+    val uiDetailInfo: StateFlow<UiDetailState> = _uiDetailInfo
 
     private val _itemCount = MutableStateFlow<Int>(1)
     val itemCount: StateFlow<Int> = _itemCount
@@ -70,27 +61,21 @@ class DetailViewModel @Inject constructor(
 
     private fun getDetailDishInfo() {
         viewModelScope.launch {
-            getDetailDishUseCase(currentUiDishItem!!.hash).onStart {
-                setLoading()
+            getDetailDishUseCase(currentUiDishItem!!.hash, currentUiDishItem, _itemCount.value).onStart {
+                _uiDetailInfo.value = UiDetailState.Loading(true)
             }.catch { exception ->
-                hideLoading()
-                showToast(exception.message.toString())
+                _uiDetailInfo.value = UiDetailState.Loading(false)
+                _uiDetailInfo.value = UiDetailState.ShowToast(exception.message.toString())
             }.flowOn(Dispatchers.IO).collect { result ->
-                hideLoading()
+                _uiDetailInfo.value = UiDetailState.Loading(false)
                 when (result) {
                     is BaseResult.Success -> {
-                        _thumbList.value = result.data.thumbImages
-                        _sectionList.value = result.data.detailSection
-                        _uiDetailInfo.value = createUiDetailInfoUseCase(
-                            currentUiDishItem,
-                            result.data,
-                            _itemCount.value
-                        )
-                        _detailState.value = DetailUiState.Success(result.data)
+                        _uiDetailInfo.value = UiDetailState.Success(result.data)
                         insertRecent()
                     }
-                    is BaseResult.Error -> _detailState.value =
-                        DetailUiState.Error(result.errorCode)
+                    is BaseResult.Error -> {
+                        _uiDetailInfo.value = UiDetailState.Error(result.errorCode)
+                    }
                 }
             }
         }
@@ -104,7 +89,7 @@ class DetailViewModel @Inject constructor(
                         // 이미 장바구니에 있는 경우
                         updateCartAmount(hash = it.hash, amount = _itemCount.value)
                     } else {
-                        // 새로 장바구니에 들어가는 경우
+                        //새로 장바구니에 들어가는 경우
                         insertCartInfoUseCase(
                             CartInfo(
                                 hash = it.hash,
@@ -124,25 +109,13 @@ class DetailViewModel @Inject constructor(
 
     fun plusItemCount() {
         _itemCount.value += 1
-        _uiDetailInfo.value = _uiDetailInfo.value.copy(itemCount = _itemCount.value)
+        _uiDetailInfo.value = UiDetailState.Success((_uiDetailInfo.value as UiDetailState.Success).uiDishItems.copy(itemCount = _itemCount.value))
     }
 
     fun minusItemCount() {
         if (_itemCount.value >= 2) {
             _itemCount.value -= 1
-            _uiDetailInfo.value = _uiDetailInfo.value.copy(itemCount = _itemCount.value)
+            _uiDetailInfo.value = UiDetailState.Success((_uiDetailInfo.value as UiDetailState.Success).uiDishItems.copy(itemCount = _itemCount.value))
         }
-    }
-
-    private fun setLoading() {
-        _detailState.value = DetailUiState.IsLoading(true)
-    }
-
-    private fun hideLoading() {
-        _detailState.value = DetailUiState.IsLoading(false)
-    }
-
-    private fun showToast(message: String) {
-        _detailState.value = DetailUiState.ShowToast(message)
     }
 }

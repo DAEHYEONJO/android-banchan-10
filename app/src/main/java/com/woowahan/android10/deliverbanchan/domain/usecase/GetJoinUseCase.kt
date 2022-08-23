@@ -43,6 +43,9 @@ class GetJoinUseCase @Inject constructor(
         return recentRepository.getAllRecentJoinList().map { recentlyViewedList ->
             recentlyViewedList.map { recentlyViewed ->
                 with(recentlyViewed) {
+                    val nPrice = this.nPrice
+                    val sPrice = this.sPrice
+                    val percentage = if (nPrice == 0) 0 else 100 - (sPrice.toDouble() / nPrice * 100).toInt()
                     val inInserted = cartRepository.isExistCartInfo(hash)
                     UiDishItem(
                         hash = hash,
@@ -50,6 +53,7 @@ class GetJoinUseCase @Inject constructor(
                         image = image,
                         nPrice = nPrice,
                         sPrice = sPrice,
+                        salePercentage = percentage,
                         description = description,
                         timeStamp = timeStamp,
                         isInserted = inInserted
