@@ -24,12 +24,7 @@ class DishViewModel @Inject constructor(
     companion object {
         const val TAG = "DishViewModel"
     }
-    private val _cartInfoState = MutableStateFlow<UiLocalState<CartInfo>>(UiLocalState.Init)
-    val cartInfoState: StateFlow<UiLocalState<CartInfo>> get() = _cartInfoState
     val cartIconText = MutableLiveData("")
-
-    private val _orderState = MutableStateFlow<UiLocalState<OrderInfo>>(UiLocalState.Init)
-    val orderState: StateFlow<UiLocalState<OrderInfo>> get() = _orderState
     val isOrderingExist = MutableLiveData(false)
 
     init {
@@ -38,19 +33,13 @@ class DishViewModel @Inject constructor(
     }
 
     private fun getAllCartInfo() = viewModelScope.launch {
-        getAllCartInfoUseCase().catch { exception ->
-            _cartInfoState.value = UiLocalState.ShowToast(exception.message.toString())
-        }.collect{
-            _cartInfoState.value = UiLocalState.Success(it)
-            setCartIconText((cartInfoState.value as UiLocalState.Success).uiDishItems.size)
+        getAllCartInfoUseCase(this).collect{
+            setCartIconText(it.size)
         }
     }
 
     private fun getAllOrderInfo() = viewModelScope.launch {
-        getAllOrderInfoListUseCase().catch { exception ->
-            _orderState.value = UiLocalState.ShowToast(exception.message.toString())
-        }.flowOn(Dispatchers.IO).collect{
-            _orderState.value = UiLocalState.Success(it)
+        getAllOrderInfoListUseCase(this).collect{
             val deliveringOrder: OrderInfo? = it.find { order ->
                 order.isDelivering
             }

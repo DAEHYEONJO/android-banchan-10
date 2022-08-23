@@ -63,14 +63,14 @@ class OrderViewModel @Inject constructor(
     private fun getAllOrderList() {
         viewModelScope.launch {
             getAllOrderJoinListUseCase().onStart {
-                _allOrderJoinState.value = UiLocalState.IsLoading(true)
+                _allOrderJoinState.value = UiLocalState.Loading(true)
             }.flowOn(dispatcher).catch { exception ->
-                _allOrderJoinState.value = UiLocalState.IsLoading(false)
+                _allOrderJoinState.value = UiLocalState.Loading(false)
                 _allOrderJoinState.value = UiLocalState.ShowToast(exception.message.toString())
             }.collect {
                 Log.e(TAG, "getAllOrderList: 올더조인플로우 $it", )
-                _allOrderJoinState.value = UiLocalState.IsLoading(false)
-                if (it.isEmpty()) _allOrderJoinState.value = UiLocalState.IsEmpty(true)
+                _allOrderJoinState.value = UiLocalState.Loading(false)
+                if (it.isEmpty()) _allOrderJoinState.value = UiLocalState.Empty(true)
                 else {
                     val map = it.groupBy { it.timeStamp }
                     val list = map.toList().map { (timeStamp, UiCartJointItemLIst) ->

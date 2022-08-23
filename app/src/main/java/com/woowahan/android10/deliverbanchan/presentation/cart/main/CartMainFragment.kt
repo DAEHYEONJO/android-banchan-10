@@ -196,8 +196,8 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
 
     private fun <A, T> handleState(adapter: A, uiLocalState: UiLocalState<T>) {
         when (uiLocalState) {
-            is UiLocalState.IsEmpty -> {}
-            is UiLocalState.IsLoading -> {}
+            is UiLocalState.Empty -> {}
+            is UiLocalState.Loading -> {}
             is UiLocalState.ShowToast -> {
                 requireContext().showToast(uiLocalState.message)
             }

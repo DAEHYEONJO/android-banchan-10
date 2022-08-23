@@ -5,6 +5,9 @@
         <variable
             name="dishViewModel"
             type="com.woowahan.android10.deliverbanchan.presentation.main.host.DishViewModel" />
+        <variable
+            name="detailViewModel"
+            type="com.woowahan.android10.deliverbanchan.presentation.detail.DetailViewModel" />
         <import type="android.view.View"/>
     </data>
 
@@ -38,7 +41,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:layout_marginEnd="@dimen/base_space_16dp"
-                    app:setProfileIcon="@{dishViewModel.isOrderingExist()}"
+                    app:setProfileIcon="@{dishViewModel!=null?dishViewModel.isOrderingExist():detailViewModel.isOrderingExist()}"
                     android:visibility="visible" />
 
                 <FrameLayout
@@ -52,7 +55,7 @@
                         android:id="@+id/app_bar_no_back_btn_iv_cart"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:setCartIcon="@{dishViewModel.cartIconText}"
+                        app:setCartIcon="@{dishViewModel!=null?dishViewModel.cartIconText:detailViewModel.cartIconText}"
                         android:layout_gravity="bottom|start"
                         android:layout_marginBottom="@dimen/item_elevation_2dp"
                         android:layout_marginStart="@dimen/item_elevation_2dp"
@@ -63,8 +66,8 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_cart_count_13dp"
                         android:gravity="center"
-                        app:setCartTextViewVisibility="@{dishViewModel.cartIconText}"
-                        android:text="@{dishViewModel.cartIconText}"
+                        app:setCartTextViewVisibility="@{dishViewModel!=null?dishViewModel.cartIconText:detailViewModel.cartIconText}"
+                        android:text="@{dishViewModel!=null?dishViewModel.cartIconText:detailViewModel.cartIconText}"
                         style="@style/Widget.TextView.KoPubWorldDotumPro_GreyScaleWhite8_Bold.Style"
                         android:layout_gravity="top|end" />
                 </FrameLayout>

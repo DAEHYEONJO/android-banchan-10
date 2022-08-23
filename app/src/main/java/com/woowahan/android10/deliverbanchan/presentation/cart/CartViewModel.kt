@@ -129,14 +129,14 @@ class CartViewModel @Inject constructor(
 
     private fun getAllCartJoinList() = viewModelScope.launch {
         getJoinUseCase.getCartJoinList().onStart {
-            _allCartJoinState.value = UiLocalState.IsLoading(true)
+            _allCartJoinState.value = UiLocalState.Loading(true)
         }.flowOn(dispatcher).catch { exception ->
-            _allCartJoinState.value = UiLocalState.IsLoading(false)
+            _allCartJoinState.value = UiLocalState.Loading(false)
             _allCartJoinState.value = UiLocalState.ShowToast(exception.message.toString())
         }.onEach { uiCartJoinItemList ->
             calcCartBottomBodyAndHeaderVal(uiCartJoinItemList)
         }.collect {
-            _allCartJoinState.value = UiLocalState.IsLoading(false)
+            _allCartJoinState.value = UiLocalState.Loading(false)
             _allCartJoinState.value = UiLocalState.Success(it)
             _uiCartJoinArrayList.clear()
             _uiCartJoinArrayList.addAll(it)
@@ -194,12 +194,12 @@ class CartViewModel @Inject constructor(
 
     private fun getAllRecentlyJoinList() = viewModelScope.launch {
         getJoinUseCase.getAllRecentJoinListLimitSeven().onStart {
-            _allRecentlyJoinState.value = UiLocalState.IsLoading(true)
+            _allRecentlyJoinState.value = UiLocalState.Loading(true)
         }.flowOn(dispatcher).catch { exception ->
-            _allRecentlyJoinState.value = UiLocalState.IsLoading(false)
+            _allRecentlyJoinState.value = UiLocalState.Loading(false)
             _allRecentlyJoinState.value = UiLocalState.ShowToast(exception.message.toString())
         }.collect {
-            _allRecentlyJoinState.value = UiLocalState.IsLoading(false)
+            _allRecentlyJoinState.value = UiLocalState.Loading(false)
             _allRecentlyJoinState.value = UiLocalState.Success(it)
         }
     }
