@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.databinding.ItemCartDishTopBodyBinding
-import com.woowahan.android10.deliverbanchan.domain.model.UiCartJoinItem
+import com.woowahan.android10.deliverbanchan.domain.model.UiCartOrderDishJoinItem
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEventWithDuration
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.CoroutineScope
@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @ActivityRetainedScoped
 class CartDishTopBodyAdapter @Inject constructor(
-) : ListAdapter<UiCartJoinItem, CartDishTopBodyAdapter.ViewHolder>(diffUtil) {
+) : ListAdapter<UiCartOrderDishJoinItem, CartDishTopBodyAdapter.ViewHolder>(diffUtil) {
 
     interface OnCartTopBodyItemClickListener {
         fun onClickDeleteBtn(position: Int, hash: String)
@@ -30,17 +30,17 @@ class CartDishTopBodyAdapter @Inject constructor(
 
     companion object {
         const val TAG = "CartDishTopBodyAdapter"
-        val diffUtil = object : DiffUtil.ItemCallback<UiCartJoinItem>() {
+        val diffUtil = object : DiffUtil.ItemCallback<UiCartOrderDishJoinItem>() {
             override fun areItemsTheSame(
-                oldItem: UiCartJoinItem,
-                newItem: UiCartJoinItem
+                oldItem: UiCartOrderDishJoinItem,
+                newItem: UiCartOrderDishJoinItem
             ): Boolean {
                 return oldItem.hash == newItem.hash && oldItem.checked == newItem.checked && oldItem.amount == newItem.amount
             }
 
             override fun areContentsTheSame(
-                oldItem: UiCartJoinItem,
-                newItem: UiCartJoinItem
+                oldItem: UiCartOrderDishJoinItem,
+                newItem: UiCartOrderDishJoinItem
             ): Boolean {
                 return oldItem == newItem
             }
@@ -49,14 +49,14 @@ class CartDishTopBodyAdapter @Inject constructor(
 
     inner class ViewHolder(val binding: ItemCartDishTopBodyBinding, private val coroutineScope: CoroutineScope) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(uiCartJoinItem: UiCartJoinItem) {
+        fun bind(uiCartOrderDishJoinItem: UiCartOrderDishJoinItem) {
             with(binding) {
-                item = uiCartJoinItem
-                val hash = uiCartJoinItem.hash
-                val amount = uiCartJoinItem.amount
+                item = uiCartOrderDishJoinItem
+                val hash = uiCartOrderDishJoinItem.hash
+                val amount = uiCartOrderDishJoinItem.amount
                 cartSelectTopBodyCb.setOnClickListener {
                     onCartTopBodyItemClickListener?.onCheckBoxCheckedChanged(
-                        adapterPosition, hash, uiCartJoinItem.checked
+                        adapterPosition, hash, uiCartOrderDishJoinItem.checked
                     )
                 }
                 cartSelectTopBodyIbDelete.setClickEventWithDuration(coroutineScope) {

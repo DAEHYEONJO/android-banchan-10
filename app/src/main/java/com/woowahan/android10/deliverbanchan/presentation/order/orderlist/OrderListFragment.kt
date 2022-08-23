@@ -17,7 +17,6 @@ import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
 import com.woowahan.android10.deliverbanchan.presentation.order.OrderViewModel
-import com.woowahan.android10.deliverbanchan.presentation.order.orderlistdetail.OrderDetailFragment
 import com.woowahan.android10.deliverbanchan.presentation.state.UiLocalState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -44,7 +43,6 @@ class OrderListFragment :
     private fun setRecyclerView() {
         orderListAdapter = OrderListAdapter{
             orderViewModel.selectOrderListItem(it)
-            // OrDetailFragment 로 이동 코드 추가하기
             orderViewModel.triggerMoveToOrderDetailFragmentEvent()
         }
         binding.orderRv.apply {

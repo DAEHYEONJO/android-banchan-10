@@ -5,7 +5,7 @@
     <data>
         <variable
             name="item"
-            type="com.woowahan.android10.deliverbanchan.domain.model.UiCartJoinItem" />
+            type="com.woowahan.android10.deliverbanchan.domain.model.UiCartOrderDishJoinItem" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

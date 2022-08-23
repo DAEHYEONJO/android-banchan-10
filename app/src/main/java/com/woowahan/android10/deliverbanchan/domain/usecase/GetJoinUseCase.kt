@@ -1,6 +1,6 @@
 package com.woowahan.android10.deliverbanchan.domain.usecase
 
-import com.woowahan.android10.deliverbanchan.domain.model.UiCartJoinItem
+import com.woowahan.android10.deliverbanchan.domain.model.UiCartOrderDishJoinItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.repository.local.CartRepository
 import com.woowahan.android10.deliverbanchan.domain.repository.local.OrderRepository
@@ -18,12 +18,12 @@ class GetJoinUseCase @Inject constructor(
 ) {
     fun getOrderJoinList() = orderRepository.getAllOrderJoinList()
 
-    fun getCartJoinList(): Flow<List<UiCartJoinItem>> {
+    fun getCartJoinList(): Flow<List<UiCartOrderDishJoinItem>> {
         return cartRepository.getAllCartJoinList().map { cartList ->
             cartList.map { cart ->
                 with(cart){
                     val totalPrice = sPrice*amount
-                    UiCartJoinItem(
+                    UiCartOrderDishJoinItem(
                         hash = hash,
                         title = title,
                         amount = amount,

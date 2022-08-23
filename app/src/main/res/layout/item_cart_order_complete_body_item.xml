@@ -5,12 +5,13 @@
     <data>
         <variable
             name="item"
-            type="com.woowahan.android10.deliverbanchan.domain.model.UiCartJoinItem" />
+            type="com.woowahan.android10.deliverbanchan.domain.model.UiCartOrderDishJoinItem" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/grey_scale_white">
 
         <ImageView
             android:id="@+id/cart_complete_body_item_iv"
