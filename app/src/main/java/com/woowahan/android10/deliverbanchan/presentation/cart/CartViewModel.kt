@@ -193,7 +193,7 @@ class CartViewModel @Inject constructor(
     }
 
     private fun getAllRecentlyJoinList() = viewModelScope.launch {
-        getJoinUseCase.getRecentlyJoinList().onStart {
+        getJoinUseCase.getAllRecentJoinListLimitSeven().onStart {
             _allRecentlyJoinState.value = UiLocalState.IsLoading(true)
         }.flowOn(dispatcher).catch { exception ->
             _allRecentlyJoinState.value = UiLocalState.IsLoading(false)

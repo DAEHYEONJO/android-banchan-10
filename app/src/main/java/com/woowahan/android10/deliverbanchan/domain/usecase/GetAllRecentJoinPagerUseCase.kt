@@ -22,6 +22,9 @@ class GetAllRecentJoinPagerUseCase @Inject constructor(
         return recentViewedRepository.getAllRecentJoinPager().flow.map { pagingData ->
             pagingData.map { recentViewed ->
                 withContext(dispatcher){
+                    val nPrice = recentViewed.nPrice
+                    val sPrice = recentViewed.sPrice
+                    val percentage = if (nPrice == 0) 0 else 100 - (sPrice.toDouble() / nPrice * 100).toInt()
                     val isInserted = isExistCartInfoUseCase(recentViewed.hash)
                     UiDishItem(
                         _id = recentViewed._id,
@@ -29,6 +32,7 @@ class GetAllRecentJoinPagerUseCase @Inject constructor(
                         title = recentViewed.title,
                         image = recentViewed.image,
                         description = recentViewed.description,
+                        salePercentage = percentage,
                         nPrice = recentViewed.nPrice,
                         sPrice = recentViewed.sPrice,
                         timeStamp = recentViewed.timeStamp,
