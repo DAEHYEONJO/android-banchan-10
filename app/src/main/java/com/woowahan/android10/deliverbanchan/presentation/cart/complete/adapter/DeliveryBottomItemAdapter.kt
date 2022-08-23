@@ -6,26 +6,26 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.databinding.ItemCartOrderCompleteBodyItemBinding
-import com.woowahan.android10.deliverbanchan.domain.model.UiCartJoinItem
+import com.woowahan.android10.deliverbanchan.domain.model.UiCartOrderDishJoinItem
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 
 @ActivityRetainedScoped
 class DeliveryBottomItemAdapter @Inject constructor()
-    : ListAdapter<UiCartJoinItem, DeliveryBottomItemAdapter.ViewHolder>(diffUtil) {
+    : ListAdapter<UiCartOrderDishJoinItem, DeliveryBottomItemAdapter.ViewHolder>(diffUtil) {
 
     companion object{
-        val diffUtil = object : DiffUtil.ItemCallback<UiCartJoinItem>(){
+        val diffUtil = object : DiffUtil.ItemCallback<UiCartOrderDishJoinItem>(){
             override fun areItemsTheSame(
-                oldItem: UiCartJoinItem,
-                newItem: UiCartJoinItem
+                oldItem: UiCartOrderDishJoinItem,
+                newItem: UiCartOrderDishJoinItem
             ): Boolean {
                 return oldItem.hash == newItem.hash
             }
 
             override fun areContentsTheSame(
-                oldItem: UiCartJoinItem,
-                newItem: UiCartJoinItem
+                oldItem: UiCartOrderDishJoinItem,
+                newItem: UiCartOrderDishJoinItem
             ): Boolean {
                 return oldItem == newItem
             }
@@ -33,8 +33,8 @@ class DeliveryBottomItemAdapter @Inject constructor()
     }
 
     class ViewHolder(val binding: ItemCartOrderCompleteBodyItemBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(uiCartJoinItem: UiCartJoinItem){
-            binding.item = uiCartJoinItem
+        fun bind(uiCartOrderDishJoinItem: UiCartOrderDishJoinItem){
+            binding.item = uiCartOrderDishJoinItem
             binding.executePendingBindings()
         }
     }

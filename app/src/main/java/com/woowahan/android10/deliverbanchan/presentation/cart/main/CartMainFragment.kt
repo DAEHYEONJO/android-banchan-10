@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.ConcatAdapter
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.background.DeliveryReceiver
 import com.woowahan.android10.deliverbanchan.databinding.FragmentCartMainBinding
-import com.woowahan.android10.deliverbanchan.domain.model.UiCartJoinItem
+import com.woowahan.android10.deliverbanchan.domain.model.UiCartOrderDishJoinItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
 import com.woowahan.android10.deliverbanchan.presentation.cart.CartViewModel
@@ -204,7 +204,7 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
             is UiLocalState.Success -> {
                 when (adapter) {
                     is CartDishTopBodyAdapter -> {
-                        adapter.submitList(uiLocalState.uiDishItems as List<UiCartJoinItem>)
+                        adapter.submitList(uiLocalState.uiDishItems as List<UiCartOrderDishJoinItem>)
                     }
                     is CartRecentViewedFooterAdapter -> {
                         with(adapter) {

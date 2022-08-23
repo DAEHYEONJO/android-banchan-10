@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.databinding.ItemCartOrderCompleteBodyBinding
-import com.woowahan.android10.deliverbanchan.domain.model.UiCartJoinItem
+import com.woowahan.android10.deliverbanchan.domain.model.UiCartOrderDishJoinItem
 import com.woowahan.android10.deliverbanchan.presentation.cart.common.LinearItemDecorator
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
@@ -12,10 +12,10 @@ import javax.inject.Inject
 @ActivityRetainedScoped
 class DeliveryBodyAdapter @Inject constructor(): RecyclerView.Adapter<DeliveryBodyAdapter.ViewHolder>() {
 
-    var cartDeliveryTopList = emptyList<UiCartJoinItem>()
+    var cartDeliveryTopList = emptyList<UiCartOrderDishJoinItem>()
 
     inner class ViewHolder(private val binding: ItemCartOrderCompleteBodyBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(uiCartJoinList: List<UiCartJoinItem>){
+        fun bind(uiCartJoinList: List<UiCartOrderDishJoinItem>){
             with(binding.cartOrderCompleteBodyRv){
                 adapter = DeliveryBottomItemAdapter().apply {
                     if (itemDecorationCount == 0) addItemDecoration(LinearItemDecorator(context))

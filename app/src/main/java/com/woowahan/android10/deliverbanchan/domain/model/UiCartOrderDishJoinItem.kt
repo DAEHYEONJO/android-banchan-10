@@ -1,6 +1,6 @@
 package com.woowahan.android10.deliverbanchan.domain.model
 
-data class UiCartJoinItem(
+data class UiCartOrderDishJoinItem(
     val hash: String,
     val title: String,
     var amount: Int,
@@ -16,7 +16,7 @@ data class UiCartJoinItem(
 ) {
 
     companion object {
-        fun emptyItem() = UiCartJoinItem(
+        fun emptyItem() = UiCartOrderDishJoinItem(
             hash = "",
             title = "",
             amount = 0,

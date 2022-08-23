@@ -4,10 +4,8 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.woowahan.android10.deliverbanchan.data.local.model.entity.OrderInfo
-import com.woowahan.android10.deliverbanchan.data.local.model.join.Order
 import com.woowahan.android10.deliverbanchan.di.IoDispatcher
-import com.woowahan.android10.deliverbanchan.domain.model.UiCartJoinItem
+import com.woowahan.android10.deliverbanchan.domain.model.UiCartOrderDishJoinItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiOrderInfo
 import com.woowahan.android10.deliverbanchan.domain.model.UiOrderListItem
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllOrderJoinListUseCase
@@ -36,7 +34,7 @@ class OrderViewModel @Inject constructor(
     val currentFragmentIndex = MutableStateFlow<Int>(0)
 
     var selectedOrderHeader = MutableStateFlow(UiCartCompleteHeader.emptyItem())
-    var selectedOrderList = MutableStateFlow<List<UiCartJoinItem>>(emptyList())
+    var selectedOrderList = MutableStateFlow<List<UiCartOrderDishJoinItem>>(emptyList())
     var selectedOrderInfo = MutableStateFlow(UiOrderInfo.emptyItem())
 
     private val _moveToOrderDetailEvent = MutableSharedFlow<Boolean>()
@@ -50,7 +48,7 @@ class OrderViewModel @Inject constructor(
         getAllOrderList()
     }
 
-    fun selectOrderListItem(orderList: List<UiCartJoinItem>) {
+    fun selectOrderListItem(orderList: List<UiCartOrderDishJoinItem>) {
         val orderTimeStamp = orderList.first().timeStamp
         val orderItemCount = orderList.map { it.amount }.reduce { acc, uiCartJoinItem -> acc + uiCartJoinItem }
         val deliveryFee = orderList.first().deliveryPrice

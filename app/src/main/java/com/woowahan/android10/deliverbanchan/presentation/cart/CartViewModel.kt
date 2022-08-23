@@ -11,7 +11,7 @@ import com.woowahan.android10.deliverbanchan.background.CartItemsDbWorker
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.OrderInfo
 import com.woowahan.android10.deliverbanchan.di.IoDispatcher
-import com.woowahan.android10.deliverbanchan.domain.model.UiCartJoinItem
+import com.woowahan.android10.deliverbanchan.domain.model.UiCartOrderDishJoinItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiOrderInfo
 import com.woowahan.android10.deliverbanchan.domain.usecase.*
@@ -46,8 +46,8 @@ class CartViewModel @Inject constructor(
     val orderDetailMode = MutableLiveData(false)
 
     private val _allCartJoinState =
-        MutableStateFlow<UiLocalState<UiCartJoinItem>>(UiLocalState.Init)
-    val allCartJoinState: StateFlow<UiLocalState<UiCartJoinItem>>
+        MutableStateFlow<UiLocalState<UiCartOrderDishJoinItem>>(UiLocalState.Init)
+    val allCartJoinState: StateFlow<UiLocalState<UiCartOrderDishJoinItem>>
         get() = _allCartJoinState.stateIn(
             initialValue = UiLocalState.Init,
             scope = viewModelScope,
@@ -67,9 +67,9 @@ class CartViewModel @Inject constructor(
     private val _itemCartHeaderData = MutableLiveData(UiCartHeader.emptyItem())
     val itemCartHeaderData: LiveData<UiCartHeader> get() = _itemCartHeaderData
 
-    private val _uiCartJoinList = MutableLiveData<List<UiCartJoinItem>>(emptyList())
-    val uiCartJoinList: LiveData<List<UiCartJoinItem>> get() = _uiCartJoinList
-    private val _uiCartJoinArrayList = ArrayList<UiCartJoinItem>()
+    private val _uiCartJoinList = MutableLiveData<List<UiCartOrderDishJoinItem>>(emptyList())
+    val uiCartJoinList: LiveData<List<UiCartOrderDishJoinItem>> get() = _uiCartJoinList
+    private val _uiCartJoinArrayList = ArrayList<UiCartOrderDishJoinItem>()
 
     private val _itemCartBottomBodyData = MutableLiveData(UiCartBottomBody.emptyItem())
     val itemCartBottomBodyData: LiveData<UiCartBottomBody> get() = _itemCartBottomBodyData
@@ -81,8 +81,8 @@ class CartViewModel @Inject constructor(
     private val _orderCompleteTopItem = MutableLiveData<UiCartCompleteHeader>()
     val orderCompleteTopItem: LiveData<UiCartCompleteHeader> get() = _orderCompleteTopItem
 
-    private val _orderCompleteBodyItem = MutableLiveData<List<UiCartJoinItem>>(emptyList())
-    val orderCompleteBodyItem: LiveData<List<UiCartJoinItem>> get() = _orderCompleteBodyItem
+    private val _orderCompleteBodyItem = MutableLiveData<List<UiCartOrderDishJoinItem>>(emptyList())
+    val orderCompleteBodyItem: LiveData<List<UiCartOrderDishJoinItem>> get() = _orderCompleteBodyItem
 
     private val _orderCompleteFooterItem = MutableLiveData<UiOrderInfo>()
     val orderCompleteFooterItem: LiveData<UiOrderInfo> get() = _orderCompleteFooterItem
@@ -144,10 +144,10 @@ class CartViewModel @Inject constructor(
         }
     }
 
-    fun calcCartBottomBodyAndHeaderVal(uiCartJoinItemList: List<UiCartJoinItem>) {
+    fun calcCartBottomBodyAndHeaderVal(uiCartOrderDishJoinItemList: List<UiCartOrderDishJoinItem>) {
         _itemCartBottomBodyProductTotalPrice = 0
         _selectedCartItem.clear()
-        val checkedUiJoinCartItem = uiCartJoinItemList.filter { it.checked }
+        val checkedUiJoinCartItem = uiCartOrderDishJoinItemList.filter { it.checked }
         checkedUiJoinCartItem.forEach { checkedUiCartJoinItem ->
             _selectedCartItem.add(
                 TempOrder(
@@ -158,7 +158,7 @@ class CartViewModel @Inject constructor(
             )
             _itemCartBottomBodyProductTotalPrice += checkedUiCartJoinItem.totalPrice
         }
-        if (checkedUiJoinCartItem.size == uiCartJoinItemList.size) {
+        if (checkedUiJoinCartItem.size == uiCartOrderDishJoinItemList.size) {
             _itemCartHeaderData.value = UiCartHeader(
                 checkBoxText = UiCartHeader.TEXT_SELECT_RELEASE,
                 checkBoxChecked = true
