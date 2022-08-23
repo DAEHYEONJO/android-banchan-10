@@ -19,6 +19,8 @@ import com.woowahan.android10.deliverbanchan.presentation.base.click_listener.On
 import com.woowahan.android10.deliverbanchan.presentation.cart.CartActivity
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEventWithDuration
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
 import com.woowahan.android10.deliverbanchan.presentation.detail.adapter.DetailContentAdapter
 import com.woowahan.android10.deliverbanchan.presentation.detail.adapter.DetailSectionImageAdapter
 import com.woowahan.android10.deliverbanchan.presentation.detail.adapter.DetailThumbImageAdapter
@@ -107,17 +109,22 @@ class DetailActivity :
         detailViewModel.uiDetailInfo.flowWithLifecycle(lifecycle).onEach { uiDetailState ->
             when (uiDetailState) {
                 is UiDetailState.Loading -> {
-
+                    binding.detailRv.toGone()
+                    binding.detailPb.toVisible()
                 }
                 is UiDetailState.Success -> {
+                    binding.detailRv.toVisible()
+                    binding.detailPb.toGone()
                     detailThumbImageAdapter.submitList(listOf(uiDetailState.uiDishItems.thumbList))
                     detailContentAdapter.submitList(listOf(uiDetailState.uiDishItems))
                     detailSectionImageAdapter.submitList(uiDetailState.uiDishItems.detailSection)
                 }
                 is UiDetailState.ShowToast -> {
+                    binding.detailPb.toGone()
                     showToast(uiDetailState.message)
                 }
                 is UiDetailState.Error -> {
+                    binding.detailPb.toGone()
                     showToast(uiDetailState.errorCode.toString() + "에러 에러 삐용 삐용")
                 }
             }
