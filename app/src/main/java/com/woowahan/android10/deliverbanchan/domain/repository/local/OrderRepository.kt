@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.Flow
 interface OrderRepository {
     @WorkerThread
     fun getAllOrderDish(): Flow<List<LocalDish>>
+
     @WorkerThread
     fun getAllOrderInfo(): Flow<List<OrderInfo>>
 
@@ -20,11 +21,13 @@ interface OrderRepository {
 
     @WorkerThread
     suspend fun deleteOrderDish(hash: String)
+
     @WorkerThread
     fun getAllOrderJoinList(): Flow<List<Order>>
+
     @WorkerThread
     suspend fun insertVarArgOrderInfo(orderInfoList: List<OrderInfo>)
 
     @WorkerThread
-    suspend fun updateIsDelivering(hash: String, isDelivering: Boolean)
+    suspend fun updateOrderIsDelivering(orderHashList: List<String>)
 }

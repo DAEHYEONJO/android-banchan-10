@@ -11,6 +11,8 @@ import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.ActivityMainBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseActivity
 import com.woowahan.android10.deliverbanchan.presentation.cart.CartActivity
+import com.woowahan.android10.deliverbanchan.presentation.common.KEY_ORDER_REQUEST_CODE
+import com.woowahan.android10.deliverbanchan.presentation.common.KEY_SHARED_PREFERENCES
 import com.woowahan.android10.deliverbanchan.presentation.common.ORDER_REQUEST_CODE
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEventWithDuration
 import com.woowahan.android10.deliverbanchan.presentation.main.sidedish.SideDishViewModel
@@ -95,10 +97,5 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main, "
     override fun onStop() {
         saveOrderRequestCode()
         super.onStop()
-    }
-
-    companion object{
-        private const val KEY_SHARED_PREFERENCES = "key_shared_preferences"
-        private const val KEY_ORDER_REQUEST_CODE = "key_order_request_code"
     }
 }

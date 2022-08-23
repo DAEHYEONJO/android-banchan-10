@@ -1,12 +1,21 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart.main
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.os.SystemClock
+import android.util.Log
 import android.view.View
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ConcatAdapter
 import com.woowahan.android10.deliverbanchan.R
+import com.woowahan.android10.deliverbanchan.background.DeliveryReceiver
 import com.woowahan.android10.deliverbanchan.databinding.FragmentCartMainBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiCartJoinItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
@@ -16,6 +25,7 @@ import com.woowahan.android10.deliverbanchan.presentation.cart.main.adapter.Cart
 import com.woowahan.android10.deliverbanchan.presentation.cart.main.adapter.CartOrderInfoBottomBodyAdapter
 import com.woowahan.android10.deliverbanchan.presentation.cart.main.adapter.CartRecentViewedFooterAdapter
 import com.woowahan.android10.deliverbanchan.presentation.cart.main.adapter.CartSelectHeaderAdapter
+import com.woowahan.android10.deliverbanchan.presentation.common.ORDER_REQUEST_CODE
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
 import com.woowahan.android10.deliverbanchan.presentation.state.UiLocalState
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,10 +40,13 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
 
     @Inject
     lateinit var cartHeaderAdapter: CartSelectHeaderAdapter
+
     @Inject
     lateinit var cartTopBodyAdapter: CartDishTopBodyAdapter
+
     @Inject
     lateinit var cartBottomBodyAdapter: CartOrderInfoBottomBodyAdapter
+
     @Inject
     lateinit var cartRecentViewedFooterAdapter: CartRecentViewedFooterAdapter
     private val concatAdapter: ConcatAdapter by lazy {
@@ -51,17 +64,18 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
         initInterface()
         initAdapterList()
         initRecyclerView()
+        observeOrderButtonClickEvent()
     }
 
     private fun initInterface() {
         cartBottomBodyAdapter.onCartBottomBodyItemClickListener =
-            object : CartOrderInfoBottomBodyAdapter.OnCartBottomBodyItemClickListener{
+            object : CartOrderInfoBottomBodyAdapter.OnCartBottomBodyItemClickListener {
                 override fun onClickOrderBtn() {
                     cartViewModel.setOrderCompleteCartItem()
                 }
             }
         cartHeaderAdapter.onCartTopBodyItemClickListener =
-            object : CartSelectHeaderAdapter.OnCartTopBodyItemClickListener{
+            object : CartSelectHeaderAdapter.OnCartTopBodyItemClickListener {
                 override fun onClickSelectedDelete() {
                     cartViewModel.deleteUiCartItemByHash { success ->
                         if (success) requireContext().showToast("삭제에 성공했습니다.")
@@ -80,7 +94,11 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
                     cartTopBodyAdapter.notifyItemChanged(position)
                 }
 
-                override fun onCheckBoxCheckedChanged(position: Int, hash: String, checked: Boolean) {
+                override fun onCheckBoxCheckedChanged(
+                    position: Int,
+                    hash: String,
+                    checked: Boolean
+                ) {
                     cartViewModel.updateUiCartCheckedValue(position, !checked)
                     cartTopBodyAdapter.notifyItemChanged(position)
                 }
@@ -91,7 +109,7 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
                 }
             }
         cartRecentViewedFooterAdapter.onCartFooterItemClickListener =
-            object : CartRecentViewedFooterAdapter.OnCartFooterItemClickListener{
+            object : CartRecentViewedFooterAdapter.OnCartFooterItemClickListener {
                 override fun onClickShowAllBtn() {
                     cartViewModel.fragmentArrayIndex.value = 2
                 }
@@ -114,16 +132,53 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
                     notifyDataSetChanged()
                 }
             }
-            itemCartBottomBodyData.observe(viewLifecycleOwner){ uiCartBottomBody ->
-                with(cartBottomBodyAdapter){
+            itemCartBottomBodyData.observe(viewLifecycleOwner) { uiCartBottomBody ->
+                with(cartBottomBodyAdapter) {
                     bottomBodyList = listOf(uiCartBottomBody)
                     notifyDataSetChanged()
                 }
             }
-            uiCartJoinList.observe(viewLifecycleOwner){
+            uiCartJoinList.observe(viewLifecycleOwner) {
                 cartTopBodyAdapter.submitList(it.toList())
                 cartViewModel.calcCartBottomBodyAndHeaderVal(it)
             }
+        }
+    }
+
+    private fun observeOrderButtonClickEvent() {
+        with(cartViewModel) {
+            orderButtonClicked.flowWithLifecycle(lifecycle).onEach {
+                if (it) {
+                    Log.e("CartMainFragment", "button clicked observed in CartMainFragment")
+                    val alarmManager =
+                        (requireContext().getSystemService(Context.ALARM_SERVICE)) as AlarmManager
+                    val intent = Intent(requireContext(), DeliveryReceiver::class.java)
+                    intent.putStringArrayListExtra("orderHashList", cartViewModel.orderHashList)
+
+                    val pendingIntent = PendingIntent.getBroadcast(
+                        requireContext(),
+                        ORDER_REQUEST_CODE++,
+                        intent,
+                        PendingIntent.FLAG_MUTABLE
+                    )
+
+                    val triggerTime = (SystemClock.elapsedRealtime() + 10 * 1000) // 테스트용 = 현재 10초
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        alarmManager.setExactAndAllowWhileIdle(
+                            AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                            triggerTime,
+                            pendingIntent
+                        )
+                    } else {
+                        alarmManager.set(
+                            AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                            triggerTime,
+                            pendingIntent
+                        )
+                    }
+                    Log.e("CartmainFragment", "Alarm Register")
+                }
+            }.launchIn(lifecycleScope)
         }
     }
 
@@ -135,7 +190,7 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
                 requireContext().showToast(uiLocalState.message)
             }
             is UiLocalState.Success -> {
-               when (adapter) {
+                when (adapter) {
                     is CartDishTopBodyAdapter -> {
                         adapter.submitList(uiLocalState.uiDishItems as List<UiCartJoinItem>)
                     }

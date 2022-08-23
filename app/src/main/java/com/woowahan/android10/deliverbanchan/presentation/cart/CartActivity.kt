@@ -1,5 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -16,7 +17,11 @@ import com.woowahan.android10.deliverbanchan.presentation.base.BaseActivity
 import com.woowahan.android10.deliverbanchan.presentation.cart.complete.CartDeliveryCompleteFragment
 import com.woowahan.android10.deliverbanchan.presentation.cart.main.CartMainFragment
 import com.woowahan.android10.deliverbanchan.presentation.cart.recent.RecentViewedFragment
+import com.woowahan.android10.deliverbanchan.presentation.common.KEY_ORDER_REQUEST_CODE
+import com.woowahan.android10.deliverbanchan.presentation.common.KEY_SHARED_PREFERENCES
+import com.woowahan.android10.deliverbanchan.presentation.common.ORDER_REQUEST_CODE
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
+import com.woowahan.android10.deliverbanchan.presentation.main.host.MainActivity
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -85,7 +90,15 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart, "
 
     override fun onStop() {
         super.onStop()
+        saveOrderRequestCode()
         cartViewModel.updateAllCartItemChanged()
         //makeWorkRequest()
+    }
+
+    private fun saveOrderRequestCode() {
+        val sharedPreferences = getSharedPreferences(KEY_SHARED_PREFERENCES, Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putInt(KEY_ORDER_REQUEST_CODE, ORDER_REQUEST_CODE)
+        editor.apply()
     }
 }

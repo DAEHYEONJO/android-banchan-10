@@ -10,6 +10,9 @@ import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.presentation.order.OrderActivity
 import kotlin.random.Random
@@ -22,8 +25,30 @@ class DeliveryReceiver : BroadcastReceiver() {
     }
 
     override fun onReceive(context: Context, intent: Intent?) {
+        Log.e("DeliveryReceiver", "onReceive")
+
+        val orderHashList = intent?.let { it.getStringArrayListExtra("orderHashList") } ?: ArrayList<String>()
+        Log.e("DeliveryReceiver", "orderHashList : $orderHashList")
+
+        val deliveryWorkManager = WorkManager.getInstance(context)
+
+        val deliveryWorkRequest = OneTimeWorkRequestBuilder<DeliveryWorker>()
+            //.setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+            .addTag("DeliveryWorker")
+            .setInputData(getWorkerData(orderHashList))
+            .build()
+
+        deliveryWorkManager.enqueue(deliveryWorkRequest)
+
         createNotificationChannel(context)
         deliverNotification(context)
+    }
+
+    private fun getWorkerData(orderHashList: List<String>): Data {
+        val builder = Data.Builder().apply {
+            putStringArray("orderHashArray", orderHashList.toTypedArray())
+        }
+        return builder.build()
     }
 
     private fun createNotificationChannel(context: Context) {

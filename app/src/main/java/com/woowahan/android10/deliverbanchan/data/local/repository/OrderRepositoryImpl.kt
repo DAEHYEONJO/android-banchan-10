@@ -31,7 +31,7 @@ class OrderRepositoryImpl @Inject constructor(
         orderDao.insertVarArgOrderInfo(*orderInfoList.toTypedArray())
 
     @WorkerThread
-    override suspend fun updateIsDelivering(hash: String, isDelivering: Boolean) {
-        orderDao.updateCartAmount(hash, isDelivering)
+    override suspend fun updateOrderIsDelivering(orderHashList: List<String>) {
+        orderDao.updateOrderInfoByHashList(orderHashList)
     }
 }

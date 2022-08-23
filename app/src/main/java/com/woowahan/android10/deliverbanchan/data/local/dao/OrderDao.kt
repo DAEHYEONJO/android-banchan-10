@@ -31,5 +31,12 @@ interface OrderDao {
     suspend fun insertVarArgOrderInfo(vararg orderInfo: OrderInfo)
 
     @Query("UPDATE ORDER_INFO SET is_delivering = :isDelivering WHERE hash = :hash")
-    suspend fun updateCartAmount(hash: String, isDelivering: Boolean)
+    suspend fun updateOrderInfo(hash: String, isDelivering: Boolean)
+
+    @Transaction
+    suspend fun updateOrderInfoByHashList(orderHashList: List<String>) {
+        orderHashList.forEach { hash ->
+            updateOrderInfo(hash, false)
+        }
+    }
 }
