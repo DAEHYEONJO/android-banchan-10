@@ -80,6 +80,19 @@
                                 android:button="@null" />
                         </RadioGroup>
 
+                        <com.woowahan.android10.deliverbanchan.presentation.view.CustomSortingSpinner
+                            android:id="@+id/main_dish_sp"
+                            android:layout_width="145dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/base_space_16dp"
+                            app:verticalOffsetDpValue="@dimen/cart_btn_width_32dp"
+                            android:background="@drawable/bg_sort_spinner_down"
+                            android:popupBackground="@drawable/bg_sort_spinner_pop_up"
+                            android:popupElevation="@dimen/rv_space_4dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
