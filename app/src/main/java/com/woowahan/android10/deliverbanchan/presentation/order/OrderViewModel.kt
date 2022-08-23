@@ -12,6 +12,7 @@ import com.woowahan.android10.deliverbanchan.domain.model.UiOrderInfo
 import com.woowahan.android10.deliverbanchan.domain.model.UiOrderListItem
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllOrderJoinListUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.InsertOrderInfoUseCase
+import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartCompleteHeader
 import com.woowahan.android10.deliverbanchan.presentation.state.UiLocalState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -34,6 +35,7 @@ class OrderViewModel @Inject constructor(
     val orderDetailMode = MutableLiveData(false)
     val currentFragmentIndex = MutableStateFlow<Int>(0)
 
+    var selectedOrderHeader = MutableStateFlow(UiCartCompleteHeader.emptyItem())
     var selectedOrderList = MutableStateFlow<List<UiCartJoinItem>>(emptyList())
     var selectedOrderInfo = MutableStateFlow(UiOrderInfo.emptyItem())
 
@@ -49,13 +51,14 @@ class OrderViewModel @Inject constructor(
     }
 
     fun selectOrderListItem(orderList: List<UiCartJoinItem>) {
-        selectedOrderList.value = orderList
+        val orderTimeStamp = orderList.first().timeStamp
+        val orderItemCount = orderList.map { it.amount }.reduce { acc, uiCartJoinItem -> acc + uiCartJoinItem }
         val deliveryFee = orderList.first().deliveryPrice
+        val itemPrice = orderList.map { Pair(it.sPrice, it.amount) }.fold(0) { acc, pair -> acc + pair.first * pair.second }
+        selectedOrderHeader.value = UiCartCompleteHeader(orderTimeStamp, orderItemCount)
 
-        var itemPrice = 0
-        orderList.forEach {
-            itemPrice += it.sPrice * it.amount
-        }
+        selectedOrderList.value = orderList
+
         selectedOrderInfo.value = UiOrderInfo(itemPrice, deliveryFee, itemPrice + deliveryFee)
     }
 
@@ -67,6 +70,7 @@ class OrderViewModel @Inject constructor(
                 _allOrderJoinState.value = UiLocalState.IsLoading(false)
                 _allOrderJoinState.value = UiLocalState.ShowToast(exception.message.toString())
             }.collect {
+                Log.e(TAG, "getAllOrderList: 올더조인플로우 $it", )
                 _allOrderJoinState.value = UiLocalState.IsLoading(false)
                 if (it.isEmpty()) _allOrderJoinState.value = UiLocalState.IsEmpty(true)
                 else {
@@ -79,8 +83,6 @@ class OrderViewModel @Inject constructor(
                     }
                     _allOrderJoinState.value = UiLocalState.Success(list)
                 }
-                // 알림 눌러서 온거라면 해당 상세페이지로 이동해야 함
-
             }
         }
     }

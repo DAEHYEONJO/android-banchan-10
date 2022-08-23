@@ -45,7 +45,6 @@ class OrderListFragment :
     private fun setRecyclerView() {
         orderListAdapter = OrderListAdapter{
             orderViewModel.selectOrderListItem(it)
-            // OrDetailFragment 로 이동 코드 추가하기
             orderViewModel.triggerMoveToOrderDetailFragmentEvent()
         }
         binding.orderRv.apply {

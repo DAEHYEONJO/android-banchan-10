@@ -14,23 +14,22 @@ class GetAllOrderJoinListUseCase @Inject constructor(
 ) {
     operator fun invoke(): Flow<List<UiCartJoinItem>> {
         return orderRepository.getAllOrderJoinList().map {
-           it.map{ order ->
-               UiCartJoinItem(
-                   order.hash,
-                   order.title,
-                   order.amount,
-                   false,
-                   order.description,
-                   order.nPrices,
-                   order.sPrice,
-                   order.image,
-                   order.amount*order.sPrice
-               ).apply {
-                   timeStamp = order.timeStamp
-                   isDelivering = order.isDelivering
-                   deliveryPrice = order.deliveryPrice
-               }
-           }
+            it.map { order ->
+                UiCartJoinItem(
+                    order.hash,
+                    order.title,
+                    order.amount,
+                    false,
+                    order.description,
+                    order.nPrices,
+                    order.sPrice,
+                    order.image,
+                    order.amount * order.sPrice,
+                    timeStamp = order.timeStamp,
+                    isDelivering = order.isDelivering,
+                    deliveryPrice = order.deliveryPrice
+                )
+            }
         }
     }
 }

@@ -9,11 +9,12 @@ data class UiCartJoinItem(
     var nPrice: Int = 0,
     var sPrice: Int,
     val image: String,
-    var totalPrice: Int = sPrice * amount
-) {
-    var timeStamp: Long = 0L
-    var isDelivering: Boolean = false
+    var totalPrice: Int = sPrice * amount,
+    var timeStamp: Long = 0L,
+    var isDelivering: Boolean = false,
     var deliveryPrice: Int = 0
+) {
+
     companion object {
         fun emptyItem() = UiCartJoinItem(
             hash = "",

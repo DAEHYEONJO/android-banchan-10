@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.ConcatAdapter
@@ -16,6 +17,8 @@ import com.woowahan.android10.deliverbanchan.presentation.cart.complete.adapter.
 import com.woowahan.android10.deliverbanchan.presentation.cart.complete.adapter.DeliveryTopAdapter
 import com.woowahan.android10.deliverbanchan.presentation.order.OrderViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -32,7 +35,7 @@ class OrderDetailFragment : BaseFragment<FragmentOrderDetailBinding>(
     @Inject
     lateinit var orderDetailFooterAdapter: DeliveryFooterAdapter
     private val concatAdapter: ConcatAdapter by lazy {
-        ConcatAdapter(orderDetailBodyAdapter, orderDetailBodyAdapter, orderDetailFooterAdapter)
+        ConcatAdapter(orderDetailTopAdapter, orderDetailBodyAdapter, orderDetailFooterAdapter)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -56,18 +59,23 @@ class OrderDetailFragment : BaseFragment<FragmentOrderDetailBinding>(
 
     private fun observeData() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                orderViewModel.selectedOrderList.collect {
-                    orderDetailBodyAdapter.cartDeliveryTopList = it
-                }
-            }
-        }
+            with(orderViewModel){
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                orderViewModel.selectedOrderInfo.collect {
+                selectedOrderHeader.flowWithLifecycle(lifecycle).onEach {
+                    orderDetailTopAdapter.cartDeliveryTopList = listOf(it)
+                    orderDetailTopAdapter.notifyDataSetChanged()
+                }.launchIn(lifecycleScope)
+
+                selectedOrderList.flowWithLifecycle(lifecycle).onEach {
+                    orderDetailBodyAdapter.cartDeliveryTopList = it
+                    orderDetailBodyAdapter.notifyDataSetChanged()
+                }.launchIn(lifecycleScope)
+
+                selectedOrderInfo.flowWithLifecycle(lifecycle).onEach {
                     orderDetailFooterAdapter.cartDeliveryBottomList = listOf(it)
-                }
+                    orderDetailFooterAdapter.notifyDataSetChanged()
+                }.launchIn(lifecycleScope)
+
             }
         }
     }
