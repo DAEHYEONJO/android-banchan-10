@@ -27,8 +27,11 @@ class DeliveryReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
         Log.e("DeliveryReceiver", "onReceive")
 
-        val orderHashList = intent?.let { it.getStringArrayListExtra("orderHashList") } ?: ArrayList<String>()
+        val orderHashList =
+            intent?.let { it.getStringArrayListExtra("orderHashList") } ?: ArrayList<String>()
         Log.e("DeliveryReceiver", "orderHashList : $orderHashList")
+
+        val orderFirstItemTitle = intent?.let { it.getStringExtra("firstItemTitle") } ?: "Title"
 
         val deliveryWorkManager = WorkManager.getInstance(context)
 
@@ -41,7 +44,7 @@ class DeliveryReceiver : BroadcastReceiver() {
         deliveryWorkManager.enqueue(deliveryWorkRequest)
 
         createNotificationChannel(context)
-        deliverNotification(context)
+        deliverNotification(context, getNotificationTitle(orderFirstItemTitle, orderHashList.size))
     }
 
     private fun getWorkerData(orderHashList: List<String>): Data {
@@ -49,6 +52,11 @@ class DeliveryReceiver : BroadcastReceiver() {
             putStringArray("orderHashArray", orderHashList.toTypedArray())
         }
         return builder.build()
+    }
+
+    private fun getNotificationTitle(firstItemTitle: String, listSize: Int): String {
+        if (listSize <= 1) return firstItemTitle
+        else return "${firstItemTitle} 외 ${listSize - 1}개"
     }
 
     private fun createNotificationChannel(context: Context) {
@@ -64,7 +72,7 @@ class DeliveryReceiver : BroadcastReceiver() {
         }
     }
 
-    private fun deliverNotification(context: Context) {
+    private fun deliverNotification(context: Context, contentTitle: String) {
         val contentIntent = Intent(context, OrderActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
@@ -76,9 +84,9 @@ class DeliveryReceiver : BroadcastReceiver() {
         )
 
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_launcher_foreground) // 아이콘
-            .setContentTitle("배송완료") // 제목
-            .setContentText("Test Content") // 내용
+            .setSmallIcon(R.drawable.ic_food_2) // 아이콘
+            .setContentTitle(contentTitle) // 제목
+            .setContentText("배송이 완료되었습니다") // 내용
             .setContentIntent(contentPendingIntent)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)

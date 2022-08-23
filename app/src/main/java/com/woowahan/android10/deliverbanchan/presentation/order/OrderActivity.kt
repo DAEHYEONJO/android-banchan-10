@@ -56,10 +56,10 @@ class OrderActivity : BaseActivity<ActivityOrderBinding>(R.layout.activity_order
     private fun observeFragment() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                orderViewModel.currentFragmentName.collect {
+                orderViewModel.currentFragmentIndex.collect {
                     when (it) {
-                        "OrderList" -> setOrderListAppBar()
-                        "OrderDetail" -> setOrderDetailAppBar()
+                        0 -> setOrderListAppBar()
+                        1 -> setOrderDetailAppBar()
                     }
                 }
             }

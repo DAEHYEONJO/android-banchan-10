@@ -94,12 +94,12 @@ class CartViewModel @Inject constructor(
     val orderButtonClicked = _orderButtonClicked.asSharedFlow()
 
     val orderHashList = ArrayList<String>()
+    var orderFirstItemTitle = "Title"
 
     init {
         getAllRecentlyJoinList()
         getAllCartJoinList()
     }
-
 
 
     internal fun updateCartDataBase() {
@@ -155,7 +155,8 @@ class CartViewModel @Inject constructor(
             _selectedCartItem.add(
                 TempOrder(
                     checkedUiCartJoinItem.hash,
-                    checkedUiCartJoinItem.amount
+                    checkedUiCartJoinItem.amount,
+                    checkedUiCartJoinItem.title
                 )
             )
             _itemCartBottomBodyProductTotalPrice += checkedUiCartJoinItem.totalPrice
@@ -202,7 +203,7 @@ class CartViewModel @Inject constructor(
             _allRecentlyJoinState.value = UiLocalState.ShowToast(exception.message.toString())
         }.collect {
             it.forEach {
-                Log.e(TAG, "getAllRecentlyJoinList: $it", )
+                Log.e(TAG, "getAllRecentlyJoinList: $it")
             }
             _allRecentlyJoinState.value = UiLocalState.IsLoading(false)
             _allRecentlyJoinState.value = UiLocalState.Success(it)
@@ -237,7 +238,7 @@ class CartViewModel @Inject constructor(
     fun deleteUiCartItemByHash(completion: (complete: Boolean) -> Unit) {
         val success = _uiCartJoinArrayList.removeAll(
             _uiCartJoinArrayList.filter {
-                _selectedCartItem.contains(TempOrder(it.hash, it.amount))
+                _selectedCartItem.contains(TempOrder(it.hash, it.amount, it.title))
             }.toSet()
         )
         _toBeDeletedCartItem.addAll(_selectedCartItem.map { it.hash })
@@ -283,8 +284,10 @@ class CartViewModel @Inject constructor(
             }
             val timeStamp = System.currentTimeMillis()
             orderHashList.clear()
+            orderFirstItemTitle = "Title"
             insertVarArgOrderInfoUseCase(
-                _selectedCartItem.map { tempOrder ->
+                _selectedCartItem.mapIndexed { inx, tempOrder ->
+                    if (inx == 0) orderFirstItemTitle = tempOrder.title
                     orderHashList.add(tempOrder.hash)
                     OrderInfo(
                         hash = tempOrder.hash,
@@ -295,7 +298,6 @@ class CartViewModel @Inject constructor(
                     )
                 }
             )
-            Log.e("CartViewModel", "button clicked")
             _orderButtonClicked.emit(true)
 
             deleteCartInfoByHashListUseCase(_selectedCartItem.map { it.hash }.toList())
