@@ -12,11 +12,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
-import com.woowahan.android10.deliverbanchan.presentation.cart.CartActivity
-import com.woowahan.android10.deliverbanchan.presentation.common.OnDishItemClickListener
+import com.woowahan.android10.deliverbanchan.presentation.base.click_listener.OnDishItemClickListener
 import com.woowahan.android10.deliverbanchan.presentation.detail.DetailActivity
 import com.woowahan.android10.deliverbanchan.presentation.dialogs.bottomsheet.CartBottomSheetFragment
-import com.woowahan.android10.deliverbanchan.presentation.dialogs.dialog.CartDialogFragment
 
 abstract class BaseFragment<T : ViewDataBinding>(
     @LayoutRes private val layoutResId: Int,

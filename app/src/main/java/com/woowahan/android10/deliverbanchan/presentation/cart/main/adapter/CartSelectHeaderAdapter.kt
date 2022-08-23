@@ -17,11 +17,11 @@ class CartSelectHeaderAdapter @Inject constructor() :
         const val TAG = "CartSelectHeaderAdapter"
     }
 
-    interface OnCartTopBodyItemClickListener {
-        fun onClickSelectedDelete()
-        fun onClickSelectedStateChange(checkedState: Boolean)
+    interface OnCartSelectHeaderItemClickListener {
+        fun onClickDeleteBtn()
+        fun onClickSelectedToggleBtn(checkedState: Boolean)
     }
-    var onCartTopBodyItemClickListener: OnCartTopBodyItemClickListener? = null
+    var onCartSelectHeaderItemClickListener: OnCartSelectHeaderItemClickListener? = null
     var selectHeaderList = emptyList<UiCartHeader>()
 
     inner class ViewHolder(val binding: ItemCartSelectHeaderBinding) :
@@ -31,10 +31,10 @@ class CartSelectHeaderAdapter @Inject constructor() :
                 item = uiCartHeader
                 cartSelectHeaderCb.setOnClickListener{
                     Log.e(TAG, "bind: ${cartSelectHeaderCb.isChecked}", )
-                    onCartTopBodyItemClickListener?.onClickSelectedStateChange(uiCartHeader.checkBoxChecked)
+                    onCartSelectHeaderItemClickListener?.onClickSelectedToggleBtn(uiCartHeader.checkBoxChecked)
                 }
                 cartSelectHeaderTvSelectDelete.setOnClickListener {
-                    onCartTopBodyItemClickListener?.onClickSelectedDelete()
+                    onCartSelectHeaderItemClickListener?.onClickDeleteBtn()
                 }
                 executePendingBindings()
             }

@@ -1,6 +1,5 @@
 package com.woowahan.android10.deliverbanchan.presentation.detail
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
@@ -13,7 +12,7 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.ActivityDetailBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseActivity
-import com.woowahan.android10.deliverbanchan.presentation.cart.CartActivity
+import com.woowahan.android10.deliverbanchan.presentation.base.click_listener.OnCartDialogClickListener
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
 import com.woowahan.android10.deliverbanchan.presentation.detail.adapter.DetailContentAdapter
 import com.woowahan.android10.deliverbanchan.presentation.detail.adapter.DetailSectionImageAdapter
@@ -25,7 +24,8 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class DetailActivity :
-    BaseActivity<ActivityDetailBinding>(R.layout.activity_detail, "DetailActivity"), CartDialogFragment.TextClickListener {
+    BaseActivity<ActivityDetailBinding>(R.layout.activity_detail, "DetailActivity"),
+    OnCartDialogClickListener {
 
     private val detailViewModel: DetailViewModel by viewModels()
 
