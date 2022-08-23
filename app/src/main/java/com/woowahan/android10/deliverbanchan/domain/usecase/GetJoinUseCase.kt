@@ -1,5 +1,6 @@
 package com.woowahan.android10.deliverbanchan.domain.usecase
 
+import android.util.Log
 import com.woowahan.android10.deliverbanchan.domain.model.UiCartOrderDishJoinItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.repository.local.CartRepository
@@ -39,13 +40,14 @@ class GetJoinUseCase @Inject constructor(
         }
     }
 
-    suspend fun getRecentlyJoinList(): Flow<List<UiDishItem>> {
-        return recentRepository.getAllRecentJoinList().map { recentlyViewedList ->
+    suspend fun getAllRecentJoinListLimitSeven(): Flow<List<UiDishItem>> {
+        return recentRepository.getAllRecentJoinListLimitSeven().map { recentlyViewedList ->
             recentlyViewedList.map { recentlyViewed ->
                 with(recentlyViewed) {
                     val nPrice = this.nPrice
                     val sPrice = this.sPrice
                     val percentage = if (nPrice == 0) 0 else 100 - (sPrice.toDouble() / nPrice * 100).toInt()
+                    Log.e("getRecentlyJoinList", "getRecentlyJoinList: $nPrice $sPrice $percentage", )
                     val inInserted = cartRepository.isExistCartInfo(hash)
                     UiDishItem(
                         hash = hash,

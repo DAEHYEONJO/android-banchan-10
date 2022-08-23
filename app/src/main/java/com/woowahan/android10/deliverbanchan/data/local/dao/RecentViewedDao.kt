@@ -17,7 +17,7 @@ interface RecentViewedDao {
     fun getAllRecentViewedInfo(): Flow<List<RecentViewedInfo>>
 
     @Query("SELECT * FROM LOCAL_DISH NATURAL JOIN RECENT_VIEWED_INFO ORDER BY time_stamp DESC LIMIT 7")
-    fun getAllRecentJoinList(): Flow<List<RecentViewed>>
+    fun getAllRecentJoinListLimitSeven(): Flow<List<RecentViewed>>
 
     @Query("SELECT * FROM LOCAL_DISH NATURAL JOIN RECENT_VIEWED_INFO ORDER BY time_stamp DESC")
     fun getAllRecentJoinPaging(): PagingSource<Int, RecentViewed>

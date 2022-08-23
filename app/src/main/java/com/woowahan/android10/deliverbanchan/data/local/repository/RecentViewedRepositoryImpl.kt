@@ -3,7 +3,6 @@ package com.woowahan.android10.deliverbanchan.data.local.repository
 import androidx.annotation.WorkerThread
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import androidx.paging.PagingSource
 import com.woowahan.android10.deliverbanchan.data.local.dao.RecentViewedDao
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.RecentViewedInfo
 import com.woowahan.android10.deliverbanchan.data.local.model.join.RecentViewed
@@ -26,8 +25,8 @@ class RecentViewedRepositoryImpl @Inject constructor(
     override suspend fun deleteAllRecentViewedInfo() =
         recentlyViewedDao.deleteAllRecentViewedInfo()
 
-    override fun getAllRecentJoinList(): Flow<List<RecentViewed>> =
-        recentlyViewedDao.getAllRecentJoinList()
+    override fun getAllRecentJoinListLimitSeven(): Flow<List<RecentViewed>> =
+        recentlyViewedDao.getAllRecentJoinListLimitSeven()
 
     override fun getAllRecentJoinPager(): Pager<Int, RecentViewed> {
         return Pager(

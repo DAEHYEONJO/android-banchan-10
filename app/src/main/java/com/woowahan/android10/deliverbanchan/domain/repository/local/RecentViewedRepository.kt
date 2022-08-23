@@ -15,7 +15,7 @@ interface RecentViewedRepository {
     @WorkerThread
     suspend fun deleteAllRecentViewedInfo()
     @WorkerThread
-    fun getAllRecentJoinList(): Flow<List<RecentViewed>>
+    fun getAllRecentJoinListLimitSeven(): Flow<List<RecentViewed>>
     @WorkerThread
     fun getAllRecentJoinPager(): Pager<Int, RecentViewed>
     @WorkerThread
