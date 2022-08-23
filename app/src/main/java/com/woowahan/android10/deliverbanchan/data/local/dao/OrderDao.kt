@@ -30,4 +30,6 @@ interface OrderDao {
     @Insert
     suspend fun insertVarArgOrderInfo(vararg orderInfo: OrderInfo)
 
+    @Query("UPDATE ORDER_INFO SET is_delivering = :isDelivering WHERE hash = :hash")
+    suspend fun updateCartAmount(hash: String, isDelivering: Boolean)
 }

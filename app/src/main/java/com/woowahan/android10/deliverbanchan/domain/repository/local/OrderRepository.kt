@@ -24,4 +24,7 @@ interface OrderRepository {
     fun getAllOrderJoinList(): Flow<List<Order>>
     @WorkerThread
     suspend fun insertVarArgOrderInfo(orderInfoList: List<OrderInfo>)
+
+    @WorkerThread
+    suspend fun updateIsDelivering(hash: String, isDelivering: Boolean)
 }
