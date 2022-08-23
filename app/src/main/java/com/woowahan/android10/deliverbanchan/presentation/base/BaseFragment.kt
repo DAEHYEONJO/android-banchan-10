@@ -36,25 +36,6 @@ abstract class BaseFragment<T : ViewDataBinding>(
             }
             isCancelable = false
         }
-
-        cartBottomSheetFragment.setDialogDismissWhenInsertSuccessListener(object :
-            CartBottomSheetFragment.DialogDismissWhenInsertSuccessListener {
-            override fun dialogDismissWhenInsertSuccess(hash: String, title: String) {
-                val cartDialog = CartDialogFragment().apply {
-                    setTextClickListener(object :
-                        CartDialogFragment.TextClickListener {
-                        override fun moveToCartTextClicked() {
-                            startActivity(Intent(requireActivity(), CartActivity::class.java))
-                        }
-                    })
-                    arguments = Bundle().apply {
-                        putString("hash", hash)
-                        putString("title", title)
-                    }
-                }
-                cartDialog.show(childFragmentManager, "CartDialog")
-            }
-        })
         cartBottomSheetFragment.show(childFragmentManager, "CartBottomSheet")
     }
 

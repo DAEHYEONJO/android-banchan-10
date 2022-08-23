@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class DetailActivity :
-    BaseActivity<ActivityDetailBinding>(R.layout.activity_detail, "DetailActivity") {
+    BaseActivity<ActivityDetailBinding>(R.layout.activity_detail, "DetailActivity"), CartDialogFragment.TextClickListener {
 
     private val detailViewModel: DetailViewModel by viewModels()
 
@@ -33,6 +33,10 @@ class DetailActivity :
     private lateinit var detailContentAdapter: DetailContentAdapter
     private lateinit var detailSectionImageAdapter: DetailSectionImageAdapter
     private lateinit var concatAdapter: ConcatAdapter
+    private val cartDialog: CartDialogFragment by lazy {
+        CartDialogFragment()
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -129,14 +133,8 @@ class DetailActivity :
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 detailViewModel.insertSuccessEvent.collect {
-                    if(it) {
-                        val cartDialog = CartDialogFragment()
-                        cartDialog.setTextClickListener(object : CartDialogFragment.TextClickListener {
-                            override fun moveToCartTextClicked() {
-                                Log.e("DetailActivity", "move to cart")
-                                startActivity(Intent(this@DetailActivity, CartActivity::class.java))
-                            }
-                        })
+                    Log.e(TAG, "인서트이벤트 $it: ")
+                    if (it) {
                         cartDialog.show(supportFragmentManager, "CartDialog")
                     } else {
                         showToast("장바구니 담기에 실패했습니다.")
@@ -145,4 +143,22 @@ class DetailActivity :
             }
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+//        cartDialog.setTextClickListener(object :
+//            CartDialogFragment.TextClickListener {
+//            override fun moveToCartTextClicked() {
+//                Log.e("DetailActivity", "move to cart")
+//                startActivity(
+//                    Intent(
+//                        this@DetailActivity,
+//                        CartActivity::class.java
+//                    )
+//                )
+//            }
+//        })
+    }
+
+
 }
