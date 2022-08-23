@@ -1,6 +1,8 @@
 package com.woowahan.android10.deliverbanchan.presentation.main.maindish
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
@@ -24,7 +26,14 @@ class MainDishViewModel @Inject constructor(
 
     var mainDishList = listOf<UiDishItem>()
 
+    private val _curMainSpinnerPosition = MutableLiveData<Int>(0)
+    val curMainSpinnerPosition: LiveData<Int> get() = _curMainSpinnerPosition
+    private val _preMainSpinnerPosition = MutableLiveData(0)
+    val preMainSpinnerPosition: LiveData<Int> get() = _preMainSpinnerPosition
+    val mainListSize = MutableLiveData(0)
+
     init {
+        getMainDishList()
         setMainDishCartInserted()
     }
 
@@ -76,5 +85,20 @@ class MainDishViewModel @Inject constructor(
 
     private fun showToast(message: String) {
         _mainDishState.value = UiState.ShowToast(message)
+    }
+
+    fun sortMainDishes(position: Int) {
+        if (_curMainSpinnerPosition.value != _preMainSpinnerPosition.value) { // 정렬 기준이 변경될 시
+            _preMainSpinnerPosition.value = _curMainSpinnerPosition.value
+        }
+        _curMainSpinnerPosition.value = position
+        if (_mainDishState.value is UiState.Success) {
+            _mainDishState.value = when (_curMainSpinnerPosition.value) {
+                1 -> UiState.Success((_mainDishState.value as UiState.Success).uiDishItems.sortedBy { -it.sPrice }) // 금액 내림차순
+                2 -> UiState.Success((_mainDishState.value as UiState.Success).uiDishItems.sortedBy { it.sPrice }) // 금액 오름차순
+                3 -> UiState.Success((_mainDishState.value as UiState.Success).uiDishItems.sortedBy { -it.salePercentage }) // 할인률 내림차순
+                else -> UiState.Success((_mainDishState.value as UiState.Success).uiDishItems.sortedBy { it.index }) // 기본 정렬순
+            }
+        }
     }
 }
