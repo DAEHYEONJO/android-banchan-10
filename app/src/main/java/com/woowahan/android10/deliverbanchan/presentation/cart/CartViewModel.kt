@@ -1,7 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -29,8 +28,6 @@ import javax.inject.Inject
 @HiltViewModel
 class CartViewModel @Inject constructor(
     private val getJoinUseCase: GetJoinUseCase,
-    private val deleteCartInfoByHashUseCase: DeleteCartInfoByHashUseCase,
-    private val insertOrderInfoUseCase: InsertOrderInfoUseCase,
     private val insertAndDeleteCartItemsUseCase: InsertAndDeleteCartItemsUseCase,
     private val deleteCartInfoByHashListUseCase: DeleteCartInfoByHashListUseCase,
     private val insertVarArgOrderInfoUseCase: InsertVarArgOrderInfoUseCase,

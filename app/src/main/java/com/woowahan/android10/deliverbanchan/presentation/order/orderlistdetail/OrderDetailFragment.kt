@@ -11,9 +11,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentOrderDetailBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
+import com.woowahan.android10.deliverbanchan.presentation.cart.complete.adapter.DeliveryBodyAdapter
+import com.woowahan.android10.deliverbanchan.presentation.cart.complete.adapter.DeliveryFooterAdapter
+import com.woowahan.android10.deliverbanchan.presentation.cart.complete.adapter.DeliveryTopAdapter
 import com.woowahan.android10.deliverbanchan.presentation.order.OrderViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class OrderDetailFragment : BaseFragment<FragmentOrderDetailBinding>(
@@ -21,9 +25,15 @@ class OrderDetailFragment : BaseFragment<FragmentOrderDetailBinding>(
 ) {
 
     private val orderViewModel: OrderViewModel by activityViewModels()
-    private lateinit var orderDetailAdapter: OrderDetailAdapter
-    private lateinit var orderInfoAdapter: OrderInfoAdapter
-    private lateinit var concatAdapter: ConcatAdapter
+    @Inject
+    lateinit var orderDetailTopAdapter: DeliveryTopAdapter
+    @Inject
+    lateinit var orderDetailBodyAdapter: DeliveryBodyAdapter
+    @Inject
+    lateinit var orderDetailFooterAdapter: DeliveryFooterAdapter
+    private val concatAdapter: ConcatAdapter by lazy {
+        ConcatAdapter(orderDetailBodyAdapter, orderDetailBodyAdapter, orderDetailFooterAdapter)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -38,14 +48,9 @@ class OrderDetailFragment : BaseFragment<FragmentOrderDetailBinding>(
     }
 
     private fun setRecyclerView() {
-        orderDetailAdapter = OrderDetailAdapter()
-        orderInfoAdapter = OrderInfoAdapter()
-        concatAdapter =
-            ConcatAdapter(orderDetailAdapter, orderInfoAdapter)
-
         binding.orderDetailRv.apply {
             adapter = concatAdapter
-            layoutManager = LinearLayoutManager(requireContext())
+
         }
     }
 
@@ -53,7 +58,7 @@ class OrderDetailFragment : BaseFragment<FragmentOrderDetailBinding>(
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 orderViewModel.selectedOrderList.collect {
-                    orderDetailAdapter.submitList(it.toList())
+                    orderDetailBodyAdapter.cartDeliveryTopList = it
                 }
             }
         }
@@ -61,7 +66,7 @@ class OrderDetailFragment : BaseFragment<FragmentOrderDetailBinding>(
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 orderViewModel.selectedOrderInfo.collect {
-                    orderInfoAdapter.submitList(listOf(it))
+                    orderDetailFooterAdapter.cartDeliveryBottomList = listOf(it)
                 }
             }
         }

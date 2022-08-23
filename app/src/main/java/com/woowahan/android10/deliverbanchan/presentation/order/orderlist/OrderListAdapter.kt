@@ -7,10 +7,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.data.local.model.join.Order
 import com.woowahan.android10.deliverbanchan.databinding.ItemOrderListBinding
+import com.woowahan.android10.deliverbanchan.domain.model.UiCartJoinItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiOrderListItem
 
 class OrderListAdapter(
-    private val itemClick: (orderList: List<Order>) -> Unit
+    private val itemClick: (orderList: List<UiCartJoinItem>) -> Unit
 ) : ListAdapter<UiOrderListItem, OrderListAdapter.OrderListViewHolder>(
     diffUtil
 ) {
@@ -35,9 +36,9 @@ class OrderListAdapter(
 
     inner class OrderListViewHolder(val binding: ItemOrderListBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(orderList: List<Order>, itemClick: (orderList: List<Order>) -> Unit) {
+        fun bind(orderList: List<UiCartJoinItem>, itemClick: (orderList: List<UiCartJoinItem>) -> Unit) {
             binding.listSize = orderList.size
-            binding.order = orderList[0]
+            binding.item = orderList[0]
             binding.root.setOnClickListener {
                 itemClick(orderList)
             }

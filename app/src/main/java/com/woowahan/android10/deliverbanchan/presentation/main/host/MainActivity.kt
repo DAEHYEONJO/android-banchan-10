@@ -11,17 +11,10 @@ import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.ActivityMainBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseActivity
 import com.woowahan.android10.deliverbanchan.presentation.cart.CartActivity
-import com.woowahan.android10.deliverbanchan.presentation.common.KEY_ORDER_REQUEST_CODE
-import com.woowahan.android10.deliverbanchan.presentation.common.KEY_SHARED_PREFERENCES
-import com.woowahan.android10.deliverbanchan.presentation.common.ORDER_REQUEST_CODE
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEventWithDuration
-import com.woowahan.android10.deliverbanchan.presentation.dialogs.dialog.CartDialogFragment
-import com.woowahan.android10.deliverbanchan.presentation.main.sidedish.SideDishViewModel
-import com.woowahan.android10.deliverbanchan.presentation.main.soupdish.SoupViewModel
 import com.woowahan.android10.deliverbanchan.presentation.order.OrderActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -33,29 +26,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main, "
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        loadOrderRequestCode()
         initBinding()
         initView()
         initBtn()
         dishViewModel.cartInfoState.onEach {
             Log.e("DishViewModel", "onCreate: $it")
         }.launchIn(lifecycleScope)
-    }
-
-    private fun loadOrderRequestCode() {
-        val sharedPreferences = getSharedPreferences(KEY_SHARED_PREFERENCES, Context.MODE_PRIVATE)
-        if(sharedPreferences.contains(KEY_ORDER_REQUEST_CODE)){
-            val orderRequestCode = sharedPreferences.getInt(KEY_ORDER_REQUEST_CODE, 1)
-            ORDER_REQUEST_CODE = orderRequestCode
-        }
-        Log.e(TAG, "load shared : ${ORDER_REQUEST_CODE}")
-    }
-
-    private fun saveOrderRequestCode() {
-        val sharedPreferences = getSharedPreferences(KEY_SHARED_PREFERENCES, Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.putInt(KEY_ORDER_REQUEST_CODE, ORDER_REQUEST_CODE)
-        editor.apply()
     }
 
     @OptIn(FlowPreview::class)
@@ -93,10 +69,5 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main, "
         TabLayoutMediator(binding.mainTl, binding.mainVp) { tab, position ->
             tab.text = tabTitleArray[position]
         }.attach()
-    }
-
-    override fun onStop() {
-        saveOrderRequestCode()
-        super.onStop()
     }
 }

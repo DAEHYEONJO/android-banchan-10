@@ -9,7 +9,7 @@ import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 
 @ActivityRetainedScoped
-class CartDeliveryFooterAdapter @Inject constructor(): RecyclerView.Adapter<CartDeliveryFooterAdapter.ViewHolder>() {
+class DeliveryFooterAdapter @Inject constructor(): RecyclerView.Adapter<DeliveryFooterAdapter.ViewHolder>() {
 
     var cartDeliveryBottomList = listOf<UiOrderInfo>()
 

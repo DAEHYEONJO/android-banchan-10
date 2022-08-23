@@ -15,7 +15,7 @@ interface OrderDao {
     @Query("SELECT * FROM order_info")
     fun getAllOrderInfo(): Flow<List<OrderInfo>>
 
-    @Query("SELECT * FROM LOCAL_DISH NATURAL JOIN ORDER_INFO")
+    @Query("SELECT * FROM LOCAL_DISH NATURAL JOIN ORDER_INFO ORDER BY TIME_STAMP DESC")
     fun getAllOrderJoinList(): Flow<List<Order>>
 
     @Insert

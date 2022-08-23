@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.OrderInfo
 import com.woowahan.android10.deliverbanchan.data.local.model.join.Order
 import com.woowahan.android10.deliverbanchan.di.IoDispatcher
+import com.woowahan.android10.deliverbanchan.domain.model.UiCartJoinItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiOrderInfo
 import com.woowahan.android10.deliverbanchan.domain.model.UiOrderListItem
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllOrderJoinListUseCase
@@ -32,10 +33,9 @@ class OrderViewModel @Inject constructor(
     val appBarTitle = MutableLiveData("")
     val orderDetailMode = MutableLiveData(false)
     val currentFragmentIndex = MutableStateFlow<Int>(0)
-    val deliveryFee = 2500
 
-    var selectedOrderList = MutableStateFlow<List<Order>>(emptyList())
-    var selectedOrderInfo = MutableStateFlow<UiOrderInfo>(UiOrderInfo(0, 0, 0))
+    var selectedOrderList = MutableStateFlow<List<UiCartJoinItem>>(emptyList())
+    var selectedOrderInfo = MutableStateFlow(UiOrderInfo.emptyItem())
 
     private val _moveToOrderDetailEvent = MutableSharedFlow<Boolean>()
     val moveToOrderDetailEvent = _moveToOrderDetailEvent.asSharedFlow()
@@ -45,21 +45,21 @@ class OrderViewModel @Inject constructor(
     val allOrderJoinState: StateFlow<UiLocalState<UiOrderListItem>> get() = _allOrderJoinState
 
     init {
-        //tempInsertOrderInfo()
         getAllOrderList()
     }
 
-    fun selectOrderListItem(orderList: List<Order>) {
+    fun selectOrderListItem(orderList: List<UiCartJoinItem>) {
         selectedOrderList.value = orderList
+        val deliveryFee = orderList.first().deliveryPrice
 
         var itemPrice = 0
         orderList.forEach {
             itemPrice += it.sPrice * it.amount
         }
-        selectedOrderInfo.value = UiOrderInfo(itemPrice, orderList.first().deliveryPrice, itemPrice + deliveryFee)
+        selectedOrderInfo.value = UiOrderInfo(itemPrice, deliveryFee, itemPrice + deliveryFee)
     }
 
-    fun getAllOrderList() {
+    private fun getAllOrderList() {
         viewModelScope.launch {
             getAllOrderJoinListUseCase().onStart {
                 _allOrderJoinState.value = UiLocalState.IsLoading(true)
@@ -70,15 +70,14 @@ class OrderViewModel @Inject constructor(
                 _allOrderJoinState.value = UiLocalState.IsLoading(false)
                 if (it.isEmpty()) _allOrderJoinState.value = UiLocalState.IsEmpty(true)
                 else {
-                    val map = it.reversed().groupBy { it.timeStamp }
-                    val list = map.toList().map {
+                    val map = it.groupBy { it.timeStamp }
+                    val list = map.toList().map { (timeStamp, UiCartJointItemLIst) ->
                         UiOrderListItem(
-                            it.first,
-                            it.second
+                            timeStamp,
+                            UiCartJointItemLIst
                         )
                     }
                     _allOrderJoinState.value = UiLocalState.Success(list)
-
                 }
                 // 알림 눌러서 온거라면 해당 상세페이지로 이동해야 함
 

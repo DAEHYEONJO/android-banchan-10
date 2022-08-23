@@ -10,14 +10,14 @@ import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 
 @ActivityRetainedScoped
-class CartDeliveryBodyAdapter @Inject constructor(): RecyclerView.Adapter<CartDeliveryBodyAdapter.ViewHolder>() {
+class DeliveryBodyAdapter @Inject constructor(): RecyclerView.Adapter<DeliveryBodyAdapter.ViewHolder>() {
 
     var cartDeliveryTopList = emptyList<UiCartJoinItem>()
 
     inner class ViewHolder(private val binding: ItemCartOrderCompleteBodyBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(uiCartJoinList: List<UiCartJoinItem>){
             with(binding.cartOrderCompleteBodyRv){
-                adapter = CartDeliveryBottomItemAdapter().apply {
+                adapter = DeliveryBottomItemAdapter().apply {
                     if (itemDecorationCount == 0) addItemDecoration(LinearItemDecorator(context))
                     submitList(uiCartJoinList)
                 }

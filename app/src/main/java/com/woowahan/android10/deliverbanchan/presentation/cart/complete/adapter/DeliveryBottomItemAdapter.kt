@@ -11,8 +11,8 @@ import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 
 @ActivityRetainedScoped
-class CartDeliveryBottomItemAdapter @Inject constructor()
-    : ListAdapter<UiCartJoinItem, CartDeliveryBottomItemAdapter.ViewHolder>(diffUtil) {
+class DeliveryBottomItemAdapter @Inject constructor()
+    : ListAdapter<UiCartJoinItem, DeliveryBottomItemAdapter.ViewHolder>(diffUtil) {
 
     companion object{
         val diffUtil = object : DiffUtil.ItemCallback<UiCartJoinItem>(){

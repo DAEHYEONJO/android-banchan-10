@@ -9,9 +9,9 @@ import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentCartDeliveryCompleteBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
 import com.woowahan.android10.deliverbanchan.presentation.cart.CartViewModel
-import com.woowahan.android10.deliverbanchan.presentation.cart.complete.adapter.CartDeliveryBodyAdapter
-import com.woowahan.android10.deliverbanchan.presentation.cart.complete.adapter.CartDeliveryFooterAdapter
-import com.woowahan.android10.deliverbanchan.presentation.cart.complete.adapter.CartDeliveryTopAdapter
+import com.woowahan.android10.deliverbanchan.presentation.cart.complete.adapter.DeliveryBodyAdapter
+import com.woowahan.android10.deliverbanchan.presentation.cart.complete.adapter.DeliveryFooterAdapter
+import com.woowahan.android10.deliverbanchan.presentation.cart.complete.adapter.DeliveryTopAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -21,9 +21,9 @@ class CartDeliveryCompleteFragment : BaseFragment<FragmentCartDeliveryCompleteBi
     "CartDeliveryCompleteFragment"
 ) {
 
-    @Inject lateinit var cartDishCompleteTopAdapter: CartDeliveryTopAdapter
-    @Inject lateinit var cartDishCompleteBodyAdapter: CartDeliveryBodyAdapter
-    @Inject lateinit var cartDishCompleteFooterAdapter: CartDeliveryFooterAdapter
+    @Inject lateinit var cartDishCompleteTopAdapter: DeliveryTopAdapter
+    @Inject lateinit var cartDishCompleteBodyAdapter: DeliveryBodyAdapter
+    @Inject lateinit var cartDishCompleteFooterAdapter: DeliveryFooterAdapter
     private val concatAdapter: ConcatAdapter by lazy {
         ConcatAdapter(cartDishCompleteTopAdapter, cartDishCompleteBodyAdapter, cartDishCompleteFooterAdapter)
     }
