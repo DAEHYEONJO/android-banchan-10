@@ -1,5 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.detail
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -15,13 +16,17 @@ import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.ActivityDetailBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseActivity
 import com.woowahan.android10.deliverbanchan.presentation.base.click_listener.OnCartDialogClickListener
+import com.woowahan.android10.deliverbanchan.presentation.cart.CartActivity
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEventWithDuration
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
 import com.woowahan.android10.deliverbanchan.presentation.detail.adapter.DetailContentAdapter
 import com.woowahan.android10.deliverbanchan.presentation.detail.adapter.DetailSectionImageAdapter
 import com.woowahan.android10.deliverbanchan.presentation.detail.adapter.DetailThumbImageAdapter
 import com.woowahan.android10.deliverbanchan.presentation.dialogs.dialog.CartDialogFragment
+import com.woowahan.android10.deliverbanchan.presentation.order.OrderActivity
 import com.woowahan.android10.deliverbanchan.presentation.state.UiDetailState
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -46,8 +51,23 @@ class DetailActivity :
         super.onCreate(savedInstanceState)
         binding.vm = detailViewModel
         binding.lifecycleOwner = this
+        initBtn()
         initView()
         initObservers()
+    }
+
+    @OptIn(FlowPreview::class)
+    private fun initBtn() {
+        with(binding.detailTb) {
+            lifecycleScope.launchWhenCreated {
+                appBarNoBackBtnFlCart.setClickEventWithDuration(lifecycleScope) {
+                    startActivity(Intent(this@DetailActivity, CartActivity::class.java))
+                }
+                appBarNoBackBtnIvProfile.setClickEventWithDuration(lifecycleScope) {
+                    startActivity(Intent(this@DetailActivity, OrderActivity::class.java))
+                }
+            }
+        }
     }
 
     private fun initView() {
