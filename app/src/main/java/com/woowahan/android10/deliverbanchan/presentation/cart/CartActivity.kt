@@ -1,5 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -17,12 +18,13 @@ import com.woowahan.android10.deliverbanchan.presentation.cart.complete.CartDeli
 import com.woowahan.android10.deliverbanchan.presentation.cart.main.CartMainFragment
 import com.woowahan.android10.deliverbanchan.presentation.cart.recent.RecentViewedFragment
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
+import com.woowahan.android10.deliverbanchan.presentation.dialogs.dialog.CartDialogFragment
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart, "CartActivity") {
+class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart, "CartActivity"){
     private val cartViewModel: CartViewModel by viewModels()
     private val fragmentTagArray: Array<String> by lazy {
         resources.getStringArray(R.array.cart_fragment_tag_array)

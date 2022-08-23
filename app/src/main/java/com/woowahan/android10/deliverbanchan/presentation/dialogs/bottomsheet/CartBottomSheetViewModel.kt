@@ -22,6 +22,7 @@ class CartBottomSheetViewModel @Inject constructor(
     private val updateTimeStampRecentViewedByHashUseCase: UpdateTimeStampRecentViewedByHashUseCase,
     stateHandle: SavedStateHandle
 ) : ViewModel() {
+    var currentUiDishItem = MutableStateFlow<UiDishItem>(UiDishItem.returnEmptyItem())
 
     val uiDishItem: UiDishItem? = stateHandle["UiDishItem"]
 
@@ -35,6 +36,7 @@ class CartBottomSheetViewModel @Inject constructor(
     private var isCurrentItemChecked = false
 
     fun getCartInfoByHash() {
+        Log.e("CartBottomSheetViewModel", "유아이디시아이템: uiDishItem: ${uiDishItem}", )
         viewModelScope.launch {
             getCartInfoUseCase(uiDishItem!!.hash).onStart {
 
