@@ -34,7 +34,7 @@ class OrderDetailFragment : BaseFragment<FragmentOrderDetailBinding>(
     }
 
     private fun initView() {
-        orderViewModel.currentFragmentName.value = "OrderDetail"
+        orderViewModel.currentFragmentIndex.value = 1
     }
 
     private fun setRecyclerView() {

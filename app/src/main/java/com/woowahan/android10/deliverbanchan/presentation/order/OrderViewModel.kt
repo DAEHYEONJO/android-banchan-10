@@ -31,7 +31,7 @@ class OrderViewModel @Inject constructor(
 
     val appBarTitle = MutableLiveData("")
     val orderDetailMode = MutableLiveData(false)
-    val currentFragmentName = MutableStateFlow<String>("OrderList")
+    val currentFragmentIndex = MutableStateFlow<Int>(0)
     val deliveryFee = 2500
 
     var selectedOrderList = MutableStateFlow<List<Order>>(emptyList())
@@ -80,6 +80,8 @@ class OrderViewModel @Inject constructor(
                     _allOrderJoinState.value = UiLocalState.Success(list)
 
                 }
+                // 알림 눌러서 온거라면 해당 상세페이지로 이동해야 함
+
             }
         }
     }

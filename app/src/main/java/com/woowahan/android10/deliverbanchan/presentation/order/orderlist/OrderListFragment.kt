@@ -38,7 +38,7 @@ class OrderListFragment :
     }
 
     private fun initView() {
-        orderViewModel.currentFragmentName.value = "OrderList"
+        orderViewModel.currentFragmentIndex.value = 0
     }
 
     private fun setRecyclerView() {
