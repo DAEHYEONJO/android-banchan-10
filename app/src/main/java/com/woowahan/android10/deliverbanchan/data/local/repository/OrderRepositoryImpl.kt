@@ -29,4 +29,9 @@ class OrderRepositoryImpl @Inject constructor(
     override fun getAllOrderJoinList(): Flow<List<Order>> = orderDao.getAllOrderJoinList()
     override suspend fun insertVarArgOrderInfo(orderInfoList: List<OrderInfo>) =
         orderDao.insertVarArgOrderInfo(*orderInfoList.toTypedArray())
+
+    @WorkerThread
+    override suspend fun updateOrderIsDelivering(orderHashList: List<String>) {
+        orderDao.updateOrderInfoByHashList(orderHashList)
+    }
 }
