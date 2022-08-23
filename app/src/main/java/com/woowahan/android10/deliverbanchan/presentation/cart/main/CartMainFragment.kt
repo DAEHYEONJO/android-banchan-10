@@ -9,6 +9,8 @@ import android.os.Bundle
 import android.os.SystemClock
 import android.util.Log
 import android.view.View
+import android.widget.NumberPicker
+import androidx.fragment.app.DialogFragment
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.flowWithLifecycle
@@ -27,6 +29,7 @@ import com.woowahan.android10.deliverbanchan.presentation.cart.main.adapter.Cart
 import com.woowahan.android10.deliverbanchan.presentation.cart.main.adapter.CartSelectHeaderAdapter
 import com.woowahan.android10.deliverbanchan.presentation.common.ORDER_REQUEST_CODE
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
+import com.woowahan.android10.deliverbanchan.presentation.dialogs.dialog.NumberDialogFragment
 import com.woowahan.android10.deliverbanchan.presentation.state.UiLocalState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -74,16 +77,16 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
                     cartViewModel.setOrderCompleteCartItem()
                 }
             }
-        cartHeaderAdapter.onCartTopBodyItemClickListener =
-            object : CartSelectHeaderAdapter.OnCartTopBodyItemClickListener {
-                override fun onClickSelectedDelete() {
+        cartHeaderAdapter.onCartSelectHeaderItemClickListener =
+            object : CartSelectHeaderAdapter.OnCartSelectHeaderItemClickListener{
+                override fun onClickDeleteBtn() {
                     cartViewModel.deleteUiCartItemByHash { success ->
                         if (success) requireContext().showToast("삭제에 성공했습니다.")
                         else requireContext().showToast("삭제에 실패했습니다.")
                     }
                 }
 
-                override fun onClickSelectedStateChange(checkedState: Boolean) {
+                override fun onClickSelectedToggleBtn(checkedState: Boolean) {
                     cartViewModel.changeCheckedState(!checkedState)
                 }
             }
@@ -106,6 +109,20 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
                 override fun onClickAmountBtn(position: Int, hash: String, amount: Int) {
                     cartViewModel.updateUiCartAmountValue(position, amount)
                     cartTopBodyAdapter.notifyItemChanged(position)
+                }
+
+                override fun onClickAmountTv(position: Int, amount: Int) {
+                    var dialogFragment = parentFragmentManager.findFragmentByTag("NumberDialogFragment")
+                    dialogFragment = if (dialogFragment==null) NumberDialogFragment()
+                    else dialogFragment as NumberDialogFragment
+                    dialogFragment.apply {
+                        arguments = Bundle().apply {
+                            putInt("position", position)
+                            putInt("amount", amount)
+                        }
+                    }
+                    dialogFragment.show(parentFragmentManager, "NumberDialogFragment")
+
                 }
             }
         cartRecentViewedFooterAdapter.onCartFooterItemClickListener =

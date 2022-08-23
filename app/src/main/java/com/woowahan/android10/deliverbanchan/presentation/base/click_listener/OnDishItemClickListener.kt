@@ -1,4 +1,4 @@
-package com.woowahan.android10.deliverbanchan.presentation.common
+package com.woowahan.android10.deliverbanchan.presentation.base.click_listener
 
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 

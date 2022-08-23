@@ -1,13 +1,11 @@
 package com.woowahan.android10.deliverbanchan.presentation.main.exhibition
 
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.recyclerview.widget.*
 import com.woowahan.android10.deliverbanchan.databinding.ItemExhibitionBinding
-import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiExhibitionItem
-import com.woowahan.android10.deliverbanchan.presentation.common.OnDishItemClickListener
+import com.woowahan.android10.deliverbanchan.presentation.base.click_listener.OnDishItemClickListener
 
 class ExhibitionAdapter() :
     ListAdapter<UiExhibitionItem, ExhibitionAdapter.ExhibitionViewHolder>(diffUtil) {

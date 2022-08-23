@@ -52,5 +52,6 @@
     <string name="limit_time_to_order_complete">배송까지 남은 시간</string>
     <string name="order_count">주문한 상품</string>
     <string name="empty_string">텅 빔~</string>
+    <string name="amount_change">수량변경</string>
 
 </resources>

@@ -8,7 +8,7 @@ import com.woowahan.android10.deliverbanchan.databinding.ItemCartRecentViewedFoo
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.presentation.cart.common.GridItemDecorator
 import com.woowahan.android10.deliverbanchan.presentation.cart.recent.adapter.RecentViewedVerticalAdapter
-import com.woowahan.android10.deliverbanchan.presentation.common.OnDishItemClickListener
+import com.woowahan.android10.deliverbanchan.presentation.base.click_listener.OnDishItemClickListener
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 

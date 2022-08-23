@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.databinding.ItemExhibitionHorizontalBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
-import com.woowahan.android10.deliverbanchan.presentation.common.OnDishItemClickListener
+import com.woowahan.android10.deliverbanchan.presentation.base.click_listener.OnDishItemClickListener
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEventWithDuration
 import kotlinx.coroutines.CoroutineScope
 

@@ -92,6 +92,7 @@ class CartBottomSheetViewModel @Inject constructor(
     }
 
     fun clickPlusBtn() {
+        if (_itemCount.value==20) return
         _itemCount.value += 1
     }
 

@@ -1,37 +1,29 @@
 package com.woowahan.android10.deliverbanchan.presentation.dialogs.dialog
 
-import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.viewModels
 import com.woowahan.android10.deliverbanchan.databinding.FragmentCartDialogBinding
-import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
-import dagger.hilt.android.AndroidEntryPoint
+import com.woowahan.android10.deliverbanchan.presentation.base.click_listener.OnCartDialogClickListener
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class CartDialogFragment @Inject constructor(): DialogFragment() {
 
-    interface TextClickListener {
-        fun moveToCartTextClicked()
-    }
-
     private var _binding: FragmentCartDialogBinding? = null
     private val binding: FragmentCartDialogBinding get() = checkNotNull(_binding)
-    private lateinit var textClickListener: TextClickListener
+    private lateinit var onCartDialogClickListener: OnCartDialogClickListener
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         try {
-            textClickListener = context as TextClickListener
+            onCartDialogClickListener = context as OnCartDialogClickListener
         }catch (e: ClassCastException){
             throw ClassCastException("dialog Fragment cast exception")
         }
@@ -62,7 +54,7 @@ class CartDialogFragment @Inject constructor(): DialogFragment() {
 
     private fun setMoveToCartTextClickEvent() {
         binding.dialogTvMoveToCart.setOnClickListener {
-            textClickListener.moveToCartTextClicked()
+            onCartDialogClickListener.moveToCartTextClicked()
             dismiss()
         }
     }

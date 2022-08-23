@@ -7,13 +7,14 @@ import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import com.woowahan.android10.deliverbanchan.presentation.base.click_listener.OnCartDialogClickListener
 import com.woowahan.android10.deliverbanchan.presentation.cart.CartActivity
 import com.woowahan.android10.deliverbanchan.presentation.dialogs.dialog.CartDialogFragment
 
 abstract class BaseActivity<T: ViewDataBinding>(
     @LayoutRes private val layoutResId: Int,
     val TAG: String
-): AppCompatActivity(), CartDialogFragment.TextClickListener  {
+): AppCompatActivity(), OnCartDialogClickListener {
     private var _binding: T? = null
     val binding get() = checkNotNull(_binding){
         "$TAG Activity Binding Null"

@@ -23,6 +23,7 @@ class CartDishTopBodyAdapter @Inject constructor(
         fun onClickDeleteBtn(position: Int, hash: String)
         fun onCheckBoxCheckedChanged(position: Int, hash: String, checked: Boolean)
         fun onClickAmountBtn(position: Int, hash: String, amount: Int)
+        fun onClickAmountTv(position: Int, amount: Int)
     }
 
     var onCartTopBodyItemClickListener: OnCartTopBodyItemClickListener? = null
@@ -54,11 +55,8 @@ class CartDishTopBodyAdapter @Inject constructor(
                 val hash = uiCartJoinItem.hash
                 val amount = uiCartJoinItem.amount
                 cartSelectTopBodyCb.setOnClickListener {
-                    Log.e(TAG, "bind: 체크박스 아이템 클릭=")
                     onCartTopBodyItemClickListener?.onCheckBoxCheckedChanged(
-                        adapterPosition,
-                        hash,
-                        uiCartJoinItem.checked
+                        adapterPosition, hash, uiCartJoinItem.checked
                     )
                 }
                 cartSelectTopBodyIbDelete.setClickEventWithDuration(coroutineScope) {
@@ -67,14 +65,17 @@ class CartDishTopBodyAdapter @Inject constructor(
                 cartSelectTopBodyIbMinus.setOnClickListener {
                     if (amount > 1) {
                         onCartTopBodyItemClickListener?.onClickAmountBtn(
-                            adapterPosition,
-                            hash,
-                            amount - 1
+                            adapterPosition, hash, amount - 1
                         )
                     }
                 }
                 cartSelectTopBodyIbPlus.setOnClickListener {
-                    onCartTopBodyItemClickListener?.onClickAmountBtn(adapterPosition, hash, amount + 1)
+                    if (amount <= 19) onCartTopBodyItemClickListener?.onClickAmountBtn(adapterPosition, hash, amount + 1)
+                }
+                with(cartSelectTopBodyTvAmount){
+                    setClickEventWithDuration(coroutineScope){
+                        onCartTopBodyItemClickListener?.onClickAmountTv(adapterPosition, text.toString().toInt())
+                    }
                 }
                 executePendingBindings()
             }

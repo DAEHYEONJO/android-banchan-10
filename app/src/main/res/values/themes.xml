@@ -367,4 +367,12 @@
         <item name="android:includeFontPadding">false</item>
     </style>
 
+    <style name="AppTheme.Picker" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:textColorPrimary">@color/grey_scale_black</item>
+    </style>
+
+    <style name="ThemeOverlay.NumberPicker" parent="AppTheme.Picker">
+        <item name="colorControlNormal">@color/primary_main</item>
+    </style>
+
 </resources>
