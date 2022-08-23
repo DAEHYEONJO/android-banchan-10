@@ -64,11 +64,11 @@ class OrderListFragment :
 
     private fun <T> handleState(uiLocalState: UiLocalState<T>) {
         when (uiLocalState) {
-            is UiLocalState.IsEmpty -> {
+            is UiLocalState.Empty -> {
                 binding.orderRv.toGone()
                 binding.orderListTvEmptyMessage.toVisible()
             }
-            is UiLocalState.IsLoading -> {
+            is UiLocalState.Loading -> {
                 binding.orderListPb.isVisible = uiLocalState.isLoading
             }
             is UiLocalState.ShowToast -> {

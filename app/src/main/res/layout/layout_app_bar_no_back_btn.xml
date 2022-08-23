@@ -5,6 +5,9 @@
         <variable
             name="dishViewModel"
             type="com.woowahan.android10.deliverbanchan.presentation.main.host.DishViewModel" />
+        <variable
+            name="detailViewModel"
+            type="com.woowahan.android10.deliverbanchan.presentation.detail.DetailViewModel" />
         <import type="android.view.View"/>
     </data>
 
