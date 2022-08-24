@@ -3,6 +3,7 @@ package com.woowahan.android10.deliverbanchan.background
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.app.TaskStackBuilder
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -75,20 +76,26 @@ class DeliveryReceiver : BroadcastReceiver() {
 
     private fun deliverNotification(context: Context, contentTitle: String) {
         val contentIntent = Intent(context, OrderActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            //flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
-        val contentPendingIntent = PendingIntent.getActivity(
-            context,
-            NOTIFICATION_ID, // requestCode
-            contentIntent, // 알림 클릭 시 이동할 인텐트
-            PendingIntent.FLAG_MUTABLE
-        )
+
+        val resultPendingIntent: PendingIntent = TaskStackBuilder.create(context).run {
+            addNextIntentWithParentStack(contentIntent)
+            getPendingIntent(0, PendingIntent.FLAG_MUTABLE)
+        }
+
+//        val contentPendingIntent = PendingIntent.getActivity(
+//            context,
+//            NOTIFICATION_ID, // requestCode
+//            contentIntent, // 알림 클릭 시 이동할 인텐트
+//            PendingIntent.FLAG_MUTABLE
+//        )
 
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_cart) // 아이콘
             .setContentTitle(contentTitle) // 제목
             .setContentText("배송이 완료되었습니다") // 내용
-            .setContentIntent(contentPendingIntent)
+            .setContentIntent(resultPendingIntent)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
 

@@ -23,14 +23,14 @@
             android:exported="false" />
         <activity
             android:name=".presentation.order.OrderActivity"
-            android:exported="false" />
+            android:exported="true"
+            android:parentActivityName=".presentation.main.host.MainActivity"/>
         <activity
             android:name=".presentation.detail.DetailActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.main.host.MainActivity"
-            android:exported="true"
-            android:launchMode="singleTask">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
