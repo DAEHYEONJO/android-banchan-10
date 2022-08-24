@@ -33,7 +33,12 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainDishFragment :
-    BaseFragment<FragmentMaindishBinding>(R.layout.fragment_maindish, "MainDishFragment") {
+    BaseFragment<FragmentMaindishBinding>(R.layout.fragment_maindish, "MainDishFragment"),
+    ViewTreeObserver.OnGlobalLayoutListener {
+
+    override fun onGlobalLayout() {
+        binding.maindishRv.scrollToPosition(0)
+    }
 
     private val mainDishViewModel: MainDishViewModel by viewModels()
     private lateinit var mainDishLinearAdapter: MainDishLinearAdapter
@@ -45,8 +50,6 @@ class MainDishFragment :
     lateinit var mainDishSpinnerAdapter: SortSpinnerAdapter
 
     var isListenerAdd = false
-    var globalLayoutListener = ViewTreeObserver.OnGlobalLayoutListener { }
-
     private val itemSelectedListener = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(
             p0: AdapterView<*>?,
@@ -61,15 +64,12 @@ class MainDishFragment :
                     if (curMainSpinnerPosition.value != preMainSpinnerPosition.value) {
                         sortSpinnerList[preMainSpinnerPosition.value!!].selected = false
                     }
-                    notifyDataSetChanged()
+                    //notifyDataSetChanged()
                     Log.e(TAG, "maindish sorted")
-                    //binding.maindishRv.smoothScrollToPosition(0)
 
                     if (!isListenerAdd) {
                         isListenerAdd = true
-                        binding.maindishRv.viewTreeObserver.addOnGlobalLayoutListener(
-                            globalLayoutListener
-                        )
+                        binding.maindishRv.viewTreeObserver.addOnGlobalLayoutListener(this@MainDishFragment)
                     }
                 }
             }
@@ -82,15 +82,8 @@ class MainDishFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initGlobalLayoutListener()
         initView()
         Log.e(TAG, "onViewCreated: ${binding.maindishTvHeader.paintFlags}")
-    }
-
-    private fun initGlobalLayoutListener() {
-        globalLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
-            binding.maindishRv.scrollToPosition(0)
-        }
     }
 
     private fun initView() {
@@ -151,15 +144,11 @@ class MainDishFragment :
         binding.maindishRv.apply {
             adapter = mainDishAdapter
             layoutManager = GridLayoutManager(requireContext(), 2)
-
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     super.onScrollStateChanged(recyclerView, newState)
-
                     if (isListenerAdd) {
-                        binding.maindishRv.viewTreeObserver.removeOnGlobalLayoutListener(
-                            globalLayoutListener
-                        )
+                        binding.maindishRv.viewTreeObserver.removeOnGlobalLayoutListener(this@MainDishFragment)
                         isListenerAdd = false
                     }
                 }

@@ -65,7 +65,7 @@
                             app:layout_constraintTop_toBottomOf="@id/side_dish_cl_header_text">
 
                             <TextView
-                                android:id="@+id/soupdish_tv_item_count"
+                                android:id="@+id/side_dish_tv_item_count"
                                 style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack12_Normal.Style"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"

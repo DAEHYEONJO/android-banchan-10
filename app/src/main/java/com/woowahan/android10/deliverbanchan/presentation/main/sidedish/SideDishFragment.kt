@@ -3,11 +3,13 @@ package com.woowahan.android10.deliverbanchan.presentation.main.sidedish
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.ViewTreeObserver
 import android.widget.AdapterView
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentSidedishBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
@@ -26,7 +28,12 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class SideDishFragment :
-    BaseFragment<FragmentSidedishBinding>(R.layout.fragment_sidedish, "SideDishFragment") {
+    BaseFragment<FragmentSidedishBinding>(R.layout.fragment_sidedish, "SideDishFragment"),
+    ViewTreeObserver.OnGlobalLayoutListener {
+
+    override fun onGlobalLayout() {
+        binding.sideDishRv.scrollToPosition(0)
+    }
 
     private val sideDishViewModel: SideDishViewModel by activityViewModels()
 
@@ -35,8 +42,10 @@ class SideDishFragment :
 
     @Inject
     lateinit var sideDishSpinnerAdapter: SortSpinnerAdapter
+
     @Inject
     lateinit var gridSpanCountTwoDecorator: GridSpanCountTwoDecorator
+    var isListenerAdd = false
     private val itemSelectedListener = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(
             p0: AdapterView<*>?,
@@ -50,6 +59,10 @@ class SideDishFragment :
                     sortSpinnerList[curSideDishSpinnerPosition.value!!].selected = true
                     if (curSideDishSpinnerPosition.value != preSideDishSpinnerPosition.value) {
                         sortSpinnerList[preSideDishSpinnerPosition.value!!].selected = false
+                    }
+                    if (!isListenerAdd) {
+                        isListenerAdd = true
+                        binding.sideDishRv.viewTreeObserver.addOnGlobalLayoutListener(this@SideDishFragment)
                     }
                 }
             }
@@ -113,6 +126,15 @@ class SideDishFragment :
                 adapter = sideDishAdapter.apply {
                     onDishItemClickListener = this@SideDishFragment
                 }
+                addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                    override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                        super.onScrollStateChanged(recyclerView, newState)
+                        if (isListenerAdd) {
+                            viewTreeObserver.removeOnGlobalLayoutListener(this@SideDishFragment)
+                            isListenerAdd = false
+                        }
+                    }
+                })
                 if (itemDecorationCount == 0) addItemDecoration(gridSpanCountTwoDecorator)
             }
             with(sideDishSp) {
