@@ -28,9 +28,9 @@ class DeliveryReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
         Log.e("DeliveryReceiver", "onReceive")
 
-        val orderHashList = intent?.let { it.getStringArrayListExtra("orderHashList") } ?: ArrayList<String>()
-        val orderFirstItemTitle = intent?.let { it.getStringExtra("firstItemTitle") } ?: "Title"
-        val orderTimeStamp = intent?.let { it.getLongExtra("timeStamp",0L) } ?: 0L
+        val orderHashList = intent?.getStringArrayListExtra("orderHashList") ?: ArrayList<String>()
+        val orderFirstItemTitle = intent?.getStringExtra("firstItemTitle") ?: "Title"
+        val orderTimeStamp = intent?.getLongExtra("timeStamp",0L) ?: 0L
         val deliveryWorkManager = WorkManager.getInstance(context)
 
         val deliveryWorkRequest = OneTimeWorkRequestBuilder<DeliveryWorker>()
@@ -53,8 +53,8 @@ class DeliveryReceiver : BroadcastReceiver() {
     }
 
     private fun getNotificationTitle(firstItemTitle: String, listSize: Int): String {
-        if (listSize <= 1) return firstItemTitle
-        else return "$firstItemTitle 외 ${listSize - 1}개"
+        return if (listSize <= 1) firstItemTitle
+        else "$firstItemTitle 외 ${listSize - 1}개"
     }
 
     private fun createNotificationChannel(context: Context) {
@@ -85,7 +85,7 @@ class DeliveryReceiver : BroadcastReceiver() {
         }
 
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_cart) // 아이콘
+            .setSmallIcon(R.mipmap.ic_banchan_round) // 아이콘
             .setContentTitle(contentTitle) // 제목
             .setContentText("배송이 완료되었습니다") // 내용
             .setContentIntent(resultPendingIntent)

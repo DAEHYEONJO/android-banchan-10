@@ -26,10 +26,12 @@ class DishViewModel @Inject constructor(
     }
     val cartIconText = MutableLiveData("")
     val isOrderingExist = MutableLiveData(false)
+    var isReady = false
 
     init {
         getAllCartInfo()
         getAllOrderInfo()
+        isReady = true
     }
 
     private fun getAllCartInfo() = viewModelScope.launch {

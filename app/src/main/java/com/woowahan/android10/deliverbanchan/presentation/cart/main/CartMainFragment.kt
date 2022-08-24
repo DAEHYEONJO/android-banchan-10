@@ -168,10 +168,12 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
                 if (btnClicked) {
                     val alarmManager =
                         (requireContext().getSystemService(Context.ALARM_SERVICE)) as AlarmManager
-                    val intent = Intent(requireContext(), DeliveryReceiver::class.java)
-                    intent.putStringArrayListExtra("orderHashList", cartViewModel.orderHashList)
-                    intent.putExtra("firstItemTitle", cartViewModel.orderFirstItemTitle)
-                    intent.putExtra("timeStamp", cartViewModel.currentOrderTimeStamp)
+                    val intent = Intent(requireContext(), DeliveryReceiver::class.java).apply {
+                        putStringArrayListExtra("orderHashList", cartViewModel.orderHashList)
+                        putExtra("firstItemTitle", cartViewModel.orderFirstItemTitle)
+                        putExtra("timeStamp", cartViewModel.currentOrderTimeStamp)
+                    }
+
                     val pendingIntent = PendingIntent.getBroadcast(
                         requireContext(),
                         SecureRandom().nextInt(Int.MAX_VALUE),

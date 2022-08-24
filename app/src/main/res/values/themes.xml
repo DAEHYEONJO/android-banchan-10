@@ -14,6 +14,15 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="AppTheme.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/primary_main</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_banchan</item>
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+        <item name="postSplashScreenTheme">@style/Theme.DeliverBanChan</item>
+    </style>
+
+
+
     <style name="cardViewRadius">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
