@@ -3,7 +3,9 @@ package com.woowahan.android10.deliverbanchan.presentation.main.maindish
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
+import android.view.ViewTreeObserver
 import android.widget.AdapterView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -11,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentMaindishBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
@@ -35,12 +38,14 @@ class MainDishFragment :
     private val mainDishViewModel: MainDishViewModel by viewModels()
     private lateinit var mainDishLinearAdapter: MainDishLinearAdapter
 
-    //private lateinit var mainDishGridAdapter: MainDishGridAdapter
     @Inject
     lateinit var mainDishAdapter: MainGridAdapter
 
     @Inject
     lateinit var mainDishSpinnerAdapter: SortSpinnerAdapter
+
+    var isListenerAdd = false
+    var globalLayoutListener = ViewTreeObserver.OnGlobalLayoutListener { }
 
     private val itemSelectedListener = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(
@@ -57,6 +62,18 @@ class MainDishFragment :
                         sortSpinnerList[preMainSpinnerPosition.value!!].selected = false
                     }
                     notifyDataSetChanged()
+                    Log.e(TAG, "maindish sorted")
+                    //binding.maindishRv.smoothScrollToPosition(0)
+
+                    if (isListenerAdd == false) {
+                        isListenerAdd = true
+                        globalLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
+                            binding.maindishRv.scrollToPosition(0)
+                        }
+                        binding.maindishRv.viewTreeObserver.addOnGlobalLayoutListener(
+                            globalLayoutListener
+                        )
+                    }
                 }
             }
         }
@@ -131,7 +148,22 @@ class MainDishFragment :
         binding.maindishRv.apply {
             adapter = mainDishAdapter
             layoutManager = GridLayoutManager(requireContext(), 2)
+
+            addOnScrollListener(object: RecyclerView.OnScrollListener(){
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+
+                    if (isListenerAdd == true) {
+                        binding.maindishRv.viewTreeObserver.removeOnGlobalLayoutListener(
+                            globalLayoutListener
+                        )
+                        isListenerAdd = false
+                    }
+                }
+            })
         }
+
+
     }
 
     private fun setSpinnerAdapter() {
