@@ -79,7 +79,7 @@ class OrderListFragment :
                 val uiOrderList = uiLocalState.uiDishItems as List<UiOrderListItem>
                 if (orderViewModel.fromNotificationExtraTimeStamp.value != 0L) {
                     orderViewModel.selectOrderListItem(uiOrderList.find { it.timeStamp==orderViewModel.fromNotificationExtraTimeStamp.value }!!.orderList)
-                    // index = 1 로 변경하기 orderViewModel.triggerMoveToOrderDetailFragmentEvent()
+                    orderViewModel.setFragmentIndex(1)
                 }else{
                     orderListAdapter.submitList(uiOrderList)
                 }

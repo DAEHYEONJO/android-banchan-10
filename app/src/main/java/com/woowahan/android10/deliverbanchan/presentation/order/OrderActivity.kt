@@ -83,50 +83,60 @@ class OrderActivity : BaseActivity<ActivityOrderBinding>(R.layout.activity_order
     }
 
     private fun initFragment(tagArrayIndex: Int) {
-        var fragment = supportFragmentManager.findFragmentByTag(fragmentTagArray[tagArrayIndex])
-        if (fragment == null) {
-            fragment = when (tagArrayIndex) {
-                0 -> OrderListFragment()
-                else -> OrderDetailFragment()
+        with(supportFragmentManager){
+            var fragment = findFragmentByTag(fragmentTagArray[tagArrayIndex])
+            if (fragment == null) {
+                fragment = when (tagArrayIndex) {
+                    0 -> OrderListFragment()
+                    else -> OrderDetailFragment()
+                }
+            } else {
+                when (tagArrayIndex) {
+                    0 -> fragment as OrderListFragment
+                    else -> fragment as OrderDetailFragment
+                }
             }
-        } else {
-            when (tagArrayIndex) {
-                0 -> fragment as OrderListFragment
-                else -> fragment as OrderDetailFragment
-            }
-        }
-        if (orderViewModel.fromNotificationExtraTimeStamp.value != 0L) { // 알림을 통해 온 경우
-            supportFragmentManager.commit {
-                replace(R.id.order_fcv, fragment, fragmentTagArray[tagArrayIndex])
-            }
-        } else {
-            supportFragmentManager.commit {
-                replace(R.id.order_fcv, fragment, fragmentTagArray[tagArrayIndex])
-                if (tagArrayIndex != 0) { // ListFragment 를 띄워야 하는 경우가 아니라면 백스택에 추가해주기
-                    if (supportFragmentManager.backStackEntryCount==0) addToBackStack("OrderBackStack")
+            if (orderViewModel.fromNotificationExtraTimeStamp.value != 0L) { // 알림을 통해 온 경우
+                commit {
+                    replace(R.id.order_fcv, fragment, fragmentTagArray[tagArrayIndex])
+                }
+            } else {
+                commit {
+                    replace(R.id.order_fcv, fragment, fragmentTagArray[tagArrayIndex])
+                    if (tagArrayIndex != 0 && orderViewModel.fromNotificationExtraTimeStamp.value == 0L) {
+                        // ListFragment 를 띄워야 하는 경우가 아니라면 백스택에 추가해주기
+                        if (backStackEntryCount==0) addToBackStack("OrderBackStack")
+                    }
                 }
             }
         }
     }
 
-
     private fun setOrderListAppBar() {
-        orderViewModel.setAppBarTitle(resources.getString(R.string.app_bar_order_list_title))
-        orderViewModel.orderDetailMode.value = false
+        with(orderViewModel){
+            setAppBarTitle(resources.getString(R.string.app_bar_order_list_title))
+            orderDetailMode.value = false
+        }
         binding.orderAbl.appBarWithBackBtnIvReload.toGone()
     }
 
     private fun setOrderDetailAppBar() {
-        orderViewModel.setAppBarTitle("")
-        orderViewModel.orderDetailMode.value = true
+        with(orderViewModel){
+            setAppBarTitle("")
+            orderDetailMode.value = true
+        }
         binding.orderAbl.appBarWithBackBtnIvReload.toVisible()
     }
 
     override fun onBackPressed() {
-        if (orderViewModel.currentFragmentIndex.value == 0) super.onBackPressed()
-        else {
-            supportFragmentManager.popBackStack()
-            orderViewModel.setFragmentIndex(0)
+        with(orderViewModel){
+            if (currentFragmentIndex.value == 0) super.onBackPressed()
+            else if (fromNotificationExtraTimeStamp.value==0L){
+                supportFragmentManager.popBackStack()
+                setFragmentIndex(0)
+            }else{
+                super.onBackPressed()
+            }
         }
     }
 
