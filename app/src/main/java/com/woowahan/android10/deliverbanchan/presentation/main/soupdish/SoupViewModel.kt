@@ -67,6 +67,7 @@ class SoupViewModel @Inject constructor(
     }
 
     private fun setSoupDishesState() = viewModelScope.launch {
+        Log.e("SoupViewModel", "getSoupList")
         getSoupDishesUseCase("soup").onStart {
             setLoadingStateTrue()
         }.catch { exception ->

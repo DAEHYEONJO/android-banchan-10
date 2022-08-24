@@ -1,5 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.main.exhibition
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
@@ -33,11 +34,14 @@ class ExhibitionViewModel @Inject constructor(
 
     fun getExhibitionList() {
         viewModelScope.launch {
+            Log.e("ExhibitionViewModel", "getExhibitionList")
             createUiExhibitionItemsUseCase().onStart {
                 setLoading()
             }.catch { exception ->
                 hideLoading()
                 showToast(exception.message.toString())
+                setError(1)
+                Log.e("ExhibitionViewModel", "error catch!")
             }.flowOn(Dispatchers.IO).collect { result ->
                 hideLoading()
                 withContext(Dispatchers.Main) {
@@ -46,8 +50,7 @@ class ExhibitionViewModel @Inject constructor(
                             exhibitionList = result.data
                             _exhibitionState.value = ExhibitionUiState.Success(result.data)
                         }
-                        is BaseResult.Error -> _exhibitionState.value =
-                            ExhibitionUiState.Error(result.errorCode)
+                        is BaseResult.Error -> setError(result.errorCode)
                     }
                 }
             }
@@ -73,27 +76,6 @@ class ExhibitionViewModel @Inject constructor(
         }
     }
 
-    fun changeMainDishItemIsInserted(hash: String) {
-        ((_exhibitionState.value as ExhibitionUiState.Success).uiExhibitionItems).let { uiExhibitionItems ->
-            val newList = mutableListOf<UiExhibitionItem>().apply {
-                uiExhibitionItems.forEach { uiExhibitionDishItem ->
-                    val newUiDishItemList = mutableListOf<UiDishItem>().apply {
-                        uiExhibitionDishItem.uiDishItems.forEach { uiDishItem ->
-                            if (uiDishItem.hash == hash) {
-                                add(uiDishItem.copy(isInserted = true))
-                            } else {
-                                add(uiDishItem)
-                            }
-                        }
-                    }
-                    add(uiExhibitionDishItem.copy(uiDishItems = newUiDishItemList))
-                }
-            }
-            exhibitionList = newList
-            _exhibitionState.value = ExhibitionUiState.Success(newList)
-        }
-    }
-
     private fun setLoading() {
         _exhibitionState.value = ExhibitionUiState.IsLoading(true)
     }
@@ -104,5 +86,9 @@ class ExhibitionViewModel @Inject constructor(
 
     private fun showToast(message: String) {
         _exhibitionState.value = ExhibitionUiState.ShowToast(message)
+    }
+
+    private fun setError(errorCode: Int) { // 함수명 더 나은것이 있을까..
+        _exhibitionState.value = ExhibitionUiState.Error(errorCode)
     }
 }

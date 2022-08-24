@@ -1,5 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.main.sidedish
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
@@ -59,6 +60,7 @@ class SideDishViewModel @Inject constructor(
     }
 
     private fun getSideDishList() = viewModelScope.launch {
+        Log.e("SideDishViewModel", "getSideDishList")
         getSideDishListUseCase("side").onStart {
             setLoading()
         }.catch { exception ->

@@ -52,6 +52,7 @@ class MainDishViewModel @Inject constructor(
     }
 
     fun getMainDishList() {
+        Log.e("MainDishViewModel", "getMainDishList")
         viewModelScope.launch {
             createUiDishItemsUseCase("main").onStart {
                 setLoading()
