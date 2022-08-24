@@ -259,6 +259,7 @@ class CartViewModel @Inject constructor(
             }
         val totalPrice = priceTotal + deliveryPrice
         _orderCompleteTopItem.value = UiCartCompleteHeader(
+            isDelivering = true,
             orderTimeStamp = System.currentTimeMillis(),
             orderItemCount = _orderCompleteBodyItem.value!!.size
         )

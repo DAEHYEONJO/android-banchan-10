@@ -49,11 +49,12 @@ class OrderViewModel @Inject constructor(
     }
 
     fun selectOrderListItem(orderList: List<UiCartOrderDishJoinItem>) {
+        val isDelivering = orderList.first().isDelivering
         val orderTimeStamp = orderList.first().timeStamp
         val orderItemCount = orderList.map { it.amount }.reduce { acc, uiCartJoinItem -> acc + uiCartJoinItem }
         val deliveryFee = orderList.first().deliveryPrice
         val itemPrice = orderList.map { Pair(it.sPrice, it.amount) }.fold(0) { acc, pair -> acc + pair.first * pair.second }
-        selectedOrderHeader.value = UiCartCompleteHeader(orderTimeStamp, orderItemCount)
+        selectedOrderHeader.value = UiCartCompleteHeader(isDelivering, orderTimeStamp, orderItemCount)
 
         selectedOrderList.value = orderList
 
