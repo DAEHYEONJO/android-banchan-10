@@ -20,6 +20,7 @@ import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
 import com.woowahan.android10.deliverbanchan.presentation.detail.DetailActivity
 import com.woowahan.android10.deliverbanchan.presentation.dialogs.bottomsheet.CartBottomSheetFragment
 import com.woowahan.android10.deliverbanchan.presentation.main.common.MainGridAdapter
+import com.woowahan.android10.deliverbanchan.presentation.state.ExhibitionUiState
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import com.woowahan.android10.deliverbanchan.presentation.view.SpinnerEventListener
 import com.woowahan.android10.deliverbanchan.presentation.view.adapter.SortSpinnerAdapter
@@ -76,6 +77,7 @@ class MainDishFragment :
         setRadioGroupListener()
         setRecyclerView()
         setSpinnerAdapter()
+        setErrorBtn()
         initObserver()
     }
 
@@ -83,6 +85,7 @@ class MainDishFragment :
         super.onResume()
         Log.e(TAG, "viewLifecycleOwner: ${viewLifecycleOwner}")
         Log.e(TAG, "lifecycleScope: ${viewLifecycleOwner.lifecycleScope}")
+        checkErrorState()
     }
 
     private fun setRadioGroupListener() {
@@ -155,16 +158,36 @@ class MainDishFragment :
 
     private fun handleStateChange(state: UiState) {
         when (state) {
-            is UiState.IsLoading -> binding.maindishPb.toVisible()
+            is UiState.IsLoading -> {
+                binding.maindishPb.toVisible()
+                binding.errorLayout.errorCl.toGone()
+            }
             is UiState.Success -> {
                 binding.maindishPb.toGone()
+                binding.maindishCdl.toVisible()
                 mainDishAdapter.submitList(state.uiDishItems)
                 mainDishLinearAdapter.submitList(state.uiDishItems)
             }
             is UiState.ShowToast -> {
-                binding.maindishPb.toGone()
                 requireContext().showToast(state.message)
             }
+            is UiState.Error -> {
+                binding.maindishPb.toGone()
+                binding.maindishCdl.toGone()
+                binding.errorLayout.errorCl.toVisible()
+            }
+        }
+    }
+
+    private fun setErrorBtn() {
+        binding.errorLayout.errorBtn.setOnClickListener {
+            mainDishViewModel.getMainDishList()
+        }
+    }
+
+    private fun checkErrorState() {
+        if (mainDishViewModel.mainDishState.value is UiState.Error) {
+            mainDishViewModel.getMainDishList()
         }
     }
 }

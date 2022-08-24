@@ -41,6 +41,11 @@ class ExhibitionFragment :
         initView()
     }
 
+    override fun onResume() {
+        super.onResume()
+        checkErrorState()
+    }
+
     private fun initView() {
         setExhibitionHeaderAdpater()
         setExhibitionContentAdapter()
@@ -84,25 +89,34 @@ class ExhibitionFragment :
     private fun handleStateChange(state: ExhibitionUiState) {
         when (state) {
             is ExhibitionUiState.IsLoading -> {
-                binding.maindishPb.toVisible()
-                binding.errorCl.toGone()
+                binding.exhibitionPb.toVisible()
+                binding.errorLayout.errorCl.toGone()
             }
             is ExhibitionUiState.Success -> {
-                binding.maindishPb.toGone()
+                Log.e(TAG, "exhibition success")
+                binding.exhibitionPb.toGone()
                 binding.exhibitionRv.toVisible()
                 exhibitionAdapter.submitList(state.uiExhibitionItems)
             }
             is ExhibitionUiState.ShowToast -> {
-                binding.maindishPb.toGone()
-                binding.exhibitionRv.toGone()
-                binding.errorCl.toVisible()
                 requireContext().showToast(state.message)
+            }
+            is ExhibitionUiState.Error -> {
+                binding.exhibitionPb.toGone()
+                binding.exhibitionRv.toGone()
+                binding.errorLayout.errorCl.toVisible()
             }
         }
     }
 
     private fun setErrorBtn() {
-        binding.errorBtn.setOnClickListener {
+        binding.errorLayout.errorBtn.setOnClickListener {
+            exhibitionViewModel.getExhibitionList()
+        }
+    }
+
+    private fun checkErrorState() {
+        if (exhibitionViewModel.exhibitionState.value is ExhibitionUiState.Error) {
             exhibitionViewModel.getExhibitionList()
         }
     }

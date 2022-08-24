@@ -1,5 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.main.sidedish
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
@@ -38,6 +39,10 @@ class SideDishViewModel @Inject constructor(
         _sideState.value = UiState.ShowToast(message)
     }
 
+    private fun catchError(errorCode: Int) {
+        _sideState.value = UiState.Error(errorCode)
+    }
+
     init {
         getSideDishList()
         setSideDishCartInserted()
@@ -58,12 +63,14 @@ class SideDishViewModel @Inject constructor(
         }
     }
 
-    private fun getSideDishList() = viewModelScope.launch {
+    fun getSideDishList() = viewModelScope.launch {
+        Log.e("SideDishViewModel", "getSideDishList")
         getSideDishListUseCase("side").onStart {
             setLoading()
         }.catch { exception ->
             hideLoading()
             showToast(exception.message.toString())
+            catchError(1)
         }.flowOn(Dispatchers.IO).collect { result ->
             hideLoading()
             when (result) {
@@ -71,7 +78,7 @@ class SideDishViewModel @Inject constructor(
                     _sideState.value = UiState.Success(result.data)
                     sideListSize.value = result.data.size
                 }
-                is BaseResult.Error -> _sideState.value = UiState.Error(result.errorCode)
+                is BaseResult.Error -> catchError(result.errorCode)
             }
         }
     }

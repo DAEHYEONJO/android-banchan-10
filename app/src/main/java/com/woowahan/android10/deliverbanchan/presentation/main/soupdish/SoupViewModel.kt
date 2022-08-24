@@ -43,7 +43,7 @@ class SoupViewModel @Inject constructor(
         // cart flow collect 시 , 장바구니 insert 여부 확인함
         viewModelScope.launch {
             getAllCartInfoSetUseCase().collect { cartInfoHashSet ->
-                if (_soupState.value is UiState.Success){
+                if (_soupState.value is UiState.Success) {
                     val tempList = mutableListOf<UiDishItem>()
                     (_soupState.value as UiState.Success).uiDishItems.forEach {
                         tempList.add(it.copy(isInserted = cartInfoHashSet.contains(it.hash)))
@@ -66,21 +66,29 @@ class SoupViewModel @Inject constructor(
         _soupState.value = UiState.ShowToast(message)
     }
 
-    private fun setSoupDishesState() = viewModelScope.launch {
-        getSoupDishesUseCase("soup").onStart {
-            setLoadingStateTrue()
-        }.catch { exception ->
-            Log.e(TAG, "getSoupDishes: $exception", )
-            setLoadingStateFalse()
-            setToastMessageByException(exception.message.toString())
-        }.flowOn(Dispatchers.IO).collect { result ->
-            setLoadingStateFalse()
-            when (result) {
-                is BaseResult.Success -> {
-                    _soupState.value = UiState.Success(result.data)
-                    soupListSize.value = result.data.size
+    private fun catchError(errorCode: Int) {
+        _soupState.value = UiState.Error(errorCode)
+    }
+
+    fun setSoupDishesState() {
+        viewModelScope.launch {
+            Log.e("SoupViewModel", "getSoupList")
+            getSoupDishesUseCase("soup").onStart {
+                setLoadingStateTrue()
+            }.catch { exception ->
+                Log.e(TAG, "getSoupDishes: $exception")
+                setLoadingStateFalse()
+                setToastMessageByException(exception.message.toString())
+                catchError(1)
+            }.flowOn(Dispatchers.IO).collect { result ->
+                setLoadingStateFalse()
+                when (result) {
+                    is BaseResult.Success -> {
+                        _soupState.value = UiState.Success(result.data)
+                        soupListSize.value = result.data.size
+                    }
+                    is BaseResult.Error -> catchError(result.errorCode)
                 }
-                is BaseResult.Error -> _soupState.value = UiState.Error(result.errorCode)
             }
         }
     }
