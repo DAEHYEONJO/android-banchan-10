@@ -1,6 +1,8 @@
 package com.woowahan.android10.deliverbanchan.presentation.order
 
 import android.os.Bundle
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
 import androidx.fragment.app.commit
 import androidx.lifecycle.Lifecycle
@@ -9,6 +11,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.ActivityOrderBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseActivity
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEventWithDuration
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
 import com.woowahan.android10.deliverbanchan.presentation.order.orderlist.OrderListFragment
@@ -20,6 +23,9 @@ import kotlinx.coroutines.launch
 class OrderActivity : BaseActivity<ActivityOrderBinding>(R.layout.activity_order, "OrderActivity") {
 
     private val orderViewModel: OrderViewModel by viewModels()
+    private val rotateAnimation: Animation by lazy {
+        AnimationUtils.loadAnimation(this@OrderActivity, R.anim.rotate_degree_360)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +49,9 @@ class OrderActivity : BaseActivity<ActivityOrderBinding>(R.layout.activity_order
         with(binding.orderAbl) {
             appBarWithBackBtnIvLeft.setOnClickListener {
                 onBackPressed()
+            }
+            appBarWithBackBtnIvReload.setClickEventWithDuration(duration = 1000, coroutineScope = lifecycleScope){
+                appBarWithBackBtnIvReload.startAnimation(rotateAnimation)
             }
         }
     }
