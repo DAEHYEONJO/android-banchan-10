@@ -1,8 +1,11 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart.complete
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.woowahan.android10.deliverbanchan.R
@@ -13,6 +16,8 @@ import com.woowahan.android10.deliverbanchan.presentation.cart.complete.adapter.
 import com.woowahan.android10.deliverbanchan.presentation.cart.complete.adapter.DeliveryFooterAdapter
 import com.woowahan.android10.deliverbanchan.presentation.cart.complete.adapter.DeliveryTopAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -38,17 +43,24 @@ class CartDeliveryCompleteFragment : BaseFragment<FragmentCartDeliveryCompleteBi
 
     private fun initObserver() {
         with(cartViewModel){
-            orderCompleteTopItem.observe(viewLifecycleOwner){
+            
+            orderCompleteTopItem.flowWithLifecycle(lifecycle).onEach{
                 cartDishCompleteTopAdapter.cartDeliveryTopList = listOf(it)
                 cartDishCompleteTopAdapter.notifyDataSetChanged()
-            }
-            orderCompleteBodyItem.observe(viewLifecycleOwner){
+            }.launchIn(lifecycleScope)
+            
+            orderCompleteBodyItem.flowWithLifecycle(lifecycle).onEach{
                 cartDishCompleteBodyAdapter.cartDeliveryTopList = it
                 cartDishCompleteBodyAdapter.notifyDataSetChanged()
-            }
-            orderCompleteFooterItem.observe(viewLifecycleOwner){
+            }.launchIn(lifecycleScope)
+            
+            orderCompleteFooterItem.flowWithLifecycle(lifecycle).onEach{
                 cartDishCompleteFooterAdapter.cartDeliveryBottomList = listOf(it)
                 cartDishCompleteFooterAdapter.notifyDataSetChanged()
+            }.launchIn(lifecycleScope)
+
+            reloadBtnClicked.observe(viewLifecycleOwner){
+                cartDishCompleteTopAdapter.notifyDataSetChanged()
             }
         }
     }

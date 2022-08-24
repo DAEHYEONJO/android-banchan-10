@@ -1,6 +1,7 @@
 package com.woowahan.android10.deliverbanchan.presentation.order.orderlistdetail
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -60,6 +61,10 @@ class OrderDetailFragment : BaseFragment<FragmentOrderDetailBinding>(
     private fun observeData() {
         viewLifecycleOwner.lifecycleScope.launch {
             with(orderViewModel){
+
+                reloadBtnClicked.observe(viewLifecycleOwner){
+                    orderDetailTopAdapter.notifyDataSetChanged()
+                }
 
                 selectedOrderHeader.flowWithLifecycle(lifecycle).onEach {
                     orderDetailTopAdapter.cartDeliveryTopList = listOf(it)

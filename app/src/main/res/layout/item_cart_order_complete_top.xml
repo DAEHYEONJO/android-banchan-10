@@ -6,6 +6,7 @@
         <variable
             name="item"
             type="com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartCompleteHeader" />
+        <import type="android.view.View"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,7 +23,7 @@
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="@dimen/base_space_16dp"
             android:layout_marginTop="22dp"
-            android:text="@string/order_complete_enqueue"
+            android:text="@{item.delivering?@string/order_complete_enqueue:@string/order_complete_success}"
             style="@style/Widget.TextView.KoPubWorldDotumPro_GreyScaleBlack16_Bold.Style"/>
 
         <TextView
@@ -30,6 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/base_24dp"
             android:gravity="center"
+            android:visibility="@{item.delivering?View.VISIBLE:View.GONE}"
             app:layout_constraintTop_toBottomOf="@+id/cart_order_detail_complete_top_tv_hardcode"
             app:layout_constraintStart_toStartOf="@+id/cart_order_detail_complete_top_tv_hardcode"
             android:layout_marginTop="@dimen/rv_space_8dp"
@@ -44,7 +46,10 @@
             app:layout_constraintBottom_toBottomOf="@+id/cart_order_detail_complete_top_tv_lim_time_hardcode"
             app:layout_constraintStart_toEndOf="@+id/cart_order_detail_complete_top_tv_lim_time_hardcode"
             android:layout_marginStart="@dimen/rv_space_8dp"
-            android:text="20분"
+            android:visibility="@{item.delivering?View.VISIBLE:View.GONE}"
+            beforeTime="@{item.orderTimeStamp}"
+            deliveryTime="@{item.ESTIMATED_DELIVERY_TIME}"
+            suffixString="@{``}"
             style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style"/>
 
         <TextView

@@ -45,13 +45,16 @@
     <string name="item_cart_header_select_all">전체 선택</string>
     <string name="item_cart_header_select_release">선택 해제</string>
 
-    <string name="time_format">%1$s%2$s</string>
+    <string name="arrive_soon">곧 도착</string>
+    <string name="time_format">%1$s%2$s%3$s</string>
     <string name="order_format">%1$s 주문하기</string>
     <string name="order_form_free_delivery_format">%1$s을 더 담으면 무료배송</string>
     <string name="order_complete_enqueue">주문이 접수되었습니다.</string>
+    <string name="order_complete_success">배송이 완료되었습니다.</string>
     <string name="limit_time_to_order_complete">배송까지 남은 시간</string>
     <string name="order_count">주문한 상품</string>
     <string name="empty_string">텅 빔~</string>
     <string name="amount_change">수량변경</string>
+    <string name="time_limit_suffix">전</string>
 
 </resources>

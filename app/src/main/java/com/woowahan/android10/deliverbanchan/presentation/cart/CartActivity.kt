@@ -1,10 +1,12 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
 import androidx.fragment.app.commit
+import androidx.lifecycle.lifecycleScope
 import androidx.work.WorkManager
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.background.CartItemsDbWorker
@@ -14,13 +16,16 @@ import com.woowahan.android10.deliverbanchan.presentation.base.BaseActivity
 import com.woowahan.android10.deliverbanchan.presentation.cart.complete.CartDeliveryCompleteFragment
 import com.woowahan.android10.deliverbanchan.presentation.cart.main.CartMainFragment
 import com.woowahan.android10.deliverbanchan.presentation.cart.recent.RecentViewedFragment
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEventWithDuration
 import com.woowahan.android10.deliverbanchan.presentation.dialogs.dialog.NumberDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
 class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart, "CartActivity"), NumberDialogFragment.OnNumberDialogClickListener{
-
+    private val rotateAnimation: Animation by lazy {
+        AnimationUtils.loadAnimation(this@CartActivity, R.anim.rotate_degree_360)
+    }
     override fun onClickAmountChangeBtn(position: Int, amount: Int) {
         Log.e(TAG, "전달받음: position: $position amount: $amount", )
         cartViewModel.updateUiCartAmountValue(position, amount)
@@ -73,9 +78,16 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart, "
     private fun initAppBar() {
         cartViewModel.setAppBarTitle(resources.getString(R.string.app_bar_cart_title))
         with(binding.cartAbl){
+
             appBarWithBackBtnIvLeft.setOnClickListener {
                 finish()
             }
+
+            appBarWithBackBtnIvReload.setClickEventWithDuration(duration = 1000, coroutineScope = lifecycleScope){
+                appBarWithBackBtnIvReload.startAnimation(rotateAnimation)
+                cartViewModel.setReloadBtnValue()
+            }
+
         }
     }
 

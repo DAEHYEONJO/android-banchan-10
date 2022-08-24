@@ -82,7 +82,9 @@
             app:layout_constraintStart_toStartOf="@+id/item_recent_viewd_tv_sprice"
             app:layout_constraintEnd_toEndOf="@+id/item_recent_viewed_tv_title"
             app:layout_constraintTop_toBottomOf="@+id/item_recent_viewd_tv_sprice"
-            app:getTimeString="@{item.timeStamp}"
+            beforeTime="@{item.timeStamp}"
+            deliveryTime="@{0}"
+            suffixString="@{@string/time_limit_suffix}"
             style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault12_Normal.Style"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

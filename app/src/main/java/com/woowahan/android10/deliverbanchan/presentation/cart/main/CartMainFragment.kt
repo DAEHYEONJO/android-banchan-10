@@ -23,6 +23,7 @@ import com.woowahan.android10.deliverbanchan.presentation.cart.main.adapter.Cart
 import com.woowahan.android10.deliverbanchan.presentation.cart.main.adapter.CartOrderInfoBottomBodyAdapter
 import com.woowahan.android10.deliverbanchan.presentation.cart.main.adapter.CartRecentViewedFooterAdapter
 import com.woowahan.android10.deliverbanchan.presentation.cart.main.adapter.CartSelectHeaderAdapter
+import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartCompleteHeader.Companion.ESTIMATED_DELIVERY_TIME
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
 import com.woowahan.android10.deliverbanchan.presentation.dialogs.dialog.NumberDialogFragment
 import com.woowahan.android10.deliverbanchan.presentation.state.UiLocalState
@@ -74,7 +75,7 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
                 }
             }
         cartHeaderAdapter.onCartSelectHeaderItemClickListener =
-            object : CartSelectHeaderAdapter.OnCartSelectHeaderItemClickListener{
+            object : CartSelectHeaderAdapter.OnCartSelectHeaderItemClickListener {
                 override fun onClickDeleteBtn() {
                     cartViewModel.deleteUiCartItemByHash { success ->
                         if (success) requireContext().showToast("삭제에 성공했습니다.")
@@ -108,8 +109,9 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
                 }
 
                 override fun onClickAmountTv(position: Int, amount: Int) {
-                    var dialogFragment = parentFragmentManager.findFragmentByTag("NumberDialogFragment")
-                    dialogFragment = if (dialogFragment==null) NumberDialogFragment()
+                    var dialogFragment =
+                        parentFragmentManager.findFragmentByTag("NumberDialogFragment")
+                    dialogFragment = if (dialogFragment == null) NumberDialogFragment()
                     else dialogFragment as NumberDialogFragment
                     dialogFragment.apply {
                         arguments = Bundle().apply {
@@ -139,19 +141,21 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
                 handleState(cartRecentViewedFooterAdapter, uiLocalState)
             }.launchIn(lifecycleScope)
 
-            itemCartHeaderData.observe(viewLifecycleOwner) { uiCartHeader ->
+            itemCartHeaderData.observe(viewLifecycleOwner){ uiCartHeader ->
                 with(cartHeaderAdapter) {
                     selectHeaderList = listOf(uiCartHeader)
                     notifyDataSetChanged()
                 }
             }
-            itemCartBottomBodyData.observe(viewLifecycleOwner) { uiCartBottomBody ->
+
+            itemCartBottomBodyData.observe(viewLifecycleOwner){ uiCartBottomBody ->
                 with(cartBottomBodyAdapter) {
                     bottomBodyList = listOf(uiCartBottomBody)
                     notifyDataSetChanged()
                 }
             }
-            uiCartJoinList.observe(viewLifecycleOwner) {
+
+            uiCartJoinList.observe(viewLifecycleOwner){
                 cartTopBodyAdapter.submitList(it.toList())
                 cartViewModel.calcCartBottomBodyAndHeaderVal(it)
             }
@@ -160,7 +164,7 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
 
     private fun observeOrderButtonClickEvent() {
         with(cartViewModel) {
-            orderButtonClicked.flowWithLifecycle(lifecycle).onEach{ btnClicked ->
+            orderButtonClicked.flowWithLifecycle(lifecycle).onEach { btnClicked ->
                 if (btnClicked) {
                     val alarmManager =
                         (requireContext().getSystemService(Context.ALARM_SERVICE)) as AlarmManager
@@ -174,7 +178,8 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
                         PendingIntent.FLAG_MUTABLE
                     )
 
-                    val triggerTime = (SystemClock.elapsedRealtime() + 10 * 1000) // 테스트용 = 현재 10초
+                    val triggerTime =
+                        (SystemClock.elapsedRealtime() + ESTIMATED_DELIVERY_TIME) // 테스트용 = 현재 10초
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         alarmManager.setExactAndAllowWhileIdle(
                             AlarmManager.ELAPSED_REALTIME_WAKEUP,
