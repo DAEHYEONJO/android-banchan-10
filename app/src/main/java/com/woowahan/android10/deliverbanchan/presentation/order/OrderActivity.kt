@@ -1,6 +1,7 @@
 package com.woowahan.android10.deliverbanchan.presentation.order
 
 import android.os.Bundle
+import android.util.Log
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
@@ -26,15 +27,22 @@ class OrderActivity : BaseActivity<ActivityOrderBinding>(R.layout.activity_order
     private val rotateAnimation: Animation by lazy {
         AnimationUtils.loadAnimation(this@OrderActivity, R.anim.rotate_degree_360)
     }
+    private val fragmentTagArray: Array<String> by lazy {
+        resources.getStringArray(R.array.order_fragment_tag_array)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        initBroadcastOrderDetailIntent()
         initBinding()
         initAppBar()
-        initFragment()
-        observeFragment()
-        observeMoveEvent()
+        initObserver()
+    }
+
+    private fun initBroadcastOrderDetailIntent() {
+        Log.e(TAG, "initBroadcastOrderDetailIntent: ${intent.getLongExtra("orderTimeStamp", 0L)}")
+        val timeStamp = intent.getLongExtra("orderTimeStamp", 0L)
+        orderViewModel.setNotificationExtraTimeStamp(timeStamp)
     }
 
     private fun initBinding() {
@@ -50,26 +58,54 @@ class OrderActivity : BaseActivity<ActivityOrderBinding>(R.layout.activity_order
             appBarWithBackBtnIvLeft.setOnClickListener {
                 onBackPressed()
             }
-            appBarWithBackBtnIvReload.setClickEventWithDuration(duration = 1000, coroutineScope = lifecycleScope){
+            appBarWithBackBtnIvReload.setClickEventWithDuration(
+                duration = 1000,
+                coroutineScope = lifecycleScope
+            ) {
                 appBarWithBackBtnIvReload.startAnimation(rotateAnimation)
                 orderViewModel.setReloadBtnValue()
             }
         }
     }
 
-    private fun initFragment() {
-        supportFragmentManager.commit {
-            replace(R.id.order_fcv, OrderListFragment())
+    private fun initObserver() {
+        orderViewModel.currentFragmentIndex.observe(this@OrderActivity) { tagArrayIndex ->
+            initFragment(tagArrayIndex)
+            when (tagArrayIndex) {
+                0 -> {
+                    setOrderListAppBar()
+                }
+                1 -> {
+                    setOrderDetailAppBar()
+                }
+            }
         }
     }
 
-    private fun observeFragment() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                orderViewModel.currentFragmentIndex.collect {
-                    when (it) {
-                        0 -> setOrderListAppBar()
-                        1 -> setOrderDetailAppBar()
+    private fun initFragment(tagArrayIndex: Int) {
+        with(supportFragmentManager){
+            var fragment = findFragmentByTag(fragmentTagArray[tagArrayIndex])
+            if (fragment == null) {
+                fragment = when (tagArrayIndex) {
+                    0 -> OrderListFragment()
+                    else -> OrderDetailFragment()
+                }
+            } else {
+                when (tagArrayIndex) {
+                    0 -> fragment as OrderListFragment
+                    else -> fragment as OrderDetailFragment
+                }
+            }
+            if (orderViewModel.fromNotificationExtraTimeStamp.value != 0L) { // 알림을 통해 온 경우
+                commit {
+                    replace(R.id.order_fcv, fragment, fragmentTagArray[tagArrayIndex])
+                }
+            } else {
+                commit {
+                    replace(R.id.order_fcv, fragment, fragmentTagArray[tagArrayIndex])
+                    if (tagArrayIndex != 0 && orderViewModel.fromNotificationExtraTimeStamp.value == 0L) {
+                        // ListFragment 를 띄워야 하는 경우가 아니라면 백스택에 추가해주기
+                        if (backStackEntryCount==0) addToBackStack("OrderBackStack")
                     }
                 }
             }
@@ -77,29 +113,31 @@ class OrderActivity : BaseActivity<ActivityOrderBinding>(R.layout.activity_order
     }
 
     private fun setOrderListAppBar() {
-        orderViewModel.setAppBarTitle(resources.getString(R.string.app_bar_order_list_title))
-        orderViewModel.orderDetailMode.value = false
+        with(orderViewModel){
+            setAppBarTitle(resources.getString(R.string.app_bar_order_list_title))
+            orderDetailMode.value = false
+        }
         binding.orderAbl.appBarWithBackBtnIvReload.toGone()
     }
 
     private fun setOrderDetailAppBar() {
-        orderViewModel.setAppBarTitle("")
-        orderViewModel.orderDetailMode.value = true
+        with(orderViewModel){
+            setAppBarTitle("")
+            orderDetailMode.value = true
+        }
         binding.orderAbl.appBarWithBackBtnIvReload.toVisible()
     }
 
-    private fun observeMoveEvent() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                orderViewModel.moveToOrderDetailEvent.collect {
-                    if (it) {
-                        supportFragmentManager.commit {
-                            replace(R.id.order_fcv, OrderDetailFragment(), "OrderDetail")
-                            addToBackStack("OrderDetail")
-                        }
-                    }
-                }
+    override fun onBackPressed() {
+        with(orderViewModel){
+            if (currentFragmentIndex.value == 0) super.onBackPressed()
+            else if (fromNotificationExtraTimeStamp.value==0L){
+                supportFragmentManager.popBackStack()
+                setFragmentIndex(0)
+            }else{
+                super.onBackPressed()
             }
         }
     }
+
 }

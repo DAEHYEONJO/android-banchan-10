@@ -3,6 +3,7 @@ package com.woowahan.android10.deliverbanchan.background
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.app.PendingIntent.*
 import android.app.TaskStackBuilder
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -16,8 +17,6 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.presentation.order.OrderActivity
-import java.security.SecureRandom
-import kotlin.random.Random
 
 class DeliveryReceiver : BroadcastReceiver() {
 
@@ -29,12 +28,9 @@ class DeliveryReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
         Log.e("DeliveryReceiver", "onReceive")
 
-        val orderHashList =
-            intent?.let { it.getStringArrayListExtra("orderHashList") } ?: ArrayList<String>()
-        Log.e("DeliveryReceiver", "orderHashList : $orderHashList")
-
+        val orderHashList = intent?.let { it.getStringArrayListExtra("orderHashList") } ?: ArrayList<String>()
         val orderFirstItemTitle = intent?.let { it.getStringExtra("firstItemTitle") } ?: "Title"
-
+        val orderTimeStamp = intent?.let { it.getLongExtra("timeStamp",0L) } ?: 0L
         val deliveryWorkManager = WorkManager.getInstance(context)
 
         val deliveryWorkRequest = OneTimeWorkRequestBuilder<DeliveryWorker>()
@@ -46,7 +42,7 @@ class DeliveryReceiver : BroadcastReceiver() {
         deliveryWorkManager.enqueue(deliveryWorkRequest)
 
         createNotificationChannel(context)
-        deliverNotification(context, getNotificationTitle(orderFirstItemTitle, orderHashList.size))
+        deliverNotification(context, getNotificationTitle(orderFirstItemTitle, orderHashList.size), orderTimeStamp?:0L)
     }
 
     private fun getWorkerData(orderHashList: List<String>): Data {
@@ -74,22 +70,19 @@ class DeliveryReceiver : BroadcastReceiver() {
         }
     }
 
-    private fun deliverNotification(context: Context, contentTitle: String) {
+    private fun deliverNotification(context: Context, contentTitle: String, orderTimeStamp: Long) {
         val contentIntent = Intent(context, OrderActivity::class.java).apply {
-            //flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            // pending intent가 여러개 전달된 경우 각각의 extra 값을 구별해주기 위하여 설정함
+            // action값이 다른 경우 다른 intent object로 판별됨
+            action = System.currentTimeMillis().toString()
+            putExtra("orderTimeStamp", orderTimeStamp)
+            putExtra("fromReceiver",contentTitle)
         }
 
         val resultPendingIntent: PendingIntent = TaskStackBuilder.create(context).run {
             addNextIntentWithParentStack(contentIntent)
-            getPendingIntent(0, PendingIntent.FLAG_MUTABLE)
+            getPendingIntent(0, FLAG_MUTABLE or FLAG_UPDATE_CURRENT)
         }
-
-//        val contentPendingIntent = PendingIntent.getActivity(
-//            context,
-//            NOTIFICATION_ID, // requestCode
-//            contentIntent, // 알림 클릭 시 이동할 인텐트
-//            PendingIntent.FLAG_MUTABLE
-//        )
 
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_cart) // 아이콘
