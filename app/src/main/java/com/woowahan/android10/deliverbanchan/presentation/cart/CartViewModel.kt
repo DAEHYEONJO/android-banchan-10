@@ -65,7 +65,7 @@ class CartViewModel @Inject constructor(
         )
 
     private var _itemCartBottomBodyProductTotalPrice = 0
-    private var currentOrderTimeStamp = 0L
+    var currentOrderTimeStamp = 0L
 
     private val _itemCartHeaderData = MutableLiveData(UiCartHeader.emptyItem())
     val itemCartHeaderData: LiveData<UiCartHeader> get() = _itemCartHeaderData

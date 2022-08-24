@@ -41,20 +41,13 @@ class OrderDetailFragment : BaseFragment<FragmentOrderDetailBinding>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        initView()
         setRecyclerView()
         observeData()
-    }
-
-    private fun initView() {
-        orderViewModel.currentFragmentIndex.value = 1
     }
 
     private fun setRecyclerView() {
         binding.orderDetailRv.apply {
             adapter = concatAdapter
-
         }
     }
 

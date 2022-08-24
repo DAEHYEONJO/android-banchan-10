@@ -21,7 +21,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OrderViewModel @Inject constructor(
-    private val insertOrderInfoUseCase: InsertOrderInfoUseCase,
     private val getAllOrderJoinListUseCase: GetAllOrderJoinListUseCase,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
@@ -32,14 +31,11 @@ class OrderViewModel @Inject constructor(
 
     val appBarTitle = MutableLiveData("")
     val orderDetailMode = MutableLiveData(false)
-    val currentFragmentIndex = MutableStateFlow<Int>(0)
+    val currentFragmentIndex = MutableLiveData<Int>(0)
 
     var selectedOrderHeader = MutableStateFlow(UiCartCompleteHeader.emptyItem())
     var selectedOrderList = MutableStateFlow<List<UiCartOrderDishJoinItem>>(emptyList())
     var selectedOrderInfo = MutableStateFlow(UiOrderInfo.emptyItem())
-
-    private val _moveToOrderDetailEvent = MutableSharedFlow<Boolean>()
-    val moveToOrderDetailEvent = _moveToOrderDetailEvent.asSharedFlow()
 
     private val _reloadBtnClicked = MutableLiveData(false)
     val reloadBtnClicked: LiveData<Boolean> get() = _reloadBtnClicked
@@ -48,8 +44,19 @@ class OrderViewModel @Inject constructor(
         MutableStateFlow<UiLocalState<UiOrderListItem>>(UiLocalState.Init)
     val allOrderJoinState: StateFlow<UiLocalState<UiOrderListItem>> get() = _allOrderJoinState
 
+    private val _fromNotificationExtraTimeStamp = MutableStateFlow(0L)
+    val fromNotificationExtraTimeStamp = _fromNotificationExtraTimeStamp.asStateFlow()
+
     init {
         getAllOrderList()
+    }
+
+    fun setNotificationExtraTimeStamp(timeString: Long){
+        _fromNotificationExtraTimeStamp.value = timeString
+    }
+
+    fun setFragmentIndex(index: Int){
+        currentFragmentIndex.value = index
     }
 
     fun selectOrderListItem(orderList: List<UiCartOrderDishJoinItem>) {
@@ -69,7 +76,7 @@ class OrderViewModel @Inject constructor(
         viewModelScope.launch {
             getAllOrderJoinListUseCase().onStart {
                 _allOrderJoinState.value = UiLocalState.Loading(true)
-            }.flowOn(dispatcher).catch { exception ->
+            }.catch { exception ->
                 _allOrderJoinState.value = UiLocalState.Loading(false)
                 _allOrderJoinState.value = UiLocalState.ShowToast(exception.message.toString())
             }.collect {
@@ -77,7 +84,6 @@ class OrderViewModel @Inject constructor(
                 if (it.isEmpty()) _allOrderJoinState.value = UiLocalState.Empty(true)
                 else {
                     val map = it.groupBy { it.timeStamp }
-
                     // orderList 플로우가 감지된 경우 만약, 배송완료 화면에 들어와 있다면 값 바꿔주기
                     if (selectedOrderList.value.isNotEmpty()){
                         if (map.keys.contains(selectedOrderList.value.first().timeStamp)){
@@ -105,11 +111,5 @@ class OrderViewModel @Inject constructor(
 
     fun setAppBarTitle(string: String) {
         appBarTitle.value = string
-    }
-
-    fun triggerMoveToOrderDetailFragmentEvent() {
-        viewModelScope.launch {
-            _moveToOrderDetailEvent.emit(true)
-        }
     }
 }

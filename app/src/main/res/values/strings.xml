@@ -41,6 +41,11 @@
         <item>CartDeliveryCompleteFragment</item>
         <item>RecentlyViewedFragment</item>
     </string-array>
+
+    <string-array name="order_fragment_tag_array">
+        <item>OrderListFragment</item>
+        <item>OrderDetailFragment</item>
+    </string-array>
     <string name="item_cart_bottom_body_btn">최소주문금액을 확인해주세요</string>
     <string name="item_cart_header_select_all">전체 선택</string>
     <string name="item_cart_header_select_release">선택 해제</string>

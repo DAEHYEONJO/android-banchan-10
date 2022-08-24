@@ -171,6 +171,7 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
                     val intent = Intent(requireContext(), DeliveryReceiver::class.java)
                     intent.putStringArrayListExtra("orderHashList", cartViewModel.orderHashList)
                     intent.putExtra("firstItemTitle", cartViewModel.orderFirstItemTitle)
+                    intent.putExtra("timeStamp", cartViewModel.currentOrderTimeStamp)
                     val pendingIntent = PendingIntent.getBroadcast(
                         requireContext(),
                         SecureRandom().nextInt(Int.MAX_VALUE),
