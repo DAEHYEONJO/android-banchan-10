@@ -249,7 +249,8 @@ class CartViewModel @Inject constructor(
     fun setOrderCompleteCartItem() {
         // 주문 완료 화면에 대한 리스트 세팅z`z`
         val tempHashList = _selectedCartItem.map { it.hash }.toList()
-        _orderCompleteBodyItem.value = _uiCartJoinArrayList.filter { tempHashList.contains(it.hash) }.toList()
+        _orderCompleteBodyItem.value =
+            _uiCartJoinArrayList.filter { tempHashList.contains(it.hash) }.toList()
         val deliveryPrice = _itemCartBottomBodyData.value!!.deliveryPrice
         val priceTotal = _orderCompleteBodyItem.value!!
             .map { Pair(it.sPrice, it.amount) }
@@ -270,38 +271,42 @@ class CartViewModel @Inject constructor(
         insertOrderInfoDeleteCartInfo()
     }
 
-    private fun insertOrderInfoDeleteCartInfo() = CoroutineScope(dispatcher).launch {
-        val timeStamp = System.currentTimeMillis()
-        orderHashList.clear()
-        orderFirstItemTitle = "Title"
-        insertVarArgOrderInfoUseCase(
-            _selectedCartItem.mapIndexed { inx, tempOrder ->
-                if (inx == 0) orderFirstItemTitle = tempOrder.title
-                orderHashList.add(tempOrder.hash)
-                OrderInfo(
-                    hash = tempOrder.hash,
-                    timeStamp = timeStamp,
-                    amount = tempOrder.amount,
-                    isDelivering = true,
-                    deliveryPrice = _itemCartBottomBodyData.value!!.deliveryPrice
-                )
-            }
-        )
-        _orderButtonClicked.emit(true)
-        deleteCartInfoByHashListUseCase(_selectedCartItem.map { it.hash }.toList())
+    private fun insertOrderInfoDeleteCartInfo() {
+        CoroutineScope(dispatcher).launch {
+            val timeStamp = System.currentTimeMillis()
+            orderHashList.clear()
+            orderFirstItemTitle = "Title"
+            insertVarArgOrderInfoUseCase(
+                _selectedCartItem.mapIndexed { inx, tempOrder ->
+                    if (inx == 0) orderFirstItemTitle = tempOrder.title
+                    orderHashList.add(tempOrder.hash)
+                    OrderInfo(
+                        hash = tempOrder.hash,
+                        timeStamp = timeStamp,
+                        amount = tempOrder.amount,
+                        isDelivering = true,
+                        deliveryPrice = _itemCartBottomBodyData.value!!.deliveryPrice
+                    )
+                }
+            )
+            _orderButtonClicked.emit(true)
+            deleteCartInfoByHashListUseCase(_selectedCartItem.map { it.hash }.toList())
+        }
     }
 
-    fun updateAllCartItemChanged() = CoroutineScope(dispatcher).launch {
-        insertAndDeleteCartItemsUseCase(
-            _uiCartJoinList.value!!.map {
-                CartInfo(
-                    it.hash,
-                    it.checked,
-                    it.amount
-                )
-            }.toList(), _toBeDeletedCartItem.toList()
-        )
+    fun updateAllCartItemChanged() {
+        CoroutineScope(dispatcher).launch {
+            insertAndDeleteCartItemsUseCase(
+                _uiCartJoinList.value!!.map {
+                    CartInfo(
+                        it.hash,
+                        it.checked,
+                        it.amount
+                    )
+                }.toList(), _toBeDeletedCartItem.toList()
+            )
+        }
     }
-
 }
+
 

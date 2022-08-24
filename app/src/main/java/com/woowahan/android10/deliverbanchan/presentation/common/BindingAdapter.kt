@@ -24,7 +24,7 @@ fun ImageView.setStringUrlImage(stringUrl: String) {
 }
 
 @BindingAdapter("app:setDeliveryPriceText")
-fun TextView.setDeliveryPriceText(price: Int){
+fun TextView.setDeliveryPriceText(price: Int) {
     text = price.convertPriceToString()
 }
 
@@ -66,49 +66,58 @@ fun TextView.setCartTextViewVisibility(cartIconText: String) {
 
 @BindingAdapter("app:setProfileIcon")
 fun ImageView.setProfileIcon(isOrderExist: Boolean) {
-    background = if (isOrderExist) ResourcesCompat.getDrawable(resources, R.drawable.ic_user_badge, null)
+    background =
+        if (isOrderExist) ResourcesCompat.getDrawable(resources, R.drawable.ic_user_badge, null)
         else ResourcesCompat.getDrawable(resources, R.drawable.ic_user_without_badge, null)
 }
 
-@BindingAdapter("app:getTimeString")
-fun TextView.getTimeString(beforeTime: Long){
+@BindingAdapter("beforeTime", "deliveryTime", "suffixString")
+fun TextView.getTimeString(beforeTime: Long, deliveryTime: Long, suffixString: String) {
     val curTime = System.currentTimeMillis()
-    var diffTime = (curTime - beforeTime)/1000
+    var diffTime = if (suffixString.isNotEmpty())  (curTime - beforeTime) / 1000 // 최근 확인시간 계산 diffTime
+    else (beforeTime + deliveryTime - curTime)/1000 // 배달 완료까지 남은시간 diffTime
     val timeUnitArray = intArrayOf(60, 60, 24, 30, 12)
-    val timeSuffixArray = arrayOf("방금전","분전","시간전","일전","달전","년전")
-
-    if (diffTime < timeUnitArray[0]){
-        text = timeSuffixArray[0]
+    val timeSuffixArray = arrayOf("초", "분", "시간", "일", "달", "년")
+    if (diffTime <= 0) { // 배달완료시간이 지났는데 아직 notification이 안떠서 완료 안된 상태를 위함
+        text = resources.getString(R.string.arrive_soon)
         return
     }
 
-    repeat (4){ index ->
+    if (diffTime < timeUnitArray[0]) {
+        text = resources.getString(R.string.time_format, diffTime.toString(), timeSuffixArray[0], suffixString)
+        return
+    }
+
+    repeat(4) { index ->
         diffTime /= timeUnitArray[index]
-        if (diffTime < timeUnitArray[index+1]){
-            text = resources.getString(R.string.time_format, diffTime.toString(), timeSuffixArray[index+1])
+        if (diffTime < timeUnitArray[index + 1]) {
+            text = resources.getString(R.string.time_format, diffTime.toString(), timeSuffixArray[index + 1], suffixString)
             return
         }
     }
-
-    text = resources.getString(R.string.time_format, (diffTime/timeUnitArray.last()).toString(), timeSuffixArray.last())
+    text = resources.getString(R.string.time_format, (diffTime / timeUnitArray.last()).toString(), timeSuffixArray.last(), suffixString)
 }
 
 @BindingAdapter("isAvailableDelivery", "totalPrice")
-fun TextView.setOrderBtnText(isAvailableDelivery: Boolean, totalPrice: Int){
+fun TextView.setOrderBtnText(isAvailableDelivery: Boolean, totalPrice: Int) {
     text = if (isAvailableDelivery) {
         resources.getString(R.string.order_format, totalPrice.convertPriceToString())
-    }else{
+    } else {
         resources.getString(R.string.item_cart_bottom_body_btn)
     }
 }
 
 @BindingAdapter("app:setDeliveryForFreeText")
-fun TextView.setDeliveryForFreeText(price: Int){
-    text = resources.getString(R.string.order_form_free_delivery_format, price.convertPriceToString())
+fun TextView.setDeliveryForFreeText(price: Int) {
+    text =
+        resources.getString(R.string.order_form_free_delivery_format, price.convertPriceToString())
 }
 
-@BindingAdapter("isAvailableDelivery","isAvailableDeliveryFree")
-fun TextView.setDeliveryForFreeTextVisibility(isAvailableDelivery: Boolean, isAvailableDeliveryFree: Boolean){
+@BindingAdapter("isAvailableDelivery", "isAvailableDeliveryFree")
+fun TextView.setDeliveryForFreeTextVisibility(
+    isAvailableDelivery: Boolean,
+    isAvailableDeliveryFree: Boolean
+) {
     val deliveryBit = isAvailableDelivery.toInt()
     val deliveryFreeBit = isAvailableDeliveryFree.toInt()
     val bitMask = (deliveryBit shl 1) or deliveryFreeBit

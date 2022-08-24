@@ -44,7 +44,9 @@
             app:layout_constraintBottom_toBottomOf="@+id/cart_order_detail_complete_top_tv_lim_time_hardcode"
             app:layout_constraintStart_toEndOf="@+id/cart_order_detail_complete_top_tv_lim_time_hardcode"
             android:layout_marginStart="@dimen/rv_space_8dp"
-            android:text="20분"
+            beforeTime="@{item.orderTimeStamp}"
+            deliveryTime="@{item.ESTIMATED_DELIVERY_TIME}"
+            suffixString="@{``}"
             style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style"/>
 
         <TextView
