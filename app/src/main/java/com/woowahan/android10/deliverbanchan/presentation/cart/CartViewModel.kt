@@ -1,13 +1,13 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.*
 import com.google.gson.Gson
+import com.woowahan.android10.deliverbanchan.BanChanApplication
 import com.woowahan.android10.deliverbanchan.background.CartItemsDbWorker
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.OrderInfo
@@ -300,7 +300,7 @@ class CartViewModel @Inject constructor(
     }
 
     private fun insertOrderInfoDeleteCartInfo() {
-        CoroutineScope(dispatcher).launch {
+        BanChanApplication.applicationScope.launch {
             currentOrderTimeStamp = System.currentTimeMillis()
             orderHashList.clear()
             orderFirstItemTitle = "Title"
@@ -323,7 +323,7 @@ class CartViewModel @Inject constructor(
     }
 
     fun updateAllCartItemChanged() {
-        CoroutineScope(dispatcher).launch {
+        BanChanApplication.applicationScope.launch {
             insertAndDeleteCartItemsUseCase(
                 _uiCartJoinList.value!!.map {
                     CartInfo(
@@ -336,5 +336,3 @@ class CartViewModel @Inject constructor(
         }
     }
 }
-
-
