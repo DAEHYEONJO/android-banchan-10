@@ -3,7 +3,6 @@ package com.woowahan.android10.deliverbanchan.presentation.main.maindish
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.AdapterView
@@ -17,13 +16,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentMaindishBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
+import com.woowahan.android10.deliverbanchan.presentation.common.decorator.GridSpanCountTwoForMainDishDecorator
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
 import com.woowahan.android10.deliverbanchan.presentation.detail.DetailActivity
 import com.woowahan.android10.deliverbanchan.presentation.dialogs.bottomsheet.CartBottomSheetFragment
 import com.woowahan.android10.deliverbanchan.presentation.main.common.MainGridAdapter
-import com.woowahan.android10.deliverbanchan.presentation.state.ExhibitionUiState
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import com.woowahan.android10.deliverbanchan.presentation.view.SpinnerEventListener
 import com.woowahan.android10.deliverbanchan.presentation.view.adapter.SortSpinnerAdapter
@@ -48,6 +47,9 @@ class MainDishFragment :
 
     @Inject
     lateinit var mainDishSpinnerAdapter: SortSpinnerAdapter
+
+    @Inject
+    lateinit var gridSpanCountTwoForMainDecorator: GridSpanCountTwoForMainDishDecorator
 
     var isListenerAdd = false
     private val itemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -108,6 +110,7 @@ class MainDishFragment :
                     binding.maindishRv.apply {
                         adapter = mainDishAdapter
                         layoutManager = GridLayoutManager(requireContext(), 2)
+                        addItemDecoration(gridSpanCountTwoForMainDecorator)
                     }
                     //mainDishAdapter.submitList(mainDishViewModel.mainDishList.toList())
                 }
@@ -115,6 +118,7 @@ class MainDishFragment :
                     binding.maindishRv.apply {
                         adapter = mainDishLinearAdapter
                         layoutManager = LinearLayoutManager(requireContext())
+                        removeItemDecoration(gridSpanCountTwoForMainDecorator)
                     }
                     // mainDishLinearAdapter.submitList(mainDishViewModel.mainDishList.toList())
                 }
@@ -153,6 +157,7 @@ class MainDishFragment :
                     }
                 }
             })
+            if (itemDecorationCount == 0) addItemDecoration(gridSpanCountTwoForMainDecorator)
         }
 
 
