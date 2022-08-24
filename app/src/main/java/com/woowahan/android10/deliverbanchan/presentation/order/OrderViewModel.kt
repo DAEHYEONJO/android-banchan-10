@@ -1,6 +1,7 @@
 package com.woowahan.android10.deliverbanchan.presentation.order
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -40,6 +41,9 @@ class OrderViewModel @Inject constructor(
     private val _moveToOrderDetailEvent = MutableSharedFlow<Boolean>()
     val moveToOrderDetailEvent = _moveToOrderDetailEvent.asSharedFlow()
 
+    private val _reloadBtnClicked = MutableLiveData(false)
+    val reloadBtnClicked: LiveData<Boolean> get() = _reloadBtnClicked
+
     private val _allOrderJoinState =
         MutableStateFlow<UiLocalState<UiOrderListItem>>(UiLocalState.Init)
     val allOrderJoinState: StateFlow<UiLocalState<UiOrderListItem>> get() = _allOrderJoinState
@@ -74,6 +78,14 @@ class OrderViewModel @Inject constructor(
                 if (it.isEmpty()) _allOrderJoinState.value = UiLocalState.Empty(true)
                 else {
                     val map = it.groupBy { it.timeStamp }
+
+                    // orderList 플로우가 감지된 경우 만약, 배송완료 화면에 들어와 있다면 값 바꿔주기
+                    if (selectedOrderList.value.isNotEmpty()){
+                        if (map.keys.contains(selectedOrderList.value.first().timeStamp)){
+                            selectedOrderHeader.value = selectedOrderHeader.value.copy(isDelivering = false)
+                        }
+                    }
+
                     val list = map.toList().map { (timeStamp, UiCartJointItemLIst) ->
                         UiOrderListItem(
                             timeStamp,
@@ -84,6 +96,10 @@ class OrderViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun reloadBtnClicked(){
+        _reloadBtnClicked.value = true
     }
 
     fun setAppBarTitle(string: String) {

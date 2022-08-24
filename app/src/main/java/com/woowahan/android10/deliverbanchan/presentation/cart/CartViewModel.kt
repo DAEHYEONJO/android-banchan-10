@@ -98,6 +98,10 @@ class CartViewModel @Inject constructor(
         getAllCartJoinList()
     }
 
+    fun a() {
+
+    }
+
 
     internal fun updateCartDataBase() {
         val request = OneTimeWorkRequestBuilder<CartItemsDbWorker>()
