@@ -63,7 +63,6 @@ class OrderDetailFragment : BaseFragment<FragmentOrderDetailBinding>(
             with(orderViewModel){
 
                 reloadBtnClicked.observe(viewLifecycleOwner){
-                    Log.e(TAG, "observeData: 리로드버튼클릭 $it", )
                     orderDetailTopAdapter.notifyDataSetChanged()
                 }
 

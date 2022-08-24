@@ -1,6 +1,5 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.animation.Animation
@@ -86,6 +85,7 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart, "
 
             appBarWithBackBtnIvReload.setClickEventWithDuration(duration = 1000, coroutineScope = lifecycleScope){
                 appBarWithBackBtnIvReload.startAnimation(rotateAnimation)
+                cartViewModel.setReloadBtnValue()
             }
 
         }

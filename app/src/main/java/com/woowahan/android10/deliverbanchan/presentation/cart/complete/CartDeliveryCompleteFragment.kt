@@ -45,7 +45,6 @@ class CartDeliveryCompleteFragment : BaseFragment<FragmentCartDeliveryCompleteBi
         with(cartViewModel){
             
             orderCompleteTopItem.flowWithLifecycle(lifecycle).onEach{
-                Log.e(TAG, "initObserver: 화면회점됨", )
                 cartDishCompleteTopAdapter.cartDeliveryTopList = listOf(it)
                 cartDishCompleteTopAdapter.notifyDataSetChanged()
             }.launchIn(lifecycleScope)
@@ -59,7 +58,10 @@ class CartDeliveryCompleteFragment : BaseFragment<FragmentCartDeliveryCompleteBi
                 cartDishCompleteFooterAdapter.cartDeliveryBottomList = listOf(it)
                 cartDishCompleteFooterAdapter.notifyDataSetChanged()
             }.launchIn(lifecycleScope)
-            
+
+            reloadBtnClicked.observe(viewLifecycleOwner){
+                cartDishCompleteTopAdapter.notifyDataSetChanged()
+            }
         }
     }
 

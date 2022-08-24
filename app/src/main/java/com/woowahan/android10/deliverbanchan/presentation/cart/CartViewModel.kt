@@ -80,13 +80,13 @@ class CartViewModel @Inject constructor(
 
     private val _toBeDeletedCartItem = mutableSetOf<String>()
 
-    private val _orderCompleteTopItem = MutableStateFlow<UiCartCompleteHeader>(UiCartCompleteHeader.emptyItem())
+    private val _orderCompleteTopItem = MutableStateFlow(UiCartCompleteHeader.emptyItem())
     val orderCompleteTopItem: StateFlow<UiCartCompleteHeader> get() = _orderCompleteTopItem
 
     private val _orderCompleteBodyItem = MutableStateFlow<List<UiCartOrderDishJoinItem>>(emptyList())
     val orderCompleteBodyItem: StateFlow<List<UiCartOrderDishJoinItem>> get() = _orderCompleteBodyItem
 
-    private val _orderCompleteFooterItem = MutableStateFlow<UiOrderInfo>(UiOrderInfo.emptyItem())
+    private val _orderCompleteFooterItem = MutableStateFlow(UiOrderInfo.emptyItem())
     val orderCompleteFooterItem: StateFlow<UiOrderInfo> get() = _orderCompleteFooterItem
 
     private val _orderButtonClicked = MutableSharedFlow<Boolean>()
@@ -95,10 +95,17 @@ class CartViewModel @Inject constructor(
     val orderHashList = ArrayList<String>()
     var orderFirstItemTitle = "Title"
 
+    private val _reloadBtnClicked = MutableLiveData(false)
+    val reloadBtnClicked: LiveData<Boolean> get() = _reloadBtnClicked
+
     init {
         getAllRecentlyJoinList()
         getAllCartJoinList()
         observeOrderInfo()
+    }
+
+    fun setReloadBtnValue(){
+        _reloadBtnClicked.value = true
     }
 
     private fun observeOrderInfo(){
@@ -270,16 +277,17 @@ class CartViewModel @Inject constructor(
         _orderCompleteBodyItem.value =
             _uiCartJoinArrayList.filter { tempHashList.contains(it.hash) }.toList()
         val deliveryPrice = _itemCartBottomBodyData.value!!.deliveryPrice
-        val priceTotal = _orderCompleteBodyItem.value!!
+        val priceTotal = _orderCompleteBodyItem.value
             .map { Pair(it.sPrice, it.amount) }
             .fold(0) { acc, pair ->
                 acc + pair.first * pair.second
             }
         val totalPrice = priceTotal + deliveryPrice
+        val orderItemCount = _orderCompleteBodyItem.value.map { it.amount }.reduce { sum, eachAmount -> sum+eachAmount }
         _orderCompleteTopItem.value = UiCartCompleteHeader(
             isDelivering = true,
             orderTimeStamp = System.currentTimeMillis(),
-            orderItemCount = _orderCompleteBodyItem.value!!.size
+            orderItemCount = orderItemCount
         )
         _orderCompleteFooterItem.value = UiOrderInfo(
             itemPrice = priceTotal,

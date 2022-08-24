@@ -52,7 +52,7 @@ class OrderActivity : BaseActivity<ActivityOrderBinding>(R.layout.activity_order
             }
             appBarWithBackBtnIvReload.setClickEventWithDuration(duration = 1000, coroutineScope = lifecycleScope){
                 appBarWithBackBtnIvReload.startAnimation(rotateAnimation)
-                orderViewModel.reloadBtnClicked()
+                orderViewModel.setReloadBtnValue()
             }
         }
     }
