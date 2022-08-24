@@ -29,6 +29,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CartViewModel @Inject constructor(
     private val getJoinUseCase: GetJoinUseCase,
+    private val getAllOrderInfoListUseCase: GetAllOrderInfoListUseCase,
     private val insertAndDeleteCartItemsUseCase: InsertAndDeleteCartItemsUseCase,
     private val deleteCartInfoByHashListUseCase: DeleteCartInfoByHashListUseCase,
     private val insertVarArgOrderInfoUseCase: InsertVarArgOrderInfoUseCase,
@@ -110,7 +111,7 @@ class CartViewModel @Inject constructor(
 
     private fun observeOrderInfo(){
         viewModelScope.launch {
-            getJoinUseCase.getOrderJoinList().collect{
+            getAllOrderInfoListUseCase(this).collect{
                 val orderListTimeStampMap = it.groupBy { it.timeStamp }
                 if (_orderCompleteBodyItem.value.isNotEmpty()){
                     if (orderListTimeStampMap.keys.contains(currentOrderTimeStamp) ){
