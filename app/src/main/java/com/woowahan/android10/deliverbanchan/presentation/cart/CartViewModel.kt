@@ -1,6 +1,7 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -63,6 +64,7 @@ class CartViewModel @Inject constructor(
         )
 
     private var _itemCartBottomBodyProductTotalPrice = 0
+    private var currentOrderTimeStamp = 0L
 
     private val _itemCartHeaderData = MutableLiveData(UiCartHeader.emptyItem())
     val itemCartHeaderData: LiveData<UiCartHeader> get() = _itemCartHeaderData
@@ -78,14 +80,14 @@ class CartViewModel @Inject constructor(
 
     private val _toBeDeletedCartItem = mutableSetOf<String>()
 
-    private val _orderCompleteTopItem = MutableLiveData<UiCartCompleteHeader>()
-    val orderCompleteTopItem: LiveData<UiCartCompleteHeader> get() = _orderCompleteTopItem
+    private val _orderCompleteTopItem = MutableStateFlow<UiCartCompleteHeader>(UiCartCompleteHeader.emptyItem())
+    val orderCompleteTopItem: StateFlow<UiCartCompleteHeader> get() = _orderCompleteTopItem
 
-    private val _orderCompleteBodyItem = MutableLiveData<List<UiCartOrderDishJoinItem>>(emptyList())
-    val orderCompleteBodyItem: LiveData<List<UiCartOrderDishJoinItem>> get() = _orderCompleteBodyItem
+    private val _orderCompleteBodyItem = MutableStateFlow<List<UiCartOrderDishJoinItem>>(emptyList())
+    val orderCompleteBodyItem: StateFlow<List<UiCartOrderDishJoinItem>> get() = _orderCompleteBodyItem
 
-    private val _orderCompleteFooterItem = MutableLiveData<UiOrderInfo>()
-    val orderCompleteFooterItem: LiveData<UiOrderInfo> get() = _orderCompleteFooterItem
+    private val _orderCompleteFooterItem = MutableStateFlow<UiOrderInfo>(UiOrderInfo.emptyItem())
+    val orderCompleteFooterItem: StateFlow<UiOrderInfo> get() = _orderCompleteFooterItem
 
     private val _orderButtonClicked = MutableSharedFlow<Boolean>()
     val orderButtonClicked: SharedFlow<Boolean> = _orderButtonClicked.asSharedFlow()
@@ -96,12 +98,24 @@ class CartViewModel @Inject constructor(
     init {
         getAllRecentlyJoinList()
         getAllCartJoinList()
+        observeOrderInfo()
     }
 
-    fun a() {
-
+    private fun observeOrderInfo(){
+        viewModelScope.launch {
+            getJoinUseCase.getOrderJoinList().collect{
+                val orderListTimeStampMap = it.groupBy { it.timeStamp }
+                if (_orderCompleteBodyItem.value.isNotEmpty()){
+                    if (orderListTimeStampMap.keys.contains(currentOrderTimeStamp) ){
+                        _orderCompleteTopItem.value =
+                            _orderCompleteTopItem.value.copy(
+                                isDelivering = orderListTimeStampMap[currentOrderTimeStamp]!!.first().isDelivering
+                            )
+                    }
+                }
+            }
+        }
     }
-
 
     internal fun updateCartDataBase() {
         val request = OneTimeWorkRequestBuilder<CartItemsDbWorker>()
@@ -278,7 +292,7 @@ class CartViewModel @Inject constructor(
 
     private fun insertOrderInfoDeleteCartInfo() {
         CoroutineScope(dispatcher).launch {
-            val timeStamp = System.currentTimeMillis()
+            currentOrderTimeStamp = System.currentTimeMillis()
             orderHashList.clear()
             orderFirstItemTitle = "Title"
             insertVarArgOrderInfoUseCase(
@@ -287,7 +301,7 @@ class CartViewModel @Inject constructor(
                     orderHashList.add(tempOrder.hash)
                     OrderInfo(
                         hash = tempOrder.hash,
-                        timeStamp = timeStamp,
+                        timeStamp = currentOrderTimeStamp,
                         amount = tempOrder.amount,
                         isDelivering = true,
                         deliveryPrice = _itemCartBottomBodyData.value!!.deliveryPrice

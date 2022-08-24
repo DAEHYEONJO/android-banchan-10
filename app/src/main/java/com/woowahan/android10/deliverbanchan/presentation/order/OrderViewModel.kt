@@ -73,7 +73,6 @@ class OrderViewModel @Inject constructor(
                 _allOrderJoinState.value = UiLocalState.Loading(false)
                 _allOrderJoinState.value = UiLocalState.ShowToast(exception.message.toString())
             }.collect {
-                Log.e(TAG, "getAllOrderList: 올더조인플로우 $it", )
                 _allOrderJoinState.value = UiLocalState.Loading(false)
                 if (it.isEmpty()) _allOrderJoinState.value = UiLocalState.Empty(true)
                 else {
@@ -82,7 +81,9 @@ class OrderViewModel @Inject constructor(
                     // orderList 플로우가 감지된 경우 만약, 배송완료 화면에 들어와 있다면 값 바꿔주기
                     if (selectedOrderList.value.isNotEmpty()){
                         if (map.keys.contains(selectedOrderList.value.first().timeStamp)){
-                            selectedOrderHeader.value = selectedOrderHeader.value.copy(isDelivering = false)
+                            selectedOrderHeader.value = selectedOrderHeader.value.copy(
+                                isDelivering = map[selectedOrderList.value.first().timeStamp]!!.first().isDelivering
+                            )
                         }
                     }
 
