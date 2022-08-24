@@ -37,8 +37,7 @@
             app:layout_constraintEnd_toEndOf="@id/gl_end_16dp"
             app:layout_constraintStart_toStartOf="@id/gl_begin_16dp"
             app:layout_constraintTop_toTopOf="parent"
-            app:setStringUrlImage="@{imageUrl}"
-            tools:src="@drawable/ic_launcher_foreground" />
+            app:setStringUrlImage="@{imageUrl}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

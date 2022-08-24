@@ -42,6 +42,8 @@ object Versions {
     const val WORK_MANAGER = "2.7.1"
     const val HILT_WORK = "1.0.0"
     const val HILT_COMPILER = "1.0.0"
+
+    const val SPLASH_SCREEN_VERSION = "1.0.0-beta02"
 }
 
 object Kotlin {
@@ -77,6 +79,8 @@ object AndroidX {
     const val PAGING_RUNTIME_KTX      = "androidx.paging:paging-runtime-ktx:${Versions.PAGING_VERSION}"
     const val PAGING_COMMON           = "androidx.paging:paging-common:${Versions.PAGING_VERSION}"
     const val ROOM_PAGING             = "androidx.room:room-paging:${Versions.ROOM}"
+
+    const val SPLASH_SCREEN           = "androidx.core:core-splashscreen:${Versions.SPLASH_SCREEN_VERSION}"
 }
 
 object Google {

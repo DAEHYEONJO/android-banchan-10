@@ -97,4 +97,6 @@ dependencies {
     implementation AndroidX.PAGING_RUNTIME_KTX
     testImplementation AndroidX.PAGING_COMMON
     implementation AndroidX.ROOM_PAGING
+
+    implementation AndroidX.SPLASH_SCREEN
 }
