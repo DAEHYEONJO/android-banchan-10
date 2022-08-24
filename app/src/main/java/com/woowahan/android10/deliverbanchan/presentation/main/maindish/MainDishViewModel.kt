@@ -9,6 +9,7 @@ import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResu
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.usecase.CreateUiDishItemsUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllCartInfoHashSetUseCase
+import com.woowahan.android10.deliverbanchan.presentation.state.ExhibitionUiState
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
@@ -60,6 +61,7 @@ class MainDishViewModel @Inject constructor(
                 hideLoading()
                 Log.e("MainDishViewModel", "exception : ${exception.message}")
                 showToast(exception.message.toString())
+                catchError(1)
             }.collect { result ->
                 hideLoading()
                 withContext(Dispatchers.Main) {
@@ -68,8 +70,7 @@ class MainDishViewModel @Inject constructor(
                             mainDishList = result.data
                             _mainDishState.value = UiState.Success(result.data)
                         }
-                        is BaseResult.Error -> _mainDishState.value =
-                            UiState.Error(result.errorCode)
+                        is BaseResult.Error -> catchError(1)
                     }
                 }
             }
@@ -86,6 +87,10 @@ class MainDishViewModel @Inject constructor(
 
     private fun showToast(message: String) {
         _mainDishState.value = UiState.ShowToast(message)
+    }
+
+    private fun catchError(errorCode: Int) {
+        _mainDishState.value = UiState.Error(errorCode)
     }
 
     fun sortMainDishes(position: Int) {

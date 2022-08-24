@@ -93,6 +93,7 @@ class ExhibitionFragment :
                 binding.errorLayout.errorCl.toGone()
             }
             is ExhibitionUiState.Success -> {
+                Log.e(TAG, "exhibition success")
                 binding.exhibitionPb.toGone()
                 binding.exhibitionRv.toVisible()
                 exhibitionAdapter.submitList(state.uiExhibitionItems)

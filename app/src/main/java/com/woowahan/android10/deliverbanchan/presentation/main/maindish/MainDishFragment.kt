@@ -169,13 +169,12 @@ class MainDishFragment :
                 mainDishLinearAdapter.submitList(state.uiDishItems)
             }
             is UiState.ShowToast -> {
-                binding.maindishPb.toGone()
-                binding.maindishCdl.toGone()
-                binding.errorLayout.errorCl.toVisible()
                 requireContext().showToast(state.message)
             }
             is UiState.Error -> {
-
+                binding.maindishPb.toGone()
+                binding.maindishCdl.toGone()
+                binding.errorLayout.errorCl.toVisible()
             }
         }
     }

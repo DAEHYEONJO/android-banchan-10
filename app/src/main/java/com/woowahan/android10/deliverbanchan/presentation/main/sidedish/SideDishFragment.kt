@@ -29,11 +29,14 @@ class SideDishFragment :
     BaseFragment<FragmentSidedishBinding>(R.layout.fragment_sidedish, "SideDishFragment") {
 
     private val sideDishViewModel: SideDishViewModel by activityViewModels()
+
     @Inject
     lateinit var sideDishAdapter: MainGridAdapter
+
     @Inject
     lateinit var sideDishSpinnerAdapter: SortSpinnerAdapter
-    @Inject lateinit var gridSpanCountTwoDecorator: GridSpanCountTwoDecorator
+    @Inject
+    lateinit var gridSpanCountTwoDecorator: GridSpanCountTwoDecorator
     private val itemSelectedListener = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(
             p0: AdapterView<*>?,
@@ -59,8 +62,9 @@ class SideDishFragment :
 
     override fun onResume() {
         super.onResume()
-        Log.e(TAG, "viewLifecycleOwner: ${viewLifecycleOwner}", )
-        Log.e(TAG, "lifecycleScope: ${viewLifecycleOwner.lifecycleScope}", )
+        Log.e(TAG, "viewLifecycleOwner: ${viewLifecycleOwner}")
+        Log.e(TAG, "lifecycleScope: ${viewLifecycleOwner.lifecycleScope}")
+        checkErrorState()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -68,6 +72,7 @@ class SideDishFragment :
         binding.vm = sideDishViewModel
         initLayout()
         initObserver()
+        setErrorBtn()
     }
 
     private fun initObserver() {
@@ -82,14 +87,22 @@ class SideDishFragment :
 
     private fun handleStateChange(state: UiState) {
         when (state) {
-            is UiState.IsLoading -> binding.sideDishPb.toVisible()
+            is UiState.IsLoading -> {
+                binding.sideDishPb.toVisible()
+                binding.errorLayout.errorCl.toGone()
+            }
             is UiState.Success -> {
                 binding.sideDishPb.toGone()
+                binding.sideDishCdl.toVisible()
                 sideDishAdapter.submitList(state.uiDishItems)
             }
             is UiState.ShowToast -> {
-                binding.sideDishPb.toGone()
                 requireContext().showToast(state.message)
+            }
+            is UiState.Error -> {
+                binding.sideDishPb.toGone()
+                binding.sideDishCdl.toGone()
+                binding.errorLayout.errorCl.toVisible()
             }
         }
     }
@@ -109,6 +122,18 @@ class SideDishFragment :
                     onItemSelectedListener = itemSelectedListener
                 }
             }
+        }
+    }
+
+    private fun setErrorBtn() {
+        binding.errorLayout.errorBtn.setOnClickListener {
+            sideDishViewModel.getSideDishList()
+        }
+    }
+
+    private fun checkErrorState() {
+        if (sideDishViewModel.sideState.value is UiState.Error) {
+            sideDishViewModel.getSideDishList()
         }
     }
 }

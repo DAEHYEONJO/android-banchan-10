@@ -40,7 +40,7 @@ class ExhibitionViewModel @Inject constructor(
             }.catch { exception ->
                 hideLoading()
                 showToast(exception.message.toString())
-                setError(1)
+                catchError(1)
                 Log.e("ExhibitionViewModel", "error catch!")
             }.flowOn(Dispatchers.IO).collect { result ->
                 hideLoading()
@@ -50,7 +50,7 @@ class ExhibitionViewModel @Inject constructor(
                             exhibitionList = result.data
                             _exhibitionState.value = ExhibitionUiState.Success(result.data)
                         }
-                        is BaseResult.Error -> setError(result.errorCode)
+                        is BaseResult.Error -> catchError(result.errorCode)
                     }
                 }
             }
@@ -88,7 +88,7 @@ class ExhibitionViewModel @Inject constructor(
         _exhibitionState.value = ExhibitionUiState.ShowToast(message)
     }
 
-    private fun setError(errorCode: Int) { // 함수명 더 나은것이 있을까..
+    private fun catchError(errorCode: Int) { // 함수명 더 나은것이 있을까..
         _exhibitionState.value = ExhibitionUiState.Error(errorCode)
     }
 }
