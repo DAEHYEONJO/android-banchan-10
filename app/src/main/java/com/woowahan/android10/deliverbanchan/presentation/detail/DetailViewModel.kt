@@ -105,7 +105,7 @@ class DetailViewModel @Inject constructor(
         }
     }
 
-    private fun getDetailDishInfo() {
+    fun getDetailDishInfo() {
         viewModelScope.launch {
             getDetailDishUseCase(
                 currentUiDishItem!!.hash,

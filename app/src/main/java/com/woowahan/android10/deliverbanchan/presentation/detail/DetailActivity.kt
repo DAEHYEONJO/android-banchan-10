@@ -52,6 +52,7 @@ class DetailActivity :
         initBtn()
         initView()
         initObservers()
+        setErrorBtn()
     }
 
     @OptIn(FlowPreview::class)
@@ -105,10 +106,14 @@ class DetailActivity :
         detailViewModel.uiDetailInfo.flowWithLifecycle(lifecycle).onEach { uiDetailState ->
             when (uiDetailState) {
                 is UiState.Loading -> {
+                    Log.e(TAG, "initObservers: 로딩", )
+                    binding.detailErrorLayout.errorCl.toGone()
                     binding.detailRv.toGone()
                     binding.detailPb.toVisible()
                 }
                 is UiState.Success -> {
+                    Log.e(TAG, "initObservers: ${uiDetailState.items}", )
+                    binding.detailErrorLayout.errorCl.toGone()
                     binding.detailRv.toVisible()
                     binding.detailPb.toGone()
                     detailThumbImageAdapter.submitList(listOf(uiDetailState.items.thumbList))
@@ -117,6 +122,7 @@ class DetailActivity :
                 }
                 is UiState.Error -> {
                     binding.detailPb.toGone()
+                    binding.detailErrorLayout.errorCl.toVisible()
                     showToast(uiDetailState.error + "에러 에러 삐용 삐용")
                 }
             }
@@ -133,6 +139,11 @@ class DetailActivity :
 
     }
 
+    private fun setErrorBtn() {
+        binding.detailErrorLayout.errorBtn.setClickEventWithDuration(coroutineScope = lifecycleScope){
+            detailViewModel.getDetailDishInfo()
+        }
+    }
 
 
 }
