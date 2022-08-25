@@ -36,7 +36,6 @@ class MapUiDishItemListUseCase @Inject constructor(
                 }
             }
         }
-
         return uiDishItemList
     }
 }
