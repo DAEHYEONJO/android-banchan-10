@@ -3,12 +3,9 @@ package com.woowahan.android10.deliverbanchan.presentation.detail
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
@@ -26,12 +23,12 @@ import com.woowahan.android10.deliverbanchan.presentation.detail.adapter.DetailS
 import com.woowahan.android10.deliverbanchan.presentation.detail.adapter.DetailThumbImageAdapter
 import com.woowahan.android10.deliverbanchan.presentation.dialogs.dialog.CartDialogFragment
 import com.woowahan.android10.deliverbanchan.presentation.order.OrderActivity
-import com.woowahan.android10.deliverbanchan.presentation.state.UiDetailState
+import com.woowahan.android10.deliverbanchan.presentation.state.UiTempState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
+import kotlin.math.log
 
 @AndroidEntryPoint
 class DetailActivity :
@@ -108,22 +105,22 @@ class DetailActivity :
 
         detailViewModel.uiDetailInfo.flowWithLifecycle(lifecycle).onEach { uiDetailState ->
             when (uiDetailState) {
-                is UiDetailState.Loading -> {
+                is UiTempState.Loading -> {
                     binding.detailRv.toGone()
                     binding.detailPb.toVisible()
                 }
-                is UiDetailState.Success -> {
+                is UiTempState.Success -> {
                     binding.detailRv.toVisible()
                     binding.detailPb.toGone()
-                    detailThumbImageAdapter.submitList(listOf(uiDetailState.uiDishItems.thumbList))
-                    detailContentAdapter.submitList(listOf(uiDetailState.uiDishItems))
-                    detailSectionImageAdapter.submitList(uiDetailState.uiDishItems.detailSection)
+                    detailThumbImageAdapter.submitList(listOf(uiDetailState.items.thumbList))
+                    detailContentAdapter.submitList(listOf(uiDetailState.items))
+                    detailSectionImageAdapter.submitList(uiDetailState.items.detailSection)
                 }
-                is UiDetailState.ShowToast -> {
+                is UiTempState.ShowToast -> {
                     binding.detailPb.toGone()
                     showToast(uiDetailState.message)
                 }
-                is UiDetailState.Error -> {
+                is UiTempState.Error -> {
                     binding.detailPb.toGone()
                     showToast(uiDetailState.errorCode.toString() + "에러 에러 삐용 삐용")
                 }
