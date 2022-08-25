@@ -10,6 +10,7 @@ import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllCartInfoHashSetUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetThemeDishListUseCase
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
+import com.woowahan.android10.deliverbanchan.presentation.state.UiTempState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -26,8 +27,8 @@ class SoupViewModel @Inject constructor(
         const val TAG = "SoupViewModel"
     }
 
-    private val _soupState = MutableStateFlow<UiState>(UiState.Init)
-    val soupState: StateFlow<UiState> get() = _soupState
+    private val _soupState = MutableStateFlow<UiTempState<List<UiDishItem>>>(UiTempState.Init)
+    val soupState: StateFlow<UiTempState<List<UiDishItem>>> get() = _soupState
     private val _curSoupSpinnerPosition = MutableLiveData<Int>(0)
     val curSoupSpinnerPosition: LiveData<Int> get() = _curSoupSpinnerPosition
     private val _preSoupSpinnerPosition = MutableLiveData(0)
@@ -43,31 +44,31 @@ class SoupViewModel @Inject constructor(
         // cart flow collect 시 , 장바구니 insert 여부 확인함
         viewModelScope.launch {
             getAllCartInfoSetUseCase().collect { cartInfoHashSet ->
-                if (_soupState.value is UiState.Success) {
+                if (_soupState.value is UiTempState.Success) {
                     val tempList = mutableListOf<UiDishItem>()
-                    (_soupState.value as UiState.Success).uiDishItems.forEach {
+                    (_soupState.value as UiTempState.Success).uiDishItems.forEach {
                         tempList.add(it.copy(isInserted = cartInfoHashSet.contains(it.hash)))
                     }
-                    _soupState.value = UiState.Success(tempList)
+                    _soupState.value = UiTempState.Success(tempList)
                 }
             }
         }
     }
 
     private fun setLoadingStateTrue() {
-        _soupState.value = UiState.IsLoading(true)
+        _soupState.value = UiTempState.Loading(true)
     }
 
     private fun setLoadingStateFalse() {
-        _soupState.value = UiState.IsLoading(false)
+        _soupState.value = UiTempState.Loading(false)
     }
 
     private fun setToastMessageByException(message: String) {
-        _soupState.value = UiState.ShowToast(message)
+        _soupState.value = UiTempState.ShowToast(message)
     }
 
     private fun catchError(errorCode: Int) {
-        _soupState.value = UiState.Error(errorCode)
+        _soupState.value = UiTempState.Error(errorCode)
     }
 
     fun setSoupDishesState() {
@@ -84,7 +85,7 @@ class SoupViewModel @Inject constructor(
                 setLoadingStateFalse()
                 when (result) {
                     is BaseResult.Success -> {
-                        _soupState.value = UiState.Success(result.data)
+                        _soupState.value = UiTempState.Success(result.data)
                         soupListSize.value = result.data.size
                     }
                     is BaseResult.Error -> catchError(result.errorCode)
@@ -98,12 +99,12 @@ class SoupViewModel @Inject constructor(
             _preSoupSpinnerPosition.value = _curSoupSpinnerPosition.value
         }
         _curSoupSpinnerPosition.value = position
-        if (_soupState.value is UiState.Success) {
+        if (_soupState.value is UiTempState.Success) {
             _soupState.value = when (_curSoupSpinnerPosition.value) {
-                1 -> UiState.Success((_soupState.value as UiState.Success).uiDishItems.sortedBy { -it.sPrice }) // 금액 내림차순
-                2 -> UiState.Success((_soupState.value as UiState.Success).uiDishItems.sortedBy { it.sPrice }) // 금액 오름차순
-                3 -> UiState.Success((_soupState.value as UiState.Success).uiDishItems.sortedBy { -it.salePercentage }) // 할인률 내림차순
-                else -> UiState.Success((_soupState.value as UiState.Success).uiDishItems.sortedBy { it.index }) // 기본 정렬순
+                1 -> UiTempState.Success((_soupState.value as UiTempState.Success).uiDishItems.sortedBy { -it.sPrice }) // 금액 내림차순
+                2 -> UiTempState.Success((_soupState.value as UiTempState.Success).uiDishItems.sortedBy { it.sPrice }) // 금액 오름차순
+                3 -> UiTempState.Success((_soupState.value as UiTempState.Success).uiDishItems.sortedBy { -it.salePercentage }) // 할인률 내림차순
+                else -> UiTempState.Success((_soupState.value as UiTempState.Success).uiDishItems.sortedBy { it.index }) // 기본 정렬순
             }
         }
     }

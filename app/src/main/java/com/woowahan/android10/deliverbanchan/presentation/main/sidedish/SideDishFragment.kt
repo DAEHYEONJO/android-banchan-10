@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentSidedishBinding
+import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
 import com.woowahan.android10.deliverbanchan.presentation.common.decorator.GridSpanCountTwoDecorator
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
@@ -19,6 +20,7 @@ import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
 import com.woowahan.android10.deliverbanchan.presentation.main.common.MainGridAdapter
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
+import com.woowahan.android10.deliverbanchan.presentation.state.UiTempState
 import com.woowahan.android10.deliverbanchan.presentation.view.adapter.SortSpinnerAdapter
 import com.woowahan.android10.deliverbanchan.presentation.view.SpinnerEventListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -100,21 +102,21 @@ class SideDishFragment :
         }
     }
 
-    private fun handleStateChange(state: UiState) {
+    private fun handleStateChange(state: UiTempState<List<UiDishItem>>) {
         when (state) {
-            is UiState.IsLoading -> {
+            is UiTempState.Loading -> {
                 binding.sideDishPb.toVisible()
                 binding.errorLayout.errorCl.toGone()
             }
-            is UiState.Success -> {
+            is UiTempState.Success -> {
                 binding.sideDishPb.toGone()
                 binding.sideDishCdl.toVisible()
                 sideDishAdapter.submitList(state.uiDishItems)
             }
-            is UiState.ShowToast -> {
+            is UiTempState.ShowToast -> {
                 requireContext().showToast(state.message)
             }
-            is UiState.Error -> {
+            is UiTempState.Error -> {
                 binding.sideDishPb.toGone()
                 binding.sideDishCdl.toGone()
                 binding.errorLayout.errorCl.toVisible()
@@ -156,7 +158,7 @@ class SideDishFragment :
     }
 
     private fun checkErrorState() {
-        if (sideDishViewModel.sideState.value is UiState.Error) {
+        if (sideDishViewModel.sideState.value is UiTempState.Error) {
             sideDishViewModel.getSideDishList()
         }
     }

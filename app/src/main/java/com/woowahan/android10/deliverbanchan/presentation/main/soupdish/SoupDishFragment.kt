@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentSoupdishBinding
+import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
 import com.woowahan.android10.deliverbanchan.presentation.common.decorator.GridSpanCountTwoDecorator
@@ -21,6 +22,7 @@ import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
 import com.woowahan.android10.deliverbanchan.presentation.main.common.MainGridAdapter
 import com.woowahan.android10.deliverbanchan.presentation.main.host.DishViewModel
+import com.woowahan.android10.deliverbanchan.presentation.state.UiTempState
 import com.woowahan.android10.deliverbanchan.presentation.view.SpinnerEventListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -103,22 +105,22 @@ class SoupDishFragment :
         }
     }
 
-    private fun handleStateChange(state: UiState) {
+    private fun handleStateChange(state: UiTempState<List<UiDishItem>>) {
         when (state) {
-            is UiState.IsLoading -> {
+            is UiTempState.Loading -> {
                 binding.soupPb.toVisible()
                 binding.errorLayout.errorCl.toGone()
             }
-            is UiState.Success -> {
+            is UiTempState.Success -> {
                 binding.soupPb.toGone()
                 binding.soupCdl.toVisible()
                 mainGridAdapter.submitList(state.uiDishItems)
             }
-            is UiState.ShowToast -> {
+            is UiTempState.ShowToast -> {
                 Log.e("SoupDishFragment", "show toast")
                 requireContext().showToast(state.message)
             }
-            is UiState.Error -> {
+            is UiTempState.Error -> {
                 binding.soupPb.toGone()
                 binding.soupCdl.toGone()
                 binding.errorLayout.errorCl.toVisible()
@@ -160,7 +162,7 @@ class SoupDishFragment :
     }
 
     private fun checkErrorState() {
-        if (soupViewModel.soupState.value is UiState.Error) {
+        if (soupViewModel.soupState.value is UiTempState.Error) {
             soupViewModel.setSoupDishesState()
         }
     }
