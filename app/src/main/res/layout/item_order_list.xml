@@ -8,6 +8,9 @@
             name="item"
             type="com.woowahan.android10.deliverbanchan.domain.model.UiCartOrderDishJoinItem" />
         <variable
+            name="orderTotalPrice"
+            type="Integer" />
+        <variable
             name="listSize"
             type="Integer" />
     </data>
@@ -71,8 +74,7 @@
             app:layout_constraintBottom_toTopOf="@id/order_list_tv_isdelivering"
             app:layout_constraintStart_toEndOf="@id/order_list_iv_food"
             app:layout_constraintTop_toBottomOf="@id/order_list_tv_title"
-            isNPrice="@{false}"
-            price="@{item.SPrice * item.amount}"
+            app:setDeliveryPriceText="@{orderTotalPrice}"
             tools:text="21,140원" />
 
         <TextView

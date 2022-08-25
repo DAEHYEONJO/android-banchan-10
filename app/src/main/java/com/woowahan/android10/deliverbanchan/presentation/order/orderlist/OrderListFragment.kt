@@ -20,6 +20,7 @@ import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
 import com.woowahan.android10.deliverbanchan.presentation.order.OrderViewModel
 import com.woowahan.android10.deliverbanchan.presentation.state.UiLocalState
+import com.woowahan.android10.deliverbanchan.presentation.state.UiTempState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -61,19 +62,19 @@ class OrderListFragment :
         }
     }
 
-    private fun <T> handleState(uiLocalState: UiLocalState<T>) {
+    private fun <T> handleState(uiLocalState: UiTempState<T>) {
         when (uiLocalState) {
-            is UiLocalState.Empty -> {
+            is UiTempState.Empty -> {
                 binding.orderRv.toGone()
                 binding.orderListTvEmptyMessage.toVisible()
             }
-            is UiLocalState.Loading -> {
+            is UiTempState.Loading -> {
                 binding.orderListPb.isVisible = uiLocalState.isLoading
             }
-            is UiLocalState.ShowToast -> {
+            is UiTempState.ShowToast -> {
                 requireContext().showToast(uiLocalState.message)
             }
-            is UiLocalState.Success -> {
+            is UiTempState.Success -> {
                 binding.orderRv.toVisible()
                 binding.orderListTvEmptyMessage.toGone()
                 val uiOrderList = uiLocalState.uiDishItems as List<UiOrderListItem>
@@ -84,7 +85,7 @@ class OrderListFragment :
                     orderListAdapter.submitList(uiOrderList)
                 }
             }
-            is UiLocalState.Error -> {}
+            is UiTempState.Error -> {}
         }
     }
 }
