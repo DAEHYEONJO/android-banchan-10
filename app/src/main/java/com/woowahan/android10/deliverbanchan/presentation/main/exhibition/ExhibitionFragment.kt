@@ -4,21 +4,20 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentExhibitionBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiExhibitionItem
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
-import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
 class ExhibitionFragment :
@@ -70,14 +69,9 @@ class ExhibitionFragment :
     }
 
     private fun initObserver() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                exhibitionViewModel.exhibitionState.collect {
-                    Log.e("ExhibitionFragment", "collect")
-                    handleStateChange(it)
-                }
-            }
-        }
+        exhibitionViewModel.exhibitionState.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach {
+            handleStateChange(it)
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun handleStateChange(state: UiState<List<UiExhibitionItem>>) {

@@ -59,20 +59,20 @@ class OrderDetailFragment : BaseFragment<FragmentOrderDetailBinding>(
                     orderDetailTopAdapter.notifyDataSetChanged()
                 }
 
-                selectedOrderHeader.flowWithLifecycle(lifecycle).onEach {
+                selectedOrderHeader.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach {
                     orderDetailTopAdapter.cartDeliveryTopList = listOf(it)
                     orderDetailTopAdapter.notifyDataSetChanged()
-                }.launchIn(lifecycleScope)
+                }.launchIn(viewLifecycleOwner.lifecycleScope)
 
-                selectedOrderList.flowWithLifecycle(lifecycle).onEach {
+                selectedOrderList.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach {
                     orderDetailBodyAdapter.cartDeliveryTopList = it
                     orderDetailBodyAdapter.notifyDataSetChanged()
-                }.launchIn(lifecycleScope)
+                }.launchIn(viewLifecycleOwner.lifecycleScope)
 
-                selectedOrderInfo.flowWithLifecycle(lifecycle).onEach {
+                selectedOrderInfo.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach {
                     orderDetailFooterAdapter.cartDeliveryBottomList = listOf(it)
                     orderDetailFooterAdapter.notifyDataSetChanged()
-                }.launchIn(lifecycleScope)
+                }.launchIn(viewLifecycleOwner.lifecycleScope)
 
             }
         }

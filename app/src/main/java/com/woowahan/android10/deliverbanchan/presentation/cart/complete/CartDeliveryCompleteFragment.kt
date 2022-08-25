@@ -44,20 +44,20 @@ class CartDeliveryCompleteFragment : BaseFragment<FragmentCartDeliveryCompleteBi
     private fun initObserver() {
         with(cartViewModel){
             
-            orderCompleteTopItem.flowWithLifecycle(lifecycle).onEach{
+            orderCompleteTopItem.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach{
                 cartDishCompleteTopAdapter.cartDeliveryTopList = listOf(it)
                 cartDishCompleteTopAdapter.notifyDataSetChanged()
-            }.launchIn(lifecycleScope)
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
             
-            orderCompleteBodyItem.flowWithLifecycle(lifecycle).onEach{
+            orderCompleteBodyItem.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach{
                 cartDishCompleteBodyAdapter.cartDeliveryTopList = it
                 cartDishCompleteBodyAdapter.notifyDataSetChanged()
-            }.launchIn(lifecycleScope)
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
             
-            orderCompleteFooterItem.flowWithLifecycle(lifecycle).onEach{
+            orderCompleteFooterItem.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach{
                 cartDishCompleteFooterAdapter.cartDeliveryBottomList = listOf(it)
                 cartDishCompleteFooterAdapter.notifyDataSetChanged()
-            }.launchIn(lifecycleScope)
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
 
             reloadBtnClicked.observe(viewLifecycleOwner){
                 cartDishCompleteTopAdapter.notifyDataSetChanged()

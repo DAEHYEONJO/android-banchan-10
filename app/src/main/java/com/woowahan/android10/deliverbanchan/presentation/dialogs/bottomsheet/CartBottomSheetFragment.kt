@@ -1,27 +1,23 @@
 package com.woowahan.android10.deliverbanchan.presentation.dialogs.bottomsheet
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentCartBottomSheetBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
-import com.woowahan.android10.deliverbanchan.presentation.cart.CartActivity
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
 import com.woowahan.android10.deliverbanchan.presentation.dialogs.dialog.CartDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
-import javax.inject.Inject
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
 class CartBottomSheetFragment : BottomSheetDialogFragment() {
@@ -77,18 +73,14 @@ class CartBottomSheetFragment : BottomSheetDialogFragment() {
     }
 
     private fun observeInsertResult() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                cartBottomSheetViewModel.insertSuccessEvent.collect {
-                    if(it) {
-                        cartDialogFragment.show(parentFragmentManager, "CartDialog")
-                        dismiss()
-                    } else {
-                        requireContext().showToast("장바구니 담기에 실패했습니다")
-                    }
-                }
+        cartBottomSheetViewModel.insertSuccessEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach {
+            if(it) {
+                cartDialogFragment.show(parentFragmentManager, "CartDialog")
+                dismiss()
+            } else {
+                requireContext().showToast("장바구니 담기에 실패했습니다")
             }
-        }
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     override fun onDestroyView() {

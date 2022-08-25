@@ -54,7 +54,7 @@ class OrderListFragment :
         with(orderViewModel) {
             allOrderJoinState.flowWithLifecycle(lifecycle).onEach {
                 handleState(it)
-            }.launchIn(lifecycleScope)
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
         }
     }
 
