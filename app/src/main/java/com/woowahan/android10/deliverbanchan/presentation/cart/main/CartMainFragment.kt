@@ -133,13 +133,13 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
 
     private fun initAdapterList() {
         with(cartViewModel) {
-            allCartJoinState.flowWithLifecycle(lifecycle).onEach { uiTempState ->
+            allCartJoinState.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { uiTempState ->
                 handleState(cartTopBodyAdapter, uiTempState)
-            }.launchIn(lifecycleScope)
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
 
-            allRecentlyJoinState.flowWithLifecycle(lifecycle).onEach { uiTempState ->
+            allRecentlyJoinState.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { uiTempState ->
                 handleState(cartRecentViewedFooterAdapter, uiTempState)
-            }.launchIn(lifecycleScope)
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
 
             itemCartHeaderData.observe(viewLifecycleOwner){ uiCartHeader ->
                 with(cartHeaderAdapter) {
@@ -164,7 +164,7 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
 
     private fun observeOrderButtonClickEvent() {
         with(cartViewModel) {
-            orderButtonClicked.flowWithLifecycle(lifecycle).onEach { btnClicked ->
+            orderButtonClicked.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { btnClicked ->
                 if (btnClicked) {
                     val alarmManager =
                         (requireContext().getSystemService(Context.ALARM_SERVICE)) as AlarmManager
@@ -198,7 +198,7 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
                     }
                     cartViewModel.fragmentArrayIndex.value = 1 // fragment 전환 -> 주문 디테일 화면
                 }
-            }.launchIn(lifecycleScope)
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
         }
     }
 

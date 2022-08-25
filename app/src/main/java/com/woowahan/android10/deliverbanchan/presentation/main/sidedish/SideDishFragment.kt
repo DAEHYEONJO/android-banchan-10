@@ -92,11 +92,11 @@ class SideDishFragment :
 
     private fun initObserver() {
         with(sideDishViewModel) {
-            sideState.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+            sideState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .onEach { state ->
                     Log.e(TAG, "initObserver: $state")
                     handleStateChange(state)
-                }.launchIn(lifecycleScope)
+                }.launchIn(viewLifecycleOwner.lifecycleScope)
         }
     }
 

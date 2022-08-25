@@ -8,6 +8,7 @@ import android.view.ViewTreeObserver
 import android.widget.AdapterView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
@@ -27,17 +28,14 @@ import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import com.woowahan.android10.deliverbanchan.presentation.view.SpinnerEventListener
 import com.woowahan.android10.deliverbanchan.presentation.view.adapter.SortSpinnerAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainDishFragment :
-    BaseFragment<FragmentMaindishBinding>(R.layout.fragment_maindish, "MainDishFragment"),
-    ViewTreeObserver.OnGlobalLayoutListener {
-
-    override fun onGlobalLayout() {
-        binding.maindishRv.scrollToPosition(0)
-    }
+    BaseFragment<FragmentMaindishBinding>(R.layout.fragment_maindish, "MainDishFragment") {
 
     private val mainDishViewModel: MainDishViewModel by viewModels()
     private lateinit var mainDishLinearAdapter: MainDishLinearAdapter
@@ -59,7 +57,6 @@ class MainDishFragment :
             position: Int,
             id: Long
         ) {
-            Log.e(TAG, "onItemSelected: $position", )
             with(mainDishViewModel) {
                 sortMainDishes(position)
                 with(mainDishSpinnerAdapter) {
@@ -67,14 +64,6 @@ class MainDishFragment :
                     if (curMainSpinnerPosition.value != preMainSpinnerPosition.value) {
                         sortSpinnerList[preMainSpinnerPosition.value!!].selected = false
                     }
-                    //notifyDataSetChanged()
-                    Log.e(TAG, "maindish sorted")
-
-//                    if (!isListenerAdd) {
-//                        isListenerAdd = true
-//                        binding.maindishRv.viewTreeObserver.addOnGlobalLayoutListener(this@MainDishFragment)
-//                    }
-                    //notifyDataSetChanged()
                 }
             }
         }
@@ -150,15 +139,6 @@ class MainDishFragment :
         binding.maindishRv.apply {
             adapter = mainDishAdapter
             layoutManager = GridLayoutManager(requireContext(), 2)
-//            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-//                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-//                    super.onScrollStateChanged(recyclerView, newState)
-//                    if (isListenerAdd) {
-//                        binding.maindishRv.viewTreeObserver.removeOnGlobalLayoutListener(this@MainDishFragment)
-//                        isListenerAdd = false
-//                    }
-//                }
-//            })
             if (itemDecorationCount == 0) addItemDecoration(gridSpanCountTwoForMainDecorator)
         }
 
@@ -178,13 +158,9 @@ class MainDishFragment :
     }
 
     private fun initObserver() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                mainDishViewModel.mainDishState.collect {
-                    handleStateChange(it)
-                }
-            }
-        }
+        mainDishViewModel.mainDishState.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach {
+            handleStateChange(it)
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun handleStateChange(state: UiState<List<UiDishItem>>) {

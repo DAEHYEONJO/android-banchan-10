@@ -98,7 +98,7 @@ class SoupDishFragment :
                 .onEach { state ->
                     Log.e(TAG, "initObserver: $state")
                     handleStateChange(state)
-                }.launchIn(lifecycleScope)
+                }.launchIn(viewLifecycleOwner.lifecycleScope)
 
         }
     }
