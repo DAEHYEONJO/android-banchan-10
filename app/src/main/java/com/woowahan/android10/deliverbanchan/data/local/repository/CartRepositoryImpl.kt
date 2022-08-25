@@ -5,15 +5,12 @@ import androidx.annotation.WorkerThread
 import com.woowahan.android10.deliverbanchan.data.local.dao.CartDao
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
 import com.woowahan.android10.deliverbanchan.data.local.model.join.Cart
-import com.woowahan.android10.deliverbanchan.di.IoDispatcher
 import com.woowahan.android10.deliverbanchan.domain.repository.local.CartRepository
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class CartRepositoryImpl @Inject constructor(
-    private val cartDao: CartDao,
-    @IoDispatcher private val dispatcher: CoroutineDispatcher
+    private val cartDao: CartDao
 ) : CartRepository {
 
     override fun getAllCartInfo(): Flow<List<CartInfo>> = cartDao.getAllCartInfo()

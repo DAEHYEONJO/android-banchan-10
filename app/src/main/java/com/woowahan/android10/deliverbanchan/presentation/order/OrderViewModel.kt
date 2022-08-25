@@ -76,7 +76,6 @@ class OrderViewModel @Inject constructor(
                 _allOrderJoinState.value = UiState.Loading(true)
             }.catch { exception ->
                 _allOrderJoinState.value = UiState.Loading(false)
-                _allOrderJoinState.value = UiState.ShowToast(exception.message.toString())
             }.collect {
                 _allOrderJoinState.value = UiState.Loading(false)
                 if (it.isEmpty()) _allOrderJoinState.value = UiState.Empty(true)

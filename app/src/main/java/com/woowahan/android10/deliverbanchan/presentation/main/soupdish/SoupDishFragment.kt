@@ -114,10 +114,6 @@ class SoupDishFragment :
                 binding.soupCdl.toVisible()
                 mainGridAdapter.submitList(state.items)
             }
-            is UiState.ShowToast -> {
-                Log.e("SoupDishFragment", "show toast")
-                requireContext().showToast(state.message)
-            }
             is UiState.Error -> {
                 binding.soupPb.toGone()
                 binding.soupCdl.toGone()

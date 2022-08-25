@@ -199,9 +199,6 @@ class MainDishFragment :
                 mainDishAdapter.submitList(state.items)
                 mainDishLinearAdapter.submitList(state.items)
             }
-            is UiState.ShowToast -> {
-                requireContext().showToast(state.message)
-            }
             is UiState.Error -> {
                 binding.maindishPb.toGone()
                 binding.maindishCdl.toGone()

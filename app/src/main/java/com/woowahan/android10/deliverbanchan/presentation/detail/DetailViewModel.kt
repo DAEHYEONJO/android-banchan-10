@@ -1,5 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.detail
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -8,7 +9,7 @@ import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.LocalDish
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.OrderInfo
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.RecentViewedInfo
-import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
+import com.woowahan.android10.deliverbanchan.domain.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.model.UiDetailInfo
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.usecase.*
@@ -31,6 +32,9 @@ class DetailViewModel @Inject constructor(
 ) : ViewModel() {
 
     // Cart Flow 감지하고(어차피 app bar 용도로 만들어 주어야함.) 현재 hash에 해당하는 isInserted값 업데이트하기
+    companion object{
+        const val TAG = "DetailViewModel"
+    }
 
 
     val cartIconText = MutableLiveData("")
@@ -112,13 +116,13 @@ class DetailViewModel @Inject constructor(
         viewModelScope.launch {
             getDetailDishUseCase(
                 currentUiDishItem!!.hash,
-                currentUiDishItem,
-                _itemCount.value
+                currentUiDishItem
             ).onStart {
                 _uiDetailInfo.value = UiState.Loading(true)
             }.catch { exception ->
                 _uiDetailInfo.value = UiState.Loading(false)
-                _uiDetailInfo.value = UiState.ShowToast(exception.message.toString())
+                _uiDetailInfo.value = UiState.Error(exception.message.toString())
+                Log.e(TAG, "getDetailDishInfo: 뷰모델 캐치 에러 ${exception.message.toString()}", )
             }.flowOn(Dispatchers.IO).collect { result ->
                 _uiDetailInfo.value = UiState.Loading(false)
                 when (result) {
@@ -127,7 +131,8 @@ class DetailViewModel @Inject constructor(
                         insertRecent()
                     }
                     is BaseResult.Error -> {
-                        _uiDetailInfo.value = UiState.Error(result.errorCode)
+                        _uiDetailInfo.value = UiState.Error(result.error)
+                        Log.e(TAG, "getDetailDishInfo: 뷰모델 베이스 에러 : ${result.error}", )
                     }
                 }
             }
