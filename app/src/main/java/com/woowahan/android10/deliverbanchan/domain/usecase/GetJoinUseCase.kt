@@ -17,7 +17,6 @@ class GetJoinUseCase @Inject constructor(
     private val orderRepository: OrderRepository,
     private val recentRepository: RecentViewedRepository
 ) {
-    fun getOrderJoinList() = orderRepository.getAllOrderJoinList()
 
     fun getCartJoinList(): Flow<List<UiCartOrderDishJoinItem>> {
         return cartRepository.getAllCartJoinList().map { cartList ->

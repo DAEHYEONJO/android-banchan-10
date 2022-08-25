@@ -14,7 +14,7 @@ import javax.inject.Singleton
 @Singleton
 class DishDetailRepositoryImpl @Inject constructor(
     private val dishApi: DishApi
-): DishDetailRepository{
+) : DishDetailRepository {
 
     override suspend fun getDetailDish(hash: String): Flow<BaseResult<DishDetail.DishDetailData, Int>> =
         flow {
@@ -28,16 +28,4 @@ class DishDetailRepositoryImpl @Inject constructor(
                 }
             }
         }
-
-    override suspend fun getDetailDishBaseResult(hash: String): BaseResult<DishDetail.DishDetailData, Int> {
-        val response = dishApi.getDetailDish(hash)
-        return with(response) {
-            if (isSuccessful) {
-                val dishDetailData = body()!!.data
-                BaseResult.Success(dishDetailData)
-            } else {
-                BaseResult.Error(code())
-            }
-        }
-    }
 }

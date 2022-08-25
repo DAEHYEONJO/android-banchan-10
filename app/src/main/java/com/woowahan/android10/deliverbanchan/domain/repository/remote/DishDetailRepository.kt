@@ -8,8 +8,4 @@ interface DishDetailRepository {
     suspend fun getDetailDish(
         hash: String
     ): Flow<BaseResult<DishDetail.DishDetailData, Int>>
-
-    suspend fun getDetailDishBaseResult(
-        hash: String
-    ): BaseResult<DishDetail.DishDetailData, Int>
 }
