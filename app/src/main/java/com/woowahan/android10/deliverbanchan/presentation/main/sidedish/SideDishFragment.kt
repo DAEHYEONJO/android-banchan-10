@@ -53,6 +53,7 @@ class SideDishFragment :
             position: Int,
             id: Long
         ) {
+            Log.e(TAG, "onItemSelected: $position", )
             with(sideDishViewModel) {
                 sortSoupDishes(position)
                 with(sideDishSpinnerAdapter) {
@@ -60,10 +61,11 @@ class SideDishFragment :
                     if (curSideDishSpinnerPosition.value != preSideDishSpinnerPosition.value) {
                         sortSpinnerList[preSideDishSpinnerPosition.value!!].selected = false
                     }
-                    if (!isListenerAdd) {
-                        isListenerAdd = true
-                        binding.sideDishRv.viewTreeObserver.addOnGlobalLayoutListener(this@SideDishFragment)
-                    }
+//                    if (!isListenerAdd) {
+//                        isListenerAdd = true
+//                        binding.sideDishRv.viewTreeObserver.addOnGlobalLayoutListener(this@SideDishFragment)
+//                    }
+                    //notifyDataSetChanged()
                 }
             }
         }
@@ -126,15 +128,15 @@ class SideDishFragment :
                 adapter = sideDishAdapter.apply {
                     onDishItemClickListener = this@SideDishFragment
                 }
-                addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                    override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                        super.onScrollStateChanged(recyclerView, newState)
-                        if (isListenerAdd) {
-                            viewTreeObserver.removeOnGlobalLayoutListener(this@SideDishFragment)
-                            isListenerAdd = false
-                        }
-                    }
-                })
+//                addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//                    override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+//                        super.onScrollStateChanged(recyclerView, newState)
+//                        if (isListenerAdd) {
+//                            viewTreeObserver.removeOnGlobalLayoutListener(this@SideDishFragment)
+//                            isListenerAdd = false
+//                        }
+//                    }
+//                })
                 if (itemDecorationCount == 0) addItemDecoration(gridSpanCountTwoDecorator)
             }
             with(sideDishSp) {

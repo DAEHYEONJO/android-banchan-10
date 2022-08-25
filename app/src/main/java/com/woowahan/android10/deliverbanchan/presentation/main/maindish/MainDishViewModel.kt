@@ -102,6 +102,7 @@ class MainDishViewModel @Inject constructor(
     }
 
     fun sortMainDishes(position: Int) {
+        Log.e("MainDishViewModel", "sortMainDishes: pre: ${_preMainSpinnerPosition.value} cur: ${_curMainSpinnerPosition.value}", )
         if (_curMainSpinnerPosition.value != _preMainSpinnerPosition.value) { // 정렬 기준이 변경될 시
             _preMainSpinnerPosition.value = _curMainSpinnerPosition.value
         }

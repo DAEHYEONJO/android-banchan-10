@@ -55,6 +55,7 @@ class SoupDishFragment :
             position: Int,
             id: Long
         ) {
+            Log.e(TAG, "onItemSelected: $position", )
             with(soupViewModel) {
                 sortSoupDishes(position)
                 with(soupSpinnerAdapter) {
@@ -62,11 +63,11 @@ class SoupDishFragment :
                     if (curSoupSpinnerPosition.value != preSoupSpinnerPosition.value) {
                         sortSpinnerList[preSoupSpinnerPosition.value!!].selected = false
                     }
+//                    if (!isListenerAdd) {
+//                        isListenerAdd = true
+//                        binding.soupDishRv.viewTreeObserver.addOnGlobalLayoutListener(this@SoupDishFragment)
+//                    }
                     //notifyDataSetChanged()
-                    if (!isListenerAdd) {
-                        isListenerAdd = true
-                        binding.soupDishRv.viewTreeObserver.addOnGlobalLayoutListener(this@SoupDishFragment)
-                    }
                 }
             }
         }
@@ -131,15 +132,15 @@ class SoupDishFragment :
                 adapter = mainGridAdapter.apply {
                     onDishItemClickListener = this@SoupDishFragment
                 }
-                addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                    override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                        super.onScrollStateChanged(recyclerView, newState)
-                        if (isListenerAdd) {
-                            viewTreeObserver.removeOnGlobalLayoutListener(this@SoupDishFragment)
-                            isListenerAdd = false
-                        }
-                    }
-                })
+//                addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//                    override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+//                        super.onScrollStateChanged(recyclerView, newState)
+//                        if (isListenerAdd) {
+//                            viewTreeObserver.removeOnGlobalLayoutListener(this@SoupDishFragment)
+//                            isListenerAdd = false
+//                        }
+//                    }
+//                })
                 if (itemDecorationCount == 0) addItemDecoration(gridSpanCountTwoDecorator)
             }
             with(soupDishSp) {

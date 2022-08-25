@@ -1,6 +1,7 @@
 package com.woowahan.android10.deliverbanchan.presentation.view.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,6 +48,7 @@ class SortSpinnerAdapter @Inject constructor(
         with(binding){
             sortSpinnerDropDownTv.text = sortSpinnerList[position].name
             sortSpinnerDropDownIv.visibility = sortSpinnerList[position].selected.let{ selected ->
+                Log.e("dsffsd", "getDropDownView: 드랍다운 셀렉티드 $selected", )
                 if (selected) {
                     sortSpinnerDropDownTv.setTextAppearance(R.style.Widget_TextView_NotoSansKR_GreyScaleBlack14_Medium_TextAppearance)
                     View.VISIBLE
