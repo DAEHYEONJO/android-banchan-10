@@ -1,21 +1,18 @@
-package com.woowahan.android10.deliverbanchan.presentation.cart
+package com.woowahan.android10.deliverbanchan.presentation.cart.host
 
 import android.os.Bundle
-import android.util.Log
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
 import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
-import androidx.work.WorkManager
 import com.woowahan.android10.deliverbanchan.R
-import com.woowahan.android10.deliverbanchan.background.CartItemsDbWorker
-import com.woowahan.android10.deliverbanchan.background.getOneTimeRequestBuilder
 import com.woowahan.android10.deliverbanchan.databinding.ActivityCartBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseActivity
 import com.woowahan.android10.deliverbanchan.presentation.cart.complete.CartDeliveryCompleteFragment
 import com.woowahan.android10.deliverbanchan.presentation.cart.main.CartMainFragment
 import com.woowahan.android10.deliverbanchan.presentation.cart.recent.RecentViewedFragment
+import com.woowahan.android10.deliverbanchan.presentation.cart.viewmodel.CartViewModel
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEventWithDuration
 import com.woowahan.android10.deliverbanchan.presentation.dialogs.dialog.NumberDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,11 +20,15 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart, "CartActivity"), NumberDialogFragment.OnNumberDialogClickListener{
+
+    companion object{
+        const val BACKSTACK_TAG = "CartBackStack"
+    }
+
     private val rotateAnimation: Animation by lazy {
         AnimationUtils.loadAnimation(this@CartActivity, R.anim.rotate_degree_360)
     }
     override fun onClickAmountChangeBtn(position: Int, amount: Int) {
-        Log.e(TAG, "전달받음: position: $position amount: $amount", )
         cartViewModel.updateUiCartAmountValue(position, amount)
     }
 
@@ -65,6 +66,9 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart, "
         }
         supportFragmentManager.commit {
             replace(R.id.cart_fcv, fragment, fragmentTagArray[tagArrayIndex])
+            if (tagArrayIndex == 2 && supportFragmentManager.backStackEntryCount==0){
+                addToBackStack(BACKSTACK_TAG)
+            }
         }
     }
 
@@ -80,7 +84,12 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart, "
         with(binding.cartAbl){
 
             appBarWithBackBtnIvLeft.setOnClickListener {
-                finish()
+                when(cartViewModel.fragmentArrayIndex.value){
+                    2 -> {
+                       supportFragmentManager.popBackStack()
+                        cartViewModel.fragmentArrayIndex.value = 0
+                    }else -> onBackPressed()
+                }
             }
 
             appBarWithBackBtnIvReload.setClickEventWithDuration(duration = 1000, coroutineScope = lifecycleScope){
@@ -91,17 +100,9 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart, "
         }
     }
 
-    private fun makeWorkRequest(){
-        Log.e(TAG, "makeWorkRequest: 워크매니저콜", )
-        val worker = WorkManager.getInstance(application)
-        val workRequest = getOneTimeRequestBuilder<CartItemsDbWorker>(cartViewModel.getCartWorkerData())
-        worker.enqueue(workRequest)
-    }
-
     override fun onStop() {
         super.onStop()
         cartViewModel.updateAllCartItemChanged()
-        //makeWorkRequest()
     }
 
 }

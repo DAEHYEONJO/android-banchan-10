@@ -3,16 +3,18 @@ package com.woowahan.android10.deliverbanchan.domain.repository.local
 import androidx.annotation.WorkerThread
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
 import com.woowahan.android10.deliverbanchan.data.local.model.join.Cart
+import com.woowahan.android10.deliverbanchan.domain.model.UiBottomSheet
+import com.woowahan.android10.deliverbanchan.domain.model.UiCartOrderDishJoinItem
 import kotlinx.coroutines.flow.Flow
 
 interface CartRepository {
     @WorkerThread
     fun getAllCartInfo(): Flow<List<CartInfo>>
     @WorkerThread
-    fun getCartInfoById(hash: String): Flow<CartInfo>
+    fun getBottomSheetCartInfoByHash(hash: String): Flow<UiBottomSheet>
 
     @WorkerThread
-    suspend fun insertCartInfo(cartInfo: CartInfo)
+    suspend fun insertCartInfo(hash: String, checked: Boolean, amount: Int)
 
     @WorkerThread
     suspend fun deleteCartInfo(hash: String)
@@ -28,7 +30,7 @@ interface CartRepository {
     @WorkerThread
     suspend fun insertCartInfoVarArg(vararg cartInfo: CartInfo)
     @WorkerThread
-    suspend fun insertAndDeleteCartItems(cartInfo: List<CartInfo>, deleteHashes: List<String>)
+    suspend fun insertAndDeleteCartItems(uiCartOrderDishJoinList: List<UiCartOrderDishJoinItem>, deleteHashes: List<String>)
     @WorkerThread
     suspend fun deleteCartInfoByHashList(deleteHashes: List<String>)
 }

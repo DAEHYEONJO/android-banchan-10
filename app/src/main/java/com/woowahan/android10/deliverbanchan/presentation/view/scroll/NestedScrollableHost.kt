@@ -1,4 +1,4 @@
-package com.woowahan.android10.deliverbanchan.presentation.main.common
+package com.woowahan.android10.deliverbanchan.presentation.view.scroll
 
 import android.content.Context
 import android.util.AttributeSet

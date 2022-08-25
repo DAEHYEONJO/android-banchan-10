@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.AdapterView
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.woowahan.android10.deliverbanchan.R
@@ -14,12 +13,11 @@ import com.woowahan.android10.deliverbanchan.databinding.FragmentSidedishBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
 import com.woowahan.android10.deliverbanchan.presentation.common.decorator.GridSpanCountTwoDecorator
-import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
 import com.woowahan.android10.deliverbanchan.presentation.main.common.MainGridAdapter
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
-import com.woowahan.android10.deliverbanchan.presentation.view.SpinnerEventListener
+import com.woowahan.android10.deliverbanchan.presentation.base.listeners.SpinnerEventListener
 import com.woowahan.android10.deliverbanchan.presentation.view.adapter.SortSpinnerAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -28,12 +26,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class SideDishFragment :
-    BaseFragment<FragmentSidedishBinding>(R.layout.fragment_sidedish, "SideDishFragment"),
-    ViewTreeObserver.OnGlobalLayoutListener {
-
-    override fun onGlobalLayout() {
-        binding.sideDishRv.scrollToPosition(0)
-    }
+    BaseFragment<FragmentSidedishBinding>(R.layout.fragment_sidedish, "SideDishFragment") {
 
     private val sideDishViewModel: SideDishViewModel by activityViewModels()
 
@@ -61,11 +54,6 @@ class SideDishFragment :
                     if (curSideDishSpinnerPosition.value != preSideDishSpinnerPosition.value) {
                         sortSpinnerList[preSideDishSpinnerPosition.value!!].selected = false
                     }
-//                    if (!isListenerAdd) {
-//                        isListenerAdd = true
-//                        binding.sideDishRv.viewTreeObserver.addOnGlobalLayoutListener(this@SideDishFragment)
-//                    }
-                    //notifyDataSetChanged()
                 }
             }
         }
@@ -92,11 +80,11 @@ class SideDishFragment :
 
     private fun initObserver() {
         with(sideDishViewModel) {
-            sideState.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+            sideState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .onEach { state ->
                     Log.e(TAG, "initObserver: $state")
                     handleStateChange(state)
-                }.launchIn(lifecycleScope)
+                }.launchIn(viewLifecycleOwner.lifecycleScope)
         }
     }
 
@@ -125,15 +113,6 @@ class SideDishFragment :
                 adapter = sideDishAdapter.apply {
                     onDishItemClickListener = this@SideDishFragment
                 }
-//                addOnScrollListener(object : RecyclerView.OnScrollListener() {
-//                    override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-//                        super.onScrollStateChanged(recyclerView, newState)
-//                        if (isListenerAdd) {
-//                            viewTreeObserver.removeOnGlobalLayoutListener(this@SideDishFragment)
-//                            isListenerAdd = false
-//                        }
-//                    }
-//                })
                 if (itemDecorationCount == 0) addItemDecoration(gridSpanCountTwoDecorator)
             }
             with(sideDishSp) {

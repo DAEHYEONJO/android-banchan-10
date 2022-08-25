@@ -7,9 +7,8 @@ import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import com.woowahan.android10.deliverbanchan.presentation.base.click_listener.OnCartDialogClickListener
-import com.woowahan.android10.deliverbanchan.presentation.cart.CartActivity
-import com.woowahan.android10.deliverbanchan.presentation.dialogs.dialog.CartDialogFragment
+import com.woowahan.android10.deliverbanchan.presentation.base.listeners.OnCartDialogClickListener
+import com.woowahan.android10.deliverbanchan.presentation.cart.host.CartActivity
 
 abstract class BaseActivity<T: ViewDataBinding>(
     @LayoutRes private val layoutResId: Int,

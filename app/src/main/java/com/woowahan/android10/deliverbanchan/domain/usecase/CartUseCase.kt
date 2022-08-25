@@ -1,7 +1,7 @@
 package com.woowahan.android10.deliverbanchan.domain.usecase
 
-import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
-import com.woowahan.android10.deliverbanchan.data.local.model.entity.OrderInfo
+import com.woowahan.android10.deliverbanchan.domain.model.TempOrder
+import com.woowahan.android10.deliverbanchan.domain.model.UiBottomSheet
 import com.woowahan.android10.deliverbanchan.domain.model.UiCartOrderDishJoinItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.repository.local.CartRepository
@@ -22,8 +22,8 @@ class CartUseCase @Inject constructor(
         cartRepository.deleteCartInfoByHashList(hashList)
     }
 
-    fun getCartInfoByHash(hash: String): Flow<CartInfo> {
-        return cartRepository.getCartInfoById(hash)
+    fun getBottomSheetInfoByHash(hash: String): Flow<UiBottomSheet> {
+        return cartRepository.getBottomSheetCartInfoByHash(hash)
     }
 
     fun getCartJoinList(): Flow<List<UiCartOrderDishJoinItem>> {
@@ -53,7 +53,8 @@ class CartUseCase @Inject constructor(
                 with(recentlyViewed) {
                     val nPrice = this.nPrice
                     val sPrice = this.sPrice
-                    val percentage = if (nPrice == 0) 0 else 100 - (sPrice.toDouble() / nPrice * 100).toInt()
+                    val percentage =
+                        if (nPrice == 0) 0 else 100 - (sPrice.toDouble() / nPrice * 100).toInt()
                     val inInserted = cartRepository.isExistCartInfo(hash)
                     UiDishItem(
                         hash = hash,
@@ -71,11 +72,19 @@ class CartUseCase @Inject constructor(
         }
     }
 
-    suspend fun insertAndDeleteCartItems(cartInfo: List<CartInfo>, deleteHashes: List<String>) {
-        cartRepository.insertAndDeleteCartItems(cartInfo, deleteHashes)
+    suspend fun insertAndDeleteCartItems(
+        uiCartOrderDishJoinList: List<UiCartOrderDishJoinItem>,
+        deleteHashes: List<String>
+    ) {
+        cartRepository.insertAndDeleteCartItems(uiCartOrderDishJoinList, deleteHashes)
     }
 
-    suspend fun insertVarArgOrderInfo(orderInfoList: List<OrderInfo>){
-        orderRepository.insertVarArgOrderInfo(orderInfoList)
+    suspend fun insertVarArgOrderInfo(
+        tempOrderSet: Set<TempOrder>,
+        timeStamp: Long,
+        isDelivering: Boolean,
+        deliveryPrice: Int
+    ) {
+        orderRepository.insertVarArgOrderInfo(tempOrderSet, timeStamp, isDelivering, deliveryPrice)
     }
 }

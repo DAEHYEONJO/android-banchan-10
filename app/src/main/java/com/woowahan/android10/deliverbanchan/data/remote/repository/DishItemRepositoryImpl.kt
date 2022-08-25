@@ -1,7 +1,7 @@
 package com.woowahan.android10.deliverbanchan.data.remote.repository
 
 import com.woowahan.android10.deliverbanchan.data.remote.dao.DishApi
-import com.woowahan.android10.deliverbanchan.data.remote.mapper.UiMapper
+import com.woowahan.android10.deliverbanchan.data.remote.mapper.ApiMapper
 import com.woowahan.android10.deliverbanchan.di.IoDispatcher
 import com.woowahan.android10.deliverbanchan.domain.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
@@ -44,7 +44,7 @@ class DishItemRepositoryImpl @Inject constructor(
                                     async(dispatcher) {
                                         val isInserted =
                                             cartRepository.isExistCartInfo(dishItem.detailHash)
-                                        UiMapper.mapToUiDishItem(dishItem, isInserted, index)
+                                        ApiMapper.mapToUiDishItem(dishItem, isInserted, index)
                                     }
                                 }.awaitAll().toList()
                             )
@@ -75,7 +75,7 @@ class DishItemRepositoryImpl @Inject constructor(
                                         categoryItem.items.mapIndexed { index, dishItem ->
                                             async {
                                                 val isInserted = cartRepository.isExistCartInfo(dishItem.detailHash)
-                                                UiMapper.mapToUiDishItem(dishItem, isInserted, 0)
+                                                ApiMapper.mapToUiDishItem(dishItem, isInserted, 0)
                                             }
                                         }.awaitAll().toList()
                                     UiExhibitionItem(

@@ -14,13 +14,12 @@ import com.woowahan.android10.deliverbanchan.databinding.FragmentSoupdishBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
 import com.woowahan.android10.deliverbanchan.presentation.common.decorator.GridSpanCountTwoDecorator
-import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
 import com.woowahan.android10.deliverbanchan.presentation.main.common.MainGridAdapter
 import com.woowahan.android10.deliverbanchan.presentation.main.host.DishViewModel
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
-import com.woowahan.android10.deliverbanchan.presentation.view.SpinnerEventListener
+import com.woowahan.android10.deliverbanchan.presentation.base.listeners.SpinnerEventListener
 import com.woowahan.android10.deliverbanchan.presentation.view.adapter.SortSpinnerAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -29,14 +28,8 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class SoupDishFragment :
-    BaseFragment<FragmentSoupdishBinding>(R.layout.fragment_soupdish, "SoupDishFragment"),
-    ViewTreeObserver.OnGlobalLayoutListener {
+    BaseFragment<FragmentSoupdishBinding>(R.layout.fragment_soupdish, "SoupDishFragment") {
 
-    override fun onGlobalLayout() {
-        binding.soupDishRv.scrollToPosition(0)
-    }
-
-    private val dishViewModel: DishViewModel by activityViewModels()
     private val soupViewModel: SoupViewModel by activityViewModels()
 
     @Inject
@@ -47,7 +40,6 @@ class SoupDishFragment :
 
     @Inject
     lateinit var gridSpanCountTwoDecorator: GridSpanCountTwoDecorator
-    var isListenerAdd = false
     private val itemSelectedListener = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(
             p0: AdapterView<*>?,
@@ -63,11 +55,6 @@ class SoupDishFragment :
                     if (curSoupSpinnerPosition.value != preSoupSpinnerPosition.value) {
                         sortSpinnerList[preSoupSpinnerPosition.value!!].selected = false
                     }
-//                    if (!isListenerAdd) {
-//                        isListenerAdd = true
-//                        binding.soupDishRv.viewTreeObserver.addOnGlobalLayoutListener(this@SoupDishFragment)
-//                    }
-                    //notifyDataSetChanged()
                 }
             }
         }
@@ -98,7 +85,7 @@ class SoupDishFragment :
                 .onEach { state ->
                     Log.e(TAG, "initObserver: $state")
                     handleStateChange(state)
-                }.launchIn(lifecycleScope)
+                }.launchIn(viewLifecycleOwner.lifecycleScope)
 
         }
     }
@@ -128,15 +115,6 @@ class SoupDishFragment :
                 adapter = mainGridAdapter.apply {
                     onDishItemClickListener = this@SoupDishFragment
                 }
-//                addOnScrollListener(object : RecyclerView.OnScrollListener() {
-//                    override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-//                        super.onScrollStateChanged(recyclerView, newState)
-//                        if (isListenerAdd) {
-//                            viewTreeObserver.removeOnGlobalLayoutListener(this@SoupDishFragment)
-//                            isListenerAdd = false
-//                        }
-//                    }
-//                })
                 if (itemDecorationCount == 0) addItemDecoration(gridSpanCountTwoDecorator)
             }
             with(soupDishSp) {

@@ -85,7 +85,7 @@
                                     android:button="@null" />
                             </RadioGroup>
 
-                            <com.woowahan.android10.deliverbanchan.presentation.view.CustomSortingSpinner
+                            <com.woowahan.android10.deliverbanchan.presentation.view.spinner.CustomSortingSpinner
                                 android:id="@+id/main_dish_sp"
                                 android:layout_width="145dp"
                                 android:layout_height="wrap_content"

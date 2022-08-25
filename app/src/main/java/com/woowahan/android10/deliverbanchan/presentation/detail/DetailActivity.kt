@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.ActivityDetailBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseActivity
-import com.woowahan.android10.deliverbanchan.presentation.base.click_listener.OnCartDialogClickListener
-import com.woowahan.android10.deliverbanchan.presentation.cart.CartActivity
+import com.woowahan.android10.deliverbanchan.presentation.base.listeners.OnCartDialogClickListener
+import com.woowahan.android10.deliverbanchan.presentation.cart.host.CartActivity
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEventWithDuration
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
@@ -22,7 +22,7 @@ import com.woowahan.android10.deliverbanchan.presentation.detail.adapter.DetailC
 import com.woowahan.android10.deliverbanchan.presentation.detail.adapter.DetailSectionImageAdapter
 import com.woowahan.android10.deliverbanchan.presentation.detail.adapter.DetailThumbImageAdapter
 import com.woowahan.android10.deliverbanchan.presentation.dialogs.dialog.CartDialogFragment
-import com.woowahan.android10.deliverbanchan.presentation.order.OrderActivity
+import com.woowahan.android10.deliverbanchan.presentation.order.host.OrderActivity
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.FlowPreview

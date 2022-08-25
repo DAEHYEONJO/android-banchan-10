@@ -1,4 +1,4 @@
-package com.woowahan.android10.deliverbanchan.presentation.order.orderlist
+package com.woowahan.android10.deliverbanchan.presentation.order.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

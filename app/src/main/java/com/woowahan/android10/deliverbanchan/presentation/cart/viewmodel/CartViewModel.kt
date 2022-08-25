@@ -1,26 +1,19 @@
-package com.woowahan.android10.deliverbanchan.presentation.cart
+package com.woowahan.android10.deliverbanchan.presentation.cart.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.work.Data
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
-import com.google.gson.Gson
 import com.woowahan.android10.deliverbanchan.BanChanApplication
-import com.woowahan.android10.deliverbanchan.background.CartItemsDbWorker
-import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
-import com.woowahan.android10.deliverbanchan.data.local.model.entity.OrderInfo
 import com.woowahan.android10.deliverbanchan.di.IoDispatcher
+import com.woowahan.android10.deliverbanchan.domain.model.TempOrder
 import com.woowahan.android10.deliverbanchan.domain.model.UiCartOrderDishJoinItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiOrderInfo
 import com.woowahan.android10.deliverbanchan.domain.usecase.CartUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllOrderInfoListUseCase
-import com.woowahan.android10.deliverbanchan.presentation.cart.model.TempOrder
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartBottomBody
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartCompleteHeader
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartHeader
@@ -86,7 +79,8 @@ class CartViewModel @Inject constructor(
     private val _orderCompleteTopItem = MutableStateFlow(UiCartCompleteHeader.emptyItem())
     val orderCompleteTopItem: StateFlow<UiCartCompleteHeader> get() = _orderCompleteTopItem
 
-    private val _orderCompleteBodyItem = MutableStateFlow<List<UiCartOrderDishJoinItem>>(emptyList())
+    private val _orderCompleteBodyItem =
+        MutableStateFlow<List<UiCartOrderDishJoinItem>>(emptyList())
     val orderCompleteBodyItem: StateFlow<List<UiCartOrderDishJoinItem>> get() = _orderCompleteBodyItem
 
     private val _orderCompleteFooterItem = MutableStateFlow(UiOrderInfo.emptyItem())
@@ -107,16 +101,16 @@ class CartViewModel @Inject constructor(
         observeOrderInfo()
     }
 
-    fun setReloadBtnValue(){
+    fun setReloadBtnValue() {
         _reloadBtnClicked.value = true
     }
 
-    private fun observeOrderInfo(){
+    private fun observeOrderInfo() {
         viewModelScope.launch {
-            getAllOrderInfoListUseCase(this).collect{
+            getAllOrderInfoListUseCase(this).collect {
                 val orderListTimeStampMap = it.groupBy { it.timeStamp }
-                if (_orderCompleteBodyItem.value.isNotEmpty()){
-                    if (orderListTimeStampMap.keys.contains(currentOrderTimeStamp) ){
+                if (_orderCompleteBodyItem.value.isNotEmpty()) {
+                    if (orderListTimeStampMap.keys.contains(currentOrderTimeStamp)) {
                         _orderCompleteTopItem.value =
                             _orderCompleteTopItem.value.copy(
                                 isDelivering = orderListTimeStampMap[currentOrderTimeStamp]!!.first().isDelivering
@@ -125,34 +119,6 @@ class CartViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    internal fun updateCartDataBase() {
-        val request = OneTimeWorkRequestBuilder<CartItemsDbWorker>()
-            .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
-            .setInputData(getCartWorkerData())
-            .build()
-
-        workManager.enqueue(request)
-    }
-
-    fun getCartWorkerData(): Data {
-        val cartList = _uiCartJoinList.value!!.map {
-            CartInfo(
-                it.hash,
-                it.checked,
-                it.amount
-            )
-        }.toList()
-
-        val deleteList = _toBeDeletedCartItem.toList()
-        val gson = Gson()
-        val cartListStr = gson.toJson(cartList)
-        val builder = Data.Builder().apply {
-            putString("cartListStr", cartListStr)
-            putStringArray("deleteListStr", deleteList.toTypedArray())
-        }
-        return builder.build()
     }
 
     private fun getAllCartJoinList() = viewModelScope.launch {
@@ -275,7 +241,7 @@ class CartViewModel @Inject constructor(
     }
 
     fun setOrderCompleteCartItem() {
-        // 주문 완료 화면에 대한 리스트 세팅z`z`
+        // 주문 완료 화면에 대한 리스트 세팅
         val tempHashList = _selectedCartItem.map { it.hash }.toList()
         _orderCompleteBodyItem.value =
             _uiCartJoinArrayList.filter { tempHashList.contains(it.hash) }.toList()
@@ -286,7 +252,8 @@ class CartViewModel @Inject constructor(
                 acc + pair.first * pair.second
             }
         val totalPrice = priceTotal + deliveryPrice
-        val orderItemCount = _orderCompleteBodyItem.value.map { it.amount }.reduce { sum, eachAmount -> sum+eachAmount }
+        val orderItemCount = _orderCompleteBodyItem.value.map { it.amount }
+            .reduce { sum, eachAmount -> sum + eachAmount }
         _orderCompleteTopItem.value = UiCartCompleteHeader(
             isDelivering = true,
             orderTimeStamp = System.currentTimeMillis(),
@@ -306,18 +273,15 @@ class CartViewModel @Inject constructor(
             currentOrderTimeStamp = System.currentTimeMillis()
             orderHashList.clear()
             orderFirstItemTitle = "Title"
+            _selectedCartItem.forEachIndexed { index, tempOrder ->
+                if (index == 0) orderFirstItemTitle = tempOrder.title
+                orderHashList.add(tempOrder.hash)
+            }
             cartUseCase.insertVarArgOrderInfo(
-                _selectedCartItem.mapIndexed { inx, tempOrder ->
-                    if (inx == 0) orderFirstItemTitle = tempOrder.title
-                    orderHashList.add(tempOrder.hash)
-                    OrderInfo(
-                        hash = tempOrder.hash,
-                        timeStamp = currentOrderTimeStamp,
-                        amount = tempOrder.amount,
-                        isDelivering = true,
-                        deliveryPrice = _itemCartBottomBodyData.value!!.deliveryPrice
-                    )
-                }
+                tempOrderSet = _selectedCartItem,
+                timeStamp = currentOrderTimeStamp,
+                isDelivering = true,
+                deliveryPrice = _itemCartBottomBodyData.value!!.deliveryPrice
             )
             _orderButtonClicked.emit(true)
             cartUseCase.deleteCartInfoByHashList(_selectedCartItem.map { it.hash }.toList())
@@ -327,13 +291,7 @@ class CartViewModel @Inject constructor(
     fun updateAllCartItemChanged() {
         BanChanApplication.applicationScope.launch {
             cartUseCase.insertAndDeleteCartItems(
-                _uiCartJoinList.value!!.map {
-                    CartInfo(
-                        it.hash,
-                        it.checked,
-                        it.amount
-                    )
-                }.toList(), _toBeDeletedCartItem.toList()
+                _uiCartJoinList.value!!, _toBeDeletedCartItem.toList()
             )
         }
     }

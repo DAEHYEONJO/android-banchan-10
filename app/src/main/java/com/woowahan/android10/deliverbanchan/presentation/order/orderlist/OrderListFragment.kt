@@ -13,10 +13,10 @@ import com.woowahan.android10.deliverbanchan.databinding.FragmentOrderListBindin
 import com.woowahan.android10.deliverbanchan.domain.model.UiOrderListItem
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
 import com.woowahan.android10.deliverbanchan.presentation.common.OrderListVerticalDecoration
-import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
-import com.woowahan.android10.deliverbanchan.presentation.order.OrderViewModel
+import com.woowahan.android10.deliverbanchan.presentation.order.viewmodel.OrderViewModel
+import com.woowahan.android10.deliverbanchan.presentation.order.adapter.OrderListAdapter
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -54,7 +54,7 @@ class OrderListFragment :
         with(orderViewModel) {
             allOrderJoinState.flowWithLifecycle(lifecycle).onEach {
                 handleState(it)
-            }.launchIn(lifecycleScope)
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
         }
     }
 

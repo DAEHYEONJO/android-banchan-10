@@ -1,4 +1,4 @@
-package com.woowahan.android10.deliverbanchan.presentation.main.maindish
+package com.woowahan.android10.deliverbanchan.presentation.main.maindish.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
