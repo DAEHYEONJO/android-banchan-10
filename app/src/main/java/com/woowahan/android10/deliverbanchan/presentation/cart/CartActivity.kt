@@ -22,11 +22,15 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart, "CartActivity"), NumberDialogFragment.OnNumberDialogClickListener{
+
+    companion object{
+        const val BACKSTACK_TAG = "CartBackStack"
+    }
+
     private val rotateAnimation: Animation by lazy {
         AnimationUtils.loadAnimation(this@CartActivity, R.anim.rotate_degree_360)
     }
     override fun onClickAmountChangeBtn(position: Int, amount: Int) {
-        Log.e(TAG, "전달받음: position: $position amount: $amount", )
         cartViewModel.updateUiCartAmountValue(position, amount)
     }
 
@@ -64,6 +68,9 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart, "
         }
         supportFragmentManager.commit {
             replace(R.id.cart_fcv, fragment, fragmentTagArray[tagArrayIndex])
+            if (tagArrayIndex == 2 && supportFragmentManager.backStackEntryCount==0){
+                addToBackStack(BACKSTACK_TAG)
+            }
         }
     }
 
@@ -79,7 +86,12 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart, "
         with(binding.cartAbl){
 
             appBarWithBackBtnIvLeft.setOnClickListener {
-                finish()
+                when(cartViewModel.fragmentArrayIndex.value){
+                    2 -> {
+                       supportFragmentManager.popBackStack()
+                        cartViewModel.fragmentArrayIndex.value = 0
+                    }else -> onBackPressed()
+                }
             }
 
             appBarWithBackBtnIvReload.setClickEventWithDuration(duration = 1000, coroutineScope = lifecycleScope){
