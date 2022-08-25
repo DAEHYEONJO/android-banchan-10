@@ -20,6 +20,7 @@ import com.woowahan.android10.deliverbanchan.presentation.main.common.MainGridAd
 import com.woowahan.android10.deliverbanchan.presentation.main.host.DishViewModel
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import com.woowahan.android10.deliverbanchan.presentation.base.listeners.SpinnerEventListener
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEventWithDuration
 import com.woowahan.android10.deliverbanchan.presentation.view.adapter.SortSpinnerAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -94,10 +95,11 @@ class SoupDishFragment :
         when (state) {
             is UiState.Loading -> {
                 binding.soupPb.toVisible()
-                binding.errorLayout.errorCl.toGone()
             }
             is UiState.Success -> {
                 binding.soupPb.toGone()
+                binding.errorLayout.errorCl.toGone()
+                binding.soupDishAbl.toVisible()
                 binding.soupCdl.toVisible()
                 mainGridAdapter.submitList(state.items)
             }
@@ -128,7 +130,7 @@ class SoupDishFragment :
     }
 
     private fun setErrorBtn() {
-        binding.errorLayout.errorBtn.setOnClickListener {
+        binding.errorLayout.errorBtn.setClickEventWithDuration(coroutineScope = viewLifecycleOwner.lifecycleScope) {
             soupViewModel.setSoupDishesState()
         }
     }

@@ -23,6 +23,7 @@ import com.woowahan.android10.deliverbanchan.presentation.main.common.MainGridAd
 import com.woowahan.android10.deliverbanchan.presentation.main.maindish.adapter.MainDishLinearAdapter
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import com.woowahan.android10.deliverbanchan.presentation.base.listeners.SpinnerEventListener
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEventWithDuration
 import com.woowahan.android10.deliverbanchan.presentation.view.adapter.SortSpinnerAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -163,10 +164,11 @@ class MainDishFragment :
         when (state) {
             is UiState.Loading -> {
                 binding.maindishPb.toVisible()
-                binding.errorLayout.errorCl.toGone()
             }
             is UiState.Success -> {
                 binding.maindishPb.toGone()
+                binding.errorLayout.errorCl.toGone()
+                binding.mainDishAbl.toVisible()
                 binding.maindishCdl.toVisible()
                 mainDishAdapter.submitList(state.items)
                 mainDishLinearAdapter.submitList(state.items)
@@ -180,7 +182,7 @@ class MainDishFragment :
     }
 
     private fun setErrorBtn() {
-        binding.errorLayout.errorBtn.setOnClickListener {
+        binding.errorLayout.errorBtn.setClickEventWithDuration(coroutineScope = viewLifecycleOwner.lifecycleScope) {
             mainDishViewModel.getMainDishList()
         }
     }
