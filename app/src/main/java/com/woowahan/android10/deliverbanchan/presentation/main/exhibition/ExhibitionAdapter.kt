@@ -1,17 +1,13 @@
 package com.woowahan.android10.deliverbanchan.presentation.main.exhibition
 
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.recyclerview.widget.*
 import com.woowahan.android10.deliverbanchan.databinding.ItemExhibitionBinding
-import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiExhibitionItem
+import com.woowahan.android10.deliverbanchan.presentation.base.click_listener.OnDishItemClickListener
 
-class ExhibitionAdapter(
-    private val cartIconClick: (uiDishItem: UiDishItem) -> Unit,
-    private val itemClick: (uiDishItem: UiDishItem) -> Unit
-) :
+class ExhibitionAdapter() :
     ListAdapter<UiExhibitionItem, ExhibitionAdapter.ExhibitionViewHolder>(diffUtil) {
 
     companion object {
@@ -33,15 +29,16 @@ class ExhibitionAdapter(
         }
     }
 
+    var dishItemClickListener: OnDishItemClickListener? = null
+
     inner class ExhibitionViewHolder(private val binding: ItemExhibitionBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(
-            uiExhibitionItem: UiExhibitionItem, cartIconClick: (uiDishItem: UiDishItem) -> Unit,
-            itemClick: (uiDishItem: UiDishItem) -> Unit
-        ) {
+        fun bind(uiExhibitionItem: UiExhibitionItem) {
             binding.uiExhibitionItem = uiExhibitionItem
-            val exhibitonHorizontalAdpater = ExhibitionHorizontalAdapter(cartIconClick, itemClick)
+            val exhibitonHorizontalAdpater = ExhibitionHorizontalAdapter().apply {
+                this.onDishItemClickListener = dishItemClickListener
+            }
             binding.exhibitionRvHorizontal.apply {
                 adapter = exhibitonHorizontalAdpater
                 layoutManager = LinearLayoutManager(binding.root.context).also {
@@ -61,6 +58,6 @@ class ExhibitionAdapter(
     }
 
     override fun onBindViewHolder(holder: ExhibitionViewHolder, position: Int) {
-        holder.bind(currentList[position], cartIconClick, itemClick)
+        holder.bind(currentList[position])
     }
 }

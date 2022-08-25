@@ -15,13 +15,13 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/base_space_16dp"
         android:paddingBottom="8dp">
 
         <FrameLayout
             android:id="@+id/maindish_fl"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/rv_space_8dp"
             app:layout_constraintBottom_toTopOf="@id/maindish_view_footer"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -62,12 +62,15 @@
         <TextView
             android:id="@+id/maindish_tv_description"
             style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault12_Medium.Style"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="@dimen/text_size_24sp"
             android:layout_marginStart="16sp"
-            android:gravity="center_vertical"
+            android:ellipsize="end"
+            android:gravity="center_vertical|left"
+            android:maxLines="1"
             android:text="@{uiDishItem.description}"
             app:layout_constraintBottom_toTopOf="@id/maindish_tv_sPrice"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/maindish_fl"
             app:layout_constraintTop_toBottomOf="@id/maindish_tv_title"
             tools:text="감칠맛 나는 매콤한 양념" />

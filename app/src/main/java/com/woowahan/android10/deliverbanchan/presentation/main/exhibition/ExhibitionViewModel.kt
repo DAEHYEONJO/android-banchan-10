@@ -1,12 +1,13 @@
 package com.woowahan.android10.deliverbanchan.presentation.main.exhibition
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
+import com.woowahan.android10.deliverbanchan.domain.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiExhibitionItem
-import com.woowahan.android10.deliverbanchan.domain.usecase.CreateUiExhibitionItemsUseCase
-import com.woowahan.android10.deliverbanchan.presentation.state.ExhibitionUiState
+import com.woowahan.android10.deliverbanchan.domain.usecase.GetUiExhibitionItemsUseCase
+import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllCartInfoHashSetUseCase
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -17,71 +18,63 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ExhibitionViewModel @Inject constructor(
-    private val createUiExhibitionItemsUseCase: CreateUiExhibitionItemsUseCase
+    private val getUiExhibitionItemsUseCase: GetUiExhibitionItemsUseCase,
+    private val getAllCartInfoSetUseCase: GetAllCartInfoHashSetUseCase
 ) : ViewModel() {
 
-    private val _exhibitionState = MutableStateFlow<ExhibitionUiState>(ExhibitionUiState.Init)
-    val exhibitionState: StateFlow<ExhibitionUiState> get() = _exhibitionState
+    private val _exhibitionState = MutableStateFlow<UiState<List<UiExhibitionItem>>>(UiState.Init)
+    val exhibitionState: StateFlow<UiState<List<UiExhibitionItem>>> get() = _exhibitionState
 
     var exhibitionList = listOf<UiExhibitionItem>()
 
     init {
         getExhibitionList()
+        setExhibitionCartInserted()
     }
 
     fun getExhibitionList() {
         viewModelScope.launch {
-            createUiExhibitionItemsUseCase().onStart {
-                setLoading()
+            Log.e("ExhibitionViewModel", "getExhibitionList")
+            getUiExhibitionItemsUseCase().onStart {
+                _exhibitionState.value = UiState.Loading(true)
             }.catch { exception ->
-                hideLoading()
-                showToast(exception.message.toString())
+                _exhibitionState.value = UiState.Loading(false)
+                _exhibitionState.value = UiState.Error(exception.message.toString())
+                Log.e("ExhibitionViewModel", "뷰모델 캐치: ${exception.message.toString()}")
             }.flowOn(Dispatchers.IO).collect { result ->
-                hideLoading()
+                _exhibitionState.value = UiState.Loading(false)
                 withContext(Dispatchers.Main) {
                     when (result) {
                         is BaseResult.Success -> {
                             exhibitionList = result.data
-                            _exhibitionState.value = ExhibitionUiState.Success(result.data)
+                            _exhibitionState.value = UiState.Success(result.data)
                         }
-                        is BaseResult.Error -> _exhibitionState.value =
-                            ExhibitionUiState.Error(result.errorCode)
+                        is BaseResult.Error -> {
+                            _exhibitionState.value = UiState.Error(result.error)
+                            Log.e("ExhibitionViewModel", "뷰모델 베이스 에러: ${result.error}", )
+                        }
                     }
                 }
             }
         }
     }
 
-    fun changeMainDishItemIsInserted(hash: String) {
-        ((_exhibitionState.value as ExhibitionUiState.Success).uiExhibitionItems).let { uiExhibitionItems ->
-            val newList = mutableListOf<UiExhibitionItem>().apply {
-                uiExhibitionItems.forEach { uiExhibitionDishItem ->
-                    val newUiDishItemList = mutableListOf<UiDishItem>().apply {
-                        uiExhibitionDishItem.uiDishItems.forEach { uiDishItem ->
-                            if (uiDishItem.hash == hash) {
-                                add(uiDishItem.copy(isInserted = true))
-                            } else {
-                                add(uiDishItem)
+    private fun setExhibitionCartInserted() { // 카트 DB 변화 시 자동 감지
+        viewModelScope.launch {
+            getAllCartInfoSetUseCase().collect { cartInfoHashSet ->
+                if (_exhibitionState.value is UiState.Success) {
+                    val tempList = mutableListOf<UiExhibitionItem>()
+                    (_exhibitionState.value as UiState.Success).items.forEach { uiExhibitionDishItem ->
+                        val newUiDishItemList = mutableListOf<UiDishItem>().apply {
+                            uiExhibitionDishItem.uiDishItems.forEach { uiDishItem ->
+                                add(uiDishItem.copy(isInserted = cartInfoHashSet.contains(uiDishItem.hash)))
                             }
                         }
+                        tempList.add(uiExhibitionDishItem.copy(uiDishItems = newUiDishItemList))
                     }
-                    add(uiExhibitionDishItem.copy(uiDishItems = newUiDishItemList))
+                    _exhibitionState.value = UiState.Success(tempList)
                 }
             }
-            exhibitionList = newList
-            _exhibitionState.value = ExhibitionUiState.Success(newList)
         }
-    }
-
-    private fun setLoading() {
-        _exhibitionState.value = ExhibitionUiState.IsLoading(true)
-    }
-
-    private fun hideLoading() {
-        _exhibitionState.value = ExhibitionUiState.IsLoading(false)
-    }
-
-    private fun showToast(message: String) {
-        _exhibitionState.value = ExhibitionUiState.ShowToast(message)
     }
 }

@@ -5,12 +5,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.woowahan.android10.deliverbanchan.data.local.model.join.Order
 import com.woowahan.android10.deliverbanchan.databinding.ItemOrderListBinding
+import com.woowahan.android10.deliverbanchan.domain.model.UiCartOrderDishJoinItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiOrderListItem
 
 class OrderListAdapter(
-    private val itemClick: (orderList: List<Order>) -> Unit
+    private val itemClick: (orderList: List<UiCartOrderDishJoinItem>) -> Unit
 ) : ListAdapter<UiOrderListItem, OrderListAdapter.OrderListViewHolder>(
     diffUtil
 ) {
@@ -35,11 +35,14 @@ class OrderListAdapter(
 
     inner class OrderListViewHolder(val binding: ItemOrderListBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(orderList: List<Order>, itemClick: (orderList: List<Order>) -> Unit) {
-            binding.listSize = orderList.size
-            binding.order = orderList[0]
-            binding.root.setOnClickListener {
-                itemClick(orderList)
+        fun bind(orderList: List<UiCartOrderDishJoinItem>, curDeliveryTotalPrice: Int, itemClick: (orderList: List<UiCartOrderDishJoinItem>) -> Unit) {
+            with(binding){
+                listSize = orderList.size
+                item = orderList[0]
+                orderTotalPrice = curDeliveryTotalPrice
+                root.setOnClickListener {
+                    itemClick(orderList)
+                }
             }
         }
     }
@@ -51,6 +54,6 @@ class OrderListAdapter(
     }
 
     override fun onBindViewHolder(holder: OrderListViewHolder, position: Int) {
-        holder.bind(currentList[position].orderList, itemClick)
+        holder.bind(currentList[position].orderList, currentList[position].curDeliveryTotalPrice, itemClick)
     }
 }

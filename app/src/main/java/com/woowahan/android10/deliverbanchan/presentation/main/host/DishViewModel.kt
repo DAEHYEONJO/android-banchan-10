@@ -2,24 +2,11 @@ package com.woowahan.android10.deliverbanchan.presentation.main.host
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
-import com.woowahan.android10.deliverbanchan.data.local.model.entity.LocalDish
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.OrderInfo
-import com.woowahan.android10.deliverbanchan.data.local.model.entity.RecentlyViewedInfo
-import com.woowahan.android10.deliverbanchan.data.local.model.join.Cart
-import com.woowahan.android10.deliverbanchan.data.local.model.join.Order
-import com.woowahan.android10.deliverbanchan.data.local.model.join.RecentlyViewed
-import com.woowahan.android10.deliverbanchan.domain.repository.local.CartRepository
-import com.woowahan.android10.deliverbanchan.domain.repository.local.DishRepository
-import com.woowahan.android10.deliverbanchan.domain.repository.local.OrderRepository
-import com.woowahan.android10.deliverbanchan.domain.repository.local.RecentlyViewedRepository
-import com.woowahan.android10.deliverbanchan.domain.usecase.*
-import com.woowahan.android10.deliverbanchan.presentation.state.UiLocalState
+import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllCartInfoUseCase
+import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllOrderInfoListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -32,33 +19,24 @@ class DishViewModel @Inject constructor(
     companion object {
         const val TAG = "DishViewModel"
     }
-    private val _cartInfoState = MutableStateFlow<UiLocalState<CartInfo>>(UiLocalState.Init)
-    val cartInfoState: StateFlow<UiLocalState<CartInfo>> get() = _cartInfoState
     val cartIconText = MutableLiveData("")
-
-    private val _orderState = MutableStateFlow<UiLocalState<OrderInfo>>(UiLocalState.Init)
-    val orderState: StateFlow<UiLocalState<OrderInfo>> get() = _orderState
     val isOrderingExist = MutableLiveData(false)
+    var isReady = false
 
     init {
         getAllCartInfo()
         getAllOrderInfo()
+        isReady = true
     }
 
     private fun getAllCartInfo() = viewModelScope.launch {
-        getAllCartInfoUseCase().catch { exception ->
-            _cartInfoState.value = UiLocalState.ShowToast(exception.message.toString())
-        }.collect{
-            _cartInfoState.value = UiLocalState.Success(it)
-            setCartIconText((cartInfoState.value as UiLocalState.Success).uiDishItems.size)
+        getAllCartInfoUseCase(this).collect{
+            setCartIconText(it.size)
         }
     }
 
     private fun getAllOrderInfo() = viewModelScope.launch {
-        getAllOrderInfoListUseCase().catch { exception ->
-            _orderState.value = UiLocalState.ShowToast(exception.message.toString())
-        }.flowOn(Dispatchers.IO).collect{
-            _orderState.value = UiLocalState.Success(it)
+        getAllOrderInfoListUseCase(this).collect{
             val deliveringOrder: OrderInfo? = it.find { order ->
                 order.isDelivering
             }

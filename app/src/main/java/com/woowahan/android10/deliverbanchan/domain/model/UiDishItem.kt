@@ -13,5 +13,18 @@ data class UiDishItem(
     val sPrice: Int,
     val nPrice: Int = 0,
     val salePercentage: Int = 0,
-    val index: Int = 0
-) : Parcelable
+    val index: Int = 0,
+    val timeStamp: Long = 0L,
+    val _id: Int = 0
+) : Parcelable {
+    companion object {
+        fun returnEmptyItem() = UiDishItem(
+            hash = "",
+            title = "",
+            isInserted = false,
+            image = "",
+            description = "",
+            sPrice = 0,
+        )
+    }
+}

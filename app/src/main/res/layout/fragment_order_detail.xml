@@ -1,117 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
     </data>
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/grey_scale_surface">
-
-        <com.google.android.material.appbar.AppBarLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/white">
-
-            <com.google.android.material.appbar.CollapsingToolbarLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/grey_scale_surface">
-
-                    <TextView
-                        android:id="@+id/order_detail_tv_state"
-                        style="@style/Widget.TextView.KoPubWorldDotumPro_GreyScaleBlack16_Bold.Style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/base_space_16dp"
-                        android:layout_marginTop="22dp"
-                        android:text="주문이 접수되었습니다."
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/order_detail_tv_time_description"
-                        style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault14_Normal.Style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/base_space_16dp"
-                        android:layout_marginTop="8dp"
-                        android:text="배송까지 남은 시간"
-                        android:visibility="visible"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/order_detail_tv_state" />
-
-                    <TextView
-                        android:id="@+id/order_detail_tv_time"
-                        style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:text="20분"
-                        android:visibility="visible"
-                        app:layout_constraintBottom_toBottomOf="@id/order_detail_tv_time_description"
-                        app:layout_constraintStart_toEndOf="@id/order_detail_tv_time_description"
-                        app:layout_constraintTop_toTopOf="@id/order_detail_tv_time_description" />
-
-                    <TextView
-                        android:id="@+id/order_detail_tv_item_count_description"
-                        style="@style/Widget.TextView.NotoSansKR_GreyScaleDefault14_Normal.Style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/base_space_16dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="22dp"
-                        android:text="주문한 상품"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/order_detail_tv_time_description" />
-
-                    <TextView
-                        android:id="@+id/order_detail_tv_item_count"
-                        style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack14_Medium.Style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:text="총 4개"
-                        app:layout_constraintBottom_toBottomOf="@id/order_detail_tv_item_count_description"
-                        app:layout_constraintStart_toEndOf="@id/order_detail_tv_item_count_description"
-                        app:layout_constraintTop_toTopOf="@id/order_detail_tv_item_count_description" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/grey_scale_line"
-                        app:layout_constraintBottom_toBottomOf="parent" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-            </com.google.android.material.appbar.CollapsingToolbarLayout>
-
-        </com.google.android.material.appbar.AppBarLayout>
+        tools:context=".presentation.cart.complete.CartDeliveryCompleteFragment">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/order_detail_rv"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <ProgressBar
-            android:id="@+id/order_detail_pb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:indeterminateBehavior="repeat"
-            android:indeterminateTint="@color/progress_indicator"
-            android:visibility="gone" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

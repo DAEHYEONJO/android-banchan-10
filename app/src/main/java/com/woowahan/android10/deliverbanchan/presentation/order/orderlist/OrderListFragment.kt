@@ -1,12 +1,12 @@
 package com.woowahan.android10.deliverbanchan.presentation.order.orderlist
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentOrderListBinding
@@ -17,10 +17,10 @@ import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
 import com.woowahan.android10.deliverbanchan.presentation.order.OrderViewModel
-import com.woowahan.android10.deliverbanchan.presentation.order.orderlistdetail.OrderDetailFragment
-import com.woowahan.android10.deliverbanchan.presentation.state.UiLocalState
+import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
 class OrderListFragment :
@@ -32,56 +32,53 @@ class OrderListFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initView()
         setRecyclerView()
         observeOrderListData()
     }
 
-    private fun initView() {
-        orderViewModel.currentFragmentName.value = "OrderList"
-    }
 
     private fun setRecyclerView() {
-        orderListAdapter = OrderListAdapter{
+        orderListAdapter = OrderListAdapter {
+            Log.e(TAG, "setRecyclerView: 클릭", )
+            orderViewModel.setFragmentIndex(1)
             orderViewModel.selectOrderListItem(it)
-            // OrDetailFragment 로 이동 코드 추가하기
-            orderViewModel.triggerMoveToOrderDetailFragmentEvent()
         }
         binding.orderRv.apply {
             adapter = orderListAdapter
             layoutManager = LinearLayoutManager(requireContext())
-            addItemDecoration(OrderListVerticalDecoration())
+            addItemDecoration(OrderListVerticalDecoration(requireContext()))
         }
     }
 
     private fun observeOrderListData() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                orderViewModel.allOrderJoinState.collect {
-                    handleState(it)
-                }
-            }
+        with(orderViewModel) {
+            allOrderJoinState.flowWithLifecycle(lifecycle).onEach {
+                handleState(it)
+            }.launchIn(lifecycleScope)
         }
     }
 
-    private fun <T> handleState(uiLocalState: UiLocalState<T>) {
-        when (uiLocalState) {
-            is UiLocalState.IsEmpty -> {
+    private fun <T> handleState(uiState: UiState<T>) {
+        when (uiState) {
+            is UiState.Empty -> {
                 binding.orderRv.toGone()
                 binding.orderListTvEmptyMessage.toVisible()
             }
-            is UiLocalState.IsLoading -> {
-                binding.orderListPb.isVisible = uiLocalState.isLoading
+            is UiState.Loading -> {
+                binding.orderListPb.isVisible = uiState.isLoading
             }
-            is UiLocalState.ShowToast -> {
-                requireContext().showToast(uiLocalState.message)
-            }
-            is UiLocalState.Success -> {
+            is UiState.Success -> {
                 binding.orderRv.toVisible()
                 binding.orderListTvEmptyMessage.toGone()
-                orderListAdapter.submitList(uiLocalState.uiDishItems as List<UiOrderListItem>)
+                val uiOrderList = uiState.items as List<UiOrderListItem>
+                if (orderViewModel.fromNotificationExtraTimeStamp.value != 0L) {
+                    orderViewModel.selectOrderListItem(uiOrderList.find { it.timeStamp==orderViewModel.fromNotificationExtraTimeStamp.value }!!.orderList)
+                    orderViewModel.setFragmentIndex(1)
+                }else{
+                    orderListAdapter.submitList(uiOrderList)
+                }
             }
-            is UiLocalState.Error -> {}
+            is UiState.Error -> {}
         }
     }
 }

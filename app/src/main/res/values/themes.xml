@@ -14,6 +14,15 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="AppTheme.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/primary_main</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_banchan</item>
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+        <item name="postSplashScreenTheme">@style/Theme.DeliverBanChan</item>
+    </style>
+
+
+
     <style name="cardViewRadius">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
@@ -365,6 +374,14 @@
             @style/Widget.TextView.KoPubWorldDotumPro_GreyScaleBlack16_Bold.TextAppearance
         </item>
         <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="AppTheme.Picker" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:textColorPrimary">@color/grey_scale_black</item>
+    </style>
+
+    <style name="ThemeOverlay.NumberPicker" parent="AppTheme.Picker">
+        <item name="colorControlNormal">@color/primary_main</item>
     </style>
 
 </resources>

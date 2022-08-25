@@ -2,52 +2,46 @@ package com.woowahan.android10.deliverbanchan.presentation.main.host
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.view.View
+import android.view.ViewTreeObserver
 import androidx.activity.viewModels
-import androidx.lifecycle.flowWithLifecycle
+import androidx.core.splashscreen.SplashScreen
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.tabs.TabLayoutMediator
 import com.woowahan.android10.deliverbanchan.R
-import com.woowahan.android10.deliverbanchan.data.local.db.FoodRoomDatabase
-import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
-import com.woowahan.android10.deliverbanchan.data.local.model.entity.LocalDish
-import com.woowahan.android10.deliverbanchan.data.local.model.entity.OrderInfo
-import com.woowahan.android10.deliverbanchan.data.local.model.entity.RecentlyViewedInfo
 import com.woowahan.android10.deliverbanchan.databinding.ActivityMainBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseActivity
 import com.woowahan.android10.deliverbanchan.presentation.cart.CartActivity
-import com.woowahan.android10.deliverbanchan.presentation.main.sidedish.SideDishViewModel
-import com.woowahan.android10.deliverbanchan.presentation.main.soupdish.SoupViewModel
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEventWithDuration
 import com.woowahan.android10.deliverbanchan.presentation.order.OrderActivity
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.FlowPreview
 
 @AndroidEntryPoint
-class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main, "MainActivity") {
+class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main, "MainActivity"){
 
     private val dishViewModel: DishViewModel by viewModels()
-    private val soupViewModel: SoupViewModel by viewModels()
-    private val sideDishViewModel: SideDishViewModel by viewModels()
     private lateinit var tabTitleArray: Array<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
         initBinding()
         initView()
         initBtn()
     }
 
+    @OptIn(FlowPreview::class)
     private fun initBtn() {
         with(binding.mainTb) {
-            appBarNoBackBtnFlCart.setOnClickListener {
-                startActivity(Intent(this@MainActivity, CartActivity::class.java))
-            }
-            appBarNoBackBtnIvProfile.setOnClickListener {
-                startActivity(Intent(this@MainActivity, OrderActivity::class.java))
+            lifecycleScope.launchWhenCreated {
+                appBarNoBackBtnFlCart.setClickEventWithDuration(lifecycleScope) {
+                    startActivity(Intent(this@MainActivity, CartActivity::class.java))
+                }
+                appBarNoBackBtnIvProfile.setClickEventWithDuration(lifecycleScope) {
+                    startActivity(Intent(this@MainActivity, OrderActivity::class.java))
+                }
             }
         }
     }

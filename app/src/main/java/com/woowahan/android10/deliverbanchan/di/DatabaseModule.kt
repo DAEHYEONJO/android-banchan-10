@@ -6,7 +6,7 @@ import com.woowahan.android10.deliverbanchan.data.local.db.FoodRoomDatabase
 import com.woowahan.android10.deliverbanchan.data.local.dao.CartDao
 import com.woowahan.android10.deliverbanchan.data.local.dao.DishDao
 import com.woowahan.android10.deliverbanchan.data.local.dao.OrderDao
-import com.woowahan.android10.deliverbanchan.data.local.dao.RecentlyViewedDao
+import com.woowahan.android10.deliverbanchan.data.local.dao.RecentViewedDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,7 +34,7 @@ object DatabaseModule {
 
     @Singleton
     @Provides
-    fun providesRecentlyViewedDao(foodRoomDatabase: FoodRoomDatabase): RecentlyViewedDao = foodRoomDatabase.recentlyViewedDao()
+    fun providesRecentlyViewedDao(foodRoomDatabase: FoodRoomDatabase): RecentViewedDao = foodRoomDatabase.recentlyViewedDao()
 
     @Singleton
     @Provides

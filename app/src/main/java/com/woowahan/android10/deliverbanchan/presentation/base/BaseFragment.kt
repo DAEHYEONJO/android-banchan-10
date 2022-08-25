@@ -1,6 +1,7 @@
 package com.woowahan.android10.deliverbanchan.presentation.base
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,15 +11,36 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
+import com.woowahan.android10.deliverbanchan.presentation.base.click_listener.OnDishItemClickListener
+import com.woowahan.android10.deliverbanchan.presentation.detail.DetailActivity
+import com.woowahan.android10.deliverbanchan.presentation.dialogs.bottomsheet.CartBottomSheetFragment
 
-abstract class BaseFragment<T: ViewDataBinding>(
+abstract class BaseFragment<T : ViewDataBinding>(
     @LayoutRes private val layoutResId: Int,
     val TAG: String
-): Fragment() {
+) : Fragment(), OnDishItemClickListener {
 
     private var _binding: T? = null
-    val binding get() = checkNotNull(_binding){
-        "$TAG Fragment Binding Null"
+    val binding
+        get() = checkNotNull(_binding) {
+            "$TAG Fragment Binding Null"
+        }
+
+    override fun onClickCartIcon(uiDishItem: UiDishItem) {
+        val cartBottomSheetFragment = CartBottomSheetFragment().apply {
+            arguments = Bundle().apply {
+                putParcelable("UiDishItem", uiDishItem)
+            }
+            isCancelable = false
+        }
+        cartBottomSheetFragment.show(childFragmentManager, "CartBottomSheet")
+    }
+
+    override fun onClickDish(uiDishItem: UiDishItem) {
+        val intent = Intent(requireContext(), DetailActivity::class.java)
+        intent.putExtra("UiDishItem", uiDishItem)
+        startActivity(intent)
     }
 
     override fun onAttach(context: Context) {

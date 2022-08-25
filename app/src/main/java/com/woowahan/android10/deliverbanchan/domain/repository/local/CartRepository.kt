@@ -25,4 +25,10 @@ interface CartRepository {
     suspend fun updateCartChecked(hash: String, checked: Boolean)
     @WorkerThread
     suspend fun updateCartAmount(hash: String, amount: Int)
+    @WorkerThread
+    suspend fun insertCartInfoVarArg(vararg cartInfo: CartInfo)
+    @WorkerThread
+    suspend fun insertAndDeleteCartItems(cartInfo: List<CartInfo>, deleteHashes: List<String>)
+    @WorkerThread
+    suspend fun deleteCartInfoByHashList(deleteHashes: List<String>)
 }

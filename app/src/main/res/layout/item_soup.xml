@@ -15,9 +15,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/soup_root"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/rv_space_8dp"
-        android:paddingBottom="@dimen/cart_btn_width_32dp">
+        android:layout_height="wrap_content">
 
         <FrameLayout
             android:id="@+id/soup_fl"

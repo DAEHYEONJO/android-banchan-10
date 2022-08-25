@@ -1,10 +1,12 @@
 package com.woowahan.android10.deliverbanchan.presentation.dialogs.bottomsheet
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -14,9 +16,12 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentCartBottomSheetBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
+import com.woowahan.android10.deliverbanchan.presentation.cart.CartActivity
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
+import com.woowahan.android10.deliverbanchan.presentation.dialogs.dialog.CartDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CartBottomSheetFragment : BottomSheetDialogFragment() {
@@ -24,17 +29,17 @@ class CartBottomSheetFragment : BottomSheetDialogFragment() {
     private var _binding: FragmentCartBottomSheetBinding? = null
     private val binding: FragmentCartBottomSheetBinding get() = checkNotNull(_binding)
     private val cartBottomSheetViewModel: CartBottomSheetViewModel by viewModels()
+    override fun onStart() {
+        super.onStart()
+        val behavior = BottomSheetBehavior.from(requireView().parent as View)
+        behavior.state = BottomSheetBehavior.STATE_EXPANDED
+    }
+    private val cartDialogFragment: CartDialogFragment by lazy { CartDialogFragment() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setStyle(STYLE_NORMAL, R.style.AppBottomSheetDialogTheme)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        val behavior = BottomSheetBehavior.from(requireView().parent as View)
-        behavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     override fun onCreateView(
@@ -50,7 +55,6 @@ class CartBottomSheetFragment : BottomSheetDialogFragment() {
             Log.e("AppTest", "$uiDishItem")
             uiDishItem?.let {
                 cartBottomSheetViewModel.currentUiDishItem.value = it
-                //binding.item = it
                 binding.viewModel = cartBottomSheetViewModel
             }
         }
@@ -66,6 +70,9 @@ class CartBottomSheetFragment : BottomSheetDialogFragment() {
     }
 
     private fun initView() {
+        binding.tvCancel.setOnClickListener {
+            dismiss()
+        }
         cartBottomSheetViewModel.getCartInfoByHash()
     }
 
@@ -74,12 +81,7 @@ class CartBottomSheetFragment : BottomSheetDialogFragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 cartBottomSheetViewModel.insertSuccessEvent.collect {
                     if(it) {
-                        // dialog 작업 예정
-                        Log.e("CartBottomSheetFragment", "dialog open")
-                        dialogDismissWhenInsertSuccessListener.dialogDismissWhenInsertSuccess(
-                            cartBottomSheetViewModel.currentUiDishItem.value.hash,
-                            cartBottomSheetViewModel.currentUiDishItem.value.title
-                        )
+                        cartDialogFragment.show(parentFragmentManager, "CartDialog")
                         dismiss()
                     } else {
                         requireContext().showToast("장바구니 담기에 실패했습니다")
@@ -94,13 +96,4 @@ class CartBottomSheetFragment : BottomSheetDialogFragment() {
         _binding = null
     }
 
-    interface DialogDismissWhenInsertSuccessListener {
-        fun dialogDismissWhenInsertSuccess(hash: String, title: String)
-    }
-
-    fun setDialogDismissWhenInsertSuccessListener(dialogDismissWhenInsertSuccessListener: DialogDismissWhenInsertSuccessListener) {
-        this.dialogDismissWhenInsertSuccessListener = dialogDismissWhenInsertSuccessListener
-    }
-
-    private lateinit var dialogDismissWhenInsertSuccessListener: DialogDismissWhenInsertSuccessListener
 }

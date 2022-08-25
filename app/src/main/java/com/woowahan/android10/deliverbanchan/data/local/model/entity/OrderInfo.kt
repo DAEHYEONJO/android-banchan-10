@@ -9,5 +9,6 @@ data class OrderInfo(
     val hash: String,
     @ColumnInfo(name = "time_stamp")val timeStamp: Long,
     val amount: Int,
-    @ColumnInfo(name = "is_delivering")val isDelivering: Boolean
+    @ColumnInfo(name = "is_delivering")val isDelivering: Boolean,
+    @ColumnInfo(name = "delivery_price")val deliveryPrice: Int
 )

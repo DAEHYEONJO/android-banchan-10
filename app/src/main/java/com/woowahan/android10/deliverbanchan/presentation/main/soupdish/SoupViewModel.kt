@@ -5,8 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
+import com.woowahan.android10.deliverbanchan.domain.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
+import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllCartInfoHashSetUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetThemeDishListUseCase
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,16 +18,17 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SoupViewModel @Inject constructor(
-    private val getSoupDishesUseCase: GetThemeDishListUseCase
+    private val getSoupDishesUseCase: GetThemeDishListUseCase,
+    private val getAllCartInfoSetUseCase: GetAllCartInfoHashSetUseCase
 ) : ViewModel() {
 
     companion object {
         const val TAG = "SoupViewModel"
+        const val THEME = "soup"
     }
 
-
-    private val _soupState = MutableStateFlow<UiState>(UiState.Init)
-    val soupState: StateFlow<UiState> get() = _soupState
+    private val _soupState = MutableStateFlow<UiState<List<UiDishItem>>>(UiState.Init)
+    val soupState: StateFlow<UiState<List<UiDishItem>>> get() = _soupState
     private val _curSoupSpinnerPosition = MutableLiveData<Int>(0)
     val curSoupSpinnerPosition: LiveData<Int> get() = _curSoupSpinnerPosition
     private val _preSoupSpinnerPosition = MutableLiveData(0)
@@ -34,36 +36,47 @@ class SoupViewModel @Inject constructor(
     val soupListSize = MutableLiveData(0)
 
     init {
-        getSoupDishes()
+        setSoupDishesState()
+        setSoupDishCartInserted()
     }
 
-    private fun setLoading() {
-        _soupState.value = UiState.IsLoading(true)
-    }
-
-    private fun hideLoading() {
-        _soupState.value = UiState.IsLoading(false)
-    }
-
-    private fun showToast(message: String) {
-        _soupState.value = UiState.ShowToast(message)
-    }
-
-    private fun getSoupDishes() = viewModelScope.launch {
-        getSoupDishesUseCase("soup").onStart {
-            setLoading()
-        }.catch { exception ->
-            Log.e(TAG, "getSoupDishes: $exception", )
-            hideLoading()
-            showToast(exception.message.toString())
-        }.flowOn(Dispatchers.IO).collect { result ->
-            hideLoading()
-            when (result) {
-                is BaseResult.Success -> {
-                    _soupState.value = UiState.Success(result.data)
-                    soupListSize.value = result.data.size
+    private fun setSoupDishCartInserted() {
+        // cart flow collect 시 , 장바구니 insert 여부 확인함
+        viewModelScope.launch {
+            getAllCartInfoSetUseCase().collect { cartInfoHashSet ->
+                if (_soupState.value is UiState.Success) {
+                    val tempList = mutableListOf<UiDishItem>()
+                    (_soupState.value as UiState.Success).items.forEach {
+                        tempList.add(it.copy(isInserted = cartInfoHashSet.contains(it.hash)))
+                    }
+                    _soupState.value = UiState.Success(tempList)
                 }
-                is BaseResult.Error -> _soupState.value = UiState.Error(result.errorCode)
+            }
+        }
+    }
+
+    fun setSoupDishesState() {
+        viewModelScope.launch {
+            Log.e("SoupViewModel", "getSoupList")
+            getSoupDishesUseCase(THEME).onStart {
+                _soupState.value = UiState.Loading(true)
+            }.catch { exception ->
+                Log.e(TAG, "getSoupDishes: $exception")
+                _soupState.value = UiState.Loading(false)
+                _soupState.value = UiState.Error(exception.message.toString())
+                Log.e(TAG, "setSoupDishesState: 뷰모델 catch ${exception.message.toString()}", )
+            }.flowOn(Dispatchers.IO).collect { result ->
+                _soupState.value = UiState.Loading(false)
+                when (result) {
+                    is BaseResult.Success -> {
+                        _soupState.value = UiState.Success(result.data)
+                        soupListSize.value = result.data.size
+                    }
+                    is BaseResult.Error -> {
+                        _soupState.value = UiState.Error(result.error)
+                        Log.e(TAG, "setSoupDishesState: 뷰모델 베이스 에러: ${result.error}", )
+                    }
+                }
             }
         }
     }
@@ -75,27 +88,11 @@ class SoupViewModel @Inject constructor(
         _curSoupSpinnerPosition.value = position
         if (_soupState.value is UiState.Success) {
             _soupState.value = when (_curSoupSpinnerPosition.value) {
-                1 -> UiState.Success((_soupState.value as UiState.Success).uiDishItems.sortedBy { -it.sPrice }) // 금액 내림차순
-                2 -> UiState.Success((_soupState.value as UiState.Success).uiDishItems.sortedBy { it.sPrice }) // 금액 오름차순
-                3 -> UiState.Success((_soupState.value as UiState.Success).uiDishItems.sortedBy { -it.salePercentage }) // 할인률 내림차순
-                else -> UiState.Success((_soupState.value as UiState.Success).uiDishItems.sortedBy { it.index }) // 기본 정렬순
+                1 -> UiState.Success((_soupState.value as UiState.Success).items.sortedBy { -it.sPrice }) // 금액 내림차순
+                2 -> UiState.Success((_soupState.value as UiState.Success).items.sortedBy { it.sPrice }) // 금액 오름차순
+                3 -> UiState.Success((_soupState.value as UiState.Success).items.sortedBy { -it.salePercentage }) // 할인률 내림차순
+                else -> UiState.Success((_soupState.value as UiState.Success).items.sortedBy { it.index }) // 기본 정렬순
             }
         }
     }
-
-    fun changeSoupItemIsInserted(hash: String){
-        ((_soupState.value as UiState.Success).uiDishItems).let { uiDishList ->
-            val newList = mutableListOf<UiDishItem>().apply {
-                uiDishList.forEach { uiDishItem ->
-                    if (uiDishItem.hash == hash){
-                        add(uiDishItem.copy(isInserted = true))
-                    }else{
-                        add(uiDishItem)
-                    }
-                }
-            }
-            _soupState.value = UiState.Success(newList)
-        }
-    }
-
 }

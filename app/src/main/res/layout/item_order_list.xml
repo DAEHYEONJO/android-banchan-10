@@ -5,8 +5,11 @@
 
     <data>
         <variable
-            name="order"
-            type="com.woowahan.android10.deliverbanchan.data.local.model.join.Order" />
+            name="item"
+            type="com.woowahan.android10.deliverbanchan.domain.model.UiCartOrderDishJoinItem" />
+        <variable
+            name="orderTotalPrice"
+            type="Integer" />
         <variable
             name="listSize"
             type="Integer" />
@@ -34,7 +37,7 @@
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/order_list_view_top"
-            app:setStringUrlImage="@{order.image}"/>
+            app:setStringUrlImage="@{item.image}"/>
 
         <View
             android:id="@+id/order_list_view_bottom"
@@ -58,7 +61,7 @@
             app:layout_constraintTop_toTopOf="@id/order_list_iv_food"
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="새콤달콤 오징어무침 외 1개"
-            app:setOrderListTitle="@{order.title}"
+            app:setOrderListTitle="@{item.title}"
             app:setOrderItemSize="@{listSize}"/>
 
         <TextView
@@ -71,8 +74,7 @@
             app:layout_constraintBottom_toTopOf="@id/order_list_tv_isdelivering"
             app:layout_constraintStart_toEndOf="@id/order_list_iv_food"
             app:layout_constraintTop_toBottomOf="@id/order_list_tv_title"
-            isNPrice="@{false}"
-            price="@{order.SPrice * order.amount}"
+            app:setDeliveryPriceText="@{orderTotalPrice}"
             tools:text="21,140원" />
 
         <TextView
@@ -86,7 +88,7 @@
             app:layout_constraintStart_toEndOf="@id/order_list_iv_food"
             app:layout_constraintTop_toBottomOf="@id/order_list_tv_sprice"
             tools:text="배송 준비중"
-            app:setOrderStateText="@{order.delivering}"/>
+            app:setOrderStateText="@{item.delivering}"/>
 
         <ImageView
             android:id="@+id/order_list_iv_arrow_icon"

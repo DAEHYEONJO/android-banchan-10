@@ -1,15 +1,16 @@
 package com.woowahan.android10.deliverbanchan.presentation.dialogs.bottomsheet
 
 import android.util.Log
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.woowahan.android10.deliverbanchan.BanChanApplication
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.LocalDish
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
-import com.woowahan.android10.deliverbanchan.domain.usecase.CreateEmptyUiDishItemUseCase
-import com.woowahan.android10.deliverbanchan.domain.usecase.GetCartInfoUseCase
+import com.woowahan.android10.deliverbanchan.domain.usecase.*
+import com.woowahan.android10.deliverbanchan.domain.usecase.CartUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.InsertCartInfoUseCase
-import com.woowahan.android10.deliverbanchan.domain.usecase.InsertLocalDishUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -18,13 +19,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CartBottomSheetViewModel @Inject constructor(
-    private val createEmptyUiDishItemUseCase: CreateEmptyUiDishItemUseCase,
-    private val getCartInfoUseCase: GetCartInfoUseCase,
+    private val cartUseCase: CartUseCase,
     private val insertCartInfoUseCase: InsertCartInfoUseCase,
-    private val insertLocalDishUseCase: InsertLocalDishUseCase
+    private val insertLocalDishUseCase: InsertLocalDishUseCase,
+    private val updateTimeStampRecentViewedByHashUseCase: UpdateTimeStampRecentViewedByHashUseCase,
+    stateHandle: SavedStateHandle
 ) : ViewModel() {
+    var currentUiDishItem = MutableStateFlow<UiDishItem>(UiDishItem.returnEmptyItem())
 
-    var currentUiDishItem = MutableStateFlow<UiDishItem>(createEmptyUiDishItemUseCase())
+    val uiDishItem: UiDishItem? = stateHandle["UiDishItem"]
 
     private val _itemCount = MutableStateFlow<Int>(1)
     val itemCount: StateFlow<Int> = _itemCount
@@ -36,8 +39,9 @@ class CartBottomSheetViewModel @Inject constructor(
     private var isCurrentItemChecked = false
 
     fun getCartInfoByHash() {
-        viewModelScope.launch {
-            getCartInfoUseCase(currentUiDishItem.value.hash).onStart {
+        Log.e("CartBottomSheetViewModel", "유아이디시아이템: uiDishItem: ${uiDishItem}", )
+        BanChanApplication.applicationScope.launch {
+            cartUseCase.getCartInfoByHash(uiDishItem!!.hash).onStart {
 
             }.catch { exception ->
                 Log.e("CartBottomSheetViewModel", "${exception.message}")
@@ -58,9 +62,10 @@ class CartBottomSheetViewModel @Inject constructor(
     }
 
     fun insertCartInfo() {
-        viewModelScope.launch {
+        BanChanApplication.applicationScope.launch {
             runCatching {
-                with(currentUiDishItem.value) {
+                with(uiDishItem!!) {
+                    updateTimeStampRecentViewedByHashUseCase(hash, System.currentTimeMillis())
                     insertCartInfoUseCase(
                         CartInfo(
                             hash = hash,
@@ -73,6 +78,7 @@ class CartBottomSheetViewModel @Inject constructor(
                             hash = hash,
                             title = title,
                             image = image,
+                            description = description,
                             nPrice = nPrice,
                             sPrice = sPrice
                         )
@@ -89,6 +95,7 @@ class CartBottomSheetViewModel @Inject constructor(
     }
 
     fun clickPlusBtn() {
+        if (_itemCount.value==20) return
         _itemCount.value += 1
     }
 

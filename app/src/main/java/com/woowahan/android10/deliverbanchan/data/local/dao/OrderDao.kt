@@ -15,7 +15,7 @@ interface OrderDao {
     @Query("SELECT * FROM order_info")
     fun getAllOrderInfo(): Flow<List<OrderInfo>>
 
-    @Query("SELECT * FROM LOCAL_DISH NATURAL JOIN ORDER_INFO")
+    @Query("SELECT * FROM LOCAL_DISH NATURAL JOIN ORDER_INFO ORDER BY TIME_STAMP DESC")
     fun getAllOrderJoinList(): Flow<List<Order>>
 
     @Insert
@@ -27,4 +27,16 @@ interface OrderDao {
     @Query("DELETE FROM LOCAL_DISH WHERE hash = :hash")
     suspend fun deleteOrderDish(hash: String)
 
+    @Insert
+    suspend fun insertVarArgOrderInfo(vararg orderInfo: OrderInfo)
+
+    @Query("UPDATE ORDER_INFO SET is_delivering = :isDelivering WHERE hash = :hash")
+    suspend fun updateOrderInfo(hash: String, isDelivering: Boolean)
+
+    @Transaction
+    suspend fun updateOrderInfoByHashList(orderHashList: List<String>) {
+        orderHashList.forEach { hash ->
+            updateOrderInfo(hash, false)
+        }
+    }
 }

@@ -1,20 +1,16 @@
 package com.woowahan.android10.deliverbanchan.data.local.repository
 
+import android.util.Log
 import androidx.annotation.WorkerThread
-import androidx.room.Query
 import com.woowahan.android10.deliverbanchan.data.local.dao.CartDao
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
 import com.woowahan.android10.deliverbanchan.data.local.model.join.Cart
-import com.woowahan.android10.deliverbanchan.di.IoDispatcher
 import com.woowahan.android10.deliverbanchan.domain.repository.local.CartRepository
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class CartRepositoryImpl @Inject constructor(
-    private val cartDao: CartDao,
-    @IoDispatcher private val dispatcher: CoroutineDispatcher
+    private val cartDao: CartDao
 ) : CartRepository {
 
     override fun getAllCartInfo(): Flow<List<CartInfo>> = cartDao.getAllCartInfo()
@@ -39,6 +35,22 @@ class CartRepositoryImpl @Inject constructor(
     @WorkerThread
     override suspend fun updateCartAmount(hash: String, amount: Int) {
         cartDao.updateCartAmount(hash, amount)
+    }
+
+    override suspend fun insertCartInfoVarArg(vararg cartInfo: CartInfo) {
+        cartDao.insertCartInfoVarArg(*cartInfo)
+    }
+
+    override suspend fun insertAndDeleteCartItems(
+        cartInfo: List<CartInfo>,
+        deleteHashes: List<String>
+    ) {
+        cartDao.insertAndDeleteCartItems(cartInfo, deleteHashes)
+    }
+
+    override suspend fun deleteCartInfoByHashList(deleteHashes: List<String>) {
+        Log.e("repo impl", "deleteVarArgByHashList: $deleteHashes", )
+        cartDao.deleteCartInfoByHashList(deleteHashes)
     }
 
 
