@@ -1,6 +1,5 @@
 package com.woowahan.android10.deliverbanchan.presentation.detail
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -12,8 +11,8 @@ import com.woowahan.android10.deliverbanchan.data.local.model.entity.RecentViewe
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.usecase.*
+import com.woowahan.android10.deliverbanchan.domain.usecase.remote.GetDetailDishUseCase
 import com.woowahan.android10.deliverbanchan.presentation.state.UiDetailState
-import com.woowahan.android10.deliverbanchan.presentation.state.UiLocalState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*

@@ -1,8 +1,9 @@
-package com.woowahan.android10.deliverbanchan.domain.usecase
+package com.woowahan.android10.deliverbanchan.domain.usecase.mapper
 
 import com.woowahan.android10.deliverbanchan.data.remote.model.DishItem
 import com.woowahan.android10.deliverbanchan.domain.common.convertPriceToInt
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
+import com.woowahan.android10.deliverbanchan.domain.usecase.local.IsExistCartInfoUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -32,7 +33,8 @@ class MapDishItemListToUiDishItemListUseCase @Inject constructor(
                         description = dishItem.description,
                         sPrice = sPriceInt,
                         nPrice = nPriceInt,
-                        salePercentage = percentage
+                        salePercentage = percentage,
+                        index = index
                     )
                 }
             }

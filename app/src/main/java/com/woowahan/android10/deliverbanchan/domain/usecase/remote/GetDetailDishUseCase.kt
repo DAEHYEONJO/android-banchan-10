@@ -1,4 +1,4 @@
-package com.woowahan.android10.deliverbanchan.domain.usecase
+package com.woowahan.android10.deliverbanchan.domain.usecase.remote
 
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.model.UiDetailInfo

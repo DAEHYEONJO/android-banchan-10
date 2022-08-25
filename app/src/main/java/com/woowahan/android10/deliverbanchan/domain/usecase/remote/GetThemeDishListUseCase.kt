@@ -1,8 +1,9 @@
-package com.woowahan.android10.deliverbanchan.domain.usecase
+package com.woowahan.android10.deliverbanchan.domain.usecase.remote
 
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.repository.remote.DishItemRepository
+import com.woowahan.android10.deliverbanchan.domain.usecase.mapper.MapDishItemListToUiDishItemListUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

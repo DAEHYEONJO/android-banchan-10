@@ -1,4 +1,4 @@
-package com.woowahan.android10.deliverbanchan.domain.usecase
+package com.woowahan.android10.deliverbanchan.domain.usecase.local
 
 import com.woowahan.android10.deliverbanchan.domain.repository.local.CartRepository
 import javax.inject.Inject

@@ -5,6 +5,7 @@ import androidx.paging.map
 import com.woowahan.android10.deliverbanchan.di.IoDispatcher
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.repository.local.RecentViewedRepository
+import com.woowahan.android10.deliverbanchan.domain.usecase.local.IsExistCartInfoUseCase
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
