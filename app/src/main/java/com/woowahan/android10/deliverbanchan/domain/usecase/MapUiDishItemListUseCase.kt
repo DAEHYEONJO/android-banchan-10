@@ -2,6 +2,7 @@ package com.woowahan.android10.deliverbanchan.domain.usecase
 
 import android.util.Log
 import com.woowahan.android10.deliverbanchan.data.remote.model.DishItem
+import com.woowahan.android10.deliverbanchan.domain.common.convertPriceToInt
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -13,17 +14,29 @@ import kotlin.math.log
 
 @Singleton
 class MapUiDishItemListUseCase @Inject constructor(
-    private val mapUiDishItemUseCase: MapUiDishItemUseCase,
     private val isExistCartInfoUseCase: IsExistCartInfoUseCase,
 ) {
     suspend operator fun invoke(dishItemList: List<DishItem>): List<UiDishItem> {
         val uiDishItemList =
-            MutableList<UiDishItem>(dishItemList.size) { UiDishItem.returnEmptyItem() }
+            MutableList(dishItemList.size) { UiDishItem.returnEmptyItem() }
         coroutineScope { // coroutineScope = 자체가 suspend 함수
             dishItemList.mapIndexed { index, dishItem ->
                 async(Dispatchers.IO) {
-                    val isInserted = isExistCartInfoUseCase(dishItem.detailHash)
-                    uiDishItemList[index] = mapUiDishItemUseCase(dishItem, isInserted)
+                    val nPriceInt = dishItem.nPrice.convertPriceToInt()
+                    val sPriceInt = dishItem.sPrice.convertPriceToInt()
+                    val percentage =
+                        if (nPriceInt == 0) 0 else 100 - (sPriceInt.toDouble() / nPriceInt * 100).toInt()
+
+                    uiDishItemList[index] = UiDishItem(
+                        hash = dishItem.detailHash,
+                        title = dishItem.title,
+                        isInserted = isExistCartInfoUseCase(dishItem.detailHash),
+                        image = dishItem.image,
+                        description = dishItem.description,
+                        sPrice = sPriceInt,
+                        nPrice = nPriceInt,
+                        salePercentage = percentage
+                    )
                 }
             }
         }

@@ -11,9 +11,7 @@ import javax.inject.Singleton
 @Singleton
 class CreateUiDishItemsUseCase @Inject constructor(
     private val getDishListByThemeUseCase: GetDishListByThemeUseCase,
-    private val mapUiDishItemUseCase: MapUiDishItemUseCase,
     private val mapUiDishItemListUseCase: MapUiDishItemListUseCase,
-    private val isExistCartInfoUseCase: IsExistCartInfoUseCase
 ) {
 
 //    val supervisorJob = SupervisorJob()
