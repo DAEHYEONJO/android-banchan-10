@@ -2,9 +2,9 @@ package com.woowahan.android10.deliverbanchan.data.remote.repository
 
 import com.woowahan.android10.deliverbanchan.data.remote.dao.DishApi
 import com.woowahan.android10.deliverbanchan.data.remote.mapper.ApiMapper
-import com.woowahan.android10.deliverbanchan.domain.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.model.UiDetailInfo
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
+import com.woowahan.android10.deliverbanchan.domain.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.repository.remote.DishDetailRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

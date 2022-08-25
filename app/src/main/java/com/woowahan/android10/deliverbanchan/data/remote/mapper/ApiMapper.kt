@@ -2,7 +2,7 @@ package com.woowahan.android10.deliverbanchan.data.remote.mapper
 
 import com.woowahan.android10.deliverbanchan.data.remote.model.DishDetail
 import com.woowahan.android10.deliverbanchan.data.remote.model.DishItem
-import com.woowahan.android10.deliverbanchan.domain.common.convertPriceToInt
+import com.woowahan.android10.deliverbanchan.data.common.ext.convertPriceToInt
 import com.woowahan.android10.deliverbanchan.domain.model.UiDetailInfo
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 
