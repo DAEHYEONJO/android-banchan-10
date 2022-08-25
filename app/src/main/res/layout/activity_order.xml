@@ -6,7 +6,7 @@
     <data>
         <variable
             name="vm"
-            type="com.woowahan.android10.deliverbanchan.presentation.order.OrderViewModel" />
+            type="com.woowahan.android10.deliverbanchan.presentation.order.viewmodel.OrderViewModel" />
     </data>
 
     <LinearLayout

@@ -26,7 +26,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="풍성한 고기반찬" />
 
-        <com.woowahan.android10.deliverbanchan.presentation.main.common.NestedScrollableHost
+        <com.woowahan.android10.deliverbanchan.presentation.view.scroll.NestedScrollableHost
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/base_space_16dp"
@@ -39,6 +39,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-        </com.woowahan.android10.deliverbanchan.presentation.main.common.NestedScrollableHost>
+        </com.woowahan.android10.deliverbanchan.presentation.view.scroll.NestedScrollableHost>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

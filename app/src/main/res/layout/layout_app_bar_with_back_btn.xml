@@ -4,13 +4,13 @@
     <data>
         <variable
             name="vm"
-            type="com.woowahan.android10.deliverbanchan.presentation.cart.CartViewModel" />
+            type="com.woowahan.android10.deliverbanchan.presentation.cart.viewmodel.CartViewModel" />
 
         <import type="android.view.View" />
 
         <variable
             name="vmOrder"
-            type="com.woowahan.android10.deliverbanchan.presentation.order.OrderViewModel" />
+            type="com.woowahan.android10.deliverbanchan.presentation.order.viewmodel.OrderViewModel" />
     </data>
 
     <merge>

@@ -14,6 +14,8 @@ import com.woowahan.android10.deliverbanchan.domain.model.UiExhibitionItem
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
+import com.woowahan.android10.deliverbanchan.presentation.main.exhibition.adapter.ExhibitionAdapter
+import com.woowahan.android10.deliverbanchan.presentation.main.exhibition.adapter.ExhibitionHeaderAdapter
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn

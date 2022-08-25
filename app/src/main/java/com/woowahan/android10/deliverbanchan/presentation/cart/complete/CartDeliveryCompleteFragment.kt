@@ -1,7 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart.complete
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.flowWithLifecycle
@@ -11,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentCartDeliveryCompleteBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
-import com.woowahan.android10.deliverbanchan.presentation.cart.CartViewModel
+import com.woowahan.android10.deliverbanchan.presentation.cart.viewmodel.CartViewModel
 import com.woowahan.android10.deliverbanchan.presentation.cart.complete.adapter.DeliveryBodyAdapter
 import com.woowahan.android10.deliverbanchan.presentation.cart.complete.adapter.DeliveryFooterAdapter
 import com.woowahan.android10.deliverbanchan.presentation.cart.complete.adapter.DeliveryTopAdapter

@@ -16,7 +16,7 @@ import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.woowahan.android10.deliverbanchan.R
-import com.woowahan.android10.deliverbanchan.presentation.order.OrderActivity
+import com.woowahan.android10.deliverbanchan.presentation.order.host.OrderActivity
 
 class DeliveryReceiver : BroadcastReceiver() {
 

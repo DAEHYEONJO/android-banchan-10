@@ -18,7 +18,7 @@ import com.woowahan.android10.deliverbanchan.databinding.FragmentCartMainBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiCartOrderDishJoinItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
-import com.woowahan.android10.deliverbanchan.presentation.cart.CartViewModel
+import com.woowahan.android10.deliverbanchan.presentation.cart.viewmodel.CartViewModel
 import com.woowahan.android10.deliverbanchan.presentation.cart.main.adapter.CartDishTopBodyAdapter
 import com.woowahan.android10.deliverbanchan.presentation.cart.main.adapter.CartOrderInfoBottomBodyAdapter
 import com.woowahan.android10.deliverbanchan.presentation.cart.main.adapter.CartRecentViewedFooterAdapter

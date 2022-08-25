@@ -1,4 +1,4 @@
-package com.woowahan.android10.deliverbanchan.presentation.order
+package com.woowahan.android10.deliverbanchan.presentation.order.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

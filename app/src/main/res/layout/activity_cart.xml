@@ -6,7 +6,7 @@
     <data>
         <variable
             name="vm"
-            type="com.woowahan.android10.deliverbanchan.presentation.cart.CartViewModel" />
+            type="com.woowahan.android10.deliverbanchan.presentation.cart.viewmodel.CartViewModel" />
     </data>
 
     <LinearLayout
@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="@color/grey_scale_surface"
-        tools:context=".presentation.cart.CartActivity">
+        tools:context=".presentation.cart.host.CartActivity">
 
         <include
             android:id="@+id/cart_abl"

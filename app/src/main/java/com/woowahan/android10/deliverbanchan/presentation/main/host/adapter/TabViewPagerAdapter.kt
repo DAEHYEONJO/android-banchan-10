@@ -1,4 +1,4 @@
-package com.woowahan.android10.deliverbanchan.presentation.main.host
+package com.woowahan.android10.deliverbanchan.presentation.main.host.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
