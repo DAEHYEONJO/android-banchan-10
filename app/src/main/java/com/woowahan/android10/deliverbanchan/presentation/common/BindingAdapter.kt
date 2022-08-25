@@ -78,13 +78,17 @@ fun TextView.getTimeString(beforeTime: Long, deliveryTime: Long, suffixString: S
     else (beforeTime + deliveryTime - curTime)/1000 // 배달 완료까지 남은시간 diffTime
     val timeUnitArray = intArrayOf(60, 60, 24, 30, 12)
     val timeSuffixArray = arrayOf("초", "분", "시간", "일", "달", "년")
-    if (diffTime <= 0) { // 배달완료시간이 지났는데 아직 notification이 안떠서 완료 안된 상태를 위함
-        text = resources.getString(R.string.arrive_soon)
-        return
-    }
-
-    if (diffTime < timeUnitArray[0]) {
-        text = resources.getString(R.string.time_format, diffTime.toString(), timeSuffixArray[0], suffixString)
+    if (suffixString.isEmpty()){
+        if (diffTime <= 0) { // 배달완료시간이 지났는데 아직 notification이 안떠서 완료 안된 상태를 위함
+            text = resources.getString(R.string.arrive_soon)
+            return
+        }
+        if (diffTime < timeUnitArray[0]) {
+            text = resources.getString(R.string.time_format, diffTime.toString(), timeSuffixArray[0], suffixString)
+            return
+        }
+    }else if (diffTime < timeUnitArray[0]){
+        text = resources.getString(R.string.recent)
         return
     }
 

@@ -1,6 +1,5 @@
 package com.woowahan.android10.deliverbanchan.domain.usecase
 
-import com.woowahan.android10.deliverbanchan.data.remote.model.DishDetail
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.model.UiDetailInfo
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem

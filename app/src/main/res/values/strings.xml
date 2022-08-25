@@ -51,6 +51,7 @@
     <string name="item_cart_header_select_release">선택 해제</string>
 
     <string name="arrive_soon">곧 도착</string>
+    <string name="recent">방금전</string>
     <string name="time_format">%1$s%2$s%3$s</string>
     <string name="order_format">%1$s 주문하기</string>
     <string name="order_form_free_delivery_format">%1$s을 더 담으면 무료배송</string>

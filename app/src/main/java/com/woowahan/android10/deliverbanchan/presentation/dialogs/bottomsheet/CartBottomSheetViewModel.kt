@@ -4,10 +4,13 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.woowahan.android10.deliverbanchan.BanChanApplication
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.LocalDish
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.usecase.*
+import com.woowahan.android10.deliverbanchan.domain.usecase.CartUseCase
+import com.woowahan.android10.deliverbanchan.domain.usecase.InsertCartInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -16,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CartBottomSheetViewModel @Inject constructor(
-    private val getCartInfoUseCase: GetCartInfoUseCase,
+    private val cartUseCase: CartUseCase,
     private val insertCartInfoUseCase: InsertCartInfoUseCase,
     private val insertLocalDishUseCase: InsertLocalDishUseCase,
     private val updateTimeStampRecentViewedByHashUseCase: UpdateTimeStampRecentViewedByHashUseCase,
@@ -37,8 +40,8 @@ class CartBottomSheetViewModel @Inject constructor(
 
     fun getCartInfoByHash() {
         Log.e("CartBottomSheetViewModel", "유아이디시아이템: uiDishItem: ${uiDishItem}", )
-        viewModelScope.launch {
-            getCartInfoUseCase(uiDishItem!!.hash).onStart {
+        BanChanApplication.applicationScope.launch {
+            cartUseCase.getCartInfoByHash(uiDishItem!!.hash).onStart {
 
             }.catch { exception ->
                 Log.e("CartBottomSheetViewModel", "${exception.message}")
@@ -59,7 +62,7 @@ class CartBottomSheetViewModel @Inject constructor(
     }
 
     fun insertCartInfo() {
-        viewModelScope.launch {
+        BanChanApplication.applicationScope.launch {
             runCatching {
                 with(uiDishItem!!) {
                     updateTimeStampRecentViewedByHashUseCase(hash, System.currentTimeMillis())

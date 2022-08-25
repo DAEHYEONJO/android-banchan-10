@@ -85,7 +85,7 @@ class DeliveryReceiver : BroadcastReceiver() {
         }
 
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.mipmap.ic_banchan_round) // 아이콘
+            .setSmallIcon(R.mipmap.ic_banchan_foreground) // 아이콘
             .setContentTitle(contentTitle) // 제목
             .setContentText("배송이 완료되었습니다") // 내용
             .setContentIntent(resultPendingIntent)

@@ -59,6 +59,7 @@ class MainDishFragment :
             position: Int,
             id: Long
         ) {
+            Log.e(TAG, "onItemSelected: $position", )
             with(mainDishViewModel) {
                 sortMainDishes(position)
                 with(mainDishSpinnerAdapter) {
@@ -69,10 +70,11 @@ class MainDishFragment :
                     //notifyDataSetChanged()
                     Log.e(TAG, "maindish sorted")
 
-                    if (!isListenerAdd) {
-                        isListenerAdd = true
-                        binding.maindishRv.viewTreeObserver.addOnGlobalLayoutListener(this@MainDishFragment)
-                    }
+//                    if (!isListenerAdd) {
+//                        isListenerAdd = true
+//                        binding.maindishRv.viewTreeObserver.addOnGlobalLayoutListener(this@MainDishFragment)
+//                    }
+                    //notifyDataSetChanged()
                 }
             }
         }
@@ -148,15 +150,15 @@ class MainDishFragment :
         binding.maindishRv.apply {
             adapter = mainDishAdapter
             layoutManager = GridLayoutManager(requireContext(), 2)
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                    super.onScrollStateChanged(recyclerView, newState)
-                    if (isListenerAdd) {
-                        binding.maindishRv.viewTreeObserver.removeOnGlobalLayoutListener(this@MainDishFragment)
-                        isListenerAdd = false
-                    }
-                }
-            })
+//            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+//                    super.onScrollStateChanged(recyclerView, newState)
+//                    if (isListenerAdd) {
+//                        binding.maindishRv.viewTreeObserver.removeOnGlobalLayoutListener(this@MainDishFragment)
+//                        isListenerAdd = false
+//                    }
+//                }
+//            })
             if (itemDecorationCount == 0) addItemDecoration(gridSpanCountTwoForMainDecorator)
         }
 

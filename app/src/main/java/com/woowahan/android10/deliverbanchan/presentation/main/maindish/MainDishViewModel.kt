@@ -7,20 +7,28 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
-import com.woowahan.android10.deliverbanchan.domain.usecase.CreateUiDishItemsUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllCartInfoHashSetUseCase
-import com.woowahan.android10.deliverbanchan.presentation.state.ExhibitionUiState
+import com.woowahan.android10.deliverbanchan.domain.usecase.GetThemeDishListUseCase
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class MainDishViewModel @Inject constructor(
-    private val createUiDishItemsUseCase: CreateUiDishItemsUseCase,
+    private val getThemeDishListUseCase: GetThemeDishListUseCase,
     private val getAllCartInfoSetUseCase: GetAllCartInfoHashSetUseCase
 ) : ViewModel() {
+
+    companion object{
+        const val THEME = "main"
+    }
 
     private val _mainDishState = MutableStateFlow<UiState>(UiState.Init)
     val mainDishState: StateFlow<UiState> get() = _mainDishState
@@ -55,7 +63,7 @@ class MainDishViewModel @Inject constructor(
     fun getMainDishList() {
         Log.e("MainDishViewModel", "getMainDishList")
         viewModelScope.launch {
-            createUiDishItemsUseCase("main").onStart {
+            getThemeDishListUseCase(THEME).onStart {
                 setLoading()
             }.catch { exception ->
                 hideLoading()
@@ -94,6 +102,7 @@ class MainDishViewModel @Inject constructor(
     }
 
     fun sortMainDishes(position: Int) {
+        Log.e("MainDishViewModel", "sortMainDishes: pre: ${_preMainSpinnerPosition.value} cur: ${_curMainSpinnerPosition.value}", )
         if (_curMainSpinnerPosition.value != _preMainSpinnerPosition.value) { // 정렬 기준이 변경될 시
             _preMainSpinnerPosition.value = _curMainSpinnerPosition.value
         }

@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiExhibitionItem
-import com.woowahan.android10.deliverbanchan.domain.usecase.CreateUiExhibitionItemsUseCase
+import com.woowahan.android10.deliverbanchan.domain.usecase.GetUiExhibitionItemsUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllCartInfoHashSetUseCase
 import com.woowahan.android10.deliverbanchan.presentation.state.ExhibitionUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ExhibitionViewModel @Inject constructor(
-    private val createUiExhibitionItemsUseCase: CreateUiExhibitionItemsUseCase,
+    private val getUiExhibitionItemsUseCase: GetUiExhibitionItemsUseCase,
     private val getAllCartInfoSetUseCase: GetAllCartInfoHashSetUseCase
 ) : ViewModel() {
 
@@ -35,7 +35,7 @@ class ExhibitionViewModel @Inject constructor(
     fun getExhibitionList() {
         viewModelScope.launch {
             Log.e("ExhibitionViewModel", "getExhibitionList")
-            createUiExhibitionItemsUseCase().onStart {
+            getUiExhibitionItemsUseCase().onStart {
                 setLoading()
             }.catch { exception ->
                 hideLoading()
