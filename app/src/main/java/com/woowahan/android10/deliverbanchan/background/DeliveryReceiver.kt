@@ -14,6 +14,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.presentation.order.host.OrderActivity
@@ -34,7 +35,7 @@ class DeliveryReceiver : BroadcastReceiver() {
         val deliveryWorkManager = WorkManager.getInstance(context)
 
         val deliveryWorkRequest = OneTimeWorkRequestBuilder<DeliveryWorker>()
-            //.setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+            .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
             .addTag("DeliveryWorker")
             .setInputData(getWorkerData(orderHashList))
             .build()
