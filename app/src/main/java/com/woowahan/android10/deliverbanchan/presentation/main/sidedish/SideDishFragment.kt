@@ -8,6 +8,7 @@ import android.widget.AdapterView
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentSidedishBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
@@ -18,6 +19,7 @@ import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
 import com.woowahan.android10.deliverbanchan.presentation.main.common.MainGridAdapter
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import com.woowahan.android10.deliverbanchan.presentation.base.listeners.SpinnerEventListener
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.observeItemRangeMoved
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEventWithDuration
 import com.woowahan.android10.deliverbanchan.presentation.view.adapter.SortSpinnerAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -47,7 +49,7 @@ class SideDishFragment :
             position: Int,
             id: Long
         ) {
-            Log.e(TAG, "onItemSelected: $position", )
+            Log.e(TAG, "onItemSelected: $position")
             with(sideDishViewModel) {
                 sortSoupDishes(position)
                 with(sideDishSpinnerAdapter) {
@@ -124,6 +126,12 @@ class SideDishFragment :
                     onItemSelectedListener = itemSelectedListener
                 }
             }
+        }
+
+        sideDishAdapter.apply {
+            observeItemRangeMoved().flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach {
+                binding.sideDishRv.scrollToPosition(0)
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
         }
     }
 

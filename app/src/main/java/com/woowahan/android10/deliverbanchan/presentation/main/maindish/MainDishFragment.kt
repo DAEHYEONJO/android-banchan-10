@@ -14,16 +14,14 @@ import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentMaindishBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
+import com.woowahan.android10.deliverbanchan.presentation.base.listeners.SpinnerEventListener
 import com.woowahan.android10.deliverbanchan.presentation.common.decorator.GridSpanCountTwoForMainDishDecorator
-import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
-import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.*
 import com.woowahan.android10.deliverbanchan.presentation.detail.DetailActivity
 import com.woowahan.android10.deliverbanchan.presentation.dialogs.bottomsheet.CartBottomSheetFragment
 import com.woowahan.android10.deliverbanchan.presentation.main.common.MainGridAdapter
 import com.woowahan.android10.deliverbanchan.presentation.main.maindish.adapter.MainDishLinearAdapter
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
-import com.woowahan.android10.deliverbanchan.presentation.base.listeners.SpinnerEventListener
-import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEventWithDuration
 import com.woowahan.android10.deliverbanchan.presentation.view.adapter.SortSpinnerAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -46,7 +44,6 @@ class MainDishFragment :
     @Inject
     lateinit var gridSpanCountTwoForMainDecorator: GridSpanCountTwoForMainDishDecorator
 
-    var isListenerAdd = false
     private val itemSelectedListener = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(
             p0: AdapterView<*>?,
@@ -115,9 +112,12 @@ class MainDishFragment :
     }
 
     private fun setRecyclerView() {
-
         mainDishAdapter.apply {
             onDishItemClickListener = this@MainDishFragment
+
+            observeItemRangeMoved().flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach {
+                binding.maindishRv.scrollToPosition(0)
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
         }
 
         mainDishLinearAdapter = MainDishLinearAdapter({
@@ -131,7 +131,11 @@ class MainDishFragment :
             val intent = Intent(requireContext(), DetailActivity::class.java)
             intent.putExtra("UiDishItem", it)
             startActivity(intent)
-        })
+        }).apply {
+            observeItemRangeMoved().flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach {
+                binding.maindishRv.scrollToPosition(0)
+            }.launchIn(lifecycleScope)
+        }
 
         binding.maindishRv.apply {
             adapter = mainDishAdapter
