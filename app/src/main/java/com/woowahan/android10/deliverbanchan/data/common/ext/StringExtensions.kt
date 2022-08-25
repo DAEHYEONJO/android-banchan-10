@@ -1,6 +1,4 @@
-package com.woowahan.android10.deliverbanchan.domain.common
-
-import android.util.Log
+package com.woowahan.android10.deliverbanchan.data.common.ext
 
 fun String.convertPriceToInt(): Int{
     val noCommaString = replace(",","")

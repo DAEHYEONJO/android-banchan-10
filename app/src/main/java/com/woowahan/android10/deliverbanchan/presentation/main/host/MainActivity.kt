@@ -11,6 +11,7 @@ import com.woowahan.android10.deliverbanchan.databinding.ActivityMainBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseActivity
 import com.woowahan.android10.deliverbanchan.presentation.cart.host.CartActivity
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEventWithDuration
+import com.woowahan.android10.deliverbanchan.presentation.main.host.adapter.TabViewPagerAdapter
 import com.woowahan.android10.deliverbanchan.presentation.order.host.OrderActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.FlowPreview
