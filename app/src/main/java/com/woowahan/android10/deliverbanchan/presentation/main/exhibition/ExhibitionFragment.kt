@@ -81,11 +81,11 @@ class ExhibitionFragment :
         when (state) {
             is UiState.Loading -> {
                 binding.exhibitionPb.toVisible()
-                binding.errorLayout.errorCl.toGone()
             }
             is UiState.Success -> {
                 Log.e(TAG, "exhibition success")
                 binding.exhibitionPb.toGone()
+                binding.errorLayout.errorCl.toGone()
                 binding.exhibitionRv.toVisible()
                 exhibitionAdapter.submitList(state.items)
             }

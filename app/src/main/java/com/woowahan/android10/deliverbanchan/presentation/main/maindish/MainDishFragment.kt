@@ -164,10 +164,11 @@ class MainDishFragment :
         when (state) {
             is UiState.Loading -> {
                 binding.maindishPb.toVisible()
-                binding.errorLayout.errorCl.toGone()
             }
             is UiState.Success -> {
                 binding.maindishPb.toGone()
+                binding.errorLayout.errorCl.toGone()
+                binding.mainDishAbl.toVisible()
                 binding.maindishCdl.toVisible()
                 mainDishAdapter.submitList(state.items)
                 mainDishLinearAdapter.submitList(state.items)

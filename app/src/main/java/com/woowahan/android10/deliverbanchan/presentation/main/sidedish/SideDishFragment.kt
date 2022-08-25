@@ -93,10 +93,11 @@ class SideDishFragment :
         when (state) {
             is UiState.Loading -> {
                 binding.sideDishPb.toVisible()
-                binding.errorLayout.errorCl.toGone()
             }
             is UiState.Success -> {
                 binding.sideDishPb.toGone()
+                binding.sideDishApl.toVisible()
+                binding.errorLayout.errorCl.toGone()
                 binding.sideDishCdl.toVisible()
                 sideDishAdapter.submitList(state.items)
             }

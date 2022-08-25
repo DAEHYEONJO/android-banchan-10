@@ -95,10 +95,11 @@ class SoupDishFragment :
         when (state) {
             is UiState.Loading -> {
                 binding.soupPb.toVisible()
-                binding.errorLayout.errorCl.toGone()
             }
             is UiState.Success -> {
                 binding.soupPb.toGone()
+                binding.errorLayout.errorCl.toGone()
+                binding.soupDishAbl.toVisible()
                 binding.soupCdl.toVisible()
                 mainGridAdapter.submitList(state.items)
             }

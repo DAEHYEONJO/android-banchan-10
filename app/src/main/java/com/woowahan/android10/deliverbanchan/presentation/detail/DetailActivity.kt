@@ -107,7 +107,6 @@ class DetailActivity :
             when (uiDetailState) {
                 is UiState.Loading -> {
                     Log.e(TAG, "initObservers: 로딩", )
-                    binding.detailErrorLayout.errorCl.toGone()
                     binding.detailRv.toGone()
                     binding.detailPb.toVisible()
                 }
@@ -122,6 +121,7 @@ class DetailActivity :
                 }
                 is UiState.Error -> {
                     binding.detailPb.toGone()
+                    binding.detailRv.toGone()
                     binding.detailErrorLayout.errorCl.toVisible()
                     showToast(uiDetailState.error + "에러 에러 삐용 삐용")
                 }

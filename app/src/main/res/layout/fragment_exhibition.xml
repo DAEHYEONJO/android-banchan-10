@@ -13,9 +13,14 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/exhibition_rv"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
+
+        <include
+            android:id="@+id/error_layout"
+            layout="@layout/layout_error_screen" />
 
         <ProgressBar
             android:id="@+id/exhibition_pb"
@@ -28,10 +33,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <include
-            android:id="@+id/error_layout"
-            layout="@layout/layout_error_screen" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
