@@ -3,10 +3,15 @@ package com.woowahan.android10.deliverbanchan.data.local.repository
 import android.util.Log
 import androidx.annotation.WorkerThread
 import com.woowahan.android10.deliverbanchan.data.local.dao.CartDao
+import com.woowahan.android10.deliverbanchan.data.local.mapper.DomainMapper
+import com.woowahan.android10.deliverbanchan.data.local.mapper.EntityMapper
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
 import com.woowahan.android10.deliverbanchan.data.local.model.join.Cart
+import com.woowahan.android10.deliverbanchan.domain.model.UiBottomSheet
+import com.woowahan.android10.deliverbanchan.domain.model.UiCartOrderDishJoinItem
 import com.woowahan.android10.deliverbanchan.domain.repository.local.CartRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class CartRepositoryImpl @Inject constructor(
@@ -15,10 +20,20 @@ class CartRepositoryImpl @Inject constructor(
 
     override fun getAllCartInfo(): Flow<List<CartInfo>> = cartDao.getAllCartInfo()
 
-    override fun getCartInfoById(hash: String): Flow<CartInfo> = cartDao.getCartInfoById(hash)
+    override fun getBottomSheetCartInfoByHash(hash: String): Flow<UiBottomSheet> {
+        return cartDao.getCartInfoById(hash).map { cartInfo ->
+            EntityMapper.mapToUiBottomSheet(cartInfo)
+        }
+    }
 
     @WorkerThread
-    override suspend fun insertCartInfo(cartInfo: CartInfo) = cartDao.insertCartInfo(cartInfo)
+    override suspend fun insertCartInfo(hash: String, checked: Boolean, amount: Int) {
+        cartDao.insertCartInfo(
+            DomainMapper.mapToCartInfo(
+                hash, checked, amount
+            )
+        )
+    }
 
     @WorkerThread
     override suspend fun deleteCartInfo(hash: String) = cartDao.deleteCartInfo(hash)
@@ -27,6 +42,7 @@ class CartRepositoryImpl @Inject constructor(
     override suspend fun isExistCartInfo(hash: String): Boolean = cartDao.isExistCartInfo(hash)
 
     override fun getAllCartJoinList(): Flow<List<Cart>> = cartDao.getAllCartJoinList()
+
     @WorkerThread
     override suspend fun updateCartChecked(hash: String, checked: Boolean) {
         cartDao.updateCartChecked(hash, checked)
@@ -42,14 +58,17 @@ class CartRepositoryImpl @Inject constructor(
     }
 
     override suspend fun insertAndDeleteCartItems(
-        cartInfo: List<CartInfo>,
+        uiCartOrderDishJoinList: List<UiCartOrderDishJoinItem>,
         deleteHashes: List<String>
     ) {
-        cartDao.insertAndDeleteCartItems(cartInfo, deleteHashes)
+        cartDao.insertAndDeleteCartItems(
+            uiCartOrderDishJoinList.map { DomainMapper.mapToCartInfo(it) },
+            deleteHashes
+        )
     }
 
     override suspend fun deleteCartInfoByHashList(deleteHashes: List<String>) {
-        Log.e("repo impl", "deleteVarArgByHashList: $deleteHashes", )
+        Log.e("repo impl", "deleteVarArgByHashList: $deleteHashes")
         cartDao.deleteCartInfoByHashList(deleteHashes)
     }
 

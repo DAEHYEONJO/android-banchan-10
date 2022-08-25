@@ -5,13 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
-import com.woowahan.android10.deliverbanchan.data.local.model.entity.LocalDish
-import com.woowahan.android10.deliverbanchan.data.local.model.entity.OrderInfo
-import com.woowahan.android10.deliverbanchan.data.local.model.entity.RecentViewedInfo
-import com.woowahan.android10.deliverbanchan.domain.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.model.UiDetailInfo
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
+import com.woowahan.android10.deliverbanchan.domain.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.usecase.*
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,7 +28,7 @@ class DetailViewModel @Inject constructor(
 ) : ViewModel() {
 
     // Cart Flow 감지하고(어차피 app bar 용도로 만들어 주어야함.) 현재 hash에 해당하는 isInserted값 업데이트하기
-    companion object{
+    companion object {
         const val TAG = "DetailViewModel"
     }
 
@@ -74,12 +70,12 @@ class DetailViewModel @Inject constructor(
     }
 
     private fun getAllOrderInfo() = viewModelScope.launch {
-
         getAllOrderInfoListUseCase(this).collect {
-            val deliveringOrder: OrderInfo? = it.find { order ->
+            it.count { order ->
                 order.isDelivering
+            }.let { currentDeliveringOrderCount ->
+                isOrderingExist.value = currentDeliveringOrderCount >= 1
             }
-            isOrderingExist.value = deliveringOrder?.let { true } ?: false
         }
     }
 
@@ -100,12 +96,9 @@ class DetailViewModel @Inject constructor(
             viewModelScope.launch {
                 with(dishItem) {
                     insertLocalDishAndRecentUseCase(
-                        LocalDish(
-                            hash, title, image, description, nPrice, sPrice
-                        ),
-                        RecentViewedInfo(
-                            hash = hash, timeStamp = System.currentTimeMillis()
-                        )
+                        dishItem,
+                        hash,
+                        System.currentTimeMillis()
                     )
                 }
             }
@@ -122,7 +115,7 @@ class DetailViewModel @Inject constructor(
             }.catch { exception ->
                 _uiDetailInfo.value = UiState.Loading(false)
                 _uiDetailInfo.value = UiState.Error(exception.message.toString())
-                Log.e(TAG, "getDetailDishInfo: 뷰모델 캐치 에러 ${exception.message.toString()}", )
+                Log.e(TAG, "getDetailDishInfo: 뷰모델 캐치 에러 ${exception.message.toString()}")
             }.flowOn(Dispatchers.IO).collect { result ->
                 _uiDetailInfo.value = UiState.Loading(false)
                 when (result) {
@@ -132,7 +125,7 @@ class DetailViewModel @Inject constructor(
                     }
                     is BaseResult.Error -> {
                         _uiDetailInfo.value = UiState.Error(result.error)
-                        Log.e(TAG, "getDetailDishInfo: 뷰모델 베이스 에러 : ${result.error}", )
+                        Log.e(TAG, "getDetailDishInfo: 뷰모델 베이스 에러 : ${result.error}")
                     }
                 }
             }
@@ -148,13 +141,7 @@ class DetailViewModel @Inject constructor(
                         updateCartAmount(hash = it.hash, amount = _itemCount.value)
                     } else {
                         //새로 장바구니에 들어가는 경우
-                        insertCartInfoUseCase(
-                            CartInfo(
-                                hash = it.hash,
-                                checked = true,
-                                amount = _itemCount.value
-                            )
-                        )
+                        insertCartInfoUseCase(hash = it.hash, checked = true, amount = _itemCount.value)
                     }
                 }.onSuccess {
                     _insertSuccessEvent.emit(true)

@@ -1,4 +1,4 @@
-package com.woowahan.android10.deliverbanchan.presentation.cart.model
+package com.woowahan.android10.deliverbanchan.domain.model
 
 data class TempOrder(
     val hash: String,
