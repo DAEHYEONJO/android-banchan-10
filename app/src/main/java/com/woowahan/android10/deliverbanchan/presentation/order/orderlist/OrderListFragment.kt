@@ -17,7 +17,7 @@ import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
 import com.woowahan.android10.deliverbanchan.presentation.order.OrderViewModel
-import com.woowahan.android10.deliverbanchan.presentation.state.UiTempState
+import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -58,22 +58,22 @@ class OrderListFragment :
         }
     }
 
-    private fun <T> handleState(uiLocalState: UiTempState<T>) {
-        when (uiLocalState) {
-            is UiTempState.Empty -> {
+    private fun <T> handleState(uiState: UiState<T>) {
+        when (uiState) {
+            is UiState.Empty -> {
                 binding.orderRv.toGone()
                 binding.orderListTvEmptyMessage.toVisible()
             }
-            is UiTempState.Loading -> {
-                binding.orderListPb.isVisible = uiLocalState.isLoading
+            is UiState.Loading -> {
+                binding.orderListPb.isVisible = uiState.isLoading
             }
-            is UiTempState.ShowToast -> {
-                requireContext().showToast(uiLocalState.message)
+            is UiState.ShowToast -> {
+                requireContext().showToast(uiState.message)
             }
-            is UiTempState.Success -> {
+            is UiState.Success -> {
                 binding.orderRv.toVisible()
                 binding.orderListTvEmptyMessage.toGone()
-                val uiOrderList = uiLocalState.items as List<UiOrderListItem>
+                val uiOrderList = uiState.items as List<UiOrderListItem>
                 if (orderViewModel.fromNotificationExtraTimeStamp.value != 0L) {
                     orderViewModel.selectOrderListItem(uiOrderList.find { it.timeStamp==orderViewModel.fromNotificationExtraTimeStamp.value }!!.orderList)
                     orderViewModel.setFragmentIndex(1)
@@ -81,7 +81,7 @@ class OrderListFragment :
                     orderListAdapter.submitList(uiOrderList)
                 }
             }
-            is UiTempState.Error -> {}
+            is UiState.Error -> {}
         }
     }
 }

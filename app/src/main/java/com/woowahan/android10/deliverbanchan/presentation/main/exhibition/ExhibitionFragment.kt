@@ -16,7 +16,7 @@ import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
-import com.woowahan.android10.deliverbanchan.presentation.state.UiTempState
+import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -80,22 +80,22 @@ class ExhibitionFragment :
         }
     }
 
-    private fun handleStateChange(state: UiTempState<List<UiExhibitionItem>>) {
+    private fun handleStateChange(state: UiState<List<UiExhibitionItem>>) {
         when (state) {
-            is UiTempState.Loading -> {
+            is UiState.Loading -> {
                 binding.exhibitionPb.toVisible()
                 binding.errorLayout.errorCl.toGone()
             }
-            is UiTempState.Success -> {
+            is UiState.Success -> {
                 Log.e(TAG, "exhibition success")
                 binding.exhibitionPb.toGone()
                 binding.exhibitionRv.toVisible()
                 exhibitionAdapter.submitList(state.items)
             }
-            is UiTempState.ShowToast -> {
+            is UiState.ShowToast -> {
                 requireContext().showToast(state.message)
             }
-            is UiTempState.Error -> {
+            is UiState.Error -> {
                 binding.exhibitionPb.toGone()
                 binding.exhibitionRv.toGone()
                 binding.errorLayout.errorCl.toVisible()
@@ -110,7 +110,7 @@ class ExhibitionFragment :
     }
 
     private fun checkErrorState() {
-        if (exhibitionViewModel.exhibitionState.value is UiTempState.Error) {
+        if (exhibitionViewModel.exhibitionState.value is UiState.Error) {
             exhibitionViewModel.getExhibitionList()
         }
     }

@@ -18,7 +18,7 @@ import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
 import com.woowahan.android10.deliverbanchan.presentation.main.common.MainGridAdapter
-import com.woowahan.android10.deliverbanchan.presentation.state.UiTempState
+import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import com.woowahan.android10.deliverbanchan.presentation.view.SpinnerEventListener
 import com.woowahan.android10.deliverbanchan.presentation.view.adapter.SortSpinnerAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -100,21 +100,21 @@ class SideDishFragment :
         }
     }
 
-    private fun handleStateChange(state: UiTempState<List<UiDishItem>>) {
+    private fun handleStateChange(state: UiState<List<UiDishItem>>) {
         when (state) {
-            is UiTempState.Loading -> {
+            is UiState.Loading -> {
                 binding.sideDishPb.toVisible()
                 binding.errorLayout.errorCl.toGone()
             }
-            is UiTempState.Success -> {
+            is UiState.Success -> {
                 binding.sideDishPb.toGone()
                 binding.sideDishCdl.toVisible()
                 sideDishAdapter.submitList(state.items)
             }
-            is UiTempState.ShowToast -> {
+            is UiState.ShowToast -> {
                 requireContext().showToast(state.message)
             }
-            is UiTempState.Error -> {
+            is UiState.Error -> {
                 binding.sideDishPb.toGone()
                 binding.sideDishCdl.toGone()
                 binding.errorLayout.errorCl.toVisible()
@@ -156,7 +156,7 @@ class SideDishFragment :
     }
 
     private fun checkErrorState() {
-        if (sideDishViewModel.sideState.value is UiTempState.Error) {
+        if (sideDishViewModel.sideState.value is UiState.Error) {
             sideDishViewModel.getSideDishList()
         }
     }

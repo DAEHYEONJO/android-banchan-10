@@ -23,12 +23,11 @@ import com.woowahan.android10.deliverbanchan.presentation.detail.adapter.DetailS
 import com.woowahan.android10.deliverbanchan.presentation.detail.adapter.DetailThumbImageAdapter
 import com.woowahan.android10.deliverbanchan.presentation.dialogs.dialog.CartDialogFragment
 import com.woowahan.android10.deliverbanchan.presentation.order.OrderActivity
-import com.woowahan.android10.deliverbanchan.presentation.state.UiTempState
+import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlin.math.log
 
 @AndroidEntryPoint
 class DetailActivity :
@@ -105,22 +104,22 @@ class DetailActivity :
 
         detailViewModel.uiDetailInfo.flowWithLifecycle(lifecycle).onEach { uiDetailState ->
             when (uiDetailState) {
-                is UiTempState.Loading -> {
+                is UiState.Loading -> {
                     binding.detailRv.toGone()
                     binding.detailPb.toVisible()
                 }
-                is UiTempState.Success -> {
+                is UiState.Success -> {
                     binding.detailRv.toVisible()
                     binding.detailPb.toGone()
                     detailThumbImageAdapter.submitList(listOf(uiDetailState.items.thumbList))
                     detailContentAdapter.submitList(listOf(uiDetailState.items))
                     detailSectionImageAdapter.submitList(uiDetailState.items.detailSection)
                 }
-                is UiTempState.ShowToast -> {
+                is UiState.ShowToast -> {
                     binding.detailPb.toGone()
                     showToast(uiDetailState.message)
                 }
-                is UiTempState.Error -> {
+                is UiState.Error -> {
                     binding.detailPb.toGone()
                     showToast(uiDetailState.errorCode.toString() + "에러 에러 삐용 삐용")
                 }

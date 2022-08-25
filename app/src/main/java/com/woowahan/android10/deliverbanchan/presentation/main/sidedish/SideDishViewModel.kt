@@ -9,7 +9,7 @@ import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResu
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllCartInfoHashSetUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetThemeDishListUseCase
-import com.woowahan.android10.deliverbanchan.presentation.state.UiTempState
+import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -26,8 +26,8 @@ class SideDishViewModel @Inject constructor(
         const val THEME = "side"
     }
 
-    private val _sideState = MutableStateFlow<UiTempState<List<UiDishItem>>>(UiTempState.Init)
-    val sideState: StateFlow<UiTempState<List<UiDishItem>>> get() = _sideState
+    private val _sideState = MutableStateFlow<UiState<List<UiDishItem>>>(UiState.Init)
+    val sideState: StateFlow<UiState<List<UiDishItem>>> get() = _sideState
     val sideListSize = MutableLiveData(0)
     private val _curSideDishSpinnerPosition = MutableLiveData<Int>(0)
     val curSideDishSpinnerPosition: LiveData<Int> get() = _curSideDishSpinnerPosition
@@ -35,19 +35,19 @@ class SideDishViewModel @Inject constructor(
     val preSideDishSpinnerPosition: LiveData<Int> get() = _preSideDishSpinnerPosition
 
     private fun setLoading() {
-        _sideState.value = UiTempState.Loading(true)
+        _sideState.value = UiState.Loading(true)
     }
 
     private fun hideLoading() {
-        _sideState.value = UiTempState.Loading(false)
+        _sideState.value = UiState.Loading(false)
     }
 
     private fun showToast(message: String) {
-        _sideState.value = UiTempState.ShowToast(message)
+        _sideState.value = UiState.ShowToast(message)
     }
 
     private fun catchError(errorCode: Int) {
-        _sideState.value = UiTempState.Error(errorCode)
+        _sideState.value = UiState.Error(errorCode)
     }
 
     init {
@@ -59,12 +59,12 @@ class SideDishViewModel @Inject constructor(
         // cart flow collect 시 , 장바구니 insert 여부 확인함
         viewModelScope.launch {
             getAllCartInfoSetUseCase().collect { cartInfoHashMap ->
-                if (_sideState.value is UiTempState.Success){
+                if (_sideState.value is UiState.Success){
                     val tempList = mutableListOf<UiDishItem>()
-                    (_sideState.value as UiTempState.Success).items.forEach {
+                    (_sideState.value as UiState.Success).items.forEach {
                         tempList.add(it.copy(isInserted = cartInfoHashMap.contains(it.hash)))
                     }
-                    _sideState.value = UiTempState.Success(tempList)
+                    _sideState.value = UiState.Success(tempList)
                 }
             }
         }
@@ -82,7 +82,7 @@ class SideDishViewModel @Inject constructor(
             hideLoading()
             when (result) {
                 is BaseResult.Success -> {
-                    _sideState.value = UiTempState.Success(result.data)
+                    _sideState.value = UiState.Success(result.data)
                     sideListSize.value = result.data.size
                 }
                 is BaseResult.Error -> catchError(result.errorCode)
@@ -91,7 +91,7 @@ class SideDishViewModel @Inject constructor(
     }
 
     fun changeSoupItemIsInserted(hash: String){
-        ((_sideState.value as UiTempState.Success).items).let { uiDishList ->
+        ((_sideState.value as UiState.Success).items).let { uiDishList ->
             val newList = mutableListOf<UiDishItem>().apply {
                 uiDishList.forEach { uiDishItem ->
                     if (uiDishItem.hash == hash){
@@ -101,7 +101,7 @@ class SideDishViewModel @Inject constructor(
                     }
                 }
             }
-            _sideState.value = UiTempState.Success(newList)
+            _sideState.value = UiState.Success(newList)
         }
     }
 
@@ -110,12 +110,12 @@ class SideDishViewModel @Inject constructor(
             _preSideDishSpinnerPosition.value = _curSideDishSpinnerPosition.value
         }
         _curSideDishSpinnerPosition.value = position
-        if (_sideState.value is UiTempState.Success) {
+        if (_sideState.value is UiState.Success) {
             _sideState.value = when (_curSideDishSpinnerPosition.value) {
-                1 -> UiTempState.Success((_sideState.value as UiTempState.Success).items.sortedBy { -it.sPrice }) // 금액 내림차순
-                2 -> UiTempState.Success((_sideState.value as UiTempState.Success).items.sortedBy { it.sPrice }) // 금액 오름차순
-                3 -> UiTempState.Success((_sideState.value as UiTempState.Success).items.sortedBy { -it.salePercentage }) // 할인률 내림차순
-                else -> UiTempState.Success((_sideState.value as UiTempState.Success).items.sortedBy { it.index }) // 기본 정렬순
+                1 -> UiState.Success((_sideState.value as UiState.Success).items.sortedBy { -it.sPrice }) // 금액 내림차순
+                2 -> UiState.Success((_sideState.value as UiState.Success).items.sortedBy { it.sPrice }) // 금액 오름차순
+                3 -> UiState.Success((_sideState.value as UiState.Success).items.sortedBy { -it.salePercentage }) // 할인률 내림차순
+                else -> UiState.Success((_sideState.value as UiState.Success).items.sortedBy { it.index }) // 기본 정렬순
             }
         }
     }

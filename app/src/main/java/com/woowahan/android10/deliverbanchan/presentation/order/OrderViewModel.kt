@@ -9,8 +9,7 @@ import com.woowahan.android10.deliverbanchan.domain.model.UiOrderInfo
 import com.woowahan.android10.deliverbanchan.domain.model.UiOrderListItem
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllOrderJoinListUseCase
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartCompleteHeader
-import com.woowahan.android10.deliverbanchan.presentation.state.UiLocalState
-import com.woowahan.android10.deliverbanchan.presentation.state.UiTempState
+import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -37,8 +36,8 @@ class OrderViewModel @Inject constructor(
     val reloadBtnClicked: LiveData<Boolean> get() = _reloadBtnClicked
 
     private val _allOrderJoinState =
-        MutableStateFlow<UiTempState<List<UiOrderListItem>>>(UiTempState.Init)
-    val allOrderJoinState: StateFlow<UiTempState<List<UiOrderListItem>>> get() = _allOrderJoinState
+        MutableStateFlow<UiState<List<UiOrderListItem>>>(UiState.Init)
+    val allOrderJoinState: StateFlow<UiState<List<UiOrderListItem>>> get() = _allOrderJoinState
 
     private val _fromNotificationExtraTimeStamp = MutableStateFlow(0L)
     val fromNotificationExtraTimeStamp = _fromNotificationExtraTimeStamp.asStateFlow()
@@ -74,13 +73,13 @@ class OrderViewModel @Inject constructor(
     private fun getAllOrderList() {
         viewModelScope.launch {
             getAllOrderJoinListUseCase().onStart {
-                _allOrderJoinState.value = UiTempState.Loading(true)
+                _allOrderJoinState.value = UiState.Loading(true)
             }.catch { exception ->
-                _allOrderJoinState.value = UiTempState.Loading(false)
-                _allOrderJoinState.value = UiTempState.ShowToast(exception.message.toString())
+                _allOrderJoinState.value = UiState.Loading(false)
+                _allOrderJoinState.value = UiState.ShowToast(exception.message.toString())
             }.collect {
-                _allOrderJoinState.value = UiTempState.Loading(false)
-                if (it.isEmpty()) _allOrderJoinState.value = UiTempState.Empty(true)
+                _allOrderJoinState.value = UiState.Loading(false)
+                if (it.isEmpty()) _allOrderJoinState.value = UiState.Empty(true)
                 else {
                     val map = it.groupBy { it.timeStamp }
                     // orderList 플로우가 감지된 경우 만약, 배송완료 화면에 들어와 있다면 값 바꿔주기
@@ -102,7 +101,7 @@ class OrderViewModel @Inject constructor(
                             uiCartJointItemLIst
                         )
                     }
-                    _allOrderJoinState.value = UiTempState.Success(list)
+                    _allOrderJoinState.value = UiState.Success(list)
                 }
             }
         }

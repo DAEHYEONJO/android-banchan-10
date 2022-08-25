@@ -26,7 +26,7 @@ import com.woowahan.android10.deliverbanchan.presentation.cart.main.adapter.Cart
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartCompleteHeader.Companion.ESTIMATED_DELIVERY_TIME
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
 import com.woowahan.android10.deliverbanchan.presentation.dialogs.dialog.NumberDialogFragment
-import com.woowahan.android10.deliverbanchan.presentation.state.UiLocalState
+import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -133,12 +133,12 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
 
     private fun initAdapterList() {
         with(cartViewModel) {
-            allCartJoinState.flowWithLifecycle(lifecycle).onEach { uiLocalState ->
-                handleState(cartTopBodyAdapter, uiLocalState)
+            allCartJoinState.flowWithLifecycle(lifecycle).onEach { uiTempState ->
+                handleState(cartTopBodyAdapter, uiTempState)
             }.launchIn(lifecycleScope)
 
-            allRecentlyJoinState.flowWithLifecycle(lifecycle).onEach { uiLocalState ->
-                handleState(cartRecentViewedFooterAdapter, uiLocalState)
+            allRecentlyJoinState.flowWithLifecycle(lifecycle).onEach { uiTempState ->
+                handleState(cartRecentViewedFooterAdapter, uiTempState)
             }.launchIn(lifecycleScope)
 
             itemCartHeaderData.observe(viewLifecycleOwner){ uiCartHeader ->
@@ -202,28 +202,28 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
         }
     }
 
-    private fun <A, T> handleState(adapter: A, uiLocalState: UiLocalState<T>) {
-        when (uiLocalState) {
-            is UiLocalState.Empty -> {}
-            is UiLocalState.Loading -> {}
-            is UiLocalState.ShowToast -> {
-                requireContext().showToast(uiLocalState.message)
+    private fun <A, T> handleState(adapter: A, uiState: UiState<T>) {
+        when (uiState) {
+            is UiState.Empty -> {}
+            is UiState.Loading -> {}
+            is UiState.ShowToast -> {
+                requireContext().showToast(uiState.message)
             }
-            is UiLocalState.Success -> {
+            is UiState.Success -> {
                 when (adapter) {
                     is CartDishTopBodyAdapter -> {
-                        adapter.submitList(uiLocalState.uiDishItems as List<UiCartOrderDishJoinItem>)
+                        adapter.submitList(uiState.items as List<UiCartOrderDishJoinItem>)
                     }
                     is CartRecentViewedFooterAdapter -> {
                         with(adapter) {
                             recentOnDishItemClickListener = this@CartMainFragment
-                            uiRecentJoinList = uiLocalState.uiDishItems as List<UiDishItem>
+                            uiRecentJoinList = uiState.items as List<UiDishItem>
                             notifyDataSetChanged()
                         }
                     }
                 }
             }
-            is UiLocalState.Error -> {}
+            is UiState.Error -> {}
         }
     }
 

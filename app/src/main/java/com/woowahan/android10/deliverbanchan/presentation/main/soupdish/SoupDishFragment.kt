@@ -19,7 +19,7 @@ import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
 import com.woowahan.android10.deliverbanchan.presentation.main.common.MainGridAdapter
 import com.woowahan.android10.deliverbanchan.presentation.main.host.DishViewModel
-import com.woowahan.android10.deliverbanchan.presentation.state.UiTempState
+import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import com.woowahan.android10.deliverbanchan.presentation.view.SpinnerEventListener
 import com.woowahan.android10.deliverbanchan.presentation.view.adapter.SortSpinnerAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -103,22 +103,22 @@ class SoupDishFragment :
         }
     }
 
-    private fun handleStateChange(state: UiTempState<List<UiDishItem>>) {
+    private fun handleStateChange(state: UiState<List<UiDishItem>>) {
         when (state) {
-            is UiTempState.Loading -> {
+            is UiState.Loading -> {
                 binding.soupPb.toVisible()
                 binding.errorLayout.errorCl.toGone()
             }
-            is UiTempState.Success -> {
+            is UiState.Success -> {
                 binding.soupPb.toGone()
                 binding.soupCdl.toVisible()
                 mainGridAdapter.submitList(state.items)
             }
-            is UiTempState.ShowToast -> {
+            is UiState.ShowToast -> {
                 Log.e("SoupDishFragment", "show toast")
                 requireContext().showToast(state.message)
             }
-            is UiTempState.Error -> {
+            is UiState.Error -> {
                 binding.soupPb.toGone()
                 binding.soupCdl.toGone()
                 binding.errorLayout.errorCl.toVisible()
@@ -160,7 +160,7 @@ class SoupDishFragment :
     }
 
     private fun checkErrorState() {
-        if (soupViewModel.soupState.value is UiTempState.Error) {
+        if (soupViewModel.soupState.value is UiState.Error) {
             soupViewModel.setSoupDishesState()
         }
     }

@@ -23,7 +23,7 @@ import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
 import com.woowahan.android10.deliverbanchan.presentation.detail.DetailActivity
 import com.woowahan.android10.deliverbanchan.presentation.dialogs.bottomsheet.CartBottomSheetFragment
 import com.woowahan.android10.deliverbanchan.presentation.main.common.MainGridAdapter
-import com.woowahan.android10.deliverbanchan.presentation.state.UiTempState
+import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import com.woowahan.android10.deliverbanchan.presentation.view.SpinnerEventListener
 import com.woowahan.android10.deliverbanchan.presentation.view.adapter.SortSpinnerAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -187,22 +187,22 @@ class MainDishFragment :
         }
     }
 
-    private fun handleStateChange(state: UiTempState<List<UiDishItem>>) {
+    private fun handleStateChange(state: UiState<List<UiDishItem>>) {
         when (state) {
-            is UiTempState.Loading -> {
+            is UiState.Loading -> {
                 binding.maindishPb.toVisible()
                 binding.errorLayout.errorCl.toGone()
             }
-            is UiTempState.Success -> {
+            is UiState.Success -> {
                 binding.maindishPb.toGone()
                 binding.maindishCdl.toVisible()
                 mainDishAdapter.submitList(state.items)
                 mainDishLinearAdapter.submitList(state.items)
             }
-            is UiTempState.ShowToast -> {
+            is UiState.ShowToast -> {
                 requireContext().showToast(state.message)
             }
-            is UiTempState.Error -> {
+            is UiState.Error -> {
                 binding.maindishPb.toGone()
                 binding.maindishCdl.toGone()
                 binding.errorLayout.errorCl.toVisible()
@@ -217,7 +217,7 @@ class MainDishFragment :
     }
 
     private fun checkErrorState() {
-        if (mainDishViewModel.mainDishState.value is UiTempState.Error) {
+        if (mainDishViewModel.mainDishState.value is UiState.Error) {
             mainDishViewModel.getMainDishList()
         }
     }
