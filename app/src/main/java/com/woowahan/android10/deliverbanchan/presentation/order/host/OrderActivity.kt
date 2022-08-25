@@ -1,4 +1,4 @@
-package com.woowahan.android10.deliverbanchan.presentation.order
+package com.woowahan.android10.deliverbanchan.presentation.order.host
 
 import android.os.Bundle
 import android.util.Log
@@ -6,19 +6,17 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
 import androidx.fragment.app.commit
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.ActivityOrderBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseActivity
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEventWithDuration
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
+import com.woowahan.android10.deliverbanchan.presentation.order.viewmodel.OrderViewModel
 import com.woowahan.android10.deliverbanchan.presentation.order.orderlist.OrderListFragment
 import com.woowahan.android10.deliverbanchan.presentation.order.orderlistdetail.OrderDetailFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class OrderActivity : BaseActivity<ActivityOrderBinding>(R.layout.activity_order, "OrderActivity") {

@@ -1,4 +1,4 @@
-package com.woowahan.android10.deliverbanchan.presentation.view
+package com.woowahan.android10.deliverbanchan.presentation.view.spinner
 
 import android.content.Context
 import android.util.AttributeSet

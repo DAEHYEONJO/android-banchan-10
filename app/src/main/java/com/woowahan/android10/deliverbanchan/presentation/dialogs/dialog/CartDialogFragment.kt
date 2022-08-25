@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.woowahan.android10.deliverbanchan.databinding.FragmentCartDialogBinding
-import com.woowahan.android10.deliverbanchan.presentation.base.click_listener.OnCartDialogClickListener
+import com.woowahan.android10.deliverbanchan.presentation.base.listeners.OnCartDialogClickListener
 import javax.inject.Inject
 import javax.inject.Singleton
 

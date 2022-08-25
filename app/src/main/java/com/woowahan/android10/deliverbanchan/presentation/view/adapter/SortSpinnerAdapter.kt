@@ -11,7 +11,7 @@ import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.ItemSortSpinnerDropDownBinding
 import com.woowahan.android10.deliverbanchan.databinding.ItemSortSpinnerSelectedBinding
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.dpToPx
-import com.woowahan.android10.deliverbanchan.presentation.view.SortSpinnerItem
+import com.woowahan.android10.deliverbanchan.presentation.view.spinner.SortSpinnerItem
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.FragmentScoped
 import javax.inject.Inject

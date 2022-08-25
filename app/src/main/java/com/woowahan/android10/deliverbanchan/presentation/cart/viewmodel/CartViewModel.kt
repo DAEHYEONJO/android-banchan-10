@@ -1,4 +1,4 @@
-package com.woowahan.android10.deliverbanchan.presentation.cart
+package com.woowahan.android10.deliverbanchan.presentation.cart.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.LiveData

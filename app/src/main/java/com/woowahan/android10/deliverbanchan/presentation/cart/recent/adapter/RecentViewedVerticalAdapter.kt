@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.databinding.ItemRecentViewedBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
-import com.woowahan.android10.deliverbanchan.presentation.base.click_listener.OnDishItemClickListener
+import com.woowahan.android10.deliverbanchan.presentation.base.listeners.OnDishItemClickListener
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.dpToPx
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
 import dagger.hilt.android.scopes.ActivityRetainedScoped
