@@ -14,7 +14,7 @@ import javax.inject.Singleton
 @Singleton
 class GetThemeDishListUseCase @Inject constructor(
     private val dishItemRepository: DishItemRepository,
-    private val isExistCartInfoUseCase: IsExistCartInfoUseCase
+    private val mapDishItemListToUiDishItemListUseCase: MapDishItemListToUiDishItemListUseCase
 ) {
 
     companion object {
@@ -25,28 +25,9 @@ class GetThemeDishListUseCase @Inject constructor(
             return dishItemRepository.getDishesByTheme(theme).map { response ->
                 when (response) {
                     is BaseResult.Success -> {
-                        BaseResult.Success(
-                            response.data.mapIndexed { index, dishItem ->
-                                val sPrice = dishItem.sPrice.convertPriceToInt()
-                                val nPrice = dishItem.nPrice.convertPriceToInt()
-                                val percentage =
-                                    if (nPrice == 0) 0 else 100 - (sPrice.toDouble() / nPrice * 100).toInt()
-                                UiDishItem(
-                                    hash = dishItem.detailHash,
-                                    title = dishItem.title,
-                                    isInserted = isExistCartInfoUseCase(dishItem.detailHash),
-                                    image = dishItem.image,
-                                    description = dishItem.description,
-                                    sPrice = sPrice,
-                                    nPrice = nPrice,
-                                    salePercentage = percentage,
-                                    index = index
-                                )
-                            }.toList()
-                        )
+                        BaseResult.Success(mapDishItemListToUiDishItemListUseCase(response.data))
                     }
                     is BaseResult.Error -> {
-                        Log.e(TAG, "invoke: ${response.errorCode}")
                         BaseResult.Error(errorCode = response.errorCode)
                     }
                 }

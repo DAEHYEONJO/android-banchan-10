@@ -10,7 +10,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class MapUiDishItemListUseCase @Inject constructor(
+class MapDishItemListToUiDishItemListUseCase @Inject constructor(
     private val isExistCartInfoUseCase: IsExistCartInfoUseCase,
 ) {
     suspend operator fun invoke(dishItemList: List<DishItem>): List<UiDishItem> {
