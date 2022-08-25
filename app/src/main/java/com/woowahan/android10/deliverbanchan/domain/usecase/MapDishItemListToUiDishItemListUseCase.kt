@@ -9,6 +9,7 @@ import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 import javax.inject.Singleton
 
+// 정리 완료
 @Singleton
 class MapDishItemListToUiDishItemListUseCase @Inject constructor(
     private val isExistCartInfoUseCase: IsExistCartInfoUseCase,

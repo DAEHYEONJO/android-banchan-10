@@ -1,6 +1,5 @@
 package com.woowahan.android10.deliverbanchan.domain.usecase
 
-import com.woowahan.android10.deliverbanchan.data.remote.model.DishDetail
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.model.UiDetailInfo
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
@@ -10,6 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
+// 정리 완료
 @ActivityRetainedScoped
 class GetDetailDishUseCase @Inject constructor(
     private val dishDetailRepository: DishDetailRepository
