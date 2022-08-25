@@ -9,5 +9,7 @@ import javax.inject.Singleton
 class InsertOrderInfoUseCase @Inject constructor(
     private val orderRepository: OrderRepository
 ){
-    suspend operator fun invoke(orderInfo: OrderInfo) = orderRepository.insertOrderInfo(orderInfo)
+    suspend operator fun invoke(orderInfo: OrderInfo) {
+        orderRepository.insertOrderInfo(orderInfo)
+    }
 }

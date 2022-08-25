@@ -4,11 +4,11 @@ import com.woowahan.android10.deliverbanchan.data.local.model.entity.LocalDish
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.RecentViewedInfo
 import com.woowahan.android10.deliverbanchan.domain.repository.local.DishRepository
 import com.woowahan.android10.deliverbanchan.domain.repository.local.RecentViewedRepository
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
-import javax.inject.Singleton
 
-
-@Singleton
+// 정리 완료
+@ActivityRetainedScoped
 class InsertRecentUseCase @Inject constructor(
     private val recentViewedRepository: RecentViewedRepository,
     private val dishRepository: DishRepository

@@ -14,7 +14,6 @@ import javax.inject.Singleton
 @Singleton
 class GetJoinUseCase @Inject constructor(
     private val cartRepository: CartRepository,
-    private val orderRepository: OrderRepository,
     private val recentRepository: RecentViewedRepository
 ) {
 
@@ -39,7 +38,7 @@ class GetJoinUseCase @Inject constructor(
         }
     }
 
-    suspend fun getAllRecentJoinListLimitSeven(): Flow<List<UiDishItem>> {
+    fun getAllRecentJoinListLimitSeven(): Flow<List<UiDishItem>> {
         return recentRepository.getAllRecentJoinListLimitSeven().map { recentlyViewedList ->
             recentlyViewedList.map { recentlyViewed ->
                 with(recentlyViewed) {
