@@ -5,10 +5,8 @@ import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentOrderListBinding
@@ -19,12 +17,10 @@ import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
 import com.woowahan.android10.deliverbanchan.presentation.order.OrderViewModel
-import com.woowahan.android10.deliverbanchan.presentation.state.UiLocalState
 import com.woowahan.android10.deliverbanchan.presentation.state.UiTempState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class OrderListFragment :
@@ -77,7 +73,7 @@ class OrderListFragment :
             is UiTempState.Success -> {
                 binding.orderRv.toVisible()
                 binding.orderListTvEmptyMessage.toGone()
-                val uiOrderList = uiLocalState.uiDishItems as List<UiOrderListItem>
+                val uiOrderList = uiLocalState.items as List<UiOrderListItem>
                 if (orderViewModel.fromNotificationExtraTimeStamp.value != 0L) {
                     orderViewModel.selectOrderListItem(uiOrderList.find { it.timeStamp==orderViewModel.fromNotificationExtraTimeStamp.value }!!.orderList)
                     orderViewModel.setFragmentIndex(1)

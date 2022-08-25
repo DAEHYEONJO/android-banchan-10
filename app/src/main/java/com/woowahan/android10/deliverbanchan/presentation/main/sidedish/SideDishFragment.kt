@@ -9,7 +9,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentSidedishBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
@@ -19,10 +18,9 @@ import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
 import com.woowahan.android10.deliverbanchan.presentation.main.common.MainGridAdapter
-import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import com.woowahan.android10.deliverbanchan.presentation.state.UiTempState
-import com.woowahan.android10.deliverbanchan.presentation.view.adapter.SortSpinnerAdapter
 import com.woowahan.android10.deliverbanchan.presentation.view.SpinnerEventListener
+import com.woowahan.android10.deliverbanchan.presentation.view.adapter.SortSpinnerAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -111,7 +109,7 @@ class SideDishFragment :
             is UiTempState.Success -> {
                 binding.sideDishPb.toGone()
                 binding.sideDishCdl.toVisible()
-                sideDishAdapter.submitList(state.uiDishItems)
+                sideDishAdapter.submitList(state.items)
             }
             is UiTempState.ShowToast -> {
                 requireContext().showToast(state.message)

@@ -12,9 +12,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentMaindishBinding
+import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
 import com.woowahan.android10.deliverbanchan.presentation.common.decorator.GridSpanCountTwoForMainDishDecorator
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
@@ -23,7 +23,7 @@ import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
 import com.woowahan.android10.deliverbanchan.presentation.detail.DetailActivity
 import com.woowahan.android10.deliverbanchan.presentation.dialogs.bottomsheet.CartBottomSheetFragment
 import com.woowahan.android10.deliverbanchan.presentation.main.common.MainGridAdapter
-import com.woowahan.android10.deliverbanchan.presentation.state.UiState
+import com.woowahan.android10.deliverbanchan.presentation.state.UiTempState
 import com.woowahan.android10.deliverbanchan.presentation.view.SpinnerEventListener
 import com.woowahan.android10.deliverbanchan.presentation.view.adapter.SortSpinnerAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -187,22 +187,22 @@ class MainDishFragment :
         }
     }
 
-    private fun handleStateChange(state: UiState) {
+    private fun handleStateChange(state: UiTempState<List<UiDishItem>>) {
         when (state) {
-            is UiState.IsLoading -> {
+            is UiTempState.Loading -> {
                 binding.maindishPb.toVisible()
                 binding.errorLayout.errorCl.toGone()
             }
-            is UiState.Success -> {
+            is UiTempState.Success -> {
                 binding.maindishPb.toGone()
                 binding.maindishCdl.toVisible()
-                mainDishAdapter.submitList(state.uiDishItems)
-                mainDishLinearAdapter.submitList(state.uiDishItems)
+                mainDishAdapter.submitList(state.items)
+                mainDishLinearAdapter.submitList(state.items)
             }
-            is UiState.ShowToast -> {
+            is UiTempState.ShowToast -> {
                 requireContext().showToast(state.message)
             }
-            is UiState.Error -> {
+            is UiTempState.Error -> {
                 binding.maindishPb.toGone()
                 binding.maindishCdl.toGone()
                 binding.errorLayout.errorCl.toVisible()
@@ -217,7 +217,7 @@ class MainDishFragment :
     }
 
     private fun checkErrorState() {
-        if (mainDishViewModel.mainDishState.value is UiState.Error) {
+        if (mainDishViewModel.mainDishState.value is UiTempState.Error) {
             mainDishViewModel.getMainDishList()
         }
     }

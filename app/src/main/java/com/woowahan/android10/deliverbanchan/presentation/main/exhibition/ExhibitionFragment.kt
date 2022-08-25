@@ -1,11 +1,8 @@
 package com.woowahan.android10.deliverbanchan.presentation.main.exhibition
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -14,15 +11,12 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentExhibitionBinding
+import com.woowahan.android10.deliverbanchan.domain.model.UiExhibitionItem
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
-import com.woowahan.android10.deliverbanchan.presentation.cart.CartActivity
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
-import com.woowahan.android10.deliverbanchan.presentation.detail.DetailActivity
-import com.woowahan.android10.deliverbanchan.presentation.dialogs.bottomsheet.CartBottomSheetFragment
-import com.woowahan.android10.deliverbanchan.presentation.dialogs.dialog.CartDialogFragment
-import com.woowahan.android10.deliverbanchan.presentation.state.ExhibitionUiState
+import com.woowahan.android10.deliverbanchan.presentation.state.UiTempState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -86,22 +80,22 @@ class ExhibitionFragment :
         }
     }
 
-    private fun handleStateChange(state: ExhibitionUiState) {
+    private fun handleStateChange(state: UiTempState<List<UiExhibitionItem>>) {
         when (state) {
-            is ExhibitionUiState.IsLoading -> {
+            is UiTempState.Loading -> {
                 binding.exhibitionPb.toVisible()
                 binding.errorLayout.errorCl.toGone()
             }
-            is ExhibitionUiState.Success -> {
+            is UiTempState.Success -> {
                 Log.e(TAG, "exhibition success")
                 binding.exhibitionPb.toGone()
                 binding.exhibitionRv.toVisible()
-                exhibitionAdapter.submitList(state.uiExhibitionItems)
+                exhibitionAdapter.submitList(state.items)
             }
-            is ExhibitionUiState.ShowToast -> {
+            is UiTempState.ShowToast -> {
                 requireContext().showToast(state.message)
             }
-            is ExhibitionUiState.Error -> {
+            is UiTempState.Error -> {
                 binding.exhibitionPb.toGone()
                 binding.exhibitionRv.toGone()
                 binding.errorLayout.errorCl.toVisible()
@@ -116,7 +110,7 @@ class ExhibitionFragment :
     }
 
     private fun checkErrorState() {
-        if (exhibitionViewModel.exhibitionState.value is ExhibitionUiState.Error) {
+        if (exhibitionViewModel.exhibitionState.value is UiTempState.Error) {
             exhibitionViewModel.getExhibitionList()
         }
     }

@@ -1,12 +1,14 @@
 package com.woowahan.android10.deliverbanchan.presentation.main.sidedish
 
 import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllCartInfoHashSetUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetThemeDishListUseCase
-import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import com.woowahan.android10.deliverbanchan.presentation.state.UiTempState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -19,6 +21,10 @@ class SideDishViewModel @Inject constructor(
     private val getSideDishListUseCase: GetThemeDishListUseCase,
     private val getAllCartInfoSetUseCase: GetAllCartInfoHashSetUseCase
 ): ViewModel(){
+
+    companion object{
+        const val THEME = "side"
+    }
 
     private val _sideState = MutableStateFlow<UiTempState<List<UiDishItem>>>(UiTempState.Init)
     val sideState: StateFlow<UiTempState<List<UiDishItem>>> get() = _sideState
@@ -55,7 +61,7 @@ class SideDishViewModel @Inject constructor(
             getAllCartInfoSetUseCase().collect { cartInfoHashMap ->
                 if (_sideState.value is UiTempState.Success){
                     val tempList = mutableListOf<UiDishItem>()
-                    (_sideState.value as UiTempState.Success).uiDishItems.forEach {
+                    (_sideState.value as UiTempState.Success).items.forEach {
                         tempList.add(it.copy(isInserted = cartInfoHashMap.contains(it.hash)))
                     }
                     _sideState.value = UiTempState.Success(tempList)
@@ -66,7 +72,7 @@ class SideDishViewModel @Inject constructor(
 
     fun getSideDishList() = viewModelScope.launch {
         Log.e("SideDishViewModel", "getSideDishList")
-        getSideDishListUseCase("side").onStart {
+        getSideDishListUseCase(THEME).onStart {
             setLoading()
         }.catch { exception ->
             hideLoading()
@@ -85,7 +91,7 @@ class SideDishViewModel @Inject constructor(
     }
 
     fun changeSoupItemIsInserted(hash: String){
-        ((_sideState.value as UiTempState.Success).uiDishItems).let { uiDishList ->
+        ((_sideState.value as UiTempState.Success).items).let { uiDishList ->
             val newList = mutableListOf<UiDishItem>().apply {
                 uiDishList.forEach { uiDishItem ->
                     if (uiDishItem.hash == hash){
@@ -106,10 +112,10 @@ class SideDishViewModel @Inject constructor(
         _curSideDishSpinnerPosition.value = position
         if (_sideState.value is UiTempState.Success) {
             _sideState.value = when (_curSideDishSpinnerPosition.value) {
-                1 -> UiTempState.Success((_sideState.value as UiTempState.Success).uiDishItems.sortedBy { -it.sPrice }) // 금액 내림차순
-                2 -> UiTempState.Success((_sideState.value as UiTempState.Success).uiDishItems.sortedBy { it.sPrice }) // 금액 오름차순
-                3 -> UiTempState.Success((_sideState.value as UiTempState.Success).uiDishItems.sortedBy { -it.salePercentage }) // 할인률 내림차순
-                else -> UiTempState.Success((_sideState.value as UiTempState.Success).uiDishItems.sortedBy { it.index }) // 기본 정렬순
+                1 -> UiTempState.Success((_sideState.value as UiTempState.Success).items.sortedBy { -it.sPrice }) // 금액 내림차순
+                2 -> UiTempState.Success((_sideState.value as UiTempState.Success).items.sortedBy { it.sPrice }) // 금액 오름차순
+                3 -> UiTempState.Success((_sideState.value as UiTempState.Success).items.sortedBy { -it.salePercentage }) // 할인률 내림차순
+                else -> UiTempState.Success((_sideState.value as UiTempState.Success).items.sortedBy { it.index }) // 기본 정렬순
             }
         }
     }

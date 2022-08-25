@@ -8,7 +8,7 @@ import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiExhibitionItem
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetUiExhibitionItemsUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllCartInfoHashSetUseCase
-import com.woowahan.android10.deliverbanchan.presentation.state.ExhibitionUiState
+import com.woowahan.android10.deliverbanchan.presentation.state.UiTempState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -22,8 +22,8 @@ class ExhibitionViewModel @Inject constructor(
     private val getAllCartInfoSetUseCase: GetAllCartInfoHashSetUseCase
 ) : ViewModel() {
 
-    private val _exhibitionState = MutableStateFlow<ExhibitionUiState>(ExhibitionUiState.Init)
-    val exhibitionState: StateFlow<ExhibitionUiState> get() = _exhibitionState
+    private val _exhibitionState = MutableStateFlow<UiTempState<List<UiExhibitionItem>>>(UiTempState.Init)
+    val exhibitionState: StateFlow<UiTempState<List<UiExhibitionItem>>> get() = _exhibitionState
 
     var exhibitionList = listOf<UiExhibitionItem>()
 
@@ -48,7 +48,7 @@ class ExhibitionViewModel @Inject constructor(
                     when (result) {
                         is BaseResult.Success -> {
                             exhibitionList = result.data
-                            _exhibitionState.value = ExhibitionUiState.Success(result.data)
+                            _exhibitionState.value = UiTempState.Success(result.data)
                         }
                         is BaseResult.Error -> catchError(result.errorCode)
                     }
@@ -60,9 +60,9 @@ class ExhibitionViewModel @Inject constructor(
     private fun setExhibitionCartInserted() { // 카트 DB 변화 시 자동 감지
         viewModelScope.launch {
             getAllCartInfoSetUseCase().collect { cartInfoHashSet ->
-                if (_exhibitionState.value is ExhibitionUiState.Success) {
+                if (_exhibitionState.value is UiTempState.Success) {
                     val tempList = mutableListOf<UiExhibitionItem>()
-                    (_exhibitionState.value as ExhibitionUiState.Success).uiExhibitionItems.forEach { uiExhibitionDishItem ->
+                    (_exhibitionState.value as UiTempState.Success).items.forEach { uiExhibitionDishItem ->
                         val newUiDishItemList = mutableListOf<UiDishItem>().apply {
                             uiExhibitionDishItem.uiDishItems.forEach { uiDishItem ->
                                 add(uiDishItem.copy(isInserted = cartInfoHashSet.contains(uiDishItem.hash)))
@@ -70,25 +70,25 @@ class ExhibitionViewModel @Inject constructor(
                         }
                         tempList.add(uiExhibitionDishItem.copy(uiDishItems = newUiDishItemList))
                     }
-                    _exhibitionState.value = ExhibitionUiState.Success(tempList)
+                    _exhibitionState.value = UiTempState.Success(tempList)
                 }
             }
         }
     }
 
     private fun setLoading() {
-        _exhibitionState.value = ExhibitionUiState.IsLoading(true)
+        _exhibitionState.value = UiTempState.Loading(true)
     }
 
     private fun hideLoading() {
-        _exhibitionState.value = ExhibitionUiState.IsLoading(false)
+        _exhibitionState.value = UiTempState.Loading(false)
     }
 
     private fun showToast(message: String) {
-        _exhibitionState.value = ExhibitionUiState.ShowToast(message)
+        _exhibitionState.value = UiTempState.ShowToast(message)
     }
 
     private fun catchError(errorCode: Int) { // 함수명 더 나은것이 있을까..
-        _exhibitionState.value = ExhibitionUiState.Error(errorCode)
+        _exhibitionState.value = UiTempState.Error(errorCode)
     }
 }

@@ -9,7 +9,7 @@ import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResu
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllCartInfoHashSetUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetThemeDishListUseCase
-import com.woowahan.android10.deliverbanchan.presentation.state.UiState
+import com.woowahan.android10.deliverbanchan.presentation.state.UiTempState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,8 +30,8 @@ class MainDishViewModel @Inject constructor(
         const val THEME = "main"
     }
 
-    private val _mainDishState = MutableStateFlow<UiState>(UiState.Init)
-    val mainDishState: StateFlow<UiState> get() = _mainDishState
+    private val _mainDishState = MutableStateFlow<UiTempState<List<UiDishItem>>>(UiTempState.Init)
+    val mainDishState: StateFlow<UiTempState<List<UiDishItem>>> get() = _mainDishState
 
     var mainDishList = listOf<UiDishItem>()
 
@@ -49,12 +49,12 @@ class MainDishViewModel @Inject constructor(
     private fun setMainDishCartInserted() { // 카트 DB 변화 시 자동 감지
         viewModelScope.launch {
             getAllCartInfoSetUseCase().collect { cartInfoHashSet ->
-                if (_mainDishState.value is UiState.Success) {
+                if (_mainDishState.value is UiTempState.Success) {
                     val tempList = mutableListOf<UiDishItem>()
-                    (_mainDishState.value as UiState.Success).uiDishItems.forEach {
+                    (_mainDishState.value as UiTempState.Success).items.forEach {
                         tempList.add(it.copy(isInserted = cartInfoHashSet.contains(it.hash)))
                     }
-                    _mainDishState.value = UiState.Success(tempList)
+                    _mainDishState.value = UiTempState.Success(tempList)
                 }
             }
         }
@@ -76,7 +76,7 @@ class MainDishViewModel @Inject constructor(
                     when (result) {
                         is BaseResult.Success -> {
                             mainDishList = result.data
-                            _mainDishState.value = UiState.Success(result.data)
+                            _mainDishState.value = UiTempState.Success(result.data)
                         }
                         is BaseResult.Error -> catchError(1)
                     }
@@ -86,19 +86,19 @@ class MainDishViewModel @Inject constructor(
     }
 
     private fun setLoading() {
-        _mainDishState.value = UiState.IsLoading(true)
+        _mainDishState.value = UiTempState.Loading(true)
     }
 
     private fun hideLoading() {
-        _mainDishState.value = UiState.IsLoading(false)
+        _mainDishState.value = UiTempState.Loading(false)
     }
 
     private fun showToast(message: String) {
-        _mainDishState.value = UiState.ShowToast(message)
+        _mainDishState.value = UiTempState.ShowToast(message)
     }
 
     private fun catchError(errorCode: Int) {
-        _mainDishState.value = UiState.Error(errorCode)
+        _mainDishState.value = UiTempState.Error(errorCode)
     }
 
     fun sortMainDishes(position: Int) {
@@ -107,12 +107,12 @@ class MainDishViewModel @Inject constructor(
             _preMainSpinnerPosition.value = _curMainSpinnerPosition.value
         }
         _curMainSpinnerPosition.value = position
-        if (_mainDishState.value is UiState.Success) {
+        if (_mainDishState.value is UiTempState.Success) {
             _mainDishState.value = when (_curMainSpinnerPosition.value) {
-                1 -> UiState.Success((_mainDishState.value as UiState.Success).uiDishItems.sortedBy { -it.sPrice }) // 금액 내림차순
-                2 -> UiState.Success((_mainDishState.value as UiState.Success).uiDishItems.sortedBy { it.sPrice }) // 금액 오름차순
-                3 -> UiState.Success((_mainDishState.value as UiState.Success).uiDishItems.sortedBy { -it.salePercentage }) // 할인률 내림차순
-                else -> UiState.Success((_mainDishState.value as UiState.Success).uiDishItems.sortedBy { it.index }) // 기본 정렬순
+                1 -> UiTempState.Success((_mainDishState.value as UiTempState.Success).items.sortedBy { -it.sPrice }) // 금액 내림차순
+                2 -> UiTempState.Success((_mainDishState.value as UiTempState.Success).items.sortedBy { it.sPrice }) // 금액 오름차순
+                3 -> UiTempState.Success((_mainDishState.value as UiTempState.Success).items.sortedBy { -it.salePercentage }) // 할인률 내림차순
+                else -> UiTempState.Success((_mainDishState.value as UiTempState.Success).items.sortedBy { it.index }) // 기본 정렬순
             }
         }
     }
