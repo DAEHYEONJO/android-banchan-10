@@ -15,7 +15,8 @@ import com.woowahan.android10.deliverbanchan.di.IoDispatcher
 import com.woowahan.android10.deliverbanchan.domain.model.UiCartOrderDishJoinItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiOrderInfo
-import com.woowahan.android10.deliverbanchan.domain.usecase.*
+import com.woowahan.android10.deliverbanchan.domain.usecase.CartUseCase
+import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllOrderInfoListUseCase
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.TempOrder
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartBottomBody
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartCompleteHeader
@@ -28,11 +29,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CartViewModel @Inject constructor(
-    private val getJoinUseCase: GetJoinUseCase,
     private val getAllOrderInfoListUseCase: GetAllOrderInfoListUseCase,
-    private val insertAndDeleteCartItemsUseCase: InsertAndDeleteCartItemsUseCase,
-    private val deleteCartInfoByHashListUseCase: DeleteCartInfoByHashListUseCase,
-    private val insertVarArgOrderInfoUseCase: InsertVarArgOrderInfoUseCase,
+    private val cartUseCase: CartUseCase,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
     application: Application
 ) : ViewModel() {
@@ -154,7 +152,7 @@ class CartViewModel @Inject constructor(
     }
 
     private fun getAllCartJoinList() = viewModelScope.launch {
-        getJoinUseCase.getCartJoinList().onStart {
+        cartUseCase.getCartJoinList().onStart {
             _allCartJoinState.value = UiLocalState.Loading(true)
         }.flowOn(dispatcher).catch { exception ->
             _allCartJoinState.value = UiLocalState.Loading(false)
@@ -219,7 +217,7 @@ class CartViewModel @Inject constructor(
     }
 
     private fun getAllRecentlyJoinList() = viewModelScope.launch {
-        getJoinUseCase.getAllRecentJoinListLimitSeven().onStart {
+        cartUseCase.getAllRecentJoinListLimitSeven().onStart {
             _allRecentlyJoinState.value = UiLocalState.Loading(true)
         }.flowOn(dispatcher).catch { exception ->
             _allRecentlyJoinState.value = UiLocalState.Loading(false)
@@ -304,7 +302,7 @@ class CartViewModel @Inject constructor(
             currentOrderTimeStamp = System.currentTimeMillis()
             orderHashList.clear()
             orderFirstItemTitle = "Title"
-            insertVarArgOrderInfoUseCase(
+            cartUseCase.insertVarArgOrderInfo(
                 _selectedCartItem.mapIndexed { inx, tempOrder ->
                     if (inx == 0) orderFirstItemTitle = tempOrder.title
                     orderHashList.add(tempOrder.hash)
@@ -318,13 +316,13 @@ class CartViewModel @Inject constructor(
                 }
             )
             _orderButtonClicked.emit(true)
-            deleteCartInfoByHashListUseCase(_selectedCartItem.map { it.hash }.toList())
+            cartUseCase.deleteCartInfoByHashList(_selectedCartItem.map { it.hash }.toList())
         }
     }
 
     fun updateAllCartItemChanged() {
         BanChanApplication.applicationScope.launch {
-            insertAndDeleteCartItemsUseCase(
+            cartUseCase.insertAndDeleteCartItems(
                 _uiCartJoinList.value!!.map {
                     CartInfo(
                         it.hash,

@@ -7,9 +7,8 @@ import com.woowahan.android10.deliverbanchan.domain.repository.local.RecentViewe
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 
-// 정리 완료
 @ActivityRetainedScoped
-class InsertRecentUseCase @Inject constructor(
+class InsertLocalDishAndRecentUseCase @Inject constructor(
     private val recentViewedRepository: RecentViewedRepository,
     private val dishRepository: DishRepository
 ) {

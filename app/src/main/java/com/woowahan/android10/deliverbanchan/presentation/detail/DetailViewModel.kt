@@ -11,7 +11,10 @@ import com.woowahan.android10.deliverbanchan.data.local.model.entity.RecentViewe
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.usecase.*
-import com.woowahan.android10.deliverbanchan.domain.usecase.remote.GetDetailDishUseCase
+import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllCartInfoUseCase
+import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllOrderInfoListUseCase
+import com.woowahan.android10.deliverbanchan.domain.usecase.InsertCartInfoUseCase
+import com.woowahan.android10.deliverbanchan.domain.usecase.GetDetailDishUseCase
 import com.woowahan.android10.deliverbanchan.presentation.state.UiDetailState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -22,7 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DetailViewModel @Inject constructor(
     private val getDetailDishUseCase: GetDetailDishUseCase,
-    private val insertRecentUseCase: InsertRecentUseCase,
+    private val insertLocalDishAndRecentUseCase: InsertLocalDishAndRecentUseCase,
     private val insertCartInfoUseCase: InsertCartInfoUseCase,
     private val updateCartAmount: UpdateCartAmount,
     private val getAllCartInfoUseCase: GetAllCartInfoUseCase,
@@ -55,12 +58,12 @@ class DetailViewModel @Inject constructor(
     private fun getAllCartInfo() = viewModelScope.launch {
         getAllCartInfoUseCase(this).collect { cartInfoList ->
             setCartIconText(cartInfoList.size)
+            // 디테일화면에서 insert하고, 다른곳 갔다가 다시 왔을때 카트에 있는것인지 없는것인지 판단하여 수량을 update할지
+            // 아예 cart에 insert할지 분기처리 하기 위하여 구현해놓은 부분
             currentUiDishItem?.let {
-                it.isInserted = cartInfoList
-                    .map { cartInfo ->
-                        cartInfo.hash
-                    }.toSet()
-                    .contains(it.hash)
+                it.isInserted = cartInfoList.map { cartInfo ->
+                    cartInfo.hash
+                }.toSet().contains(it.hash)
             }
         }
     }
@@ -91,7 +94,7 @@ class DetailViewModel @Inject constructor(
         currentUiDishItem?.let { dishItem ->
             viewModelScope.launch {
                 with(dishItem) {
-                    insertRecentUseCase(
+                    insertLocalDishAndRecentUseCase(
                         LocalDish(
                             hash, title, image, description, nPrice, sPrice
                         ),

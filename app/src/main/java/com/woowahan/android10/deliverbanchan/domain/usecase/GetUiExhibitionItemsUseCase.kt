@@ -1,15 +1,14 @@
-package com.woowahan.android10.deliverbanchan.domain.usecase.remote
+package com.woowahan.android10.deliverbanchan.domain.usecase
 
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.model.UiExhibitionItem
 import com.woowahan.android10.deliverbanchan.domain.repository.remote.DishItemRepository
-import com.woowahan.android10.deliverbanchan.domain.usecase.mapper.MapDishItemListToUiDishItemListUseCase
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@ActivityRetainedScoped
 class GetUiExhibitionItemsUseCase @Inject constructor(
     private val dishItemRepository: DishItemRepository,
     private val mapDishItemListToUiDishItemListUseCase: MapDishItemListToUiDishItemListUseCase

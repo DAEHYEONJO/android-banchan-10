@@ -1,16 +1,14 @@
-package com.woowahan.android10.deliverbanchan.domain.usecase.mapper
+package com.woowahan.android10.deliverbanchan.domain.usecase
 
 import com.woowahan.android10.deliverbanchan.data.remote.model.DishItem
 import com.woowahan.android10.deliverbanchan.domain.common.convertPriceToInt
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
-import com.woowahan.android10.deliverbanchan.domain.usecase.local.IsExistCartInfoUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 import javax.inject.Singleton
 
-// 정리 완료
 @Singleton
 class MapDishItemListToUiDishItemListUseCase @Inject constructor(
     private val isExistCartInfoUseCase: IsExistCartInfoUseCase,

@@ -1,15 +1,13 @@
-package com.woowahan.android10.deliverbanchan.domain.usecase.remote
+package com.woowahan.android10.deliverbanchan.domain.usecase
 
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.repository.remote.DishItemRepository
-import com.woowahan.android10.deliverbanchan.domain.usecase.mapper.MapDishItemListToUiDishItemListUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
-// 정리완료
 @Singleton
 class GetThemeDishListUseCase @Inject constructor(
     private val dishItemRepository: DishItemRepository,
