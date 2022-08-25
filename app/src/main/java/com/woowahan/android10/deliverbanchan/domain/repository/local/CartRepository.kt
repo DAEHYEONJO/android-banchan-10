@@ -12,7 +12,7 @@ interface CartRepository {
     fun getCartInfoById(hash: String): Flow<CartInfo>
 
     @WorkerThread
-    suspend fun insertCartInfo(cartInfo: CartInfo)
+    suspend fun insertCartInfo(hash: String, checked: Boolean, amount: Int)
 
     @WorkerThread
     suspend fun deleteCartInfo(hash: String)

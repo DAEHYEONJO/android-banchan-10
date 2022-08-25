@@ -3,14 +3,12 @@ package com.woowahan.android10.deliverbanchan.presentation.dialogs.bottomsheet
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.woowahan.android10.deliverbanchan.BanChanApplication
-import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
-import com.woowahan.android10.deliverbanchan.data.local.model.entity.LocalDish
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
-import com.woowahan.android10.deliverbanchan.domain.usecase.*
 import com.woowahan.android10.deliverbanchan.domain.usecase.CartUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.InsertCartInfoUseCase
+import com.woowahan.android10.deliverbanchan.domain.usecase.InsertLocalDishUseCase
+import com.woowahan.android10.deliverbanchan.domain.usecase.UpdateTimeStampRecentViewedByHashUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -66,23 +64,8 @@ class CartBottomSheetViewModel @Inject constructor(
             runCatching {
                 with(uiDishItem!!) {
                     updateTimeStampRecentViewedByHashUseCase(hash, System.currentTimeMillis())
-                    insertCartInfoUseCase(
-                        CartInfo(
-                            hash = hash,
-                            checked = true, // 기본값은 선택된 상태
-                            amount = _itemCount.value
-                        )
-                    )
-                    insertLocalDishUseCase(
-                        LocalDish(
-                            hash = hash,
-                            title = title,
-                            image = image,
-                            description = description,
-                            nPrice = nPrice,
-                            sPrice = sPrice
-                        )
-                    )
+                    insertCartInfoUseCase(hash = hash, checked = true, amount = _itemCount.value)
+                    insertLocalDishUseCase(uiDishItem)
                 }
             }.onSuccess {
                 Log.e("CartBottomSheetViewModel", "insert success")

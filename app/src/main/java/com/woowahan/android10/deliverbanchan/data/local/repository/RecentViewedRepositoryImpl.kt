@@ -4,6 +4,7 @@ import androidx.annotation.WorkerThread
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.woowahan.android10.deliverbanchan.data.local.dao.RecentViewedDao
+import com.woowahan.android10.deliverbanchan.data.local.mapper.DomainMapper
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.RecentViewedInfo
 import com.woowahan.android10.deliverbanchan.data.local.model.join.RecentViewed
 import com.woowahan.android10.deliverbanchan.domain.repository.local.RecentViewedRepository
@@ -17,9 +18,13 @@ class RecentViewedRepositoryImpl @Inject constructor(
     override fun getAllRecentViewedInfo(): Flow<List<RecentViewedInfo>> =
         recentlyViewedDao.getAllRecentViewedInfo()
 
-    @WorkerThread
-    override suspend fun insertRecentViewedInfo(recentViewedInfo: RecentViewedInfo) =
-        recentlyViewedDao.insertRecentViewedInfo(recentViewedInfo)
+    override suspend fun insertRecentViewedInfo(hash: String, timeStamp: Long) {
+        recentlyViewedDao.insertRecentViewedInfo(
+            DomainMapper.mapToRecentViewedInfo(
+                hash, timeStamp
+            )
+        )
+    }
 
     @WorkerThread
     override suspend fun deleteAllRecentViewedInfo() =

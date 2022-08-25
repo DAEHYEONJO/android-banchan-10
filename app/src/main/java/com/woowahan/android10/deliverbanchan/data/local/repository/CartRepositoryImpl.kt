@@ -3,6 +3,7 @@ package com.woowahan.android10.deliverbanchan.data.local.repository
 import android.util.Log
 import androidx.annotation.WorkerThread
 import com.woowahan.android10.deliverbanchan.data.local.dao.CartDao
+import com.woowahan.android10.deliverbanchan.data.local.mapper.DomainMapper
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
 import com.woowahan.android10.deliverbanchan.data.local.model.join.Cart
 import com.woowahan.android10.deliverbanchan.domain.repository.local.CartRepository
@@ -16,9 +17,14 @@ class CartRepositoryImpl @Inject constructor(
     override fun getAllCartInfo(): Flow<List<CartInfo>> = cartDao.getAllCartInfo()
 
     override fun getCartInfoById(hash: String): Flow<CartInfo> = cartDao.getCartInfoById(hash)
-
     @WorkerThread
-    override suspend fun insertCartInfo(cartInfo: CartInfo) = cartDao.insertCartInfo(cartInfo)
+    override suspend fun insertCartInfo(hash: String, checked: Boolean, amount: Int) {
+        cartDao.insertCartInfo(
+            DomainMapper.mapToCartInfo(
+                hash, checked, amount
+            )
+        )
+    }
 
     @WorkerThread
     override suspend fun deleteCartInfo(hash: String) = cartDao.deleteCartInfo(hash)
