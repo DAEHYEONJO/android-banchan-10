@@ -91,6 +91,7 @@ fun TextView.setOrderBtnText(isAvailableDelivery: Boolean, totalPrice: Int) {
     text = if (isAvailableDelivery) {
         resources.getString(R.string.order_format, totalPrice.convertPriceToString())
     } else {
+        setTextAppearance(R.style.Widget_TextView_NotoSansKR_GreyScaleWhite18_Medium_TextAppearance)
         resources.getString(R.string.item_cart_bottom_body_btn)
     }
 }
