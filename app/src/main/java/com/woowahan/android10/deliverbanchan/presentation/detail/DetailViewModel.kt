@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.woowahan.android10.deliverbanchan.data.local.model.entity.OrderInfo
 import com.woowahan.android10.deliverbanchan.domain.model.UiDetailInfo
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.model.response.BaseResult
@@ -71,12 +70,12 @@ class DetailViewModel @Inject constructor(
     }
 
     private fun getAllOrderInfo() = viewModelScope.launch {
-
         getAllOrderInfoListUseCase(this).collect {
-            val deliveringOrder: OrderInfo? = it.find { order ->
+            it.count { order ->
                 order.isDelivering
+            }.let { currentDeliveringOrderCount ->
+                isOrderingExist.value = currentDeliveringOrderCount >= 1
             }
-            isOrderingExist.value = deliveringOrder?.let { true } ?: false
         }
     }
 

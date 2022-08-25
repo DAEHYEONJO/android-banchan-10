@@ -39,21 +39,21 @@ class CartBottomSheetViewModel @Inject constructor(
     fun getCartInfoByHash() {
         Log.e("CartBottomSheetViewModel", "유아이디시아이템: uiDishItem: ${uiDishItem}", )
         BanChanApplication.applicationScope.launch {
-            cartUseCase.getCartInfoByHash(uiDishItem!!.hash).onStart {
+            cartUseCase.getBottomSheetInfoByHash(uiDishItem!!.hash).onStart {
 
             }.catch { exception ->
                 Log.e("CartBottomSheetViewModel", "${exception.message}")
-            }.flowOn(Dispatchers.IO).collect { cartInfo ->
-                Log.e("CartBottomSheetViewModel", "cartInfo : ${cartInfo}")
+            }.flowOn(Dispatchers.IO).collect { uiBottomSheet ->
+                Log.e("CartBottomSheetViewModel", "cartInfo : ${uiBottomSheet}")
 
-                if (cartInfo == null) {
+                if (uiBottomSheet == null) {
                     Log.e("CartBottomSheetViewModel", "null")
                     isCurrentItemInserted = false
                     isCurrentItemChecked = false
                 } else {
                     isCurrentItemInserted = true
-                    isCurrentItemChecked = cartInfo.checked
-                    _itemCount.value = cartInfo.amount
+                    isCurrentItemChecked = uiBottomSheet.checked
+                    _itemCount.value = uiBottomSheet.amount
                 }
             }
         }

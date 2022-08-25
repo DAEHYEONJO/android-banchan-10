@@ -9,7 +9,6 @@ import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
 import androidx.work.WorkManager
 import com.woowahan.android10.deliverbanchan.R
-import com.woowahan.android10.deliverbanchan.background.CartItemsDbWorker
 import com.woowahan.android10.deliverbanchan.background.getOneTimeRequestBuilder
 import com.woowahan.android10.deliverbanchan.databinding.ActivityCartBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseActivity
@@ -91,17 +90,9 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart, "
         }
     }
 
-    private fun makeWorkRequest(){
-        Log.e(TAG, "makeWorkRequest: 워크매니저콜", )
-        val worker = WorkManager.getInstance(application)
-        val workRequest = getOneTimeRequestBuilder<CartItemsDbWorker>(cartViewModel.getCartWorkerData())
-        worker.enqueue(workRequest)
-    }
-
     override fun onStop() {
         super.onStop()
         cartViewModel.updateAllCartItemChanged()
-        //makeWorkRequest()
     }
 
 }

@@ -3,7 +3,6 @@ package com.woowahan.android10.deliverbanchan.presentation.main.host
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.woowahan.android10.deliverbanchan.data.local.model.entity.OrderInfo
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllCartInfoUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllOrderInfoListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,11 +35,12 @@ class DishViewModel @Inject constructor(
     }
 
     private fun getAllOrderInfo() = viewModelScope.launch {
-        getAllOrderInfoListUseCase(this).collect{
-            val deliveringOrder: OrderInfo? = it.find { order ->
+        getAllOrderInfoListUseCase(this).collect {
+            it.count { order ->
                 order.isDelivering
+            }.let { currentDeliveringOrderCount ->
+                isOrderingExist.value = currentDeliveringOrderCount >= 1
             }
-            isOrderingExist.value = deliveringOrder?.let { true } ?: false
         }
     }
 
