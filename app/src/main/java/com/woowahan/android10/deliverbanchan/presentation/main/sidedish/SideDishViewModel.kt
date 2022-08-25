@@ -1,7 +1,10 @@
 package com.woowahan.android10.deliverbanchan.presentation.main.sidedish
 
 import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllCartInfoHashSetUseCase
@@ -19,8 +22,12 @@ class SideDishViewModel @Inject constructor(
     private val getAllCartInfoSetUseCase: GetAllCartInfoHashSetUseCase
 ): ViewModel(){
 
-    private val _sideState = MutableStateFlow<UiState>(UiState.Init)
-    val sideState: StateFlow<UiState> get() = _sideState
+    companion object{
+        const val THEME = "side"
+    }
+
+    private val _sideState = MutableStateFlow<UiState<List<UiDishItem>>>(UiState.Init)
+    val sideState: StateFlow<UiState<List<UiDishItem>>> get() = _sideState
     val sideListSize = MutableLiveData(0)
     private val _curSideDishSpinnerPosition = MutableLiveData<Int>(0)
     val curSideDishSpinnerPosition: LiveData<Int> get() = _curSideDishSpinnerPosition
@@ -28,11 +35,11 @@ class SideDishViewModel @Inject constructor(
     val preSideDishSpinnerPosition: LiveData<Int> get() = _preSideDishSpinnerPosition
 
     private fun setLoading() {
-        _sideState.value = UiState.IsLoading(true)
+        _sideState.value = UiState.Loading(true)
     }
 
     private fun hideLoading() {
-        _sideState.value = UiState.IsLoading(false)
+        _sideState.value = UiState.Loading(false)
     }
 
     private fun showToast(message: String) {
@@ -54,7 +61,7 @@ class SideDishViewModel @Inject constructor(
             getAllCartInfoSetUseCase().collect { cartInfoHashMap ->
                 if (_sideState.value is UiState.Success){
                     val tempList = mutableListOf<UiDishItem>()
-                    (_sideState.value as UiState.Success).uiDishItems.forEach {
+                    (_sideState.value as UiState.Success).items.forEach {
                         tempList.add(it.copy(isInserted = cartInfoHashMap.contains(it.hash)))
                     }
                     _sideState.value = UiState.Success(tempList)
@@ -65,7 +72,7 @@ class SideDishViewModel @Inject constructor(
 
     fun getSideDishList() = viewModelScope.launch {
         Log.e("SideDishViewModel", "getSideDishList")
-        getSideDishListUseCase("side").onStart {
+        getSideDishListUseCase(THEME).onStart {
             setLoading()
         }.catch { exception ->
             hideLoading()
@@ -84,7 +91,7 @@ class SideDishViewModel @Inject constructor(
     }
 
     fun changeSoupItemIsInserted(hash: String){
-        ((_sideState.value as UiState.Success).uiDishItems).let { uiDishList ->
+        ((_sideState.value as UiState.Success).items).let { uiDishList ->
             val newList = mutableListOf<UiDishItem>().apply {
                 uiDishList.forEach { uiDishItem ->
                     if (uiDishItem.hash == hash){
@@ -105,10 +112,10 @@ class SideDishViewModel @Inject constructor(
         _curSideDishSpinnerPosition.value = position
         if (_sideState.value is UiState.Success) {
             _sideState.value = when (_curSideDishSpinnerPosition.value) {
-                1 -> UiState.Success((_sideState.value as UiState.Success).uiDishItems.sortedBy { -it.sPrice }) // 금액 내림차순
-                2 -> UiState.Success((_sideState.value as UiState.Success).uiDishItems.sortedBy { it.sPrice }) // 금액 오름차순
-                3 -> UiState.Success((_sideState.value as UiState.Success).uiDishItems.sortedBy { -it.salePercentage }) // 할인률 내림차순
-                else -> UiState.Success((_sideState.value as UiState.Success).uiDishItems.sortedBy { it.index }) // 기본 정렬순
+                1 -> UiState.Success((_sideState.value as UiState.Success).items.sortedBy { -it.sPrice }) // 금액 내림차순
+                2 -> UiState.Success((_sideState.value as UiState.Success).items.sortedBy { it.sPrice }) // 금액 오름차순
+                3 -> UiState.Success((_sideState.value as UiState.Success).items.sortedBy { -it.salePercentage }) // 할인률 내림차순
+                else -> UiState.Success((_sideState.value as UiState.Success).items.sortedBy { it.index }) // 기본 정렬순
             }
         }
     }

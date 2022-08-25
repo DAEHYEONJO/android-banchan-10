@@ -5,7 +5,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.work.*
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.OutOfQuotaPolicy
+import androidx.work.WorkManager
 import com.google.gson.Gson
 import com.woowahan.android10.deliverbanchan.BanChanApplication
 import com.woowahan.android10.deliverbanchan.background.CartItemsDbWorker
@@ -21,10 +24,11 @@ import com.woowahan.android10.deliverbanchan.presentation.cart.model.TempOrder
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartBottomBody
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartCompleteHeader
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartHeader
-import com.woowahan.android10.deliverbanchan.presentation.state.UiLocalState
+import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -46,18 +50,18 @@ class CartViewModel @Inject constructor(
     val orderDetailMode = MutableLiveData(false)
 
     private val _allCartJoinState =
-        MutableStateFlow<UiLocalState<UiCartOrderDishJoinItem>>(UiLocalState.Init)
-    val allCartJoinState: StateFlow<UiLocalState<UiCartOrderDishJoinItem>>
+        MutableStateFlow<UiState<List<UiCartOrderDishJoinItem>>>(UiState.Init)
+    val allCartJoinState: StateFlow<UiState<List<UiCartOrderDishJoinItem>>>
         get() = _allCartJoinState.stateIn(
-            initialValue = UiLocalState.Init,
+            initialValue = UiState.Init,
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000)
         )
     private val _allRecentlyJoinState =
-        MutableStateFlow<UiLocalState<UiDishItem>>(UiLocalState.Init)
-    val allRecentlyJoinState: StateFlow<UiLocalState<UiDishItem>>
+        MutableStateFlow<UiState<List<UiDishItem>>>(UiState.Init)
+    val allRecentlyJoinState: StateFlow<UiState<List<UiDishItem>>>
         get() = _allRecentlyJoinState.stateIn(
-            initialValue = UiLocalState.Init,
+            initialValue = UiState.Init,
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000)
         )
@@ -153,15 +157,15 @@ class CartViewModel @Inject constructor(
 
     private fun getAllCartJoinList() = viewModelScope.launch {
         cartUseCase.getCartJoinList().onStart {
-            _allCartJoinState.value = UiLocalState.Loading(true)
+            _allCartJoinState.value = UiState.Loading(true)
         }.flowOn(dispatcher).catch { exception ->
-            _allCartJoinState.value = UiLocalState.Loading(false)
-            _allCartJoinState.value = UiLocalState.ShowToast(exception.message.toString())
+            _allCartJoinState.value = UiState.Loading(false)
+            _allCartJoinState.value = UiState.ShowToast(exception.message.toString())
         }.onEach { uiCartJoinItemList ->
             calcCartBottomBodyAndHeaderVal(uiCartJoinItemList)
         }.collect {
-            _allCartJoinState.value = UiLocalState.Loading(false)
-            _allCartJoinState.value = UiLocalState.Success(it)
+            _allCartJoinState.value = UiState.Loading(false)
+            _allCartJoinState.value = UiState.Success(it)
             _uiCartJoinArrayList.clear()
             _uiCartJoinArrayList.addAll(it)
             _uiCartJoinList.value = _uiCartJoinArrayList
@@ -218,13 +222,13 @@ class CartViewModel @Inject constructor(
 
     private fun getAllRecentlyJoinList() = viewModelScope.launch {
         cartUseCase.getAllRecentJoinListLimitSeven().onStart {
-            _allRecentlyJoinState.value = UiLocalState.Loading(true)
+            _allRecentlyJoinState.value = UiState.Loading(true)
         }.flowOn(dispatcher).catch { exception ->
-            _allRecentlyJoinState.value = UiLocalState.Loading(false)
-            _allRecentlyJoinState.value = UiLocalState.ShowToast(exception.message.toString())
+            _allRecentlyJoinState.value = UiState.Loading(false)
+            _allRecentlyJoinState.value = UiState.ShowToast(exception.message.toString())
         }.collect {
-            _allRecentlyJoinState.value = UiLocalState.Loading(false)
-            _allRecentlyJoinState.value = UiLocalState.Success(it)
+            _allRecentlyJoinState.value = UiState.Loading(false)
+            _allRecentlyJoinState.value = UiState.Success(it)
         }
     }
 

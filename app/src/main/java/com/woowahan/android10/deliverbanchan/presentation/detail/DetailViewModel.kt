@@ -9,13 +9,10 @@ import com.woowahan.android10.deliverbanchan.data.local.model.entity.LocalDish
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.OrderInfo
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.RecentViewedInfo
 import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
+import com.woowahan.android10.deliverbanchan.domain.model.UiDetailInfo
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.usecase.*
-import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllCartInfoUseCase
-import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllOrderInfoListUseCase
-import com.woowahan.android10.deliverbanchan.domain.usecase.InsertCartInfoUseCase
-import com.woowahan.android10.deliverbanchan.domain.usecase.GetDetailDishUseCase
-import com.woowahan.android10.deliverbanchan.presentation.state.UiDetailState
+import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -40,8 +37,12 @@ class DetailViewModel @Inject constructor(
     val isOrderingExist = MutableLiveData(false)
 
     private val currentUiDishItem: UiDishItem? = savedStateHandle["UiDishItem"]
-    private val _uiDetailInfo = MutableStateFlow<UiDetailState>(UiDetailState.Init)
-    val uiDetailInfo: StateFlow<UiDetailState> = _uiDetailInfo
+    private val _uiDetailInfo = MutableStateFlow<UiState<UiDetailInfo>>(UiState.Init)
+    val uiDetailInfo: StateFlow<UiState<UiDetailInfo>> = _uiDetailInfo.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000),
+        UiState.Init
+    )
 
     private val _itemCount = MutableStateFlow<Int>(1)
     val itemCount: StateFlow<Int> = _itemCount
@@ -114,19 +115,19 @@ class DetailViewModel @Inject constructor(
                 currentUiDishItem,
                 _itemCount.value
             ).onStart {
-                _uiDetailInfo.value = UiDetailState.Loading(true)
+                _uiDetailInfo.value = UiState.Loading(true)
             }.catch { exception ->
-                _uiDetailInfo.value = UiDetailState.Loading(false)
-                _uiDetailInfo.value = UiDetailState.ShowToast(exception.message.toString())
+                _uiDetailInfo.value = UiState.Loading(false)
+                _uiDetailInfo.value = UiState.ShowToast(exception.message.toString())
             }.flowOn(Dispatchers.IO).collect { result ->
-                _uiDetailInfo.value = UiDetailState.Loading(false)
+                _uiDetailInfo.value = UiState.Loading(false)
                 when (result) {
                     is BaseResult.Success -> {
-                        _uiDetailInfo.value = UiDetailState.Success(result.data)
+                        _uiDetailInfo.value = UiState.Success(result.data)
                         insertRecent()
                     }
                     is BaseResult.Error -> {
-                        _uiDetailInfo.value = UiDetailState.Error(result.errorCode)
+                        _uiDetailInfo.value = UiState.Error(result.errorCode)
                     }
                 }
             }
@@ -161,16 +162,16 @@ class DetailViewModel @Inject constructor(
 
     fun plusItemCount() {
         _itemCount.value += 1
-        _uiDetailInfo.value = UiDetailState.Success(
-            (_uiDetailInfo.value as UiDetailState.Success).uiDishItems.copy(itemCount = _itemCount.value)
+        _uiDetailInfo.value = UiState.Success(
+            (_uiDetailInfo.value as UiState.Success).items.copy(itemCount = _itemCount.value)
         )
     }
 
     fun minusItemCount() {
         if (_itemCount.value >= 2) {
             _itemCount.value -= 1
-            _uiDetailInfo.value = UiDetailState.Success(
-                (_uiDetailInfo.value as UiDetailState.Success).uiDishItems.copy(itemCount = _itemCount.value)
+            _uiDetailInfo.value = UiState.Success(
+                (_uiDetailInfo.value as UiState.Success).items.copy(itemCount = _itemCount.value)
             )
         }
     }

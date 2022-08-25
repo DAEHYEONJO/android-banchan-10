@@ -9,19 +9,19 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentSoupdishBinding
-import com.woowahan.android10.deliverbanchan.presentation.state.UiState
+import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
 import com.woowahan.android10.deliverbanchan.presentation.common.decorator.GridSpanCountTwoDecorator
-import com.woowahan.android10.deliverbanchan.presentation.view.adapter.SortSpinnerAdapter
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
 import com.woowahan.android10.deliverbanchan.presentation.main.common.MainGridAdapter
 import com.woowahan.android10.deliverbanchan.presentation.main.host.DishViewModel
+import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import com.woowahan.android10.deliverbanchan.presentation.view.SpinnerEventListener
+import com.woowahan.android10.deliverbanchan.presentation.view.adapter.SortSpinnerAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -103,16 +103,16 @@ class SoupDishFragment :
         }
     }
 
-    private fun handleStateChange(state: UiState) {
+    private fun handleStateChange(state: UiState<List<UiDishItem>>) {
         when (state) {
-            is UiState.IsLoading -> {
+            is UiState.Loading -> {
                 binding.soupPb.toVisible()
                 binding.errorLayout.errorCl.toGone()
             }
             is UiState.Success -> {
                 binding.soupPb.toGone()
                 binding.soupCdl.toVisible()
-                mainGridAdapter.submitList(state.uiDishItems)
+                mainGridAdapter.submitList(state.items)
             }
             is UiState.ShowToast -> {
                 Log.e("SoupDishFragment", "show toast")

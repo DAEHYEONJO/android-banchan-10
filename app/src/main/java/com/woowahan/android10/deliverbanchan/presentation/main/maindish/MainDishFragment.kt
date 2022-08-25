@@ -12,9 +12,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentMaindishBinding
+import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
 import com.woowahan.android10.deliverbanchan.presentation.common.decorator.GridSpanCountTwoForMainDishDecorator
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
@@ -187,17 +187,17 @@ class MainDishFragment :
         }
     }
 
-    private fun handleStateChange(state: UiState) {
+    private fun handleStateChange(state: UiState<List<UiDishItem>>) {
         when (state) {
-            is UiState.IsLoading -> {
+            is UiState.Loading -> {
                 binding.maindishPb.toVisible()
                 binding.errorLayout.errorCl.toGone()
             }
             is UiState.Success -> {
                 binding.maindishPb.toGone()
                 binding.maindishCdl.toVisible()
-                mainDishAdapter.submitList(state.uiDishItems)
-                mainDishLinearAdapter.submitList(state.uiDishItems)
+                mainDishAdapter.submitList(state.items)
+                mainDishLinearAdapter.submitList(state.items)
             }
             is UiState.ShowToast -> {
                 requireContext().showToast(state.message)

@@ -24,10 +24,11 @@ class SoupViewModel @Inject constructor(
 
     companion object {
         const val TAG = "SoupViewModel"
+        const val THEME = "soup"
     }
 
-    private val _soupState = MutableStateFlow<UiState>(UiState.Init)
-    val soupState: StateFlow<UiState> get() = _soupState
+    private val _soupState = MutableStateFlow<UiState<List<UiDishItem>>>(UiState.Init)
+    val soupState: StateFlow<UiState<List<UiDishItem>>> get() = _soupState
     private val _curSoupSpinnerPosition = MutableLiveData<Int>(0)
     val curSoupSpinnerPosition: LiveData<Int> get() = _curSoupSpinnerPosition
     private val _preSoupSpinnerPosition = MutableLiveData(0)
@@ -45,7 +46,7 @@ class SoupViewModel @Inject constructor(
             getAllCartInfoSetUseCase().collect { cartInfoHashSet ->
                 if (_soupState.value is UiState.Success) {
                     val tempList = mutableListOf<UiDishItem>()
-                    (_soupState.value as UiState.Success).uiDishItems.forEach {
+                    (_soupState.value as UiState.Success).items.forEach {
                         tempList.add(it.copy(isInserted = cartInfoHashSet.contains(it.hash)))
                     }
                     _soupState.value = UiState.Success(tempList)
@@ -55,11 +56,11 @@ class SoupViewModel @Inject constructor(
     }
 
     private fun setLoadingStateTrue() {
-        _soupState.value = UiState.IsLoading(true)
+        _soupState.value = UiState.Loading(true)
     }
 
     private fun setLoadingStateFalse() {
-        _soupState.value = UiState.IsLoading(false)
+        _soupState.value = UiState.Loading(false)
     }
 
     private fun setToastMessageByException(message: String) {
@@ -73,7 +74,7 @@ class SoupViewModel @Inject constructor(
     fun setSoupDishesState() {
         viewModelScope.launch {
             Log.e("SoupViewModel", "getSoupList")
-            getSoupDishesUseCase("soup").onStart {
+            getSoupDishesUseCase(THEME).onStart {
                 setLoadingStateTrue()
             }.catch { exception ->
                 Log.e(TAG, "getSoupDishes: $exception")
@@ -100,10 +101,10 @@ class SoupViewModel @Inject constructor(
         _curSoupSpinnerPosition.value = position
         if (_soupState.value is UiState.Success) {
             _soupState.value = when (_curSoupSpinnerPosition.value) {
-                1 -> UiState.Success((_soupState.value as UiState.Success).uiDishItems.sortedBy { -it.sPrice }) // 금액 내림차순
-                2 -> UiState.Success((_soupState.value as UiState.Success).uiDishItems.sortedBy { it.sPrice }) // 금액 오름차순
-                3 -> UiState.Success((_soupState.value as UiState.Success).uiDishItems.sortedBy { -it.salePercentage }) // 할인률 내림차순
-                else -> UiState.Success((_soupState.value as UiState.Success).uiDishItems.sortedBy { it.index }) // 기본 정렬순
+                1 -> UiState.Success((_soupState.value as UiState.Success).items.sortedBy { -it.sPrice }) // 금액 내림차순
+                2 -> UiState.Success((_soupState.value as UiState.Success).items.sortedBy { it.sPrice }) // 금액 오름차순
+                3 -> UiState.Success((_soupState.value as UiState.Success).items.sortedBy { -it.salePercentage }) // 할인률 내림차순
+                else -> UiState.Success((_soupState.value as UiState.Success).items.sortedBy { it.index }) // 기본 정렬순
             }
         }
     }
