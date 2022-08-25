@@ -67,9 +67,6 @@ class OrderListFragment :
             is UiState.Loading -> {
                 binding.orderListPb.isVisible = uiState.isLoading
             }
-            is UiState.ShowToast -> {
-                requireContext().showToast(uiState.message)
-            }
             is UiState.Success -> {
                 binding.orderRv.toVisible()
                 binding.orderListTvEmptyMessage.toGone()

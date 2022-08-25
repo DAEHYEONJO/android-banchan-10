@@ -115,13 +115,9 @@ class DetailActivity :
                     detailContentAdapter.submitList(listOf(uiDetailState.items))
                     detailSectionImageAdapter.submitList(uiDetailState.items.detailSection)
                 }
-                is UiState.ShowToast -> {
-                    binding.detailPb.toGone()
-                    showToast(uiDetailState.message)
-                }
                 is UiState.Error -> {
                     binding.detailPb.toGone()
-                    showToast(uiDetailState.errorCode.toString() + "에러 에러 삐용 삐용")
+                    showToast(uiDetailState.error + "에러 에러 삐용 삐용")
                 }
             }
         }.launchIn(lifecycleScope)

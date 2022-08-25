@@ -92,9 +92,6 @@ class ExhibitionFragment :
                 binding.exhibitionRv.toVisible()
                 exhibitionAdapter.submitList(state.items)
             }
-            is UiState.ShowToast -> {
-                requireContext().showToast(state.message)
-            }
             is UiState.Error -> {
                 binding.exhibitionPb.toGone()
                 binding.exhibitionRv.toGone()

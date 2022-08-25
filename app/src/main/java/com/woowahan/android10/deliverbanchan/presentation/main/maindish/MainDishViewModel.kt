@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
+import com.woowahan.android10.deliverbanchan.domain.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllCartInfoHashSetUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetThemeDishListUseCase
@@ -26,7 +26,7 @@ class MainDishViewModel @Inject constructor(
     private val getAllCartInfoSetUseCase: GetAllCartInfoHashSetUseCase
 ) : ViewModel() {
 
-    companion object{
+    companion object {
         const val THEME = "main"
     }
 
@@ -64,45 +64,34 @@ class MainDishViewModel @Inject constructor(
         Log.e("MainDishViewModel", "getMainDishList")
         viewModelScope.launch {
             getThemeDishListUseCase(THEME).onStart {
-                setLoading()
+                _mainDishState.value = UiState.Loading(true)
             }.catch { exception ->
-                hideLoading()
-                Log.e("MainDishViewModel", "exception : ${exception.message}")
-                showToast(exception.message.toString())
-                catchError(1)
+                _mainDishState.value = UiState.Loading(false)
+                _mainDishState.value = UiState.Error(exception.message.toString())
+                Log.e("MainDishViewModel", "뷰모델 익셉션 : ${exception.message}")
             }.collect { result ->
-                hideLoading()
+                _mainDishState.value = UiState.Loading(false)
                 withContext(Dispatchers.Main) {
                     when (result) {
                         is BaseResult.Success -> {
                             mainDishList = result.data
                             _mainDishState.value = UiState.Success(result.data)
                         }
-                        is BaseResult.Error -> catchError(1)
+                        is BaseResult.Error -> {
+                            _mainDishState.value = UiState.Error(result.error)
+                            Log.e("MainDishViewModel", "뷰모델 베이스 에러 : ${result.error}")
+                        }
                     }
                 }
             }
         }
     }
 
-    private fun setLoading() {
-        _mainDishState.value = UiState.Loading(true)
-    }
-
-    private fun hideLoading() {
-        _mainDishState.value = UiState.Loading(false)
-    }
-
-    private fun showToast(message: String) {
-        _mainDishState.value = UiState.ShowToast(message)
-    }
-
-    private fun catchError(errorCode: Int) {
-        _mainDishState.value = UiState.Error(errorCode)
-    }
-
     fun sortMainDishes(position: Int) {
-        Log.e("MainDishViewModel", "sortMainDishes: pre: ${_preMainSpinnerPosition.value} cur: ${_curMainSpinnerPosition.value}", )
+        Log.e(
+            "MainDishViewModel",
+            "sortMainDishes: pre: ${_preMainSpinnerPosition.value} cur: ${_curMainSpinnerPosition.value}",
+        )
         if (_curMainSpinnerPosition.value != _preMainSpinnerPosition.value) { // 정렬 기준이 변경될 시
             _preMainSpinnerPosition.value = _curMainSpinnerPosition.value
         }

@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
+import com.woowahan.android10.deliverbanchan.domain.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllCartInfoHashSetUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetThemeDishListUseCase
@@ -55,40 +55,27 @@ class SoupViewModel @Inject constructor(
         }
     }
 
-    private fun setLoadingStateTrue() {
-        _soupState.value = UiState.Loading(true)
-    }
-
-    private fun setLoadingStateFalse() {
-        _soupState.value = UiState.Loading(false)
-    }
-
-    private fun setToastMessageByException(message: String) {
-        _soupState.value = UiState.ShowToast(message)
-    }
-
-    private fun catchError(errorCode: Int) {
-        _soupState.value = UiState.Error(errorCode)
-    }
-
     fun setSoupDishesState() {
         viewModelScope.launch {
             Log.e("SoupViewModel", "getSoupList")
             getSoupDishesUseCase(THEME).onStart {
-                setLoadingStateTrue()
+                _soupState.value = UiState.Loading(true)
             }.catch { exception ->
                 Log.e(TAG, "getSoupDishes: $exception")
-                setLoadingStateFalse()
-                setToastMessageByException(exception.message.toString())
-                catchError(1)
+                _soupState.value = UiState.Loading(false)
+                _soupState.value = UiState.Error(exception.message.toString())
+                Log.e(TAG, "setSoupDishesState: 뷰모델 catch ${exception.message.toString()}", )
             }.flowOn(Dispatchers.IO).collect { result ->
-                setLoadingStateFalse()
+                _soupState.value = UiState.Loading(false)
                 when (result) {
                     is BaseResult.Success -> {
                         _soupState.value = UiState.Success(result.data)
                         soupListSize.value = result.data.size
                     }
-                    is BaseResult.Error -> catchError(result.errorCode)
+                    is BaseResult.Error -> {
+                        _soupState.value = UiState.Error(result.error)
+                        Log.e(TAG, "setSoupDishesState: 뷰모델 베이스 에러: ${result.error}", )
+                    }
                 }
             }
         }

@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.woowahan.android10.deliverbanchan.data.remote.model.response.BaseResult
+import com.woowahan.android10.deliverbanchan.domain.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllCartInfoHashSetUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetThemeDishListUseCase
@@ -23,6 +23,7 @@ class SideDishViewModel @Inject constructor(
 ): ViewModel(){
 
     companion object{
+        const val TAG = "SideDishViewModel"
         const val THEME = "side"
     }
 
@@ -33,22 +34,6 @@ class SideDishViewModel @Inject constructor(
     val curSideDishSpinnerPosition: LiveData<Int> get() = _curSideDishSpinnerPosition
     private val _preSideDishSpinnerPosition = MutableLiveData(0)
     val preSideDishSpinnerPosition: LiveData<Int> get() = _preSideDishSpinnerPosition
-
-    private fun setLoading() {
-        _sideState.value = UiState.Loading(true)
-    }
-
-    private fun hideLoading() {
-        _sideState.value = UiState.Loading(false)
-    }
-
-    private fun showToast(message: String) {
-        _sideState.value = UiState.ShowToast(message)
-    }
-
-    private fun catchError(errorCode: Int) {
-        _sideState.value = UiState.Error(errorCode)
-    }
 
     init {
         getSideDishList()
@@ -73,35 +58,23 @@ class SideDishViewModel @Inject constructor(
     fun getSideDishList() = viewModelScope.launch {
         Log.e("SideDishViewModel", "getSideDishList")
         getSideDishListUseCase(THEME).onStart {
-            setLoading()
+            _sideState.value = UiState.Loading(true)
         }.catch { exception ->
-            hideLoading()
-            showToast(exception.message.toString())
-            catchError(1)
+            _sideState.value = UiState.Loading(false)
+            _sideState.value = UiState.Error(exception.message.toString())
+            Log.e(TAG, "getSideDishList: 뷰모델 캐치 ${exception.message.toString()}", )
         }.flowOn(Dispatchers.IO).collect { result ->
-            hideLoading()
+            _sideState.value = UiState.Loading(false)
             when (result) {
                 is BaseResult.Success -> {
                     _sideState.value = UiState.Success(result.data)
                     sideListSize.value = result.data.size
                 }
-                is BaseResult.Error -> catchError(result.errorCode)
-            }
-        }
-    }
-
-    fun changeSoupItemIsInserted(hash: String){
-        ((_sideState.value as UiState.Success).items).let { uiDishList ->
-            val newList = mutableListOf<UiDishItem>().apply {
-                uiDishList.forEach { uiDishItem ->
-                    if (uiDishItem.hash == hash){
-                        add(uiDishItem.copy(isInserted = true))
-                    }else{
-                        add(uiDishItem)
-                    }
+                is BaseResult.Error -> {
+                    _sideState.value = UiState.Error(result.error)
+                    Log.e(TAG, "getSideDishList: 뷰모델 베이스 에러 :${result.error}", )
                 }
             }
-            _sideState.value = UiState.Success(newList)
         }
     }
 

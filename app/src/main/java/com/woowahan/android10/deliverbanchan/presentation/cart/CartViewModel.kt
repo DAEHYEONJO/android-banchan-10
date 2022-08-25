@@ -160,7 +160,7 @@ class CartViewModel @Inject constructor(
             _allCartJoinState.value = UiState.Loading(true)
         }.flowOn(dispatcher).catch { exception ->
             _allCartJoinState.value = UiState.Loading(false)
-            _allCartJoinState.value = UiState.ShowToast(exception.message.toString())
+            _allCartJoinState.value = UiState.Error(exception.message.toString())
         }.onEach { uiCartJoinItemList ->
             calcCartBottomBodyAndHeaderVal(uiCartJoinItemList)
         }.collect {
@@ -225,7 +225,7 @@ class CartViewModel @Inject constructor(
             _allRecentlyJoinState.value = UiState.Loading(true)
         }.flowOn(dispatcher).catch { exception ->
             _allRecentlyJoinState.value = UiState.Loading(false)
-            _allRecentlyJoinState.value = UiState.ShowToast(exception.message.toString())
+            _allRecentlyJoinState.value = UiState.Error(exception.message.toString())
         }.collect {
             _allRecentlyJoinState.value = UiState.Loading(false)
             _allRecentlyJoinState.value = UiState.Success(it)

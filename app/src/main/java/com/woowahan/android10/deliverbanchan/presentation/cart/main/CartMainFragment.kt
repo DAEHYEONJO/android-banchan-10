@@ -206,9 +206,6 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
         when (uiState) {
             is UiState.Empty -> {}
             is UiState.Loading -> {}
-            is UiState.ShowToast -> {
-                requireContext().showToast(uiState.message)
-            }
             is UiState.Success -> {
                 when (adapter) {
                     is CartDishTopBodyAdapter -> {
