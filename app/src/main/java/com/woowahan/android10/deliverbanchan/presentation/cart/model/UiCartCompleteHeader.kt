@@ -7,7 +7,7 @@ data class UiCartCompleteHeader(
     val orderItemCount: Int
 ) {
     companion object {
-        const val ESTIMATED_DELIVERY_TIME = 3 * 1000
+        const val ESTIMATED_DELIVERY_TIME = 10 * 1000
         fun emptyItem() = UiCartCompleteHeader(
             false, 0L, 0
         )
