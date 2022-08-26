@@ -9,7 +9,7 @@ import javax.inject.Inject
 class InsertLocalDishUseCase @Inject constructor(
     private val dishRepository: DishRepository
 ) {
-    suspend operator fun invoke(uiDishItem: UiDishItem){
+    suspend operator fun invoke(uiDishItem: UiDishItem) {
         dishRepository.insertLocalDish(uiDishItem)
     }
 }

@@ -1,6 +1,5 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart.main.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.findViewTreeLifecycleOwner
@@ -17,24 +16,27 @@ import javax.inject.Inject
 class CartOrderInfoBottomBodyAdapter @Inject constructor() :
     RecyclerView.Adapter<CartOrderInfoBottomBodyAdapter.ViewHolder>() {
 
-    companion object{
+    companion object {
         const val TAG = "CartOrderInfoBottomBodyAdapter"
     }
 
-    interface OnCartBottomBodyItemClickListener{
+    interface OnCartBottomBodyItemClickListener {
         fun onClickOrderBtn()
     }
+
     var onCartBottomBodyItemClickListener: OnCartBottomBodyItemClickListener? = null
 
-    var bottomBodyList: List<UiCartBottomBody> = List(1){UiCartBottomBody.emptyItem ()}
+    var bottomBodyList: List<UiCartBottomBody> = List(1) { UiCartBottomBody.emptyItem() }
 
-    inner class ViewHolder(val binding: ItemCartOrderInfoBottomBodyBinding, private val coroutineScope: CoroutineScope) :
+    inner class ViewHolder(
+        val binding: ItemCartOrderInfoBottomBodyBinding,
+        private val coroutineScope: CoroutineScope
+    ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(uiCartBottomBody: UiCartBottomBody) {
-            with(binding){
-                Log.e(TAG, "bind: ${uiCartBottomBody.isAvailableDelivery} ${uiCartBottomBody.isAvailableFreeDelivery}")
+            with(binding) {
                 item = uiCartBottomBody
-                cartOrderBottomBodyBtnOrder.setClickEventWithDuration(coroutineScope){
+                cartOrderBottomBodyBtnOrder.setClickEventWithDuration(coroutineScope) {
                     onCartBottomBodyItemClickListener?.onClickOrderBtn()
                 }
                 executePendingBindings()
@@ -44,7 +46,11 @@ class CartOrderInfoBottomBodyAdapter @Inject constructor() :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
-            ItemCartOrderInfoBottomBodyBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemCartOrderInfoBottomBodyBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
         return ViewHolder(binding, parent.findViewTreeLifecycleOwner()!!.lifecycleScope)
     }
 

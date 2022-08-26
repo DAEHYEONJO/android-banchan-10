@@ -1,7 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.dialogs.bottomsheet
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,6 +29,7 @@ class CartBottomSheetFragment : BottomSheetDialogFragment() {
         val behavior = BottomSheetBehavior.from(requireView().parent as View)
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
+
     private val cartDialogFragment: CartDialogFragment by lazy { CartDialogFragment() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,7 +48,6 @@ class CartBottomSheetFragment : BottomSheetDialogFragment() {
 
         arguments?.let {
             val uiDishItem = it.getParcelable<UiDishItem>("UiDishItem")
-            Log.e("AppTest", "$uiDishItem")
             uiDishItem?.let {
                 cartBottomSheetViewModel.currentUiDishItem.value = it
                 binding.viewModel = cartBottomSheetViewModel
@@ -73,14 +72,15 @@ class CartBottomSheetFragment : BottomSheetDialogFragment() {
     }
 
     private fun observeInsertResult() {
-        cartBottomSheetViewModel.insertSuccessEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach {
-            if(it) {
-                cartDialogFragment.show(parentFragmentManager, "CartDialog")
-                dismiss()
-            } else {
-                requireContext().showToast("장바구니 담기에 실패했습니다")
-            }
-        }.launchIn(viewLifecycleOwner.lifecycleScope)
+        cartBottomSheetViewModel.insertSuccessEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach {
+                if (it) {
+                    cartDialogFragment.show(parentFragmentManager, "CartDialog")
+                    dismiss()
+                } else {
+                    requireContext().showToast("장바구니 담기에 실패했습니다")
+                }
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     override fun onDestroyView() {

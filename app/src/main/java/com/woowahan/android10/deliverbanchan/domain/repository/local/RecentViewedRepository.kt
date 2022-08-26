@@ -9,14 +9,19 @@ import kotlinx.coroutines.flow.Flow
 interface RecentViewedRepository {
     @WorkerThread
     fun getAllRecentViewedInfo(): Flow<List<RecentViewedInfo>>
+
     @WorkerThread
     suspend fun insertRecentViewedInfo(hash: String, timeStamp: Long)
+
     @WorkerThread
     suspend fun deleteAllRecentViewedInfo()
+
     @WorkerThread
     fun getAllRecentJoinListLimitSeven(): Flow<List<RecentViewed>>
+
     @WorkerThread
     fun getAllRecentJoinPager(): Pager<Int, RecentViewed>
+
     @WorkerThread
     suspend fun updateTimeStampRecentViewedByHash(hash: String, timeStamp: Long)
 }

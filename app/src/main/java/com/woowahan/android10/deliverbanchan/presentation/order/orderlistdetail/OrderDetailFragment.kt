@@ -25,10 +25,13 @@ class OrderDetailFragment : BaseFragment<FragmentOrderDetailBinding>(
 ) {
 
     private val orderViewModel: OrderViewModel by activityViewModels()
+
     @Inject
     lateinit var orderDetailTopAdapter: DeliveryTopAdapter
+
     @Inject
     lateinit var orderDetailBodyAdapter: DeliveryBodyAdapter
+
     @Inject
     lateinit var orderDetailFooterAdapter: DeliveryFooterAdapter
     private val concatAdapter: ConcatAdapter by lazy {
@@ -49,9 +52,9 @@ class OrderDetailFragment : BaseFragment<FragmentOrderDetailBinding>(
 
     private fun observeData() {
         viewLifecycleOwner.lifecycleScope.launch {
-            with(orderViewModel){
+            with(orderViewModel) {
 
-                reloadBtnClicked.observe(viewLifecycleOwner){
+                reloadBtnClicked.observe(viewLifecycleOwner) {
                     orderDetailTopAdapter.notifyDataSetChanged()
                 }
 

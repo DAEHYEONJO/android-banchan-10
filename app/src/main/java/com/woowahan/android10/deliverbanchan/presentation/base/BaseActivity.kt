@@ -10,14 +10,15 @@ import androidx.databinding.ViewDataBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.listeners.OnCartDialogClickListener
 import com.woowahan.android10.deliverbanchan.presentation.cart.host.CartActivity
 
-abstract class BaseActivity<T: ViewDataBinding>(
+abstract class BaseActivity<T : ViewDataBinding>(
     @LayoutRes private val layoutResId: Int,
     val TAG: String
-): AppCompatActivity(), OnCartDialogClickListener {
+) : AppCompatActivity(), OnCartDialogClickListener {
     private var _binding: T? = null
-    val binding get() = checkNotNull(_binding){
-        "$TAG Activity Binding Null"
-    }
+    val binding
+        get() = checkNotNull(_binding) {
+            "$TAG Activity Binding Null"
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

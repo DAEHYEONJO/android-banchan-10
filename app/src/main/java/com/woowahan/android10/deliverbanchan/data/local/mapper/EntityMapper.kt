@@ -4,7 +4,7 @@ import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
 import com.woowahan.android10.deliverbanchan.domain.model.UiBottomSheet
 
 object EntityMapper {
-    fun mapToUiBottomSheet(cartInfo: CartInfo): UiBottomSheet = with(cartInfo){
+    fun mapToUiBottomSheet(cartInfo: CartInfo): UiBottomSheet = with(cartInfo) {
         UiBottomSheet(
             checked, amount
         )

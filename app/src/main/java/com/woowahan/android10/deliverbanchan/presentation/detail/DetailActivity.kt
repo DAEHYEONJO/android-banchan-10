@@ -2,7 +2,6 @@ package com.woowahan.android10.deliverbanchan.presentation.detail
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -106,12 +105,10 @@ class DetailActivity :
         detailViewModel.uiDetailInfo.flowWithLifecycle(lifecycle).onEach { uiDetailState ->
             when (uiDetailState) {
                 is UiState.Loading -> {
-                    Log.e(TAG, "initObservers: 로딩", )
                     binding.detailRv.toGone()
                     binding.detailPb.toVisible()
                 }
                 is UiState.Success -> {
-                    Log.e(TAG, "initObservers: ${uiDetailState.items}", )
                     binding.detailErrorLayout.errorCl.toGone()
                     binding.detailRv.toVisible()
                     binding.detailPb.toGone()
@@ -123,13 +120,11 @@ class DetailActivity :
                     binding.detailPb.toGone()
                     binding.detailRv.toGone()
                     binding.detailErrorLayout.errorCl.toVisible()
-                    showToast(uiDetailState.error + "에러 에러 삐용 삐용")
                 }
             }
         }.launchIn(lifecycleScope)
 
         detailViewModel.insertSuccessEvent.flowWithLifecycle(lifecycle).onEach {
-            Log.e(TAG, "인서트이벤트 $it: ")
             if (it) {
                 cartDialog.show(supportFragmentManager, "CartDialog")
             } else {
@@ -140,7 +135,7 @@ class DetailActivity :
     }
 
     private fun setErrorBtn() {
-        binding.detailErrorLayout.errorBtn.setClickEventWithDuration(coroutineScope = lifecycleScope){
+        binding.detailErrorLayout.errorBtn.setClickEventWithDuration(coroutineScope = lifecycleScope) {
             detailViewModel.getDetailDishInfo()
         }
     }

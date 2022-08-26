@@ -14,12 +14,13 @@ import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 
 @ActivityRetainedScoped
-class RecentViewedVerticalAdapter @Inject constructor(): ListAdapter<UiDishItem, RecentViewedVerticalAdapter.ViewHolder>(
-    diffUtil
-) {
+class RecentViewedVerticalAdapter @Inject constructor() :
+    ListAdapter<UiDishItem, RecentViewedVerticalAdapter.ViewHolder>(
+        diffUtil
+    ) {
 
-    companion object{
-        val diffUtil = object : DiffUtil.ItemCallback<UiDishItem>(){
+    companion object {
+        val diffUtil = object : DiffUtil.ItemCallback<UiDishItem>() {
             override fun areItemsTheSame(
                 oldItem: UiDishItem,
                 newItem: UiDishItem
@@ -38,9 +39,10 @@ class RecentViewedVerticalAdapter @Inject constructor(): ListAdapter<UiDishItem,
 
     var onDishItemClickListener: OnDishItemClickListener? = null
 
-    inner class ViewHolder(private val binding: ItemRecentViewedBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(uiDishItem: UiDishItem){
-            with(binding){
+    inner class ViewHolder(private val binding: ItemRecentViewedBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(uiDishItem: UiDishItem) {
+            with(binding) {
                 item = uiDishItem
                 itemRecentViewedIbCart.toGone()
                 binding.itemRecentViewedRoot.setOnClickListener {
@@ -56,7 +58,8 @@ class RecentViewedVerticalAdapter @Inject constructor(): ListAdapter<UiDishItem,
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemRecentViewedBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemRecentViewedBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 

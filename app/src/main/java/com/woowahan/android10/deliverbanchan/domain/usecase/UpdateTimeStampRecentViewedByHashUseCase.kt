@@ -7,8 +7,8 @@ import javax.inject.Inject
 @ActivityRetainedScoped
 class UpdateTimeStampRecentViewedByHashUseCase @Inject constructor(
     private val recentViewedRepository: RecentViewedRepository
-){
-    suspend operator fun invoke(hash: String, timeStamp: Long){
+) {
+    suspend operator fun invoke(hash: String, timeStamp: Long) {
         recentViewedRepository.updateTimeStampRecentViewedByHash(hash, timeStamp)
     }
 }

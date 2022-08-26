@@ -8,15 +8,15 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-fun View.toGone(){
+fun View.toGone() {
     visibility = View.GONE
 }
 
-fun View.toVisible(){
+fun View.toVisible() {
     visibility = View.VISIBLE
 }
 
-fun View.toInvisible(){
+fun View.toInvisible() {
     visibility = View.INVISIBLE
 }
 

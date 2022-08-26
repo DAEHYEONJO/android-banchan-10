@@ -8,9 +8,9 @@ data class UiCartBottomBody(
     var isAvailableFreeDelivery: Boolean = false,
     val minDeliveryPrice: Int = MIN_DELIVERY_PRICE,
     val deliveryFreePrice: Int = DELIVERY_FREE_PRICE
-){
+) {
 
-    companion object{
+    companion object {
         const val MIN_DELIVERY_PRICE: Int = 10000
         const val DELIVERY_FREE_PRICE: Int = 40000
         fun emptyItem(): UiCartBottomBody = UiCartBottomBody(

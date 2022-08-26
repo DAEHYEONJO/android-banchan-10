@@ -1,26 +1,23 @@
 package com.woowahan.android10.deliverbanchan.presentation.main.sidedish
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.view.ViewTreeObserver
 import android.widget.AdapterView
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentSidedishBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
+import com.woowahan.android10.deliverbanchan.presentation.base.listeners.SpinnerEventListener
 import com.woowahan.android10.deliverbanchan.presentation.common.decorator.GridSpanCountTwoDecorator
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.observeItemRangeMoved
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEventWithDuration
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
 import com.woowahan.android10.deliverbanchan.presentation.main.common.MainGridAdapter
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
-import com.woowahan.android10.deliverbanchan.presentation.base.listeners.SpinnerEventListener
-import com.woowahan.android10.deliverbanchan.presentation.common.ext.observeItemRangeMoved
-import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEventWithDuration
 import com.woowahan.android10.deliverbanchan.presentation.view.adapter.SortSpinnerAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -49,7 +46,6 @@ class SideDishFragment :
             position: Int,
             id: Long
         ) {
-            Log.e(TAG, "onItemSelected: $position")
             with(sideDishViewModel) {
                 sortSoupDishes(position)
                 with(sideDishSpinnerAdapter) {
@@ -68,8 +64,6 @@ class SideDishFragment :
 
     override fun onResume() {
         super.onResume()
-        Log.e(TAG, "viewLifecycleOwner: ${viewLifecycleOwner}")
-        Log.e(TAG, "lifecycleScope: ${viewLifecycleOwner.lifecycleScope}")
         checkErrorState()
     }
 
@@ -85,7 +79,6 @@ class SideDishFragment :
         with(sideDishViewModel) {
             sideState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .onEach { state ->
-                    Log.e(TAG, "initObserver: $state")
                     handleStateChange(state)
                 }.launchIn(viewLifecycleOwner.lifecycleScope)
         }

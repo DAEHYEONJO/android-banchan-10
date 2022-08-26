@@ -11,11 +11,11 @@ import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 
 @ActivityRetainedScoped
-class DeliveryBottomItemAdapter @Inject constructor()
-    : ListAdapter<UiCartOrderDishJoinItem, DeliveryBottomItemAdapter.ViewHolder>(diffUtil) {
+class DeliveryBottomItemAdapter @Inject constructor() :
+    ListAdapter<UiCartOrderDishJoinItem, DeliveryBottomItemAdapter.ViewHolder>(diffUtil) {
 
-    companion object{
-        val diffUtil = object : DiffUtil.ItemCallback<UiCartOrderDishJoinItem>(){
+    companion object {
+        val diffUtil = object : DiffUtil.ItemCallback<UiCartOrderDishJoinItem>() {
             override fun areItemsTheSame(
                 oldItem: UiCartOrderDishJoinItem,
                 newItem: UiCartOrderDishJoinItem
@@ -32,15 +32,20 @@ class DeliveryBottomItemAdapter @Inject constructor()
         }
     }
 
-    class ViewHolder(val binding: ItemCartOrderCompleteBodyItemBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(uiCartOrderDishJoinItem: UiCartOrderDishJoinItem){
+    class ViewHolder(val binding: ItemCartOrderCompleteBodyItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(uiCartOrderDishJoinItem: UiCartOrderDishJoinItem) {
             binding.item = uiCartOrderDishJoinItem
             binding.executePendingBindings()
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemCartOrderCompleteBodyItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemCartOrderCompleteBodyItemBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
         return ViewHolder(binding)
     }
 

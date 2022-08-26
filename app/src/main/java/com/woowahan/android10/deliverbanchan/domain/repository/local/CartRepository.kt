@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.Flow
 interface CartRepository {
     @WorkerThread
     fun getAllCartInfo(): Flow<List<CartInfo>>
+
     @WorkerThread
     fun getBottomSheetCartInfoByHash(hash: String): Flow<UiBottomSheet>
 
@@ -21,16 +22,25 @@ interface CartRepository {
 
     @WorkerThread
     suspend fun isExistCartInfo(hash: String): Boolean
+
     @WorkerThread
     fun getAllCartJoinList(): Flow<List<Cart>>
+
     @WorkerThread
     suspend fun updateCartChecked(hash: String, checked: Boolean)
+
     @WorkerThread
     suspend fun updateCartAmount(hash: String, amount: Int)
+
     @WorkerThread
     suspend fun insertCartInfoVarArg(vararg cartInfo: CartInfo)
+
     @WorkerThread
-    suspend fun insertAndDeleteCartItems(uiCartOrderDishJoinList: List<UiCartOrderDishJoinItem>, deleteHashes: List<String>)
+    suspend fun insertAndDeleteCartItems(
+        uiCartOrderDishJoinList: List<UiCartOrderDishJoinItem>,
+        deleteHashes: List<String>
+    )
+
     @WorkerThread
     suspend fun deleteCartInfoByHashList(deleteHashes: List<String>)
 }

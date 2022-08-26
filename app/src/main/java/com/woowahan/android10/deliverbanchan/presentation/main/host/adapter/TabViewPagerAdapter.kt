@@ -17,7 +17,7 @@ class TabViewPagerAdapter(fragmentManager: FragmentManager, lifeCycle: Lifecycle
     override fun getItemCount(): Int = NUM_TABS
 
     override fun createFragment(position: Int): Fragment {
-        return when(position) {
+        return when (position) {
             0 -> ExhibitionFragment()
             1 -> MainDishFragment()
             2 -> SoupDishFragment()

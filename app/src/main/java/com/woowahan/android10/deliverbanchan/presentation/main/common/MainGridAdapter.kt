@@ -34,16 +34,19 @@ class MainGridAdapter @Inject constructor() :
         }
     }
 
-    inner class ViewHolder(private val binding: ItemSoupBinding, private val coroutineScope: CoroutineScope) :
+    inner class ViewHolder(
+        private val binding: ItemSoupBinding,
+        private val coroutineScope: CoroutineScope
+    ) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(uiDishItem: UiDishItem) {
-            with(binding){
+            with(binding) {
                 item = uiDishItem
-                soupImbCart.setClickEventWithDuration(coroutineScope){
+                soupImbCart.setClickEventWithDuration(coroutineScope) {
                     onDishItemClickListener?.onClickCartIcon(uiDishItem)
                 }
-                root.setClickEventWithDuration(coroutineScope){
+                root.setClickEventWithDuration(coroutineScope) {
                     onDishItemClickListener?.onClickDish(uiDishItem)
                 }
                 executePendingBindings()

@@ -10,7 +10,7 @@ import javax.inject.Qualifier
 
 @InstallIn(SingletonComponent::class)
 @Module
-object DispatcherModule{
+object DispatcherModule {
 
     @IoDispatcher
     @Provides

@@ -18,7 +18,7 @@ class LinearItemDecorator(private val context: Context) : RecyclerView.ItemDecor
     ) {
         val position = parent.getChildLayoutPosition(view)
         val totalItemCount = state.itemCount
-        if (position == totalItemCount - 1){
+        if (position == totalItemCount - 1) {
             outRect.bottom = dpToPx(context, 16).roundToInt()
         }
     }

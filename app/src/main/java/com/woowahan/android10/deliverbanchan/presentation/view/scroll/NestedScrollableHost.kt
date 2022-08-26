@@ -2,7 +2,6 @@ package com.woowahan.android10.deliverbanchan.presentation.view.scroll
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
@@ -77,11 +76,9 @@ class NestedScrollableHost : FrameLayout {
                     // 수평 스크롤인 경우
                     if (canChildScroll(orientation, if (isVpHorizontal) dx else dy)) {
                         // 자식뷰가 현재 방향으로 수평 스크롤 가능 시 이벤트 가져온다
-                        Log.e("NestedScrollableHost", "can scroll")
                         parent.requestDisallowInterceptTouchEvent(true)
                     } else {
                         // 반대로 자식뷰에서 현재 방향(우측 or 좌측)으로 스크롤 더 이상 안될 시 부모뷰로 이벤트 넘긴다
-                        Log.e("NestedScrollableHost", "cannot scroll")
                         parent.requestDisallowInterceptTouchEvent(false)
                     }
                 }

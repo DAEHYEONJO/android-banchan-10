@@ -1,7 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.main.exhibition
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
@@ -83,7 +82,6 @@ class ExhibitionFragment :
                 binding.exhibitionPb.toVisible()
             }
             is UiState.Success -> {
-                Log.e(TAG, "exhibition success")
                 binding.exhibitionPb.toGone()
                 binding.errorLayout.errorCl.toGone()
                 binding.exhibitionRv.toVisible()

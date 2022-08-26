@@ -18,12 +18,12 @@ import com.woowahan.android10.deliverbanchan.databinding.FragmentCartMainBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiCartOrderDishJoinItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
-import com.woowahan.android10.deliverbanchan.presentation.cart.viewmodel.CartViewModel
 import com.woowahan.android10.deliverbanchan.presentation.cart.main.adapter.CartDishTopBodyAdapter
 import com.woowahan.android10.deliverbanchan.presentation.cart.main.adapter.CartOrderInfoBottomBodyAdapter
 import com.woowahan.android10.deliverbanchan.presentation.cart.main.adapter.CartRecentViewedFooterAdapter
 import com.woowahan.android10.deliverbanchan.presentation.cart.main.adapter.CartSelectHeaderAdapter
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartCompleteHeader.Companion.ESTIMATED_DELIVERY_TIME
+import com.woowahan.android10.deliverbanchan.presentation.cart.viewmodel.CartViewModel
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
 import com.woowahan.android10.deliverbanchan.presentation.dialogs.dialog.NumberDialogFragment
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
@@ -137,25 +137,26 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
                 handleState(cartTopBodyAdapter, uiTempState)
             }.launchIn(viewLifecycleOwner.lifecycleScope)
 
-            allRecentlyJoinState.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { uiTempState ->
-                handleState(cartRecentViewedFooterAdapter, uiTempState)
-            }.launchIn(viewLifecycleOwner.lifecycleScope)
+            allRecentlyJoinState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                .onEach { uiTempState ->
+                    handleState(cartRecentViewedFooterAdapter, uiTempState)
+                }.launchIn(viewLifecycleOwner.lifecycleScope)
 
-            itemCartHeaderData.observe(viewLifecycleOwner){ uiCartHeader ->
+            itemCartHeaderData.observe(viewLifecycleOwner) { uiCartHeader ->
                 with(cartHeaderAdapter) {
                     selectHeaderList = listOf(uiCartHeader)
                     notifyDataSetChanged()
                 }
             }
 
-            itemCartBottomBodyData.observe(viewLifecycleOwner){ uiCartBottomBody ->
+            itemCartBottomBodyData.observe(viewLifecycleOwner) { uiCartBottomBody ->
                 with(cartBottomBodyAdapter) {
                     bottomBodyList = listOf(uiCartBottomBody)
                     notifyDataSetChanged()
                 }
             }
 
-            uiCartJoinList.observe(viewLifecycleOwner){
+            uiCartJoinList.observe(viewLifecycleOwner) {
                 cartTopBodyAdapter.submitList(it.toList())
                 cartViewModel.calcCartBottomBodyAndHeaderVal(it)
             }
@@ -164,41 +165,42 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
 
     private fun observeOrderButtonClickEvent() {
         with(cartViewModel) {
-            orderButtonClicked.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { btnClicked ->
-                if (btnClicked) {
-                    val alarmManager =
-                        (requireContext().getSystemService(Context.ALARM_SERVICE)) as AlarmManager
-                    val intent = Intent(requireContext(), DeliveryReceiver::class.java).apply {
-                        putStringArrayListExtra("orderHashList", cartViewModel.orderHashList)
-                        putExtra("firstItemTitle", cartViewModel.orderFirstItemTitle)
-                        putExtra("timeStamp", cartViewModel.currentOrderTimeStamp)
-                    }
+            orderButtonClicked.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                .onEach { btnClicked ->
+                    if (btnClicked) {
+                        val alarmManager =
+                            (requireContext().getSystemService(Context.ALARM_SERVICE)) as AlarmManager
+                        val intent = Intent(requireContext(), DeliveryReceiver::class.java).apply {
+                            putStringArrayListExtra("orderHashList", cartViewModel.orderHashList)
+                            putExtra("firstItemTitle", cartViewModel.orderFirstItemTitle)
+                            putExtra("timeStamp", cartViewModel.currentOrderTimeStamp)
+                        }
 
-                    val pendingIntent = PendingIntent.getBroadcast(
-                        requireContext(),
-                        SecureRandom().nextInt(Int.MAX_VALUE),
-                        intent,
-                        PendingIntent.FLAG_MUTABLE
-                    )
+                        val pendingIntent = PendingIntent.getBroadcast(
+                            requireContext(),
+                            SecureRandom().nextInt(Int.MAX_VALUE),
+                            intent,
+                            PendingIntent.FLAG_MUTABLE
+                        )
 
-                    val triggerTime =
-                        (SystemClock.elapsedRealtime() + ESTIMATED_DELIVERY_TIME) // 테스트용 = 현재 10초
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        alarmManager.setExactAndAllowWhileIdle(
-                            AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                            triggerTime,
-                            pendingIntent
-                        )
-                    } else {
-                        alarmManager.set(
-                            AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                            triggerTime,
-                            pendingIntent
-                        )
+                        val triggerTime =
+                            (SystemClock.elapsedRealtime() + ESTIMATED_DELIVERY_TIME) // 테스트용 = 현재 10초
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            alarmManager.setExactAndAllowWhileIdle(
+                                AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                                triggerTime,
+                                pendingIntent
+                            )
+                        } else {
+                            alarmManager.set(
+                                AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                                triggerTime,
+                                pendingIntent
+                            )
+                        }
+                        cartViewModel.fragmentArrayIndex.value = 1 // fragment 전환 -> 주문 디테일 화면
                     }
-                    cartViewModel.fragmentArrayIndex.value = 1 // fragment 전환 -> 주문 디테일 화면
-                }
-            }.launchIn(viewLifecycleOwner.lifecycleScope)
+                }.launchIn(viewLifecycleOwner.lifecycleScope)
         }
     }
 

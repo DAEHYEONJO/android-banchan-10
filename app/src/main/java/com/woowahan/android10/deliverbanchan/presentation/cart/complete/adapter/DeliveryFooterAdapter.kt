@@ -9,19 +9,25 @@ import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 
 @ActivityRetainedScoped
-class DeliveryFooterAdapter @Inject constructor(): RecyclerView.Adapter<DeliveryFooterAdapter.ViewHolder>() {
+class DeliveryFooterAdapter @Inject constructor() :
+    RecyclerView.Adapter<DeliveryFooterAdapter.ViewHolder>() {
 
     var cartDeliveryBottomList = listOf<UiOrderInfo>()
 
-    class ViewHolder(private val binding: ItemCartOrderCompleteFooterBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(uiOrderInfo: UiOrderInfo){
+    class ViewHolder(private val binding: ItemCartOrderCompleteFooterBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(uiOrderInfo: UiOrderInfo) {
             binding.item = uiOrderInfo
             binding.executePendingBindings()
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemCartOrderCompleteFooterBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemCartOrderCompleteFooterBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
         return ViewHolder(binding)
     }
 

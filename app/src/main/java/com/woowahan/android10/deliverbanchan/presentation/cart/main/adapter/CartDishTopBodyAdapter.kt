@@ -1,6 +1,5 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart.main.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.findViewTreeLifecycleOwner
@@ -47,7 +46,10 @@ class CartDishTopBodyAdapter @Inject constructor(
         }
     }
 
-    inner class ViewHolder(val binding: ItemCartDishTopBodyBinding, private val coroutineScope: CoroutineScope) :
+    inner class ViewHolder(
+        val binding: ItemCartDishTopBodyBinding,
+        private val coroutineScope: CoroutineScope
+    ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(uiCartOrderDishJoinItem: UiCartOrderDishJoinItem) {
             with(binding) {
@@ -70,11 +72,18 @@ class CartDishTopBodyAdapter @Inject constructor(
                     }
                 }
                 cartSelectTopBodyIbPlus.setOnClickListener {
-                    if (amount <= 19) onCartTopBodyItemClickListener?.onClickAmountBtn(adapterPosition, hash, amount + 1)
+                    if (amount <= 19) onCartTopBodyItemClickListener?.onClickAmountBtn(
+                        adapterPosition,
+                        hash,
+                        amount + 1
+                    )
                 }
-                with(cartSelectTopBodyTvAmount){
-                    setClickEventWithDuration(coroutineScope){
-                        onCartTopBodyItemClickListener?.onClickAmountTv(adapterPosition, text.toString().toInt())
+                with(cartSelectTopBodyTvAmount) {
+                    setClickEventWithDuration(coroutineScope) {
+                        onCartTopBodyItemClickListener?.onClickAmountTv(
+                            adapterPosition,
+                            text.toString().toInt()
+                        )
                     }
                 }
                 executePendingBindings()
@@ -89,7 +98,6 @@ class CartDishTopBodyAdapter @Inject constructor(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        Log.e(TAG, "onBindViewHolder: ${currentList[position]}", )
         holder.bind(currentList[position])
     }
 }
