@@ -1,5 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.detail
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -49,6 +50,8 @@ class DetailViewModel @Inject constructor(
     private val _insertSuccessEvent = MutableSharedFlow<Boolean>()
     val insertSuccessEvent = _insertSuccessEvent.asSharedFlow()
 
+    private var _currentItemAmount: Int? = null
+
     init {
         getAllCartInfo()
         getAllOrderInfo()
@@ -60,10 +63,12 @@ class DetailViewModel @Inject constructor(
             setCartIconText(cartInfoList.size)
             // 디테일화면에서 insert하고, 다른곳 갔다가 다시 왔을때 카트에 있는것인지 없는것인지 판단하여 수량을 update할지
             // 아예 cart에 insert할지 분기처리 하기 위하여 구현해놓은 부분
-            currentUiDishItem?.let {
-                it.isInserted = cartInfoList.map { cartInfo ->
+            currentUiDishItem?.let { uiDishItem ->
+                val cartGroupedByHash = cartInfoList.groupBy { cartInfo ->
                     cartInfo.hash
-                }.toSet().contains(it.hash)
+                }
+                uiDishItem.isInserted = cartGroupedByHash.keys.contains(uiDishItem.hash)
+                _currentItemAmount = cartGroupedByHash[currentUiDishItem.hash]?.first()?.amount
             }
         }
     }
@@ -154,7 +159,19 @@ class DetailViewModel @Inject constructor(
     }
 
     fun plusItemCount() {
-        _itemCount.value += 1
+        if (_currentItemAmount != null){
+            if (_itemCount.value < 20 - _currentItemAmount!!){
+                setItemCountPlus()
+            }
+        }else{
+            if (_itemCount.value < 20){
+                setItemCountPlus()
+            }
+        }
+    }
+
+    fun setItemCountPlus(amount: Int = 1){
+        _itemCount.value += amount
         _uiDetailInfo.value = UiState.Success(
             (_uiDetailInfo.value as UiState.Success).items.copy(itemCount = _itemCount.value)
         )

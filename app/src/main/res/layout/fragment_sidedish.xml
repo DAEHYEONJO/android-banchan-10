@@ -29,13 +29,14 @@
                     android:id="@+id/side_dish_ctl"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:minHeight="72dp"
                     app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/side_dish_cl"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/rv_space_8dp">
+                        android:layout_marginBottom="24dp">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/side_dish_cl_header_text"

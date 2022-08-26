@@ -38,8 +38,7 @@ class CartBottomSheetViewModel @Inject constructor(
 
     fun getCartInfoByHash() {
         BanChanApplication.applicationScope.launch {
-            Log.e("에러", "getCartInfoByHash: ${uiDishItem!!.hash}", )
-            cartUseCase.getBottomSheetInfoByHash(uiDishItem.hash)
+            cartUseCase.getBottomSheetInfoByHash(uiDishItem!!.hash)
                 .flowOn(Dispatchers.IO).collect { uiBottomSheet ->
                     if (uiBottomSheet.amount == -1) {
                         isCurrentItemInserted = false

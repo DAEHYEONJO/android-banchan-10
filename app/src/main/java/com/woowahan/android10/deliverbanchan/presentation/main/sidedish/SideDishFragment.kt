@@ -11,7 +11,7 @@ import com.woowahan.android10.deliverbanchan.databinding.FragmentSidedishBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
 import com.woowahan.android10.deliverbanchan.presentation.base.listeners.SpinnerEventListener
-import com.woowahan.android10.deliverbanchan.presentation.common.decorator.GridSpanCountTwoDecorator
+import com.woowahan.android10.deliverbanchan.presentation.common.decorator.GridSpanCountTwoForMainDishDecorator
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.observeItemRangeMoved
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEventWithDuration
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
@@ -37,7 +37,7 @@ class SideDishFragment :
     lateinit var sideDishSpinnerAdapter: SortSpinnerAdapter
 
     @Inject
-    lateinit var gridSpanCountTwoDecorator: GridSpanCountTwoDecorator
+    lateinit var gridSpanCountTwoForMainDishDecorator: GridSpanCountTwoForMainDishDecorator
     var isListenerAdd = false
     private val itemSelectedListener = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(
@@ -110,7 +110,7 @@ class SideDishFragment :
                 adapter = sideDishAdapter.apply {
                     onDishItemClickListener = this@SideDishFragment
                 }
-                if (itemDecorationCount == 0) addItemDecoration(gridSpanCountTwoDecorator)
+                if (itemDecorationCount == 0) addItemDecoration(gridSpanCountTwoForMainDishDecorator)
             }
             with(sideDishSp) {
                 setWillNotDraw(false)
