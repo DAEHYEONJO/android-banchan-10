@@ -99,4 +99,8 @@ dependencies {
     implementation AndroidX.ROOM_PAGING
 
     implementation AndroidX.SPLASH_SCREEN
+
+    implementation Kotlin.COROUTINES_TEST
+
+    implementation Google.TRUTH
 }

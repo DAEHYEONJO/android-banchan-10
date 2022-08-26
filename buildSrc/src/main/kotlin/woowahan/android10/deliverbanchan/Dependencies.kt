@@ -50,6 +50,7 @@ object Kotlin {
     const val KOTLIN_STDLIB      = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.KOTLIN_VERSION}"
     const val COROUTINES_CORE    = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.KOTLINX_COROUTINES}"
     const val COROUTINES_ANDROID = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.KOTLINX_COROUTINES}"
+    const val COROUTINES_TEST    = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.KOTLINX_COROUTINES}"
 }
 
 object AndroidX {
@@ -88,6 +89,8 @@ object Google {
     const val HILT_ANDROID_COMPILER = "com.google.dagger:hilt-android-compiler:${Versions.HILT}"
 
     const val MATERIAL = "com.google.android.material:material:${Versions.MATERIAL}"
+
+    const val TRUTH    = "com.google.truth:truth:0.43"
 }
 
 object Libraries {
