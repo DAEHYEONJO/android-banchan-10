@@ -1,7 +1,6 @@
 package com.woowahan.android10.deliverbanchan.background
 
 import android.content.Context
-import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
@@ -22,14 +21,11 @@ class DeliveryWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
         return@withContext try {
-            Log.e("DeliveryWorker", "DeliveryWorker doWork")
-            Log.e("DeliveryWorker", "orderHashList : $orderHashList")
 
             orderRepository.updateOrderIsDelivering(orderHashList)
 
             Result.success()
         } catch (exception: Exception) {
-            Log.e("DeliveryWorker", "${exception.javaClass}, ${exception.message}")
             Result.failure()
         }
     }

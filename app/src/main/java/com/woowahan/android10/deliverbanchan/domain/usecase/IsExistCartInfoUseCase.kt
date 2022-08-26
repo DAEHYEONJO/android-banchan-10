@@ -7,8 +7,8 @@ import javax.inject.Singleton
 @Singleton
 class IsExistCartInfoUseCase @Inject constructor(
     private val cartRepository: CartRepository
-){
-    suspend operator fun invoke(hash: String): Boolean{
+) {
+    suspend operator fun invoke(hash: String): Boolean {
         return cartRepository.isExistCartInfo(hash)
     }
 }

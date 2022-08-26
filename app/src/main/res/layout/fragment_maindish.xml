@@ -16,8 +16,10 @@
             android:layout_height="match_parent">
 
             <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/main_dish_abl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:backgroundTint="@color/white">
 
                 <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -111,20 +113,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
-
-            <ProgressBar
-                android:id="@+id/maindish_pb"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:indeterminateBehavior="repeat"
-                android:indeterminateTint="@color/progress_indicator" />
-
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         <include
             android:id="@+id/error_layout"
             layout="@layout/layout_error_screen" />
+
+        <ProgressBar
+            android:id="@+id/maindish_pb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_gravity="center"
+            android:indeterminateBehavior="repeat"
+            android:indeterminateTint="@color/progress_indicator" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

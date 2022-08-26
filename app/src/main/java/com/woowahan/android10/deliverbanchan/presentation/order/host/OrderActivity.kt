@@ -1,7 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.order.host
 
 import android.os.Bundle
-import android.util.Log
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
@@ -13,9 +12,9 @@ import com.woowahan.android10.deliverbanchan.presentation.base.BaseActivity
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEventWithDuration
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
-import com.woowahan.android10.deliverbanchan.presentation.order.viewmodel.OrderViewModel
 import com.woowahan.android10.deliverbanchan.presentation.order.orderlist.OrderListFragment
 import com.woowahan.android10.deliverbanchan.presentation.order.orderlistdetail.OrderDetailFragment
+import com.woowahan.android10.deliverbanchan.presentation.order.viewmodel.OrderViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -38,7 +37,6 @@ class OrderActivity : BaseActivity<ActivityOrderBinding>(R.layout.activity_order
     }
 
     private fun initBroadcastOrderDetailIntent() {
-        Log.e(TAG, "initBroadcastOrderDetailIntent: ${intent.getLongExtra("orderTimeStamp", 0L)}")
         val timeStamp = intent.getLongExtra("orderTimeStamp", 0L)
         orderViewModel.setNotificationExtraTimeStamp(timeStamp)
     }
@@ -81,7 +79,7 @@ class OrderActivity : BaseActivity<ActivityOrderBinding>(R.layout.activity_order
     }
 
     private fun initFragment(tagArrayIndex: Int) {
-        with(supportFragmentManager){
+        with(supportFragmentManager) {
             var fragment = findFragmentByTag(fragmentTagArray[tagArrayIndex])
             if (fragment == null) {
                 fragment = when (tagArrayIndex) {
@@ -103,7 +101,7 @@ class OrderActivity : BaseActivity<ActivityOrderBinding>(R.layout.activity_order
                     replace(R.id.order_fcv, fragment, fragmentTagArray[tagArrayIndex])
                     if (tagArrayIndex != 0 && orderViewModel.fromNotificationExtraTimeStamp.value == 0L) {
                         // ListFragment 를 띄워야 하는 경우가 아니라면 백스택에 추가해주기
-                        if (backStackEntryCount==0) addToBackStack("OrderBackStack")
+                        if (backStackEntryCount == 0) addToBackStack("OrderBackStack")
                     }
                 }
             }
@@ -111,7 +109,7 @@ class OrderActivity : BaseActivity<ActivityOrderBinding>(R.layout.activity_order
     }
 
     private fun setOrderListAppBar() {
-        with(orderViewModel){
+        with(orderViewModel) {
             setAppBarTitle(resources.getString(R.string.app_bar_order_list_title))
             orderDetailMode.value = false
         }
@@ -119,7 +117,7 @@ class OrderActivity : BaseActivity<ActivityOrderBinding>(R.layout.activity_order
     }
 
     private fun setOrderDetailAppBar() {
-        with(orderViewModel){
+        with(orderViewModel) {
             setAppBarTitle("")
             orderDetailMode.value = true
         }
@@ -127,12 +125,12 @@ class OrderActivity : BaseActivity<ActivityOrderBinding>(R.layout.activity_order
     }
 
     override fun onBackPressed() {
-        with(orderViewModel){
+        with(orderViewModel) {
             if (currentFragmentIndex.value == 0) super.onBackPressed()
-            else if (fromNotificationExtraTimeStamp.value==0L){
+            else if (fromNotificationExtraTimeStamp.value == 0L) {
                 supportFragmentManager.popBackStack()
                 setFragmentIndex(0)
-            }else{
+            } else {
                 super.onBackPressed()
             }
         }

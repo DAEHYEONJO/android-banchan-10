@@ -1,6 +1,5 @@
 package com.woowahan.android10.deliverbanchan.presentation.common.binding
 
-import android.util.Log
 import android.widget.ImageView
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.BindingAdapter
@@ -16,7 +15,6 @@ fun ImageView.setStringUrlImage(stringUrl: String) {
 
 @BindingAdapter("app:setCartIcon")
 fun ImageView.setCartIcon(cartIconText: String) {
-    Log.e("BindingAdapter", "setCartIcon: $cartIconText")
     background = if (cartIconText != "") ResourcesCompat.getDrawable(
         resources,
         R.drawable.ic_cart_no_right_top_margin_0,

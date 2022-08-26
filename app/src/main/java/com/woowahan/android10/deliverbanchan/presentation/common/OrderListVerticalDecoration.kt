@@ -2,7 +2,6 @@ package com.woowahan.android10.deliverbanchan.presentation.common
 
 import android.content.Context
 import android.graphics.Rect
-import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.dpToPx

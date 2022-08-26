@@ -11,7 +11,7 @@ import javax.inject.Singleton
 
 @Singleton
 class SpinnerEventListener @Inject constructor(
-    @ApplicationContext private val context:Context
+    @ApplicationContext private val context: Context
 ) : CustomSortingSpinner.OnSpinnerEventsListener {
     override fun opPopUpWindowOpened(spinner: Spinner) {
         spinner.background =

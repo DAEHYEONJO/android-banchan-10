@@ -3,17 +3,18 @@ package com.woowahan.android10.deliverbanchan.background
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.app.PendingIntent.*
+import android.app.PendingIntent.FLAG_MUTABLE
+import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.app.TaskStackBuilder
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.presentation.order.host.OrderActivity
@@ -26,15 +27,14 @@ class DeliveryReceiver : BroadcastReceiver() {
     }
 
     override fun onReceive(context: Context, intent: Intent?) {
-        Log.e("DeliveryReceiver", "onReceive")
 
         val orderHashList = intent?.getStringArrayListExtra("orderHashList") ?: ArrayList<String>()
         val orderFirstItemTitle = intent?.getStringExtra("firstItemTitle") ?: "Title"
-        val orderTimeStamp = intent?.getLongExtra("timeStamp",0L) ?: 0L
+        val orderTimeStamp = intent?.getLongExtra("timeStamp", 0L) ?: 0L
         val deliveryWorkManager = WorkManager.getInstance(context)
 
         val deliveryWorkRequest = OneTimeWorkRequestBuilder<DeliveryWorker>()
-            //.setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+            .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
             .addTag("DeliveryWorker")
             .setInputData(getWorkerData(orderHashList))
             .build()
@@ -42,7 +42,11 @@ class DeliveryReceiver : BroadcastReceiver() {
         deliveryWorkManager.enqueue(deliveryWorkRequest)
 
         createNotificationChannel(context)
-        deliverNotification(context, getNotificationTitle(orderFirstItemTitle, orderHashList.size), orderTimeStamp?:0L)
+        deliverNotification(
+            context,
+            getNotificationTitle(orderFirstItemTitle, orderHashList.size),
+            orderTimeStamp ?: 0L
+        )
     }
 
     private fun getWorkerData(orderHashList: List<String>): Data {
@@ -76,7 +80,7 @@ class DeliveryReceiver : BroadcastReceiver() {
             // action값이 다른 경우 다른 intent object로 판별됨
             action = System.currentTimeMillis().toString()
             putExtra("orderTimeStamp", orderTimeStamp)
-            putExtra("fromReceiver",contentTitle)
+            putExtra("fromReceiver", contentTitle)
         }
 
         val resultPendingIntent: PendingIntent = TaskStackBuilder.create(context).run {
@@ -92,7 +96,7 @@ class DeliveryReceiver : BroadcastReceiver() {
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
 
-        Log.e("AppTest", "alarm notify")
-        NotificationManagerCompat.from(context).notify((System.currentTimeMillis()/1000).toInt(), builder.build())
+        NotificationManagerCompat.from(context)
+            .notify((System.currentTimeMillis() / 1000).toInt(), builder.build())
     }
 }

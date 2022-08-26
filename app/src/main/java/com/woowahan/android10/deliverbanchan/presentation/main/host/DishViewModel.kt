@@ -18,6 +18,7 @@ class DishViewModel @Inject constructor(
     companion object {
         const val TAG = "DishViewModel"
     }
+
     val cartIconText = MutableLiveData("")
     val isOrderingExist = MutableLiveData(false)
     var isReady = false
@@ -29,7 +30,7 @@ class DishViewModel @Inject constructor(
     }
 
     private fun getAllCartInfo() = viewModelScope.launch {
-        getAllCartInfoUseCase(this).collect{
+        getAllCartInfoUseCase(this).collect {
             setCartIconText(it.size)
         }
     }
@@ -44,13 +45,13 @@ class DishViewModel @Inject constructor(
         }
     }
 
-    private fun setCartIconText(listSize: Int){
-        with(listSize){
-            cartIconText.value = if ( this in 1 .. 9 ){
+    private fun setCartIconText(listSize: Int) {
+        with(listSize) {
+            cartIconText.value = if (this in 1..9) {
                 toString()
-            }else if ( this >= 10){
+            } else if (this >= 10) {
                 "10+"
-            }else{
+            } else {
                 ""
             }
         }

@@ -2,7 +2,6 @@ package com.woowahan.android10.deliverbanchan.presentation.main.maindish
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import androidx.fragment.app.viewModels
@@ -14,7 +13,10 @@ import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentMaindishBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
+import com.woowahan.android10.deliverbanchan.presentation.base.listeners.SpinnerEventListener
 import com.woowahan.android10.deliverbanchan.presentation.common.decorator.GridSpanCountTwoForMainDishDecorator
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.observeItemRangeMoved
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEventWithDuration
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
 import com.woowahan.android10.deliverbanchan.presentation.detail.DetailActivity
@@ -22,7 +24,6 @@ import com.woowahan.android10.deliverbanchan.presentation.dialogs.bottomsheet.Ca
 import com.woowahan.android10.deliverbanchan.presentation.main.common.MainGridAdapter
 import com.woowahan.android10.deliverbanchan.presentation.main.maindish.adapter.MainDishLinearAdapter
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
-import com.woowahan.android10.deliverbanchan.presentation.base.listeners.SpinnerEventListener
 import com.woowahan.android10.deliverbanchan.presentation.view.adapter.SortSpinnerAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -45,7 +46,6 @@ class MainDishFragment :
     @Inject
     lateinit var gridSpanCountTwoForMainDecorator: GridSpanCountTwoForMainDishDecorator
 
-    var isListenerAdd = false
     private val itemSelectedListener = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(
             p0: AdapterView<*>?,
@@ -72,7 +72,6 @@ class MainDishFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
-        Log.e(TAG, "onViewCreated: ${binding.maindishTvHeader.paintFlags}")
     }
 
     private fun initView() {
@@ -85,8 +84,6 @@ class MainDishFragment :
 
     override fun onResume() {
         super.onResume()
-        Log.e(TAG, "viewLifecycleOwner: ${viewLifecycleOwner}")
-        Log.e(TAG, "lifecycleScope: ${viewLifecycleOwner.lifecycleScope}")
         checkErrorState()
     }
 
@@ -114,13 +111,15 @@ class MainDishFragment :
     }
 
     private fun setRecyclerView() {
-
         mainDishAdapter.apply {
             onDishItemClickListener = this@MainDishFragment
+
+            observeItemRangeMoved().flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach {
+                binding.maindishRv.scrollToPosition(0)
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
         }
 
         mainDishLinearAdapter = MainDishLinearAdapter({
-            Log.e("TAG", "cart icon clicked")
             val cartBottomSheetFragment = CartBottomSheetFragment()
             val bundle = Bundle()
             bundle.putParcelable("UiDishItem", it)
@@ -130,7 +129,11 @@ class MainDishFragment :
             val intent = Intent(requireContext(), DetailActivity::class.java)
             intent.putExtra("UiDishItem", it)
             startActivity(intent)
-        })
+        }).apply {
+            observeItemRangeMoved().flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach {
+                binding.maindishRv.scrollToPosition(0)
+            }.launchIn(lifecycleScope)
+        }
 
         binding.maindishRv.apply {
             adapter = mainDishAdapter
@@ -163,10 +166,11 @@ class MainDishFragment :
         when (state) {
             is UiState.Loading -> {
                 binding.maindishPb.toVisible()
-                binding.errorLayout.errorCl.toGone()
             }
             is UiState.Success -> {
                 binding.maindishPb.toGone()
+                binding.errorLayout.errorCl.toGone()
+                binding.mainDishAbl.toVisible()
                 binding.maindishCdl.toVisible()
                 mainDishAdapter.submitList(state.items)
                 mainDishLinearAdapter.submitList(state.items)
@@ -180,7 +184,7 @@ class MainDishFragment :
     }
 
     private fun setErrorBtn() {
-        binding.errorLayout.errorBtn.setOnClickListener {
+        binding.errorLayout.errorBtn.setClickEventWithDuration(coroutineScope = viewLifecycleOwner.lifecycleScope) {
             mainDishViewModel.getMainDishList()
         }
     }

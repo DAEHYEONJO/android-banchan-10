@@ -14,9 +14,10 @@ import com.woowahan.android10.deliverbanchan.presentation.base.listeners.OnDishI
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEventWithDuration
 import kotlinx.coroutines.CoroutineScope
 
-class ExhibitionHorizontalAdapter() : ListAdapter<UiDishItem, ExhibitionHorizontalAdapter.ViewHolder>(
-    diffUtil
-) {
+class ExhibitionHorizontalAdapter() :
+    ListAdapter<UiDishItem, ExhibitionHorizontalAdapter.ViewHolder>(
+        diffUtil
+    ) {
 
     companion object {
         const val TAG = "MainDishGridAdapter"
@@ -33,7 +34,10 @@ class ExhibitionHorizontalAdapter() : ListAdapter<UiDishItem, ExhibitionHorizont
 
     var onDishItemClickListener: OnDishItemClickListener? = null
 
-    inner class ViewHolder(private val binding: ItemExhibitionHorizontalBinding, private val coroutineScope: CoroutineScope) :
+    inner class ViewHolder(
+        private val binding: ItemExhibitionHorizontalBinding,
+        private val coroutineScope: CoroutineScope
+    ) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(uiDishItem: UiDishItem, position: Int) {

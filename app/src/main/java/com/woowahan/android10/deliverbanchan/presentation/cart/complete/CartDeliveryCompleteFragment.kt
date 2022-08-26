@@ -10,10 +10,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentCartDeliveryCompleteBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
-import com.woowahan.android10.deliverbanchan.presentation.cart.viewmodel.CartViewModel
 import com.woowahan.android10.deliverbanchan.presentation.cart.complete.adapter.DeliveryBodyAdapter
 import com.woowahan.android10.deliverbanchan.presentation.cart.complete.adapter.DeliveryFooterAdapter
 import com.woowahan.android10.deliverbanchan.presentation.cart.complete.adapter.DeliveryTopAdapter
+import com.woowahan.android10.deliverbanchan.presentation.cart.viewmodel.CartViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -25,13 +25,20 @@ class CartDeliveryCompleteFragment : BaseFragment<FragmentCartDeliveryCompleteBi
     "CartDeliveryCompleteFragment"
 ) {
 
-    @Inject lateinit var cartDishCompleteTopAdapter: DeliveryTopAdapter
-    @Inject lateinit var cartDishCompleteBodyAdapter: DeliveryBodyAdapter
-    @Inject lateinit var cartDishCompleteFooterAdapter: DeliveryFooterAdapter
+    @Inject
+    lateinit var cartDishCompleteTopAdapter: DeliveryTopAdapter
+    @Inject
+    lateinit var cartDishCompleteBodyAdapter: DeliveryBodyAdapter
+    @Inject
+    lateinit var cartDishCompleteFooterAdapter: DeliveryFooterAdapter
     private val concatAdapter: ConcatAdapter by lazy {
-        ConcatAdapter(cartDishCompleteTopAdapter, cartDishCompleteBodyAdapter, cartDishCompleteFooterAdapter)
+        ConcatAdapter(
+            cartDishCompleteTopAdapter,
+            cartDishCompleteBodyAdapter,
+            cartDishCompleteFooterAdapter
+        )
     }
-    private val cartViewModel: CartViewModel by activityViewModels ()
+    private val cartViewModel: CartViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -41,24 +48,24 @@ class CartDeliveryCompleteFragment : BaseFragment<FragmentCartDeliveryCompleteBi
     }
 
     private fun initObserver() {
-        with(cartViewModel){
-            
-            orderCompleteTopItem.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach{
+        with(cartViewModel) {
+
+            orderCompleteTopItem.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach {
                 cartDishCompleteTopAdapter.cartDeliveryTopList = listOf(it)
                 cartDishCompleteTopAdapter.notifyDataSetChanged()
             }.launchIn(viewLifecycleOwner.lifecycleScope)
-            
-            orderCompleteBodyItem.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach{
+
+            orderCompleteBodyItem.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach {
                 cartDishCompleteBodyAdapter.cartDeliveryTopList = it
                 cartDishCompleteBodyAdapter.notifyDataSetChanged()
             }.launchIn(viewLifecycleOwner.lifecycleScope)
-            
-            orderCompleteFooterItem.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach{
+
+            orderCompleteFooterItem.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach {
                 cartDishCompleteFooterAdapter.cartDeliveryBottomList = listOf(it)
                 cartDishCompleteFooterAdapter.notifyDataSetChanged()
             }.launchIn(viewLifecycleOwner.lifecycleScope)
 
-            reloadBtnClicked.observe(viewLifecycleOwner){
+            reloadBtnClicked.observe(viewLifecycleOwner) {
                 cartDishCompleteTopAdapter.notifyDataSetChanged()
             }
         }
@@ -66,6 +73,7 @@ class CartDeliveryCompleteFragment : BaseFragment<FragmentCartDeliveryCompleteBi
 
     private fun initRecyclerView() {
         binding.cartDeliveryCompleteRv.adapter = concatAdapter
-        binding.cartDeliveryCompleteRv.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        binding.cartDeliveryCompleteRv.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
     }
 }

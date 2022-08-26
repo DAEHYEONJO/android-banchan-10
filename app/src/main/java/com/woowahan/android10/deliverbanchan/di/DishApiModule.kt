@@ -66,11 +66,12 @@ object DishApiModule {
 
     @Provides
     @Singleton
-    fun providesRetrofit(okHttpClient: OkHttpClient, converterFactory: Converter.Factory) = Retrofit.Builder()
-        .baseUrl(BASE_URL)
-        .client(okHttpClient)
-        .addConverterFactory(converterFactory)
-        .build()
+    fun providesRetrofit(okHttpClient: OkHttpClient, converterFactory: Converter.Factory) =
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(converterFactory)
+            .build()
 
     @Provides
     @Singleton

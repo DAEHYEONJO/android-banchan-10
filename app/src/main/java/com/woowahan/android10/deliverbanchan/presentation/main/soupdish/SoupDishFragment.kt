@@ -1,9 +1,7 @@
 package com.woowahan.android10.deliverbanchan.presentation.main.soupdish
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.view.ViewTreeObserver
 import android.widget.AdapterView
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -13,13 +11,14 @@ import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentSoupdishBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
+import com.woowahan.android10.deliverbanchan.presentation.base.listeners.SpinnerEventListener
 import com.woowahan.android10.deliverbanchan.presentation.common.decorator.GridSpanCountTwoDecorator
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.observeItemRangeMoved
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEventWithDuration
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
 import com.woowahan.android10.deliverbanchan.presentation.main.common.MainGridAdapter
-import com.woowahan.android10.deliverbanchan.presentation.main.host.DishViewModel
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
-import com.woowahan.android10.deliverbanchan.presentation.base.listeners.SpinnerEventListener
 import com.woowahan.android10.deliverbanchan.presentation.view.adapter.SortSpinnerAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -47,7 +46,6 @@ class SoupDishFragment :
             position: Int,
             id: Long
         ) {
-            Log.e(TAG, "onItemSelected: $position", )
             with(soupViewModel) {
                 sortSoupDishes(position)
                 with(soupSpinnerAdapter) {
@@ -66,8 +64,6 @@ class SoupDishFragment :
 
     override fun onResume() {
         super.onResume()
-        Log.e(TAG, "viewLifecycleOwner: ${viewLifecycleOwner}")
-        Log.e(TAG, "lifecycleScope: ${viewLifecycleOwner.lifecycleScope}")
         checkErrorState()
     }
 
@@ -83,7 +79,6 @@ class SoupDishFragment :
         with(soupViewModel) {
             soupState.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
                 .onEach { state ->
-                    Log.e(TAG, "initObserver: $state")
                     handleStateChange(state)
                 }.launchIn(viewLifecycleOwner.lifecycleScope)
 
@@ -94,10 +89,11 @@ class SoupDishFragment :
         when (state) {
             is UiState.Loading -> {
                 binding.soupPb.toVisible()
-                binding.errorLayout.errorCl.toGone()
             }
             is UiState.Success -> {
                 binding.soupPb.toGone()
+                binding.errorLayout.errorCl.toGone()
+                binding.soupDishAbl.toVisible()
                 binding.soupCdl.toVisible()
                 mainGridAdapter.submitList(state.items)
             }
@@ -125,10 +121,16 @@ class SoupDishFragment :
                 }
             }
         }
+
+        mainGridAdapter.apply {
+            observeItemRangeMoved().flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach {
+                binding.soupDishRv.scrollToPosition(0)
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
+        }
     }
 
     private fun setErrorBtn() {
-        binding.errorLayout.errorBtn.setOnClickListener {
+        binding.errorLayout.errorBtn.setClickEventWithDuration(coroutineScope = viewLifecycleOwner.lifecycleScope) {
             soupViewModel.setSoupDishesState()
         }
     }

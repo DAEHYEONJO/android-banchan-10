@@ -8,7 +8,7 @@ import javax.inject.Singleton
 class InsertCartInfoUseCase @Inject constructor(
     private val cartRepository: CartRepository
 ) {
-    suspend operator fun invoke(hash: String, checked: Boolean, amount: Int){
+    suspend operator fun invoke(hash: String, checked: Boolean, amount: Int) {
         cartRepository.insertCartInfo(hash, checked, amount)
     }
 }

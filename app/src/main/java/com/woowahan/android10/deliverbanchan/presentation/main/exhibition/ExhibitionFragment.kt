@@ -1,7 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.main.exhibition
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
@@ -12,6 +11,7 @@ import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentExhibitionBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiExhibitionItem
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEventWithDuration
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
 import com.woowahan.android10.deliverbanchan.presentation.main.exhibition.adapter.ExhibitionAdapter
@@ -80,11 +80,10 @@ class ExhibitionFragment :
         when (state) {
             is UiState.Loading -> {
                 binding.exhibitionPb.toVisible()
-                binding.errorLayout.errorCl.toGone()
             }
             is UiState.Success -> {
-                Log.e(TAG, "exhibition success")
                 binding.exhibitionPb.toGone()
+                binding.errorLayout.errorCl.toGone()
                 binding.exhibitionRv.toVisible()
                 exhibitionAdapter.submitList(state.items)
             }
@@ -97,7 +96,7 @@ class ExhibitionFragment :
     }
 
     private fun setErrorBtn() {
-        binding.errorLayout.errorBtn.setOnClickListener {
+        binding.errorLayout.errorBtn.setClickEventWithDuration(coroutineScope = viewLifecycleOwner.lifecycleScope) {
             exhibitionViewModel.getExhibitionList()
         }
     }

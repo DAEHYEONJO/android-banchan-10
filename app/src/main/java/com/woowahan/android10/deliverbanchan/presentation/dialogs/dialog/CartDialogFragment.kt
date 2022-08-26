@@ -14,7 +14,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CartDialogFragment @Inject constructor(): DialogFragment() {
+class CartDialogFragment @Inject constructor() : DialogFragment() {
 
     private var _binding: FragmentCartDialogBinding? = null
     private val binding: FragmentCartDialogBinding get() = checkNotNull(_binding)
@@ -24,7 +24,7 @@ class CartDialogFragment @Inject constructor(): DialogFragment() {
         super.onAttach(context)
         try {
             onCartDialogClickListener = context as OnCartDialogClickListener
-        }catch (e: ClassCastException){
+        } catch (e: ClassCastException) {
             throw ClassCastException("dialog Fragment cast exception")
         }
     }

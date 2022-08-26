@@ -1,6 +1,5 @@
 package com.woowahan.android10.deliverbanchan.data.local.repository
 
-import android.util.Log
 import androidx.annotation.WorkerThread
 import com.woowahan.android10.deliverbanchan.data.local.dao.CartDao
 import com.woowahan.android10.deliverbanchan.data.local.mapper.DomainMapper
@@ -68,7 +67,6 @@ class CartRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteCartInfoByHashList(deleteHashes: List<String>) {
-        Log.e("repo impl", "deleteVarArgByHashList: $deleteHashes")
         cartDao.deleteCartInfoByHashList(deleteHashes)
     }
 

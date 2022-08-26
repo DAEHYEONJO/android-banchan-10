@@ -2,7 +2,6 @@ package com.woowahan.android10.deliverbanchan.presentation.detail
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -52,6 +51,7 @@ class DetailActivity :
         initBtn()
         initView()
         initObservers()
+        setErrorBtn()
     }
 
     @OptIn(FlowPreview::class)
@@ -109,6 +109,7 @@ class DetailActivity :
                     binding.detailPb.toVisible()
                 }
                 is UiState.Success -> {
+                    binding.detailErrorLayout.errorCl.toGone()
                     binding.detailRv.toVisible()
                     binding.detailPb.toGone()
                     detailThumbImageAdapter.submitList(listOf(uiDetailState.items.thumbList))
@@ -117,13 +118,13 @@ class DetailActivity :
                 }
                 is UiState.Error -> {
                     binding.detailPb.toGone()
-                    showToast(uiDetailState.error + "에러 에러 삐용 삐용")
+                    binding.detailRv.toGone()
+                    binding.detailErrorLayout.errorCl.toVisible()
                 }
             }
         }.launchIn(lifecycleScope)
 
         detailViewModel.insertSuccessEvent.flowWithLifecycle(lifecycle).onEach {
-            Log.e(TAG, "인서트이벤트 $it: ")
             if (it) {
                 cartDialog.show(supportFragmentManager, "CartDialog")
             } else {
@@ -133,6 +134,11 @@ class DetailActivity :
 
     }
 
+    private fun setErrorBtn() {
+        binding.detailErrorLayout.errorBtn.setClickEventWithDuration(coroutineScope = lifecycleScope) {
+            detailViewModel.getDetailDishInfo()
+        }
+    }
 
 
 }

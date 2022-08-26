@@ -17,7 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.FlowPreview
 
 @AndroidEntryPoint
-class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main, "MainActivity"){
+class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main, "MainActivity") {
 
     private val dishViewModel: DishViewModel by viewModels()
     private lateinit var tabTitleArray: Array<String>

@@ -10,7 +10,7 @@ import javax.inject.Singleton
 @Singleton
 class GetAllOrderInfoListUseCase @Inject constructor(
     private val orderRepository: OrderRepository
-){
+) {
     operator fun invoke(coroutineScope: CoroutineScope) = orderRepository.getAllOrderInfo().shareIn(
         scope = coroutineScope,
         started = SharingStarted.WhileSubscribed(),

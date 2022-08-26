@@ -10,13 +10,15 @@ import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 
 @ActivityRetainedScoped
-class DeliveryBodyAdapter @Inject constructor(): RecyclerView.Adapter<DeliveryBodyAdapter.ViewHolder>() {
+class DeliveryBodyAdapter @Inject constructor() :
+    RecyclerView.Adapter<DeliveryBodyAdapter.ViewHolder>() {
 
     var cartDeliveryTopList = emptyList<UiCartOrderDishJoinItem>()
 
-    inner class ViewHolder(private val binding: ItemCartOrderCompleteBodyBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(uiCartJoinList: List<UiCartOrderDishJoinItem>){
-            with(binding.cartOrderCompleteBodyRv){
+    inner class ViewHolder(private val binding: ItemCartOrderCompleteBodyBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(uiCartJoinList: List<UiCartOrderDishJoinItem>) {
+            with(binding.cartOrderCompleteBodyRv) {
                 adapter = DeliveryBottomItemAdapter().apply {
                     if (itemDecorationCount == 0) addItemDecoration(LinearItemDecorator(context))
                     submitList(uiCartJoinList)
@@ -30,7 +32,11 @@ class DeliveryBodyAdapter @Inject constructor(): RecyclerView.Adapter<DeliveryBo
         parent: ViewGroup,
         viewType: Int
     ): ViewHolder {
-        val binding = ItemCartOrderCompleteBodyBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemCartOrderCompleteBodyBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
         return ViewHolder(binding)
     }
 

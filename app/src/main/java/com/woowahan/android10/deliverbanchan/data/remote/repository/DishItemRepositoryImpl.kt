@@ -3,9 +3,9 @@ package com.woowahan.android10.deliverbanchan.data.remote.repository
 import com.woowahan.android10.deliverbanchan.data.remote.dao.DishApi
 import com.woowahan.android10.deliverbanchan.data.remote.mapper.ApiMapper
 import com.woowahan.android10.deliverbanchan.di.IoDispatcher
-import com.woowahan.android10.deliverbanchan.domain.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiExhibitionItem
+import com.woowahan.android10.deliverbanchan.domain.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.repository.local.CartRepository
 import com.woowahan.android10.deliverbanchan.domain.repository.remote.DishItemRepository
 import kotlinx.coroutines.CoroutineDispatcher
@@ -41,7 +41,7 @@ class DishItemRepositoryImpl @Inject constructor(
                         emit(
                             BaseResult.Success(
                                 apiDishResponse.mapIndexed { index, dishItem ->
-                                    async(dispatcher) {
+                                async(dispatcher) {
                                         val isInserted =
                                             cartRepository.isExistCartInfo(dishItem.detailHash)
                                         ApiMapper.mapToUiDishItem(dishItem, isInserted, index)

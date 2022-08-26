@@ -1,6 +1,5 @@
 package com.woowahan.android10.deliverbanchan.presentation.detail
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -105,7 +104,7 @@ class DetailViewModel @Inject constructor(
         }
     }
 
-    private fun getDetailDishInfo() {
+    fun getDetailDishInfo() {
         viewModelScope.launch {
             getDetailDishUseCase(
                 currentUiDishItem!!.hash,
@@ -115,7 +114,6 @@ class DetailViewModel @Inject constructor(
             }.catch { exception ->
                 _uiDetailInfo.value = UiState.Loading(false)
                 _uiDetailInfo.value = UiState.Error(exception.message.toString())
-                Log.e(TAG, "getDetailDishInfo: 뷰모델 캐치 에러 ${exception.message.toString()}")
             }.flowOn(Dispatchers.IO).collect { result ->
                 _uiDetailInfo.value = UiState.Loading(false)
                 when (result) {
@@ -125,7 +123,6 @@ class DetailViewModel @Inject constructor(
                     }
                     is BaseResult.Error -> {
                         _uiDetailInfo.value = UiState.Error(result.error)
-                        Log.e(TAG, "getDetailDishInfo: 뷰모델 베이스 에러 : ${result.error}")
                     }
                 }
             }
@@ -141,7 +138,11 @@ class DetailViewModel @Inject constructor(
                         updateCartAmount(hash = it.hash, amount = _itemCount.value)
                     } else {
                         //새로 장바구니에 들어가는 경우
-                        insertCartInfoUseCase(hash = it.hash, checked = true, amount = _itemCount.value)
+                        insertCartInfoUseCase(
+                            hash = it.hash,
+                            checked = true,
+                            amount = _itemCount.value
+                        )
                     }
                 }.onSuccess {
                     _insertSuccessEvent.emit(true)

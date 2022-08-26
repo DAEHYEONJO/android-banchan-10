@@ -5,8 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.woowahan.android10.deliverbanchan.domain.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
+import com.woowahan.android10.deliverbanchan.domain.model.response.BaseResult
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllCartInfoHashSetUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetThemeDishListUseCase
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
@@ -61,14 +61,12 @@ class MainDishViewModel @Inject constructor(
     }
 
     fun getMainDishList() {
-        Log.e("MainDishViewModel", "getMainDishList")
         viewModelScope.launch {
             getThemeDishListUseCase(THEME).onStart {
                 _mainDishState.value = UiState.Loading(true)
             }.catch { exception ->
                 _mainDishState.value = UiState.Loading(false)
                 _mainDishState.value = UiState.Error(exception.message.toString())
-                Log.e("MainDishViewModel", "뷰모델 익셉션 : ${exception.message}")
             }.collect { result ->
                 _mainDishState.value = UiState.Loading(false)
                 withContext(Dispatchers.Main) {
@@ -79,7 +77,6 @@ class MainDishViewModel @Inject constructor(
                         }
                         is BaseResult.Error -> {
                             _mainDishState.value = UiState.Error(result.error)
-                            Log.e("MainDishViewModel", "뷰모델 베이스 에러 : ${result.error}")
                         }
                     }
                 }
