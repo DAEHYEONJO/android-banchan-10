@@ -1,5 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.dialogs.bottomsheet
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.woowahan.android10.deliverbanchan.BanChanApplication
@@ -37,9 +38,10 @@ class CartBottomSheetViewModel @Inject constructor(
 
     fun getCartInfoByHash() {
         BanChanApplication.applicationScope.launch {
-            cartUseCase.getBottomSheetInfoByHash(uiDishItem!!.hash)
+            Log.e("에러", "getCartInfoByHash: ${uiDishItem!!.hash}", )
+            cartUseCase.getBottomSheetInfoByHash(uiDishItem.hash)
                 .flowOn(Dispatchers.IO).collect { uiBottomSheet ->
-                    if (uiBottomSheet == null) {
+                    if (uiBottomSheet.amount == -1) {
                         isCurrentItemInserted = false
                         isCurrentItemChecked = false
                     } else {

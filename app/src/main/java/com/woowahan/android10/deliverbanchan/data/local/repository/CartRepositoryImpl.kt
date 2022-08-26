@@ -1,5 +1,6 @@
 package com.woowahan.android10.deliverbanchan.data.local.repository
 
+import android.util.Log
 import androidx.annotation.WorkerThread
 import com.woowahan.android10.deliverbanchan.data.local.dao.CartDao
 import com.woowahan.android10.deliverbanchan.data.local.mapper.DomainMapper
@@ -21,7 +22,9 @@ class CartRepositoryImpl @Inject constructor(
 
     override fun getBottomSheetCartInfoByHash(hash: String): Flow<UiBottomSheet> {
         return cartDao.getCartInfoById(hash).map { cartInfo ->
-            EntityMapper.mapToUiBottomSheet(cartInfo)
+            cartInfo?.let {
+                EntityMapper.mapToUiBottomSheet(cartInfo)
+            }?:EntityMapper.mapToUiBottomSheet(CartInfo.emptyItem())
         }
     }
 
