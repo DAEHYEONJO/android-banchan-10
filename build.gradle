@@ -5,6 +5,7 @@ buildscript {
     dependencies {
         classpath "com.google.dagger:hilt-android-gradle-plugin:${Versions.HILT}"
         classpath "org.jetbrains.kotlin:kotlin-serialization:${Versions.KOTLIN_VERSION}"
+        classpath 'com.google.gms:google-services:4.3.13'
     }
 }
 
