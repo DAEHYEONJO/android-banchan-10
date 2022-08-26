@@ -3,10 +3,8 @@ package com.woowahan.android10.deliverbanchan.data.local.dao
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.google.common.truth.Truth
 import com.woowahan.android10.deliverbanchan.data.local.db.FoodRoomDatabase
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
@@ -20,12 +18,12 @@ class CartDaoTest {
     private lateinit var dao: CartDao
     private lateinit var dummyList: List<CartInfo>
 
-    @Before // 테스트케이스 시작전 각각 호출
-    fun setup() {  // 테스트 용도이므로 inMemory 사용
+    @Before
+    fun setup() {
         database = Room.inMemoryDatabaseBuilder(
             ApplicationProvider.getApplicationContext(),
             FoodRoomDatabase::class.java
-        ).allowMainThreadQueries().build()  // 테스트 코드에서는 db 메인스레드 허용
+        ).allowMainThreadQueries().build()
 
         dao = database.cartDao()
 
@@ -40,17 +38,23 @@ class CartDaoTest {
 
     @Test
     fun insertCartInfoList() = runTest {
+        val start = System.currentTimeMillis()
         dummyList.forEach { cartInfo ->
             dao.insertCartInfo(cartInfo)
         }
+        val end = System.currentTimeMillis()
+        println((end-start)/1000)
     }
 
     @Test
     fun insertVarCartInfoList() = runTest {
+        val start = System.currentTimeMillis()
         dao.insertCartInfoVarArg(*dummyList.toTypedArray())
+        val end = System.currentTimeMillis()
+        println((end-start)/1000)
     }
 
-    @After // 테스트케이스 완료시 각각 호출
+    @After
     fun teardown() {
         database.close()
     }
