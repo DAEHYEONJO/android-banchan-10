@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "636154365139",
+    "project_id": "woowahan-android-banchan-10",
+    "storage_bucket": "woowahan-android-banchan-10.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:636154365139:android:0b1c54b86bf09e4e3f4026",
+        "android_client_info": {
+          "package_name": "com.woowahan.android10.deliverbanchan"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "636154365139-4hhhkhtleglbeandrt2f24jrslf2kq15.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.woowahan.android10.deliverbanchan",
+            "certificate_hash": "f17effe6429fbb8321773dee59dc4b7652747e63"
+          }
+        },
+        {
+          "client_id": "636154365139-l46imuei11493btvqajsbc8aactq4j72.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsKsxQkB7t5NfJKX6ruCSAVQKdeKosItU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "636154365139-l46imuei11493btvqajsbc8aactq4j72.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
