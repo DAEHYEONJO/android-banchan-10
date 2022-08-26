@@ -3,8 +3,12 @@ package com.woowahan.android10.deliverbanchan.data.local.dao
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.google.common.truth.Truth
 import com.woowahan.android10.deliverbanchan.data.local.db.FoodRoomDatabase
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
@@ -52,6 +56,30 @@ class CartDaoTest {
         dao.insertCartInfoVarArg(*dummyList.toTypedArray())
         val end = System.currentTimeMillis()
         println((end-start)/1000)
+    }
+
+    @Test
+    fun insertCartItem() = runTest {
+        val cartItem = CartInfo(hash = "HBDEF", checked = true, amount = 5)
+        dao.insertCartInfo(cartItem)
+        val allCartItems = dao.getAllCartInfo().first()
+        Truth.assertThat(allCartItems).contains(cartItem)
+    }
+
+    @Test
+    fun isInsertedCheck() = runTest {
+        dummyList.forEach {
+            dao.isExistCartInfo("HBDEF")
+        }
+    }
+
+    @Test
+    fun isInsertedCheckAsync() = runTest {
+        dummyList.forEach {
+            async(Dispatchers.IO) {
+                dao.isExistCartInfo("HBDEF")
+            }
+        }
     }
 
     @After
