@@ -12,7 +12,7 @@ interface CartDao {
     fun getAllCartInfo(): Flow<List<CartInfo>>
 
     @Query("SELECT * FROM CART_INFO WHERE hash = :hash")
-    fun getCartInfoById(hash: String): Flow<CartInfo>
+    fun getCartInfoById(hash: String): Flow<CartInfo?>
 
     @Query("SELECT * FROM LOCAL_DISH NATURAL JOIN CART_INFO")
     fun getAllCartJoinList(): Flow<List<Cart>>
