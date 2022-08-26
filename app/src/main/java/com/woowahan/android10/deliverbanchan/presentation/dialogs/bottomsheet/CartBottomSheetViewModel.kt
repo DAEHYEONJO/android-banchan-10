@@ -3,6 +3,7 @@ package com.woowahan.android10.deliverbanchan.presentation.dialogs.bottomsheet
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.woowahan.android10.deliverbanchan.BanChanApplication
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.usecase.CartUseCase
@@ -36,8 +37,12 @@ class CartBottomSheetViewModel @Inject constructor(
     private var isCurrentItemInserted = false
     private var isCurrentItemChecked = false
 
-    fun getCartInfoByHash() {
-        BanChanApplication.applicationScope.launch {
+    init {
+        getCartInfoByHash()
+    }
+
+    private fun getCartInfoByHash() {
+        viewModelScope.launch {
             cartUseCase.getBottomSheetInfoByHash(uiDishItem!!.hash)
                 .flowOn(Dispatchers.IO).collect { uiBottomSheet ->
                     if (uiBottomSheet.amount == -1) {
@@ -53,7 +58,7 @@ class CartBottomSheetViewModel @Inject constructor(
     }
 
     fun insertCartInfo() {
-        BanChanApplication.applicationScope.launch {
+        viewModelScope.launch {
             runCatching {
                 with(uiDishItem!!) {
                     updateTimeStampRecentViewedByHashUseCase(hash, System.currentTimeMillis())
