@@ -9,6 +9,7 @@ interface DishRepository {
 
     @WorkerThread
     suspend fun insertLocalDish(uiDishItem: UiDishItem)
+
     @WorkerThread
     fun getAllLocalDish(): Flow<List<LocalDish>>
 

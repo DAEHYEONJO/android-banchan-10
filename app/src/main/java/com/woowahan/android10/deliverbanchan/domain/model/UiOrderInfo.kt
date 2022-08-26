@@ -5,9 +5,9 @@ data class UiOrderInfo(
     val deliveryFee: Int,
     val totalPrice: Int
 ) {
-    companion object{
+    companion object {
         fun emptyItem() = UiOrderInfo(
-            0,0,0
+            0, 0, 0
         )
     }
 }

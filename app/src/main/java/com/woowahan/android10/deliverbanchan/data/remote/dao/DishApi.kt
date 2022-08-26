@@ -1,9 +1,9 @@
 package com.woowahan.android10.deliverbanchan.data.remote.dao
 
-import com.woowahan.android10.deliverbanchan.data.remote.model.*
+import com.woowahan.android10.deliverbanchan.data.remote.model.DishDetail
+import com.woowahan.android10.deliverbanchan.data.remote.model.DishResponse
+import com.woowahan.android10.deliverbanchan.data.remote.model.Exhibition
 import retrofit2.Response
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Path
 

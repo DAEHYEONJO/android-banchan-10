@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.databinding.ItemDetailThumbImageBinding
-import com.woowahan.android10.deliverbanchan.databinding.ItemDetailThumbImageRvBinding
 
 class DetailThumbViewPagerAdapter :
     ListAdapter<String, DetailThumbViewPagerAdapter.DetailThumbViewPagerHolder>(

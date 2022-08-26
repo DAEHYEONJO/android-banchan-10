@@ -29,8 +29,9 @@ class DetailThumbImageAdapter :
 
             vpAdapter.submitList(imgUrlList.toList())
 
-            imgUrlList.forEachIndexed{index, url ->
-                val textView = LayoutInflater.from(binding.root.context).inflate(R.layout.tab_indicator, null) as TextView
+            imgUrlList.forEachIndexed { index, url ->
+                val textView = LayoutInflater.from(binding.root.context)
+                    .inflate(R.layout.tab_indicator, null) as TextView
                 binding.detailTl.getTabAt(index)?.customView = textView
             }
         }

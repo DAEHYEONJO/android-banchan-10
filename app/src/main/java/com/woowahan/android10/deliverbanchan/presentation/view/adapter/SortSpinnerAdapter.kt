@@ -1,7 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.view.adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,14 +18,15 @@ import javax.inject.Inject
 @FragmentScoped
 class SortSpinnerAdapter @Inject constructor(
     @ApplicationContext val context: Context
-): BaseAdapter() {
+) : BaseAdapter() {
 
-    var sortSpinnerList = context.resources.getStringArray(R.array.sort_spinner_item).toList().map { str ->
-        SortSpinnerItem(
-            name = str,
-            selected = false
-        )
-    }
+    var sortSpinnerList =
+        context.resources.getStringArray(R.array.sort_spinner_item).toList().map { str ->
+            SortSpinnerItem(
+                name = str,
+                selected = false
+            )
+        }
 
     private val dp16ToPx = dpToPx(context, 16).toInt()
     private val dp8ToPx = dpToPx(context, 8).toInt()
@@ -38,17 +38,18 @@ class SortSpinnerAdapter @Inject constructor(
     override fun getItemId(position: Int): Long = position.toLong()
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val binding = ItemSortSpinnerSelectedBinding.inflate(LayoutInflater.from(context), parent, false)
+        val binding =
+            ItemSortSpinnerSelectedBinding.inflate(LayoutInflater.from(context), parent, false)
         binding.sortSpinnerSelectedTv.text = sortSpinnerList[position].name
         return binding.root
     }
 
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val binding = ItemSortSpinnerDropDownBinding.inflate(LayoutInflater.from(context), parent, false)
-        with(binding){
+        val binding =
+            ItemSortSpinnerDropDownBinding.inflate(LayoutInflater.from(context), parent, false)
+        with(binding) {
             sortSpinnerDropDownTv.text = sortSpinnerList[position].name
-            sortSpinnerDropDownIv.visibility = sortSpinnerList[position].selected.let{ selected ->
-                Log.e("dsffsd", "getDropDownView: 드랍다운 셀렉티드 $selected", )
+            sortSpinnerDropDownIv.visibility = sortSpinnerList[position].selected.let { selected ->
                 if (selected) {
                     sortSpinnerDropDownTv.setTextAppearance(R.style.Widget_TextView_NotoSansKR_GreyScaleBlack14_Medium_TextAppearance)
                     View.VISIBLE
@@ -60,13 +61,13 @@ class SortSpinnerAdapter @Inject constructor(
             val layoutParams = (sortSpinnerDropDownTv.layoutParams as ConstraintLayout.LayoutParams)
             when (position) {
                 0 -> {
-                    layoutParams.setMargins(0, dp16ToPx,0, 0)
+                    layoutParams.setMargins(0, dp16ToPx, 0, 0)
                 }
                 sortSpinnerList.size - 1 -> {
-                    layoutParams.setMargins(0, dp8ToPx,0, dp16ToPx)
+                    layoutParams.setMargins(0, dp8ToPx, 0, dp16ToPx)
                 }
                 else -> {
-                    layoutParams.setMargins(0, dp8ToPx,0, 0)
+                    layoutParams.setMargins(0, dp8ToPx, 0, 0)
                 }
             }
             sortSpinnerDropDownTv.layoutParams = layoutParams

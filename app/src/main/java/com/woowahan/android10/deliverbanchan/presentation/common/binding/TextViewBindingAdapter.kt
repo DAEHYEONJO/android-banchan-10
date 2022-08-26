@@ -58,20 +58,26 @@ fun TextView.setCartTextViewVisibility(cartIconText: String) {
 @BindingAdapter("beforeTime", "deliveryTime", "suffixString")
 fun TextView.getTimeString(beforeTime: Long, deliveryTime: Long, suffixString: String) {
     val curTime = System.currentTimeMillis()
-    var diffTime = if (suffixString.isNotEmpty())  (curTime - beforeTime) / 1000 // 최근 확인시간 계산 diffTime
-    else (beforeTime + deliveryTime - curTime)/1000 // 배달 완료까지 남은시간 diffTime
+    var diffTime =
+        if (suffixString.isNotEmpty()) (curTime - beforeTime) / 1000 // 최근 확인시간 계산 diffTime
+        else (beforeTime + deliveryTime - curTime) / 1000 // 배달 완료까지 남은시간 diffTime
     val timeUnitArray = intArrayOf(60, 60, 24, 30, 12)
     val timeSuffixArray = arrayOf("초", "분", "시간", "일", "달", "년")
-    if (suffixString.isEmpty()){
+    if (suffixString.isEmpty()) {
         if (diffTime <= 0) { // 배달완료시간이 지났는데 아직 notification이 안떠서 완료 안된 상태를 위함
             text = resources.getString(R.string.arrive_soon)
             return
         }
         if (diffTime < timeUnitArray[0]) {
-            text = resources.getString(R.string.time_format, diffTime.toString(), timeSuffixArray[0], suffixString)
+            text = resources.getString(
+                R.string.time_format,
+                diffTime.toString(),
+                timeSuffixArray[0],
+                suffixString
+            )
             return
         }
-    }else if (diffTime < timeUnitArray[0]){
+    } else if (diffTime < timeUnitArray[0]) {
         text = resources.getString(R.string.recent)
         return
     }
@@ -79,11 +85,21 @@ fun TextView.getTimeString(beforeTime: Long, deliveryTime: Long, suffixString: S
     repeat(4) { index ->
         diffTime /= timeUnitArray[index]
         if (diffTime < timeUnitArray[index + 1]) {
-            text = resources.getString(R.string.time_format, diffTime.toString(), timeSuffixArray[index + 1], suffixString)
+            text = resources.getString(
+                R.string.time_format,
+                diffTime.toString(),
+                timeSuffixArray[index + 1],
+                suffixString
+            )
             return
         }
     }
-    text = resources.getString(R.string.time_format, (diffTime / timeUnitArray.last()).toString(), timeSuffixArray.last(), suffixString)
+    text = resources.getString(
+        R.string.time_format,
+        (diffTime / timeUnitArray.last()).toString(),
+        timeSuffixArray.last(),
+        suffixString
+    )
 }
 
 @BindingAdapter("isAvailableDelivery", "totalPrice")

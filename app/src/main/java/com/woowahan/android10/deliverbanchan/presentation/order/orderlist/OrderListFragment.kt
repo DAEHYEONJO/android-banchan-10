@@ -1,7 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.order.orderlist
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
@@ -15,8 +14,8 @@ import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
 import com.woowahan.android10.deliverbanchan.presentation.common.OrderListVerticalDecoration
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
-import com.woowahan.android10.deliverbanchan.presentation.order.viewmodel.OrderViewModel
 import com.woowahan.android10.deliverbanchan.presentation.order.adapter.OrderListAdapter
+import com.woowahan.android10.deliverbanchan.presentation.order.viewmodel.OrderViewModel
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -39,7 +38,6 @@ class OrderListFragment :
 
     private fun setRecyclerView() {
         orderListAdapter = OrderListAdapter {
-            Log.e(TAG, "setRecyclerView: 클릭", )
             orderViewModel.setFragmentIndex(1)
             orderViewModel.selectOrderListItem(it)
         }
@@ -72,9 +70,9 @@ class OrderListFragment :
                 binding.orderListTvEmptyMessage.toGone()
                 val uiOrderList = uiState.items as List<UiOrderListItem>
                 if (orderViewModel.fromNotificationExtraTimeStamp.value != 0L) {
-                    orderViewModel.selectOrderListItem(uiOrderList.find { it.timeStamp==orderViewModel.fromNotificationExtraTimeStamp.value }!!.orderList)
+                    orderViewModel.selectOrderListItem(uiOrderList.find { it.timeStamp == orderViewModel.fromNotificationExtraTimeStamp.value }!!.orderList)
                     orderViewModel.setFragmentIndex(1)
-                }else{
+                } else {
                     orderListAdapter.submitList(uiOrderList)
                 }
             }

@@ -1,6 +1,5 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart.main.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -12,8 +11,8 @@ import javax.inject.Inject
 @ActivityRetainedScoped
 class CartSelectHeaderAdapter @Inject constructor() :
     RecyclerView.Adapter<CartSelectHeaderAdapter.ViewHolder>() {
-    
-    companion object{
+
+    companion object {
         const val TAG = "CartSelectHeaderAdapter"
     }
 
@@ -21,16 +20,16 @@ class CartSelectHeaderAdapter @Inject constructor() :
         fun onClickDeleteBtn()
         fun onClickSelectedToggleBtn(checkedState: Boolean)
     }
+
     var onCartSelectHeaderItemClickListener: OnCartSelectHeaderItemClickListener? = null
     var selectHeaderList = emptyList<UiCartHeader>()
 
     inner class ViewHolder(val binding: ItemCartSelectHeaderBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(uiCartHeader: UiCartHeader) {
-            with(binding){
+            with(binding) {
                 item = uiCartHeader
-                cartSelectHeaderCb.setOnClickListener{
-                    Log.e(TAG, "bind: ${cartSelectHeaderCb.isChecked}", )
+                cartSelectHeaderCb.setOnClickListener {
                     onCartSelectHeaderItemClickListener?.onClickSelectedToggleBtn(uiCartHeader.checkBoxChecked)
                 }
                 cartSelectHeaderTvSelectDelete.setOnClickListener {

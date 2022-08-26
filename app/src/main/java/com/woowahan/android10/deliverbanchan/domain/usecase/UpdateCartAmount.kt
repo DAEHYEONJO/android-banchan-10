@@ -7,8 +7,8 @@ import javax.inject.Inject
 @ActivityRetainedScoped
 class UpdateCartAmount @Inject constructor(
     private val cartRepository: CartRepository
-){
-    suspend operator fun invoke(hash: String, amount: Int){
+) {
+    suspend operator fun invoke(hash: String, amount: Int) {
         cartRepository.updateCartAmount(hash, amount)
     }
 }

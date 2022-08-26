@@ -16,7 +16,12 @@ class DetailContentAdapter(
 
     inner class DetailContentViewHolder(private val binding: ItemDetailContentBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(uiDetailInfo: UiDetailInfo, clickMinus: () -> Unit, clickPlus: () -> Unit, buttonClick: () -> Unit) {
+        fun bind(
+            uiDetailInfo: UiDetailInfo,
+            clickMinus: () -> Unit,
+            clickPlus: () -> Unit,
+            buttonClick: () -> Unit
+        ) {
             binding.uiDetailInfo = uiDetailInfo
 
             binding.detailIbMinus.setOnClickListener {

@@ -38,7 +38,7 @@ class RecentViewedRepositoryImpl @Inject constructor(
             PagingConfig(
                 pageSize = 8
             )
-        ){
+        ) {
             recentlyViewedDao.getAllRecentJoinPaging()
         }
     }

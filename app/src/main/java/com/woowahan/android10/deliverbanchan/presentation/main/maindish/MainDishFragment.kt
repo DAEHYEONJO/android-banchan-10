@@ -2,7 +2,6 @@ package com.woowahan.android10.deliverbanchan.presentation.main.maindish
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import androidx.fragment.app.viewModels
@@ -16,7 +15,10 @@ import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
 import com.woowahan.android10.deliverbanchan.presentation.base.listeners.SpinnerEventListener
 import com.woowahan.android10.deliverbanchan.presentation.common.decorator.GridSpanCountTwoForMainDishDecorator
-import com.woowahan.android10.deliverbanchan.presentation.common.ext.*
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.observeItemRangeMoved
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEventWithDuration
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
+import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
 import com.woowahan.android10.deliverbanchan.presentation.detail.DetailActivity
 import com.woowahan.android10.deliverbanchan.presentation.dialogs.bottomsheet.CartBottomSheetFragment
 import com.woowahan.android10.deliverbanchan.presentation.main.common.MainGridAdapter
@@ -70,7 +72,6 @@ class MainDishFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
-        Log.e(TAG, "onViewCreated: ${binding.maindishTvHeader.paintFlags}")
     }
 
     private fun initView() {
@@ -83,8 +84,6 @@ class MainDishFragment :
 
     override fun onResume() {
         super.onResume()
-        Log.e(TAG, "viewLifecycleOwner: ${viewLifecycleOwner}")
-        Log.e(TAG, "lifecycleScope: ${viewLifecycleOwner.lifecycleScope}")
         checkErrorState()
     }
 
@@ -121,7 +120,6 @@ class MainDishFragment :
         }
 
         mainDishLinearAdapter = MainDishLinearAdapter({
-            Log.e("TAG", "cart icon clicked")
             val cartBottomSheetFragment = CartBottomSheetFragment()
             val bundle = Bundle()
             bundle.putParcelable("UiDishItem", it)

@@ -35,8 +35,12 @@ class OrderListAdapter(
 
     inner class OrderListViewHolder(val binding: ItemOrderListBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(orderList: List<UiCartOrderDishJoinItem>, curDeliveryTotalPrice: Int, itemClick: (orderList: List<UiCartOrderDishJoinItem>) -> Unit) {
-            with(binding){
+        fun bind(
+            orderList: List<UiCartOrderDishJoinItem>,
+            curDeliveryTotalPrice: Int,
+            itemClick: (orderList: List<UiCartOrderDishJoinItem>) -> Unit
+        ) {
+            with(binding) {
                 listSize = orderList.size
                 item = orderList[0]
                 orderTotalPrice = curDeliveryTotalPrice
@@ -54,6 +58,10 @@ class OrderListAdapter(
     }
 
     override fun onBindViewHolder(holder: OrderListViewHolder, position: Int) {
-        holder.bind(currentList[position].orderList, currentList[position].curDeliveryTotalPrice, itemClick)
+        holder.bind(
+            currentList[position].orderList,
+            currentList[position].curDeliveryTotalPrice,
+            itemClick
+        )
     }
 }

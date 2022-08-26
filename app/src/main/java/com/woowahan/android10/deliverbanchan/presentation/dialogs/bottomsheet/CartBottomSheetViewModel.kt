@@ -1,6 +1,5 @@
 package com.woowahan.android10.deliverbanchan.presentation.dialogs.bottomsheet
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.woowahan.android10.deliverbanchan.BanChanApplication
@@ -37,25 +36,18 @@ class CartBottomSheetViewModel @Inject constructor(
     private var isCurrentItemChecked = false
 
     fun getCartInfoByHash() {
-        Log.e("CartBottomSheetViewModel", "유아이디시아이템: uiDishItem: ${uiDishItem}", )
         BanChanApplication.applicationScope.launch {
-            cartUseCase.getBottomSheetInfoByHash(uiDishItem!!.hash).onStart {
-
-            }.catch { exception ->
-                Log.e("CartBottomSheetViewModel", "${exception.message}")
-            }.flowOn(Dispatchers.IO).collect { uiBottomSheet ->
-                Log.e("CartBottomSheetViewModel", "cartInfo : ${uiBottomSheet}")
-
-                if (uiBottomSheet == null) {
-                    Log.e("CartBottomSheetViewModel", "null")
-                    isCurrentItemInserted = false
-                    isCurrentItemChecked = false
-                } else {
-                    isCurrentItemInserted = true
-                    isCurrentItemChecked = uiBottomSheet.checked
-                    _itemCount.value = uiBottomSheet.amount
+            cartUseCase.getBottomSheetInfoByHash(uiDishItem!!.hash)
+                .flowOn(Dispatchers.IO).collect { uiBottomSheet ->
+                    if (uiBottomSheet == null) {
+                        isCurrentItemInserted = false
+                        isCurrentItemChecked = false
+                    } else {
+                        isCurrentItemInserted = true
+                        isCurrentItemChecked = uiBottomSheet.checked
+                        _itemCount.value = uiBottomSheet.amount
+                    }
                 }
-            }
         }
     }
 
@@ -68,17 +60,15 @@ class CartBottomSheetViewModel @Inject constructor(
                     insertLocalDishUseCase(uiDishItem)
                 }
             }.onSuccess {
-                Log.e("CartBottomSheetViewModel", "insert success")
                 _insertSuccessEvent.emit(true)
             }.onFailure {
-                Log.e("CartBottomSheetViewModel", "insert fail")
                 _insertSuccessEvent.emit(false)
             }
         }
     }
 
     fun clickPlusBtn() {
-        if (_itemCount.value==20) return
+        if (_itemCount.value == 20) return
         _itemCount.value += 1
     }
 
