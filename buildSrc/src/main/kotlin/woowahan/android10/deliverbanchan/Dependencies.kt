@@ -44,6 +44,8 @@ object Versions {
     const val HILT_COMPILER = "1.0.0"
 
     const val SPLASH_SCREEN_VERSION = "1.0.0-beta02"
+
+    const val FIREBASE_BOM_VERSION = "30.3.2"
 }
 
 object Kotlin {
@@ -91,6 +93,8 @@ object Google {
     const val MATERIAL = "com.google.android.material:material:${Versions.MATERIAL}"
 
     const val TRUTH    = "com.google.truth:truth:0.43"
+    const val FIREBASE_BOM = "com.google.firebase:firebase-bom:${Versions.FIREBASE_BOM_VERSION}"
+    const val FIREBASE_ANALYTICS_KTX = "com.google.firebase:firebase-analytics-ktx"
 }
 
 object Libraries {

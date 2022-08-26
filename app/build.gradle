@@ -14,6 +14,7 @@ plugins {
     id 'kotlinx-serialization'
     id 'kotlin-android'
     id 'kotlin-parcelize'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -24,7 +25,7 @@ android {
         minSdk Versions.MIN_SDK_VERSION
         targetSdk Versions.TARGET_SDK_VERSION
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -103,4 +104,7 @@ dependencies {
     implementation Kotlin.COROUTINES_TEST
 
     implementation Google.TRUTH
+
+    implementation platform (Google.FIREBASE_BOM)
+    implementation Google.FIREBASE_ANALYTICS_KTX
 }
