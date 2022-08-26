@@ -10,4 +10,8 @@ data class CartInfo(
     val hash: String,
     val checked: Boolean = true,
     val amount: Int
-)
+) {
+    companion object{
+        fun emptyItem() = CartInfo("",true,-1)
+    }
+}
