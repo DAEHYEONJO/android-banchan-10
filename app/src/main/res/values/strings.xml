@@ -1,8 +1,6 @@
 <resources>
     <string name="app_name">DeliverBanChan</string>
-    <string name="app_bar_with_back_btn_title">Recently viewed products</string>
     <string name="app_bar_no_back_btn_title">ORDERING</string>
-    <string name="app_bar_cart_title">Cart</string>
     <string name="app_bar_cart_order_empty" />
     <string name="app_bar_order_list_title">Order List</string>
     <!-- TODO: Remove or change this placeholder text -->
@@ -40,6 +38,11 @@
         <item>CartMainFragment</item>
         <item>CartDeliveryCompleteFragment</item>
         <item>RecentlyViewedFragment</item>
+    </string-array>
+    <string-array name="cart_fragment_app_bar_title_array">
+        <item>Cart</item>
+        <item></item>
+        <item>Recently viewed products</item>
     </string-array>
 
     <string-array name="order_fragment_tag_array">
