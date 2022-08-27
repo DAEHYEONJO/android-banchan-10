@@ -2,6 +2,7 @@ package com.woowahan.android10.deliverbanchan.presentation.detail.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -12,8 +13,9 @@ class DetailSectionImageAdapter :
 
     inner class DetailSectionViewHolder(private val binding: ItemDetailSectionImageBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(imageUrl: String) {
+        fun bind(imageUrl: String, position: Int) {
             binding.imageUrl = imageUrl
+            binding.detailViewBottom.isVisible = (position == currentList.size - 1)
         }
     }
 
@@ -28,7 +30,7 @@ class DetailSectionImageAdapter :
     }
 
     override fun onBindViewHolder(holder: DetailSectionViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), position)
     }
 
     companion object DetailSectionDiffUtil : DiffUtil.ItemCallback<String>() {
