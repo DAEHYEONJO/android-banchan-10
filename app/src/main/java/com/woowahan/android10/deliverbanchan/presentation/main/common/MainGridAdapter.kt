@@ -31,6 +31,10 @@ class MainGridAdapter @Inject constructor() :
             override fun areContentsTheSame(oldItem: UiDishItem, newItem: UiDishItem): Boolean {
                 return newItem == oldItem
             }
+
+            override fun getChangePayload(oldItem: UiDishItem, newItem: UiDishItem): Any? {
+                return if (oldItem.isInserted != newItem.isInserted) true else null
+            }
         }
     }
 
@@ -61,5 +65,16 @@ class MainGridAdapter @Inject constructor() :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(currentList[position])
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
+        if (payloads.isEmpty()){
+            super.onBindViewHolder(holder, position, payloads)
+        }else{
+            if (payloads[0]==true){
+                currentList[position]?.let { holder.bind(it) }
+
+            }
+        }
     }
 }

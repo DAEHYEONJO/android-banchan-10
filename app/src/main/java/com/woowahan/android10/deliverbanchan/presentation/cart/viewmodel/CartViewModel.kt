@@ -1,11 +1,12 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart.viewmodel
 
 import android.app.Application
+import android.provider.Settings
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.work.WorkManager
 import com.woowahan.android10.deliverbanchan.BanChanApplication
 import com.woowahan.android10.deliverbanchan.di.IoDispatcher
 import com.woowahan.android10.deliverbanchan.domain.model.TempOrder
@@ -20,6 +21,7 @@ import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartHeade
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,8 +30,7 @@ import javax.inject.Inject
 class CartViewModel @Inject constructor(
     private val getAllOrderInfoListUseCase: GetAllOrderInfoListUseCase,
     private val cartUseCase: CartUseCase,
-    @IoDispatcher private val dispatcher: CoroutineDispatcher,
-    application: Application
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     companion object {
@@ -43,16 +44,17 @@ class CartViewModel @Inject constructor(
 
     private val _allCartJoinState =
         MutableStateFlow<UiState<List<UiCartOrderDishJoinItem>>>(UiState.Init)
-    val allCartJoinState: StateFlow<UiState<List<UiCartOrderDishJoinItem>>>
-        get() = _allCartJoinState.stateIn(
-            initialValue = UiState.Init,
+    val allCartJoinState: SharedFlow<UiState<List<UiCartOrderDishJoinItem>>>
+        get() = _allCartJoinState.shareIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000)
+            started = SharingStarted.WhileSubscribed(5000),
+            replay = 1
         )
-    private val _allRecentlyJoinState =
+
+    private val _allRecentSevenJoinState =
         MutableStateFlow<UiState<List<UiDishItem>>>(UiState.Init)
-    val allRecentlyJoinState: StateFlow<UiState<List<UiDishItem>>>
-        get() = _allRecentlyJoinState.stateIn(
+    val allRecentSevenJoinState: StateFlow<UiState<List<UiDishItem>>>
+        get() = _allRecentSevenJoinState.stateIn(
             initialValue = UiState.Init,
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000)
@@ -95,7 +97,7 @@ class CartViewModel @Inject constructor(
     val reloadBtnClicked: LiveData<Boolean> get() = _reloadBtnClicked
 
     init {
-        getAllRecentlyJoinList()
+        getAllRecentSevenJoinList()
         getAllCartJoinList()
         observeOrderInfo()
     }
@@ -127,8 +129,9 @@ class CartViewModel @Inject constructor(
             _allCartJoinState.value = UiState.Loading(false)
             _allCartJoinState.value = UiState.Error(exception.message.toString())
         }.onEach { uiCartJoinItemList ->
-            calcCartBottomBodyAndHeaderVal(uiCartJoinItemList)
+            //calcCartBottomBodyAndHeaderVal(uiCartJoinItemList)
         }.collect {
+            Log.e(TAG, "getAllCartJoinList: 카트조인리스트 컬렉트------------------------", )
             _allCartJoinState.value = UiState.Loading(false)
             _allCartJoinState.value = UiState.Success(it)
             _uiCartJoinArrayList.clear()
@@ -185,15 +188,15 @@ class CartViewModel @Inject constructor(
         )
     }
 
-    private fun getAllRecentlyJoinList() = viewModelScope.launch {
+    private fun getAllRecentSevenJoinList() = viewModelScope.launch {
         cartUseCase.getAllRecentJoinListLimitSeven().onStart {
-            _allRecentlyJoinState.value = UiState.Loading(true)
+            _allRecentSevenJoinState.value = UiState.Loading(true)
         }.flowOn(dispatcher).catch { exception ->
-            _allRecentlyJoinState.value = UiState.Loading(false)
-            _allRecentlyJoinState.value = UiState.Error(exception.message.toString())
+            _allRecentSevenJoinState.value = UiState.Loading(false)
+            _allRecentSevenJoinState.value = UiState.Error(exception.message.toString())
         }.collect {
-            _allRecentlyJoinState.value = UiState.Loading(false)
-            _allRecentlyJoinState.value = UiState.Success(it)
+            _allRecentSevenJoinState.value = UiState.Loading(false)
+            _allRecentSevenJoinState.value = UiState.Success(it)
         }
     }
 
@@ -202,11 +205,13 @@ class CartViewModel @Inject constructor(
     }
 
     fun updateUiCartCheckedValue(position: Int, checked: Boolean) {
+        if (position == -1) return // 클릭했을때, 없어진 view의 경우 position == -1
         _uiCartJoinArrayList[position].checked = checked
         _uiCartJoinList.value = _uiCartJoinArrayList
     }
 
     fun updateUiCartAmountValue(position: Int, amount: Int) {
+        if (position == -1) return // 클릭했을때, 없어진 view의 경우 position == -1
         _uiCartJoinArrayList[position].apply {
             this.amount = amount
             totalPrice = sPrice * amount
@@ -229,8 +234,7 @@ class CartViewModel @Inject constructor(
         )
         _toBeDeletedCartItem.addAll(_selectedCartItem.map { it.hash })
         _uiCartJoinList.value = _uiCartJoinArrayList
-
-        completion(success)
+        completion(true)
     }
 
     fun changeCheckedState(checkedValue: Boolean) {
@@ -268,7 +272,7 @@ class CartViewModel @Inject constructor(
     }
 
     private fun insertOrderInfoDeleteCartInfo() {
-        BanChanApplication.applicationScope.launch {
+        GlobalScope.launch {
             currentOrderTimeStamp = System.currentTimeMillis()
             orderHashList.clear()
             orderFirstItemTitle = "Title"
@@ -288,10 +292,18 @@ class CartViewModel @Inject constructor(
     }
 
     fun updateAllCartItemChanged() {
-        BanChanApplication.applicationScope.launch {
+        GlobalScope.launch {
+            Log.e(TAG, "--------: 업데이트 아이템 ---------", )
+            _uiCartJoinList.value!!.forEach {
+                Log.e(TAG, "업뎃되는 아이템: ${it.title} ${it.checked} ${it.amount}", )
+            }
+            _toBeDeletedCartItem.forEach {
+                Log.e(TAG, "지워지는 아이템: $it", )
+            }
             cartUseCase.insertAndDeleteCartItems(
                 _uiCartJoinList.value!!, _toBeDeletedCartItem.toList()
             )
+            _toBeDeletedCartItem.clear()
         }
     }
 }

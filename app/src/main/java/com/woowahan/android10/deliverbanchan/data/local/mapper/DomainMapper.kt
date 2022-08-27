@@ -32,7 +32,7 @@ object DomainMapper {
     fun mapToCartInfo(uiCartOrderDishJoinItem: UiCartOrderDishJoinItem): CartInfo =
         with(uiCartOrderDishJoinItem) {
             return CartInfo(
-                hash, true, amount
+                hash, checked, amount
             )
         }
 

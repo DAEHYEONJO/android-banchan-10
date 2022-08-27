@@ -1,5 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart.recent.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.findViewTreeLifecycleOwner
@@ -34,6 +35,10 @@ class RecentPagingAdapter @Inject constructor() :
             override fun areContentsTheSame(oldItem: UiDishItem, newItem: UiDishItem): Boolean {
                 return oldItem == newItem
             }
+
+            override fun getChangePayload(oldItem: UiDishItem, newItem: UiDishItem): Any? {
+                return if (oldItem.isInserted != newItem.isInserted || oldItem.timeStamp!=newItem.timeStamp) true else null
+            }
         }
     }
 
@@ -53,13 +58,34 @@ class RecentPagingAdapter @Inject constructor() :
                 executePendingBindings()
             }
         }
+
+        fun bindIsInserted(isInserted: Boolean){
+            Log.e(TAG, "bindIsInserted: 바인드 인설티드: $isInserted", )
+            binding.item!!.isInserted = isInserted
+        }
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         getItem(position)?.let {
+            Log.e(TAG, "onBindViewHolder: ${it.isInserted} ${it.title} ${it.timeStamp}", )
             holder.bind(it)
         }
     }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
+        if (payloads.isEmpty()){
+            super.onBindViewHolder(holder, position, payloads)
+        }else{
+            if (payloads[0]==true){
+                getItem(position)?.let {
+                    //holder.bindIsInserted(it.isInserted)
+                    holder.bind(it)
+                }
+
+            }
+        }
+    }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
@@ -67,4 +93,5 @@ class RecentPagingAdapter @Inject constructor() :
             ItemRecentViewedBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding, parent.findViewTreeLifecycleOwner()!!.lifecycleScope)
     }
+
 }

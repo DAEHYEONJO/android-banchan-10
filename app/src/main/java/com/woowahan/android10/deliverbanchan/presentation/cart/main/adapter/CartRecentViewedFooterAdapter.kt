@@ -1,9 +1,13 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart.main.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.ItemCartRecentViewedFooterBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.presentation.base.listeners.OnDishItemClickListener
@@ -14,10 +18,25 @@ import javax.inject.Inject
 
 @ActivityRetainedScoped
 class CartRecentViewedFooterAdapter @Inject constructor() :
-    RecyclerView.Adapter<CartRecentViewedFooterAdapter.ViewHolder>() {
-    var uiRecentJoinList: List<UiDishItem> = emptyList()
+    ListAdapter<List<UiDishItem>, CartRecentViewedFooterAdapter.ViewHolder>(itemCallback) {
+    //var uiRecentJoinList: List<UiDishItem> = emptyList()
 
     companion object {
+        val itemCallback = object : DiffUtil.ItemCallback<List<UiDishItem>>(){
+            override fun areItemsTheSame(
+                oldItem: List<UiDishItem>,
+                newItem: List<UiDishItem>
+            ): Boolean {
+                return oldItem.size == newItem.size
+            }
+
+            override fun areContentsTheSame(
+                oldItem: List<UiDishItem>,
+                newItem: List<UiDishItem>
+            ): Boolean {
+                return oldItem == newItem
+            }
+        }
         const val TAG = "CartRecentViewedFooterAdapter"
     }
 
@@ -46,7 +65,12 @@ class CartRecentViewedFooterAdapter @Inject constructor() :
         }
     }
 
+    override fun getItemId(position: Int): Long {
+        return R.layout.item_cart_recent_viewed_footer.toLong()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        //Log.e(TAG, "푸터 onCreateViewHolder: ", )
         val binding = ItemCartRecentViewedFooterBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
@@ -56,10 +80,7 @@ class CartRecentViewedFooterAdapter @Inject constructor() :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(uiRecentJoinList)
+        //Log.e(TAG, "푸터 onBindViewHolder: ", )
+        holder.bind(currentList[position])
     }
-
-    override fun getItemCount(): Int = 1
-
-
 }
