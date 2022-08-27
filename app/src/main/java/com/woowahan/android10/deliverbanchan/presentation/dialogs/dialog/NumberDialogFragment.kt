@@ -66,6 +66,9 @@ class NumberDialogFragment : DialogFragment() {
                 )
                 dismiss()
             }
+            numberPickerDialogBtnExit.setOnClickListener {
+                dismiss()
+            }
         }
     }
 
