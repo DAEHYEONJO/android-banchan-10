@@ -11,10 +11,22 @@
         android:layout_width="315dp"
         android:layout_height="wrap_content">
 
+        <ImageView
+            android:id="@+id/number_picker_dialog_btn_exit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="@dimen/base_space_16dp"
+            android:layout_marginTop="@dimen/base_space_16dp"
+            android:elevation="2dp"
+            android:src="@drawable/ic_close"/>
+
         <NumberPicker
             android:id="@+id/number_picker_dialog_np_amount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/base_space_16dp"
             android:layout_marginStart="@dimen/base_space_16dp"
             android:layout_marginEnd="@dimen/base_space_16dp"
             android:theme="@style/ThemeOverlay.NumberPicker"
