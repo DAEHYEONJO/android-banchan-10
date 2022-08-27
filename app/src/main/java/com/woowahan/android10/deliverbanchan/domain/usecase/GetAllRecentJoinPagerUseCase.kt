@@ -1,5 +1,6 @@
 package com.woowahan.android10.deliverbanchan.domain.usecase
 
+import android.util.Log
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.woowahan.android10.deliverbanchan.di.IoDispatcher
@@ -18,6 +19,9 @@ class GetAllRecentJoinPagerUseCase @Inject constructor(
     private val isExistCartInfoUseCase: IsExistCartInfoUseCase,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) {
+    companion object{
+        const val TAG = "GetAllRecentJoinPagerUseCase"
+    }
     operator fun invoke(): Flow<PagingData<UiDishItem>> {
         return recentViewedRepository.getAllRecentJoinPager().flow.map { pagingData ->
             pagingData.map { recentViewed ->
@@ -27,6 +31,7 @@ class GetAllRecentJoinPagerUseCase @Inject constructor(
                     val percentage =
                         if (nPrice == 0) 0 else 100 - (sPrice.toDouble() / nPrice * 100).toInt()
                     val isInserted = isExistCartInfoUseCase(recentViewed.hash)
+                    Log.e(TAG, "i유즈케이스: ${recentViewed.title} ${isInserted}", )
                     UiDishItem(
                         _id = recentViewed._id,
                         hash = recentViewed.hash,

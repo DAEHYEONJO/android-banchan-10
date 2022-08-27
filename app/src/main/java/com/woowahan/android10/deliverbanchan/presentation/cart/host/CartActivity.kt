@@ -104,7 +104,6 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart, "
 
     override fun onStop() {
         super.onStop()
-        cartViewModel.updateAllCartItemChanged()
     }
 
     override fun onBackPressed() {

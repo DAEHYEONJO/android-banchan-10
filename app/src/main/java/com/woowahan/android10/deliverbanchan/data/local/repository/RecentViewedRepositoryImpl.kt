@@ -1,5 +1,6 @@
 package com.woowahan.android10.deliverbanchan.data.local.repository
 
+import android.util.Log
 import androidx.annotation.WorkerThread
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -9,6 +10,7 @@ import com.woowahan.android10.deliverbanchan.data.local.model.entity.RecentViewe
 import com.woowahan.android10.deliverbanchan.data.local.model.join.RecentViewed
 import com.woowahan.android10.deliverbanchan.domain.repository.local.RecentViewedRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
 class RecentViewedRepositoryImpl @Inject constructor(

@@ -24,6 +24,7 @@ class DetailViewModel @Inject constructor(
     private val updateCartAmount: UpdateCartAmount,
     private val getAllCartInfoUseCase: GetAllCartInfoUseCase,
     private val getAllOrderInfoListUseCase: GetAllOrderInfoListUseCase,
+    private val updateTimeStampRecentViewedByHashUseCase: UpdateTimeStampRecentViewedByHashUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -140,6 +141,7 @@ class DetailViewModel @Inject constructor(
         viewModelScope.launch {
             currentUiDishItem?.let {
                 runCatching {
+                    updateTimeStampRecentViewedByHashUseCase(it.hash, System.currentTimeMillis())
                     if (it.isInserted) {
                         // 이미 장바구니에 있는 경우
                         updateCartAmount(hash = it.hash, amount = _itemCount.value)
