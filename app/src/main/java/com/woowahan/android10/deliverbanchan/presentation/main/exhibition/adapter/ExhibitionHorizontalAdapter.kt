@@ -1,5 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.main.exhibition.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
@@ -20,7 +21,7 @@ class ExhibitionHorizontalAdapter() :
     ) {
 
     companion object {
-        const val TAG = "MainDishGridAdapter"
+        const val TAG = "ExhibitionHorizontalAdapter"
         val diffUtil = object : DiffUtil.ItemCallback<UiDishItem>() {
             override fun areItemsTheSame(oldItem: UiDishItem, newItem: UiDishItem): Boolean {
                 return oldItem.hash == newItem.hash
@@ -28,6 +29,10 @@ class ExhibitionHorizontalAdapter() :
 
             override fun areContentsTheSame(oldItem: UiDishItem, newItem: UiDishItem): Boolean {
                 return newItem == oldItem
+            }
+
+            override fun getChangePayload(oldItem: UiDishItem, newItem: UiDishItem): Any? {
+                return if(oldItem.isInserted != newItem.isInserted) true else null
             }
         }
     }
@@ -41,6 +46,7 @@ class ExhibitionHorizontalAdapter() :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(uiDishItem: UiDishItem, position: Int) {
+            Log.e(TAG, "bind")
             binding.item = uiDishItem
             binding.viewLeft.isVisible = (position == 0)
             binding.viewRight.isVisible = (position == currentList.size - 1)
@@ -66,5 +72,15 @@ class ExhibitionHorizontalAdapter() :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position), position)
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
+        if (payloads.isEmpty()) {
+            super.onBindViewHolder(holder, position, payloads)
+        } else {
+            if (payloads[0] == true) {
+                holder.bind(getItem(position), position)
+            }
+        }
     }
 }

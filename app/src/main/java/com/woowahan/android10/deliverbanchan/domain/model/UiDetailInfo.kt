@@ -26,7 +26,8 @@ data class UiDetailInfo(
             point = "",
             deliveryInfo = "",
             deliveryFee = "",
-            emptyList(), emptyList(),
+            thumbList = emptyList(),
+            detailSection = emptyList(),
             sPrice = 0
         )
     }
