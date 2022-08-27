@@ -37,7 +37,6 @@ class CartViewModel @Inject constructor(
     }
 
     val fragmentArrayIndex = MutableLiveData(0)
-    private val workManager = WorkManager.getInstance(application)
 
     val appBarTitle = MutableLiveData("")
     val orderDetailMode = MutableLiveData(false)

@@ -37,6 +37,9 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart, "
     private val cartViewModel: CartViewModel by viewModels()
     private val fragmentTagArray: Array<String> by lazy {
         resources.getStringArray(R.array.cart_fragment_tag_array)
+    }// cartMain, orderComplete, recent
+    private val fragmentAppBarTitleArray: Array<String> by lazy {
+        resources.getStringArray(R.array.cart_fragment_app_bar_title_array)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,6 +76,7 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart, "
                 addToBackStack(BACKSTACK_TAG)
             }
         }
+        cartViewModel.setAppBarTitle(fragmentAppBarTitleArray[cartViewModel.fragmentArrayIndex.value!!])
     }
 
     private fun initBinding() {
@@ -83,19 +87,10 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart, "
     }
 
     private fun initAppBar() {
-        cartViewModel.setAppBarTitle(resources.getString(R.string.app_bar_cart_title))
         with(binding.cartAbl) {
-
             appBarWithBackBtnIvLeft.setOnClickListener {
-                when (cartViewModel.fragmentArrayIndex.value) {
-                    2 -> {
-                        supportFragmentManager.popBackStack()
-                        cartViewModel.fragmentArrayIndex.value = 0
-                    }
-                    else -> onBackPressed()
-                }
+                onBackPressed()
             }
-
             appBarWithBackBtnIvReload.setClickEventWithDuration(
                 duration = 1000,
                 coroutineScope = lifecycleScope
@@ -110,6 +105,21 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart, "
     override fun onStop() {
         super.onStop()
         cartViewModel.updateAllCartItemChanged()
+    }
+
+    override fun onBackPressed() {
+        with(cartViewModel.fragmentArrayIndex.value!!) {
+            cartViewModel.setAppBarTitle(fragmentAppBarTitleArray[this])
+            when (this) {
+                2 -> {
+                    supportFragmentManager.popBackStack()
+                    cartViewModel.fragmentArrayIndex.value = 0
+                }
+                else -> {
+                    super.onBackPressed()
+                }
+            }
+        }
     }
 
 }
