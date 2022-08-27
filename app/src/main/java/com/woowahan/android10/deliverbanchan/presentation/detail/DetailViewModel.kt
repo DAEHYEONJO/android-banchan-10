@@ -32,7 +32,6 @@ class DetailViewModel @Inject constructor(
         const val TAG = "DetailViewModel"
     }
 
-
     val cartIconText = MutableLiveData("")
     val isOrderingExist = MutableLiveData(false)
 
@@ -43,6 +42,8 @@ class DetailViewModel @Inject constructor(
         SharingStarted.WhileSubscribed(5000),
         UiState.Init
     )
+
+    var currentThumbImagePage = 0
 
     private val _itemCount = MutableStateFlow<Int>(1)
     val itemCount: StateFlow<Int> = _itemCount
@@ -59,6 +60,7 @@ class DetailViewModel @Inject constructor(
     }
 
     private fun getAllCartInfo() = viewModelScope.launch {
+        Log.e(TAG, "getAllCartInfo 호출")
         getAllCartInfoUseCase(this).collect { cartInfoList ->
             setCartIconText(cartInfoList.size)
             // 디테일화면에서 insert하고, 다른곳 갔다가 다시 왔을때 카트에 있는것인지 없는것인지 판단하여 수량을 update할지
@@ -184,5 +186,9 @@ class DetailViewModel @Inject constructor(
                 (_uiDetailInfo.value as UiState.Success).items.copy(itemCount = _itemCount.value)
             )
         }
+    }
+
+    fun changeCurrentThumbImagePage(pageNum: Int) {
+        currentThumbImagePage = pageNum
     }
 }
