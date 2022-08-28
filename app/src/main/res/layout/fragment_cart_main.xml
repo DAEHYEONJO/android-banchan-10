@@ -17,7 +17,6 @@
             android:id="@+id/cart_main_rv"
             android:layout_width="match_parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-
             android:layout_height="match_parent"/>
 
     </LinearLayout>

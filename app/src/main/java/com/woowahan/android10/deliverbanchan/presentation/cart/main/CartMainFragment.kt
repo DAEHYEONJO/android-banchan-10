@@ -9,12 +9,14 @@ import android.os.Bundle
 import android.os.SystemClock
 import android.util.Log
 import android.view.View
+import androidx.annotation.NonNull
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.background.DeliveryReceiver
 import com.woowahan.android10.deliverbanchan.databinding.FragmentCartMainBinding
@@ -130,6 +132,7 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
                     checked: Boolean
                 ) {
                     cartViewModel.updateUiCartCheckedValue(position, !checked)
+                    //binding.cartMainRv.scrollToPosition(binding.cartMainRv.)
                 }
 
                 override fun onClickAmountBtn(position: Int, hash: String, amount: Int) {
@@ -186,7 +189,7 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
 //                    if (cartViewModel.forInitValue!=null) {
 //
 //                    }
-                    Log.e(TAG, "initAdapterList: 널아님 트루대입", )
+                    Log.e(TAG, "initAdapterList: 널아님 트루대입")
                     //cartViewModel.forInitValue = true
                     submitList(listOf(uiCartBottomBody))
                 }
@@ -282,23 +285,10 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
     private fun initRecyclerView() {
         with(binding.cartMainRv) {
             adapter = concatAdapter
-            itemAnimator = null
-            val testlayoutManager = object : LinearLayoutManager(activity!!.applicationContext) {
-                override fun onLayoutCompleted(state: RecyclerView.State) {
-                    super.onLayoutCompleted(state)
-                    cartViewModel.forInitValue?.let {
-                        Log.e(TAG, "onLayoutCompleted: 2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222", )
-                        binding.cartMainRv.scrollToPosition(0)
-                        cartViewModel.forInitValue = null
-                    }
-//                    if(cartViewModel.isCartMainFragmentFirst) {
-//                        binding.cartMainRv.scrollToPosition(0)
-//                        cartViewModel.isCartMainFragmentFirst = false
-//                    }
-                }
+            val animator = itemAnimator
+            if (animator is SimpleItemAnimator) {
+                animator.supportsChangeAnimations = false
             }
-
-            layoutManager = testlayoutManager
 
         }
     }

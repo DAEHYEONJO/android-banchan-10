@@ -110,7 +110,8 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart, "
 
     override fun onStop() {
         super.onStop()
-        if(cartViewModel.orderBtnClickLiveData.value!=true) cartViewModel.updateAllCartItemChanged()
+        if(cartViewModel.orderBtnClickLiveData.value!=true)
+            cartViewModel.updateAllCartItemChanged()
     }
 
     override fun onBackPressed() {

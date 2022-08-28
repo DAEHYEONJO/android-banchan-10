@@ -35,9 +35,6 @@ interface CartDao {
     @Query("UPDATE CART_INFO SET amount = amount+:amount WHERE hash = :hash")
     suspend fun updateCartAmount(hash: String, amount: Int)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCartInfoVarArg(vararg cartInfo: CartInfo)
-
     @Transaction
     suspend fun deleteCartInfoByHashList(deleteHashes: List<String>) {
         deleteHashes.forEach { hash ->
@@ -45,8 +42,13 @@ interface CartDao {
         }
     }
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCartInfoVarArg(vararg cartInfo: CartInfo)
+
     @Transaction
-    suspend fun insertAndDeleteCartItems(cartInfo: List<CartInfo>, deleteHashes: List<String>) {
+    suspend fun insertAndDeleteCartItems(
+        cartInfo: List<CartInfo>
+        , deleteHashes: List<String>) {
         insertCartInfoVarArg(*cartInfo.toTypedArray())
         deleteHashes.forEach {
             deleteCartInfo(it)
