@@ -11,8 +11,8 @@ class InsertLocalDishAndRecentUseCase @Inject constructor(
     private val recentViewedRepository: RecentViewedRepository,
     private val dishRepository: DishRepository
 ) {
-    suspend operator fun invoke(uiDishItem: UiDishItem, hash: String, timeStamp: Long) {
-        recentViewedRepository.insertRecentViewedInfo(hash, timeStamp)
+    suspend operator fun invoke(uiDishItem: UiDishItem, hash: String, timeStamp: Long, isInserted: Boolean) {
+        recentViewedRepository.insertRecentViewedInfo(hash, timeStamp, isInserted)
         dishRepository.insertLocalDish(uiDishItem)
     }
 }

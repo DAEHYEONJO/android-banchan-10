@@ -8,15 +8,17 @@ import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.repository.local.RecentViewedRepository
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @ActivityRetainedScoped
 class GetAllRecentJoinPagerUseCase @Inject constructor(
     private val recentViewedRepository: RecentViewedRepository,
-    private val isExistCartInfoUseCase: IsExistCartInfoUseCase,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) {
     companion object{
@@ -30,8 +32,7 @@ class GetAllRecentJoinPagerUseCase @Inject constructor(
                     val sPrice = recentViewed.sPrice
                     val percentage =
                         if (nPrice == 0) 0 else 100 - (sPrice.toDouble() / nPrice * 100).toInt()
-                    val isInserted = isExistCartInfoUseCase(recentViewed.hash)
-                    Log.e(TAG, "i유즈케이스: ${recentViewed.title} ${isInserted}", )
+                    //Log.e(TAG, "i유즈케이스: ${recentViewed.title} ${isInserted}", )
                     UiDishItem(
                         _id = recentViewed._id,
                         hash = recentViewed.hash,
@@ -42,7 +43,7 @@ class GetAllRecentJoinPagerUseCase @Inject constructor(
                         nPrice = recentViewed.nPrice,
                         sPrice = recentViewed.sPrice,
                         timeStamp = recentViewed.timeStamp,
-                        isInserted = isInserted
+                        isInserted = recentViewed.isInserted
                     )
                 }
             }

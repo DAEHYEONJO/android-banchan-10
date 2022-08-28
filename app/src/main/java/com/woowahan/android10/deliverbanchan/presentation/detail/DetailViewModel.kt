@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
 import com.woowahan.android10.deliverbanchan.domain.model.UiDetailInfo
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.model.response.BaseResult
@@ -24,7 +25,7 @@ class DetailViewModel @Inject constructor(
     private val updateCartAmount: UpdateCartAmount,
     private val getAllCartInfoUseCase: GetAllCartInfoUseCase,
     private val getAllOrderInfoListUseCase: GetAllOrderInfoListUseCase,
-    private val updateTimeStampRecentViewedByHashUseCase: UpdateTimeStampRecentViewedByHashUseCase,
+    private val recentUseCase: RecentUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -105,7 +106,8 @@ class DetailViewModel @Inject constructor(
                     insertLocalDishAndRecentUseCase(
                         dishItem,
                         hash,
-                        System.currentTimeMillis()
+                        System.currentTimeMillis(),
+                        currentUiDishItem.isInserted
                     )
                 }
             }
@@ -141,18 +143,19 @@ class DetailViewModel @Inject constructor(
         viewModelScope.launch {
             currentUiDishItem?.let {
                 runCatching {
-                    updateTimeStampRecentViewedByHashUseCase(it.hash, System.currentTimeMillis())
                     if (it.isInserted) {
                         // 이미 장바구니에 있는 경우
                         updateCartAmount(hash = it.hash, amount = _itemCount.value)
                     } else {
                         //새로 장바구니에 들어가는 경우
+
                         insertCartInfoUseCase(
                             hash = it.hash,
                             checked = true,
                             amount = _itemCount.value
                         )
                     }
+                    recentUseCase.updateRecentIsInsertedTrueInCartUseCase(it.hash)
                 }.onSuccess {
                     _insertSuccessEvent.emit(true)
                 }.onFailure {

@@ -11,7 +11,7 @@ interface RecentViewedRepository {
     fun getAllRecentViewedInfo(): Flow<List<RecentViewedInfo>>
 
     @WorkerThread
-    suspend fun insertRecentViewedInfo(hash: String, timeStamp: Long)
+    suspend fun insertRecentViewedInfo(hash: String, timeStamp: Long, isInserted: Boolean)
 
     @WorkerThread
     suspend fun deleteAllRecentViewedInfo()
@@ -24,4 +24,10 @@ interface RecentViewedRepository {
 
     @WorkerThread
     suspend fun updateTimeStampRecentViewedByHash(hash: String, timeStamp: Long)
+
+    @WorkerThread
+    suspend fun updateRecentIsInsertedInCart(hash: String, isInserted: Boolean)
+
+    @WorkerThread
+    suspend fun updateVarArgRecentIsInsertedFalseInCart(hashList: List<String>)
 }

@@ -1,5 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.order.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -89,6 +90,9 @@ class OrderViewModel @Inject constructor(
                             )
                         }
                     }
+                    map.forEach { t, u ->
+                        Log.e(TAG, "getAllOrderList: $t ${u.map { it.title }.toList()}", )
+                    }
 
                     val list = map.toList().map { (timeStamp, uiCartJointItemLIst) ->
                         val curDeliveryTotalPrice =
@@ -97,7 +101,7 @@ class OrderViewModel @Inject constructor(
                         UiOrderListItem(
                             timeStamp,
                             curDeliveryTotalPrice,
-                            uiCartJointItemLIst
+                            uiCartJointItemLIst.sortedBy { it.title }
                         )
                     }
                     _allOrderJoinState.value = UiState.Success(list)

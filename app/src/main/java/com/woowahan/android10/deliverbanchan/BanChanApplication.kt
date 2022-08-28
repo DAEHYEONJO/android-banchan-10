@@ -17,7 +17,7 @@ class BanChanApplication : Application(), Configuration.Provider, ComponentCallb
 
     companion object {
         const val TAG = "GlobalApplication"
-        val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+        lateinit var applicationScope: CoroutineScope
     }
 
     @Inject
@@ -36,14 +36,14 @@ class BanChanApplication : Application(), Configuration.Provider, ComponentCallb
 
     override fun onTrimMemory(level: Int) {
         Log.e(TAG, "onTrimMemory: $level", )
-        applicationScope.cancel()
-        super.onTrimMemory(level)
-        when (level) {
-            ComponentCallbacks2.TRIM_MEMORY_BACKGROUND,
-            ComponentCallbacks2.TRIM_MEMORY_MODERATE,
-            ComponentCallbacks2.TRIM_MEMORY_COMPLETE -> {
-                applicationScope.cancel()
-            }
-        }
+//        applicationScope.cancel()
+//        super.onTrimMemory(level)
+//        when (level) {
+//            ComponentCallbacks2.TRIM_MEMORY_BACKGROUND,
+//            ComponentCallbacks2.TRIM_MEMORY_MODERATE,
+//            ComponentCallbacks2.TRIM_MEMORY_COMPLETE -> {
+//                applicationScope.cancel()
+//            }
+//        }
     }
 }
