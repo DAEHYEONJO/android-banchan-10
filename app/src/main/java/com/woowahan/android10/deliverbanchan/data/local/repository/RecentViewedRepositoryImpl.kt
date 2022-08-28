@@ -20,10 +20,10 @@ class RecentViewedRepositoryImpl @Inject constructor(
     override fun getAllRecentViewedInfo(): Flow<List<RecentViewedInfo>> =
         recentlyViewedDao.getAllRecentViewedInfo()
 
-    override suspend fun insertRecentViewedInfo(hash: String, timeStamp: Long) {
+    override suspend fun insertRecentViewedInfo(hash: String, timeStamp: Long, isInserted: Boolean) {
         recentlyViewedDao.insertRecentViewedInfo(
             DomainMapper.mapToRecentViewedInfo(
-                hash, timeStamp
+                hash, timeStamp, isInserted
             )
         )
     }
@@ -47,6 +47,14 @@ class RecentViewedRepositoryImpl @Inject constructor(
 
     override suspend fun updateTimeStampRecentViewedByHash(hash: String, timeStamp: Long) {
         recentlyViewedDao.updateTimeStampRecentViewedByHash(hash, timeStamp)
+    }
+
+    override suspend fun updateRecentIsInsertedInCart(hash: String, isInserted: Boolean) {
+        recentlyViewedDao.updateRecentIsInsertedInCart(hash, isInserted)
+    }
+
+    override suspend fun updateVarArgRecentIsInsertedFalseInCart(hashList: List<String>) {
+        recentlyViewedDao.updateVarArgRecentIsInsertedFalseInCart(hashList)
     }
 
 

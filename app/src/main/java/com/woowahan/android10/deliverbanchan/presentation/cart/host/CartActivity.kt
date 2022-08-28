@@ -1,6 +1,8 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart.host
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
@@ -42,6 +44,7 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart, "
         resources.getStringArray(R.array.cart_fragment_app_bar_title_array)
     }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initBinding()
@@ -56,6 +59,9 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart, "
     }
 
     private fun initFragment(tagArrayIndex: Int) {
+        if (tagArrayIndex==2){
+            cartViewModel.updateAllCartItemChanged()
+        }
         var fragment = supportFragmentManager.findFragmentByTag(fragmentTagArray[tagArrayIndex])
         if (fragment == null) {
             fragment = when (tagArrayIndex) {
@@ -104,6 +110,7 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart, "
 
     override fun onStop() {
         super.onStop()
+        if(cartViewModel.orderBtnClickLiveData.value!=true) cartViewModel.updateAllCartItemChanged()
     }
 
     override fun onBackPressed() {

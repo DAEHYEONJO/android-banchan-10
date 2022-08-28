@@ -10,5 +10,6 @@ data class RecentViewedInfo(
     @PrimaryKey(autoGenerate = true)
     val _id: Int = 0,
     val hash: String="",
+    val isInserted: Boolean,
     @ColumnInfo(name = "time_stamp") val timeStamp: Long=0L
 )

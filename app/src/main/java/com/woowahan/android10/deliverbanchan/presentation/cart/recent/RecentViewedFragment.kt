@@ -5,9 +5,11 @@ import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
+import androidx.paging.map
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.FragmentRecentViewedBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
@@ -33,7 +35,6 @@ class RecentViewedFragment : BaseFragment<FragmentRecentViewedBinding>(
     @Inject
     lateinit var gridSpanCountTwoDecorator: GridSpanCountTwoDecorator
     private val recentViewModel: RecentViewModel by activityViewModels()
-    private val cartViewModel: CartViewModel by activityViewModels()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -42,16 +43,9 @@ class RecentViewedFragment : BaseFragment<FragmentRecentViewedBinding>(
     }
 
     private fun initObserver() {
-        cartViewModel.allCartJoinState.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach {
-            if (it is UiState.Success){
-                Log.e(TAG, "initObserver: 리센트 -> 카트 변경됨", )
-                recentViewModel.getRecentJoinPagingFlow()
-                recentPagingDataAdapter.notifyDataSetChanged()
-            }
-        }.launchIn(viewLifecycleOwner.lifecycleScope)
-        recentViewModel.recentJoinItem.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach {
+        recentViewModel.recentJoinItem.flowWithLifecycle(lifecycle).onEach {
             recentPagingDataAdapter.submitData(it)
-        }.launchIn(viewLifecycleOwner.lifecycleScope)
+        }.launchIn(lifecycleScope)
     }
 
     private fun initRecyclerView() {
@@ -77,7 +71,6 @@ class RecentViewedFragment : BaseFragment<FragmentRecentViewedBinding>(
                     }
                 }
             }
-
         }
     }
 

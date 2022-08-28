@@ -6,10 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowahan.android10.deliverbanchan.BanChanApplication
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
-import com.woowahan.android10.deliverbanchan.domain.usecase.CartUseCase
-import com.woowahan.android10.deliverbanchan.domain.usecase.InsertCartInfoUseCase
-import com.woowahan.android10.deliverbanchan.domain.usecase.InsertLocalDishUseCase
-import com.woowahan.android10.deliverbanchan.domain.usecase.UpdateTimeStampRecentViewedByHashUseCase
+import com.woowahan.android10.deliverbanchan.domain.usecase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -20,8 +17,7 @@ import javax.inject.Inject
 class CartBottomSheetViewModel @Inject constructor(
     private val cartUseCase: CartUseCase,
     private val insertCartInfoUseCase: InsertCartInfoUseCase,
-    private val insertLocalDishUseCase: InsertLocalDishUseCase,
-    private val updateTimeStampRecentViewedByHashUseCase: UpdateTimeStampRecentViewedByHashUseCase,
+    private val insertLocalDishAndRecentUseCase: InsertLocalDishAndRecentUseCase,
     stateHandle: SavedStateHandle
 ) : ViewModel() {
     var currentUiDishItem = MutableStateFlow<UiDishItem>(UiDishItem.returnEmptyItem())
@@ -61,9 +57,13 @@ class CartBottomSheetViewModel @Inject constructor(
         viewModelScope.launch {
             runCatching {
                 with(uiDishItem!!) {
-                    updateTimeStampRecentViewedByHashUseCase(hash, System.currentTimeMillis())
+                    insertLocalDishAndRecentUseCase(
+                        uiDishItem,
+                        hash,
+                        System.currentTimeMillis(),
+                        true
+                    )
                     insertCartInfoUseCase(hash = hash, checked = true, amount = _itemCount.value)
-                    insertLocalDishUseCase(uiDishItem)
                 }
             }.onSuccess {
                 _insertSuccessEvent.emit(true)
