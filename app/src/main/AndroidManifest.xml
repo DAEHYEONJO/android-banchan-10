@@ -23,8 +23,8 @@
             android:exported="false" />
         <activity
             android:name=".presentation.order.host.OrderActivity"
-            android:exported="true"
-            android:parentActivityName=".presentation.main.host.MainActivity"/>
+            android:parentActivityName=".presentation.main.host.MainActivity"
+            android:exported="true"/>
         <activity
             android:name=".presentation.detail.DetailActivity"
             android:exported="false" />

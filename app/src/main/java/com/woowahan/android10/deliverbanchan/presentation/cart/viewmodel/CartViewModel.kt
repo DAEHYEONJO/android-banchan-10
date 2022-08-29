@@ -1,11 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import androidx.work.WorkManager
+import androidx.lifecycle.*
 import com.woowahan.android10.deliverbanchan.BanChanApplication
 import com.woowahan.android10.deliverbanchan.di.IoDispatcher
 import com.woowahan.android10.deliverbanchan.domain.model.TempOrder
@@ -14,6 +9,7 @@ import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiOrderInfo
 import com.woowahan.android10.deliverbanchan.domain.usecase.CartUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllOrderInfoListUseCase
+import com.woowahan.android10.deliverbanchan.domain.usecase.RecentUseCase
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartBottomBody
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartCompleteHeader
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartHeader
@@ -28,8 +24,8 @@ import javax.inject.Inject
 class CartViewModel @Inject constructor(
     private val getAllOrderInfoListUseCase: GetAllOrderInfoListUseCase,
     private val cartUseCase: CartUseCase,
-    @IoDispatcher private val dispatcher: CoroutineDispatcher,
-    application: Application
+    private val recentUseCase: RecentUseCase,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     companion object {
@@ -37,7 +33,6 @@ class CartViewModel @Inject constructor(
     }
 
     val fragmentArrayIndex = MutableLiveData(0)
-    private val workManager = WorkManager.getInstance(application)
 
     val appBarTitle = MutableLiveData("")
     val orderDetailMode = MutableLiveData(false)
@@ -50,10 +45,11 @@ class CartViewModel @Inject constructor(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000)
         )
-    private val _allRecentlyJoinState =
+
+    private val _allRecentSevenJoinState =
         MutableStateFlow<UiState<List<UiDishItem>>>(UiState.Init)
-    val allRecentlyJoinState: StateFlow<UiState<List<UiDishItem>>>
-        get() = _allRecentlyJoinState.stateIn(
+    val allRecentSevenJoinState: StateFlow<UiState<List<UiDishItem>>>
+        get() = _allRecentSevenJoinState.stateIn(
             initialValue = UiState.Init,
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000)
@@ -88,6 +84,7 @@ class CartViewModel @Inject constructor(
 
     private val _orderButtonClicked = MutableSharedFlow<Boolean>()
     val orderButtonClicked: SharedFlow<Boolean> = _orderButtonClicked.asSharedFlow()
+    val orderBtnClickLiveData = _orderButtonClicked.asLiveData()
 
     val orderHashList = ArrayList<String>()
     var orderFirstItemTitle = "Title"
@@ -95,8 +92,10 @@ class CartViewModel @Inject constructor(
     private val _reloadBtnClicked = MutableLiveData(false)
     val reloadBtnClicked: LiveData<Boolean> get() = _reloadBtnClicked
 
+    var forInitValue: Boolean? = true
+
     init {
-        getAllRecentlyJoinList()
+        getAllRecentSevenJoinList()
         getAllCartJoinList()
         observeOrderInfo()
     }
@@ -128,7 +127,7 @@ class CartViewModel @Inject constructor(
             _allCartJoinState.value = UiState.Loading(false)
             _allCartJoinState.value = UiState.Error(exception.message.toString())
         }.onEach { uiCartJoinItemList ->
-            calcCartBottomBodyAndHeaderVal(uiCartJoinItemList)
+            //calcCartBottomBodyAndHeaderVal(uiCartJoinItemList)
         }.collect {
             _allCartJoinState.value = UiState.Loading(false)
             _allCartJoinState.value = UiState.Success(it)
@@ -186,15 +185,15 @@ class CartViewModel @Inject constructor(
         )
     }
 
-    private fun getAllRecentlyJoinList() = viewModelScope.launch {
+    private fun getAllRecentSevenJoinList() = viewModelScope.launch {
         cartUseCase.getAllRecentJoinListLimitSeven().onStart {
-            _allRecentlyJoinState.value = UiState.Loading(true)
+            _allRecentSevenJoinState.value = UiState.Loading(true)
         }.flowOn(dispatcher).catch { exception ->
-            _allRecentlyJoinState.value = UiState.Loading(false)
-            _allRecentlyJoinState.value = UiState.Error(exception.message.toString())
+            _allRecentSevenJoinState.value = UiState.Loading(false)
+            _allRecentSevenJoinState.value = UiState.Error(exception.message.toString())
         }.collect {
-            _allRecentlyJoinState.value = UiState.Loading(false)
-            _allRecentlyJoinState.value = UiState.Success(it)
+            _allRecentSevenJoinState.value = UiState.Loading(false)
+            _allRecentSevenJoinState.value = UiState.Success(it)
         }
     }
 
@@ -203,11 +202,13 @@ class CartViewModel @Inject constructor(
     }
 
     fun updateUiCartCheckedValue(position: Int, checked: Boolean) {
+        if (position == -1) return // 클릭했을때, 없어진 view의 경우 position == -1
         _uiCartJoinArrayList[position].checked = checked
         _uiCartJoinList.value = _uiCartJoinArrayList
     }
 
     fun updateUiCartAmountValue(position: Int, amount: Int) {
+        if (position == -1) return // 클릭했을때, 없어진 view의 경우 position == -1
         _uiCartJoinArrayList[position].apply {
             this.amount = amount
             totalPrice = sPrice * amount
@@ -230,8 +231,7 @@ class CartViewModel @Inject constructor(
         )
         _toBeDeletedCartItem.addAll(_selectedCartItem.map { it.hash })
         _uiCartJoinList.value = _uiCartJoinArrayList
-
-        completion(success)
+        completion(true)
     }
 
     fun changeCheckedState(checkedValue: Boolean) {
@@ -244,7 +244,8 @@ class CartViewModel @Inject constructor(
         // 주문 완료 화면에 대한 리스트 세팅
         val tempHashList = _selectedCartItem.map { it.hash }.toList()
         _orderCompleteBodyItem.value =
-            _uiCartJoinArrayList.filter { tempHashList.contains(it.hash) }.toList()
+            _uiCartJoinArrayList.filter { tempHashList.contains(it.hash) }.sortedBy { it.title }.toList()
+        orderFirstItemTitle = _orderCompleteBodyItem.value.first().title
         val deliveryPrice = _itemCartBottomBodyData.value!!.deliveryPrice
         val priceTotal = _orderCompleteBodyItem.value
             .map { Pair(it.sPrice, it.amount) }
@@ -272,11 +273,8 @@ class CartViewModel @Inject constructor(
         BanChanApplication.applicationScope.launch {
             currentOrderTimeStamp = System.currentTimeMillis()
             orderHashList.clear()
-            orderFirstItemTitle = "Title"
-            _selectedCartItem.forEachIndexed { index, tempOrder ->
-                if (index == 0) orderFirstItemTitle = tempOrder.title
-                orderHashList.add(tempOrder.hash)
-            }
+            //orderFirstItemTitle = "Title"
+            orderHashList.addAll(_selectedCartItem.map { it.hash })
             cartUseCase.insertVarArgOrderInfo(
                 tempOrderSet = _selectedCartItem,
                 timeStamp = currentOrderTimeStamp,
@@ -284,6 +282,11 @@ class CartViewModel @Inject constructor(
                 deliveryPrice = _itemCartBottomBodyData.value!!.deliveryPrice
             )
             _orderButtonClicked.emit(true)
+            cartUseCase.insertAndDeleteCartItems(
+                _uiCartJoinList.value!!, _toBeDeletedCartItem.toList()
+            )
+            recentUseCase.updateVarArgRecentIsInsertedFalseInCartUseCase(_toBeDeletedCartItem.toList())
+            recentUseCase.updateVarArgRecentIsInsertedFalseInCartUseCase(_selectedCartItem.map { it.hash }.toList())
             cartUseCase.deleteCartInfoByHashList(_selectedCartItem.map { it.hash }.toList())
         }
     }
@@ -293,6 +296,8 @@ class CartViewModel @Inject constructor(
             cartUseCase.insertAndDeleteCartItems(
                 _uiCartJoinList.value!!, _toBeDeletedCartItem.toList()
             )
+            recentUseCase.updateVarArgRecentIsInsertedFalseInCartUseCase(_toBeDeletedCartItem.toList())
+            _toBeDeletedCartItem.clear()
         }
     }
 }

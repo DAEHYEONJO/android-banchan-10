@@ -25,7 +25,7 @@ class RecentViewedVerticalAdapter @Inject constructor() :
                 oldItem: UiDishItem,
                 newItem: UiDishItem
             ): Boolean {
-                return oldItem.hash == newItem.hash
+                return oldItem.hash == newItem.hash && oldItem.timeStamp==newItem.timeStamp
             }
 
             override fun areContentsTheSame(
@@ -33,6 +33,10 @@ class RecentViewedVerticalAdapter @Inject constructor() :
                 newItem: UiDishItem
             ): Boolean {
                 return oldItem == newItem
+            }
+
+            override fun getChangePayload(oldItem: UiDishItem, newItem: UiDishItem): Any? {
+                return if(oldItem.hash != newItem.hash || oldItem.timeStamp!=newItem.timeStamp) true else null
             }
         }
     }
@@ -65,5 +69,17 @@ class RecentViewedVerticalAdapter @Inject constructor() :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(currentList[position])
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
+        if (payloads.isEmpty()){
+            super.onBindViewHolder(holder, position, payloads)
+        }else{
+            if (payloads[0]==true){
+                currentList[position]?.let {
+                    holder.bind(it)
+                }
+            }
+        }
     }
 }

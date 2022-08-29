@@ -7,6 +7,7 @@ import com.google.common.truth.Truth
 import com.woowahan.android10.deliverbanchan.data.local.db.FoodRoomDatabase
 import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
@@ -40,22 +41,18 @@ class CartDaoTest {
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun insertCartInfoList() = runTest {
-        val start = System.currentTimeMillis()
         dummyList.forEach { cartInfo ->
             dao.insertCartInfo(cartInfo)
         }
-        val end = System.currentTimeMillis()
-        println((end-start)/1000)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun insertVarCartInfoList() = runTest {
-        val start = System.currentTimeMillis()
         dao.insertCartInfoVarArg(*dummyList.toTypedArray())
-        val end = System.currentTimeMillis()
-        println((end-start)/1000)
     }
 
     @Test

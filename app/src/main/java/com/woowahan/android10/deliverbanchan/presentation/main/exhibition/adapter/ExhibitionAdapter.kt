@@ -29,6 +29,13 @@ class ExhibitionAdapter() :
             ): Boolean {
                 return newItem == oldItem
             }
+
+            override fun getChangePayload(
+                oldItem: UiExhibitionItem,
+                newItem: UiExhibitionItem
+            ): Any? {
+                return if(oldItem.uiDishItems != newItem.uiDishItems) true else null
+            }
         }
     }
 
@@ -37,18 +44,26 @@ class ExhibitionAdapter() :
     inner class ExhibitionViewHolder(private val binding: ItemExhibitionBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(uiExhibitionItem: UiExhibitionItem) {
+        lateinit var exhibitonHorizontalAdpater: ExhibitionHorizontalAdapter
+
+        fun bind(uiExhibitionItem: UiExhibitionItem, position: Int) {
             binding.uiExhibitionItem = uiExhibitionItem
-            val exhibitonHorizontalAdpater = ExhibitionHorizontalAdapter().apply {
+
+            exhibitonHorizontalAdpater = ExhibitionHorizontalAdapter().apply {
                 this.onDishItemClickListener = dishItemClickListener
             }
+
             binding.exhibitionRvHorizontal.apply {
-                adapter = exhibitonHorizontalAdpater
-                layoutManager = LinearLayoutManager(binding.root.context).also {
-                    it.orientation = LinearLayoutManager.HORIZONTAL
+                if (adapter == null) {
+                    adapter = exhibitonHorizontalAdpater
+                    layoutManager = LinearLayoutManager(binding.root.context).also {
+                        it.orientation = LinearLayoutManager.HORIZONTAL
+                    }
                 }
             }
-            exhibitonHorizontalAdpater.submitList(uiExhibitionItem.uiDishItems.toList())
+            (binding.exhibitionRvHorizontal.adapter as ExhibitionHorizontalAdapter).submitList(
+                uiExhibitionItem.uiDishItems
+            )
 
             binding.executePendingBindings()
         }
@@ -61,6 +76,21 @@ class ExhibitionAdapter() :
     }
 
     override fun onBindViewHolder(holder: ExhibitionViewHolder, position: Int) {
-        holder.bind(currentList[position])
+        holder.bind(currentList[position], position)
     }
+
+    override fun onBindViewHolder(
+        holder: ExhibitionViewHolder,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
+        if (payloads.isEmpty()) {
+            super.onBindViewHolder(holder, position, payloads)
+        } else {
+            if (payloads[0] == true) {
+                holder.bind(getItem(position), position)
+            }
+        }
+    }
+
 }

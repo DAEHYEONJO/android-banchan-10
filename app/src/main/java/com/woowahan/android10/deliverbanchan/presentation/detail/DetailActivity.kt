@@ -73,7 +73,9 @@ class DetailActivity :
     }
 
     private fun setRecyclerView() {
-        detailThumbImageAdapter = DetailThumbImageAdapter()
+        detailThumbImageAdapter = DetailThumbImageAdapter{ pageNum ->
+            detailViewModel.changeCurrentThumbImagePage(pageNum)
+        }
         detailContentAdapter = DetailContentAdapter({
             // minus click
             detailViewModel.minusItemCount()
@@ -112,7 +114,11 @@ class DetailActivity :
                     binding.detailErrorLayout.errorCl.toGone()
                     binding.detailRv.toVisible()
                     binding.detailPb.toGone()
-                    detailThumbImageAdapter.submitList(listOf(uiDetailState.items.thumbList))
+
+                    with(detailThumbImageAdapter){
+                        currentImagePage = detailViewModel.currentThumbImagePage
+                        submitList(listOf(uiDetailState.items.thumbList))
+                    }
                     detailContentAdapter.submitList(listOf(uiDetailState.items))
                     detailSectionImageAdapter.submitList(uiDetailState.items.detailSection)
                 }

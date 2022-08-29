@@ -6,9 +6,6 @@ import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
 import javax.inject.Inject
 
 @HiltAndroidApp
@@ -16,7 +13,7 @@ class BanChanApplication : Application(), Configuration.Provider, ComponentCallb
 
     companion object {
         const val TAG = "GlobalApplication"
-        val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+        lateinit var applicationScope: CoroutineScope
     }
 
     @Inject
@@ -28,14 +25,4 @@ class BanChanApplication : Application(), Configuration.Provider, ComponentCallb
             .build()
     }
 
-    override fun onTrimMemory(level: Int) {
-        super.onTrimMemory(level)
-        when (level) {
-            ComponentCallbacks2.TRIM_MEMORY_BACKGROUND,
-            ComponentCallbacks2.TRIM_MEMORY_MODERATE,
-            ComponentCallbacks2.TRIM_MEMORY_COMPLETE -> {
-                applicationScope.cancel()
-            }
-        }
-    }
 }

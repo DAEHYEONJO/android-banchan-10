@@ -15,9 +15,11 @@ import javax.inject.Inject
 @ActivityRetainedScoped
 class GetAllRecentJoinPagerUseCase @Inject constructor(
     private val recentViewedRepository: RecentViewedRepository,
-    private val isExistCartInfoUseCase: IsExistCartInfoUseCase,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) {
+    companion object{
+        const val TAG = "GetAllRecentJoinPagerUseCase"
+    }
     operator fun invoke(): Flow<PagingData<UiDishItem>> {
         return recentViewedRepository.getAllRecentJoinPager().flow.map { pagingData ->
             pagingData.map { recentViewed ->
@@ -26,7 +28,6 @@ class GetAllRecentJoinPagerUseCase @Inject constructor(
                     val sPrice = recentViewed.sPrice
                     val percentage =
                         if (nPrice == 0) 0 else 100 - (sPrice.toDouble() / nPrice * 100).toInt()
-                    val isInserted = isExistCartInfoUseCase(recentViewed.hash)
                     UiDishItem(
                         _id = recentViewed._id,
                         hash = recentViewed.hash,
@@ -37,7 +38,7 @@ class GetAllRecentJoinPagerUseCase @Inject constructor(
                         nPrice = recentViewed.nPrice,
                         sPrice = recentViewed.sPrice,
                         timeStamp = recentViewed.timeStamp,
-                        isInserted = isInserted
+                        isInserted = recentViewed.isInserted
                     )
                 }
             }

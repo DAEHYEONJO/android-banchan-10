@@ -4,7 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.ItemCartOrderInfoBottomBodyBinding
 import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartBottomBody
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEventWithDuration
@@ -13,10 +16,32 @@ import kotlinx.coroutines.CoroutineScope
 import javax.inject.Inject
 
 @ActivityRetainedScoped
-class CartOrderInfoBottomBodyAdapter @Inject constructor() :
-    RecyclerView.Adapter<CartOrderInfoBottomBodyAdapter.ViewHolder>() {
+class CartOrderInfoBottomBodyAdapter @Inject constructor() : ListAdapter<UiCartBottomBody, CartOrderInfoBottomBodyAdapter.ViewHolder>(
+    itemCallback) {
 
     companion object {
+        val itemCallback = object : DiffUtil.ItemCallback<UiCartBottomBody>(){
+            override fun areItemsTheSame(
+                oldItem: UiCartBottomBody,
+                newItem: UiCartBottomBody
+            ): Boolean {
+                return oldItem.totalPrice == newItem.totalPrice
+            }
+
+            override fun areContentsTheSame(
+                oldItem: UiCartBottomBody,
+                newItem: UiCartBottomBody
+            ): Boolean {
+                return oldItem == newItem
+            }
+
+            override fun getChangePayload(
+                oldItem: UiCartBottomBody,
+                newItem: UiCartBottomBody
+            ): Any? {
+                return if (oldItem.totalPrice!=newItem.totalPrice) true else null
+            }
+        }
         const val TAG = "CartOrderInfoBottomBodyAdapter"
     }
 
@@ -25,8 +50,6 @@ class CartOrderInfoBottomBodyAdapter @Inject constructor() :
     }
 
     var onCartBottomBodyItemClickListener: OnCartBottomBodyItemClickListener? = null
-
-    var bottomBodyList: List<UiCartBottomBody> = List(1) { UiCartBottomBody.emptyItem() }
 
     inner class ViewHolder(
         val binding: ItemCartOrderInfoBottomBodyBinding,
@@ -44,6 +67,10 @@ class CartOrderInfoBottomBodyAdapter @Inject constructor() :
         }
     }
 
+    override fun getItemId(position: Int): Long {
+        return R.layout.item_cart_order_info_bottom_body.toLong()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
             ItemCartOrderInfoBottomBodyBinding.inflate(
@@ -55,8 +82,19 @@ class CartOrderInfoBottomBodyAdapter @Inject constructor() :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(bottomBodyList[position])
+        holder.bind(currentList[position])
     }
 
-    override fun getItemCount(): Int = bottomBodyList.size
+    override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
+        if (payloads.isEmpty()){
+            super.onBindViewHolder(holder, position, payloads)
+        }else{
+            if (payloads[0]==true){
+                currentList[position]?.let {
+                    holder.bind(it)
+                }
+            }
+        }
+    }
+
 }

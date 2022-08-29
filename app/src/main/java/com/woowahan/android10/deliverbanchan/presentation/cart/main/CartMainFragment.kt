@@ -12,6 +12,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ConcatAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.background.DeliveryReceiver
 import com.woowahan.android10.deliverbanchan.databinding.FragmentCartMainBinding
@@ -30,6 +31,7 @@ import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import java.security.SecureRandom
 import javax.inject.Inject
 
@@ -50,7 +52,34 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
     @Inject
     lateinit var cartRecentViewedFooterAdapter: CartRecentViewedFooterAdapter
     private val concatAdapter: ConcatAdapter by lazy {
+        val config = ConcatAdapter.Config.Builder()
+            .setStableIdMode(ConcatAdapter.Config.StableIdMode.SHARED_STABLE_IDS).build()
+        cartHeaderAdapter.apply {
+            stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+            if (!hasObservers()) {
+                setHasStableIds(true)
+            }
+        }
+        cartTopBodyAdapter.apply {
+            stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+            if (!hasObservers()) {
+                setHasStableIds(true)
+            }
+        }
+        cartBottomBodyAdapter.apply {
+            stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+            if (!hasObservers()) {
+                setHasStableIds(true)
+            }
+        }
+        cartRecentViewedFooterAdapter.apply {
+            stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+            if (!hasObservers()) {
+                setHasStableIds(true)
+            }
+        }
         ConcatAdapter(
+            config,
             cartHeaderAdapter,
             cartTopBodyAdapter,
             cartBottomBodyAdapter,
@@ -58,6 +87,7 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
         )
     }
     private val cartViewModel: CartViewModel by activityViewModels()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -79,7 +109,6 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
                 override fun onClickDeleteBtn() {
                     cartViewModel.deleteUiCartItemByHash { success ->
                         if (success) requireContext().showToast("삭제에 성공했습니다.")
-                        else requireContext().showToast("삭제에 실패했습니다.")
                     }
                 }
 
@@ -91,7 +120,6 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
             object : CartDishTopBodyAdapter.OnCartTopBodyItemClickListener {
                 override fun onClickDeleteBtn(position: Int, hash: String) {
                     cartViewModel.deleteUiCartItemByPos(position, hash)
-                    cartTopBodyAdapter.notifyItemChanged(position)
                 }
 
                 override fun onCheckBoxCheckedChanged(
@@ -100,12 +128,11 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
                     checked: Boolean
                 ) {
                     cartViewModel.updateUiCartCheckedValue(position, !checked)
-                    cartTopBodyAdapter.notifyItemChanged(position)
+                    //binding.cartMainRv.scrollToPosition(binding.cartMainRv.)
                 }
 
                 override fun onClickAmountBtn(position: Int, hash: String, amount: Int) {
                     cartViewModel.updateUiCartAmountValue(position, amount)
-                    cartTopBodyAdapter.notifyItemChanged(position)
                 }
 
                 override fun onClickAmountTv(position: Int, amount: Int) {
@@ -133,31 +160,32 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
 
     private fun initAdapterList() {
         with(cartViewModel) {
-            allCartJoinState.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { uiTempState ->
-                handleState(cartTopBodyAdapter, uiTempState)
-            }.launchIn(viewLifecycleOwner.lifecycleScope)
 
-            allRecentlyJoinState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            allRecentSevenJoinState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .onEach { uiTempState ->
                     handleState(cartRecentViewedFooterAdapter, uiTempState)
                 }.launchIn(viewLifecycleOwner.lifecycleScope)
 
+
             itemCartHeaderData.observe(viewLifecycleOwner) { uiCartHeader ->
-                with(cartHeaderAdapter) {
-                    selectHeaderList = listOf(uiCartHeader)
-                    notifyDataSetChanged()
+                lifecycleScope.launch {
+                    cartHeaderAdapter.submitList(listOf(uiCartHeader))
                 }
             }
 
             itemCartBottomBodyData.observe(viewLifecycleOwner) { uiCartBottomBody ->
                 with(cartBottomBodyAdapter) {
-                    bottomBodyList = listOf(uiCartBottomBody)
-                    notifyDataSetChanged()
+                    submitList(listOf(uiCartBottomBody))
                 }
             }
 
             uiCartJoinList.observe(viewLifecycleOwner) {
-                cartTopBodyAdapter.submitList(it.toList())
+                val newList = ArrayList<UiCartOrderDishJoinItem>().apply {
+                    it.forEach {
+                        add(it.copy())
+                    }
+                }
+                cartTopBodyAdapter.submitList(newList)
                 cartViewModel.calcCartBottomBodyAndHeaderVal(it)
             }
         }
@@ -206,6 +234,7 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
 
     private fun <A, T> handleState(adapter: A, uiState: UiState<T>) {
         when (uiState) {
+            is UiState.Init -> {}
             is UiState.Empty -> {}
             is UiState.Loading -> {}
             is UiState.Success -> {
@@ -216,8 +245,7 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
                     is CartRecentViewedFooterAdapter -> {
                         with(adapter) {
                             recentOnDishItemClickListener = this@CartMainFragment
-                            uiRecentJoinList = uiState.items as List<UiDishItem>
-                            notifyDataSetChanged()
+                            submitList(listOf(uiState.items as List<UiDishItem>))
                         }
                     }
                 }
@@ -226,9 +254,14 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
         }
     }
 
+    override fun onStop() {
+        super.onStop()
+    }
+
     private fun initRecyclerView() {
         with(binding.cartMainRv) {
             adapter = concatAdapter
+            itemAnimator = null
         }
     }
 

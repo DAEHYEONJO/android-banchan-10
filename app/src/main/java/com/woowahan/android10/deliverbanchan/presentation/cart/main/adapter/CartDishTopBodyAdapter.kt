@@ -7,8 +7,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.ItemCartDishTopBodyBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiCartOrderDishJoinItem
+import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEventWithDuration
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.CoroutineScope
@@ -34,7 +36,9 @@ class CartDishTopBodyAdapter @Inject constructor(
                 oldItem: UiCartOrderDishJoinItem,
                 newItem: UiCartOrderDishJoinItem
             ): Boolean {
-                return oldItem.hash == newItem.hash && oldItem.checked == newItem.checked && oldItem.amount == newItem.amount
+                return oldItem.checked == newItem.checked
+                        && oldItem.amount == newItem.amount
+                        && oldItem.totalPrice == newItem.totalPrice
             }
 
             override fun areContentsTheSame(
@@ -72,11 +76,13 @@ class CartDishTopBodyAdapter @Inject constructor(
                     }
                 }
                 cartSelectTopBodyIbPlus.setOnClickListener {
-                    if (amount <= 19) onCartTopBodyItemClickListener?.onClickAmountBtn(
-                        adapterPosition,
-                        hash,
-                        amount + 1
-                    )
+                    if (amount <= 19) {
+                        onCartTopBodyItemClickListener?.onClickAmountBtn(
+                            adapterPosition,
+                            hash,
+                            amount + 1
+                        )
+                    }
                 }
                 with(cartSelectTopBodyTvAmount) {
                     setClickEventWithDuration(coroutineScope) {
@@ -89,6 +95,10 @@ class CartDishTopBodyAdapter @Inject constructor(
                 executePendingBindings()
             }
         }
+    }
+
+    override fun getItemId(position: Int): Long {
+        return R.layout.item_cart_dish_top_body.toLong() + position
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

@@ -21,15 +21,18 @@
 
         <TextView
             android:id="@+id/order_list_tv_empty_message"
-            style="@style/Widget.TextView.NotoSansKR_GreyScaleBlack18_Medium.Style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="주문 내역이 없습니다"
+            android:gravity="center"
+            android:textSize="100sp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:fontFamily="@font/bm_eul_ji_ro"
+            android:textColor="@color/primary_main"
+            android:text="@string/empty_string"/>
 
         <ProgressBar
             android:id="@+id/order_list_pb"

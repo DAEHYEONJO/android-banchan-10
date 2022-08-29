@@ -1,5 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.order.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -97,7 +98,7 @@ class OrderViewModel @Inject constructor(
                         UiOrderListItem(
                             timeStamp,
                             curDeliveryTotalPrice,
-                            uiCartJointItemLIst
+                            uiCartJointItemLIst.sortedBy { it.title }
                         )
                     }
                     _allOrderJoinState.value = UiState.Success(list)

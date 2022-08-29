@@ -20,6 +20,10 @@ import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
 class CartBottomSheetFragment : BottomSheetDialogFragment() {
+    
+    companion object{
+        const val TAG = "CartBottomSheetFragment"
+    }
 
     private var _binding: FragmentCartBottomSheetBinding? = null
     private val binding: FragmentCartBottomSheetBinding get() = checkNotNull(_binding)
@@ -68,7 +72,6 @@ class CartBottomSheetFragment : BottomSheetDialogFragment() {
         binding.tvCancel.setOnClickListener {
             dismiss()
         }
-        cartBottomSheetViewModel.getCartInfoByHash()
     }
 
     private fun observeInsertResult() {
@@ -81,11 +84,6 @@ class CartBottomSheetFragment : BottomSheetDialogFragment() {
                     requireContext().showToast("장바구니 담기에 실패했습니다")
                 }
             }.launchIn(viewLifecycleOwner.lifecycleScope)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
 }

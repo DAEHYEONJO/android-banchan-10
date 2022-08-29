@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import com.woowahan.android10.deliverbanchan.R
@@ -14,7 +15,8 @@ import com.woowahan.android10.deliverbanchan.presentation.common.decorator.GridS
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -36,11 +38,9 @@ class RecentViewedFragment : BaseFragment<FragmentRecentViewedBinding>(
     }
 
     private fun initObserver() {
-        lifecycleScope.launchWhenResumed {
-            recentViewModel.recentJoinItem.collectLatest {
-                recentPagingDataAdapter.submitData(it)
-            }
-        }
+        recentViewModel.recentJoinItem.flowWithLifecycle(lifecycle).onEach {
+            recentPagingDataAdapter.submitData(it)
+        }.launchIn(lifecycleScope)
     }
 
     private fun initRecyclerView() {
@@ -66,7 +66,6 @@ class RecentViewedFragment : BaseFragment<FragmentRecentViewedBinding>(
                     }
                 }
             }
-
         }
     }
 

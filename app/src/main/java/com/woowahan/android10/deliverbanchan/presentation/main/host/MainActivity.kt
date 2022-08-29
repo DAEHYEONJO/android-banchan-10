@@ -5,7 +5,9 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import com.google.android.material.tabs.TabLayoutMediator
+import com.woowahan.android10.deliverbanchan.BanChanApplication
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.ActivityMainBinding
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseActivity
@@ -14,7 +16,7 @@ import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEve
 import com.woowahan.android10.deliverbanchan.presentation.main.host.adapter.TabViewPagerAdapter
 import com.woowahan.android10.deliverbanchan.presentation.order.host.OrderActivity
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.*
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main, "MainActivity") {
@@ -25,6 +27,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main, "
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
+        BanChanApplication.applicationScope  = dishViewModel.viewModelScope
         initBinding()
         initView()
         initBtn()
@@ -65,5 +68,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main, "
         TabLayoutMediator(binding.mainTl, binding.mainVp) { tab, position ->
             tab.text = tabTitleArray[position]
         }.attach()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 }

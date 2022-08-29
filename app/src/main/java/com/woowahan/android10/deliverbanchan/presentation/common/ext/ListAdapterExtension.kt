@@ -6,11 +6,11 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 
-inline fun <T, reified VH : RecyclerView.ViewHolder?> ListAdapter<T, VH>.observeItemRangeMoved(): Flow<Unit> =
+inline fun <reified VH : RecyclerView.ViewHolder?> RecyclerView.Adapter<VH>.observeItemRangeMoved(): Flow<Unit> =
     callbackFlow {
         val observer = object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
-                trySend(Unit)
+                trySend(Unit).isSuccess
             }
         }
         registerAdapterDataObserver(observer)
