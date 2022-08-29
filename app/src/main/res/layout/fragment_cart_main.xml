@@ -13,6 +13,15 @@
         android:orientation="vertical"
         tools:context=".presentation.cart.main.CartMainFragment">
 
+        <ProgressBar
+            android:id="@+id/cart_main_pb"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:indeterminateBehavior="repeat"
+            android:indeterminateTint="@color/progress_indicator"
+            android:layout_gravity="center"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/cart_main_rv"
             android:layout_width="match_parent"

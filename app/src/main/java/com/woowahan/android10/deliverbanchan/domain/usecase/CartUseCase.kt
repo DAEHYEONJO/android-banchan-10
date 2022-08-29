@@ -1,12 +1,11 @@
 package com.woowahan.android10.deliverbanchan.domain.usecase
 
-import com.woowahan.android10.deliverbanchan.domain.model.TempOrder
-import com.woowahan.android10.deliverbanchan.domain.model.UiBottomSheet
-import com.woowahan.android10.deliverbanchan.domain.model.UiCartOrderDishJoinItem
-import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
+import com.woowahan.android10.deliverbanchan.domain.model.*
 import com.woowahan.android10.deliverbanchan.domain.repository.local.CartRepository
 import com.woowahan.android10.deliverbanchan.domain.repository.local.OrderRepository
 import com.woowahan.android10.deliverbanchan.domain.repository.local.RecentViewedRepository
+import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartBottomBody
+import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartHeader
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -26,24 +25,69 @@ class CartUseCase @Inject constructor(
         return cartRepository.getBottomSheetCartInfoByHash(hash)
     }
 
-    fun getCartJoinList(): Flow<List<UiCartOrderDishJoinItem>> {
+    fun getCartJoinMultiViewTypeList(): Flow<List<UiCartMultiViewType>> {
         return cartRepository.getAllCartJoinList().map { cartList ->
+            val multiViewTypeList = mutableListOf<UiCartMultiViewType>().apply {
+                add(UiCartMultiViewType(0, uiCartHeader = UiCartHeader.emptyItem()))
+            }
+            var deliveryPrice = 2500
+            var productTotalPrice = 0
+            var checkedCount = 0
             cartList.map { cart ->
                 with(cart) {
-                    val totalPrice = sPrice * amount
-                    UiCartOrderDishJoinItem(
-                        hash = hash,
-                        title = title,
-                        amount = amount,
-                        checked = checked,
-                        nPrice = nPrice,
-                        description = description,
-                        sPrice = sPrice,
-                        image = image,
-                        totalPrice = totalPrice
+                    val dishTotalPrice = sPrice * amount
+                    productTotalPrice += dishTotalPrice
+                    if (checked) checkedCount++
+                    multiViewTypeList.add(
+                        UiCartMultiViewType(
+                            viewType = 1,
+                            uiCartOrderDishJoinItem = UiCartOrderDishJoinItem(
+                                hash = hash,
+                                title = title,
+                                amount = amount,
+                                checked = checked,
+                                nPrice = nPrice,
+                                description = description,
+                                sPrice = sPrice,
+                                image = image,
+                                totalPrice = dishTotalPrice
+                            )
+                        )
                     )
                 }
             }
+            var totalPrice = productTotalPrice + deliveryPrice
+            val isAvailableDelivery = productTotalPrice >= UiCartBottomBody.MIN_DELIVERY_PRICE
+            var isAvailableFreeDeliver = false
+            if (productTotalPrice >= UiCartBottomBody.DELIVERY_FREE_PRICE) {
+                totalPrice -= deliveryPrice
+                deliveryPrice = 0
+                if (isAvailableDelivery) isAvailableFreeDeliver = true
+            }
+            multiViewTypeList.add(
+                UiCartMultiViewType(
+                    viewType = 2,
+                    uiCartBottomBody = UiCartBottomBody(
+                        productTotalPrice = productTotalPrice,
+                        deliveryPrice = deliveryPrice,
+                        totalPrice = totalPrice,
+                        isAvailableDelivery = isAvailableDelivery,
+                        isAvailableFreeDelivery = isAvailableFreeDeliver
+                    )
+                )
+            )
+            if (checkedCount == cartList.size) {
+                multiViewTypeList.first().uiCartHeader!!.apply {
+                    checkBoxText = UiCartHeader.TEXT_SELECT_RELEASE
+                    checkBoxChecked = true
+                }
+            } else {
+                multiViewTypeList.first().uiCartHeader!!.apply {
+                    checkBoxText = UiCartHeader.TEXT_SELECT_ALL
+                    checkBoxChecked = false
+                }
+            }
+            multiViewTypeList
         }
     }
 
