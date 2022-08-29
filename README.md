@@ -31,7 +31,7 @@
 | UI | xml |
 | DataBase | Room |
 | Network | Retrofit |
-| Aynchronous | Coroutine |
+| Aynchronous | Coroutine, Flow |
 | Dependency Injection | Hilt |
 | Image | Glide |
 | Notification | AlarmManager |
