@@ -91,27 +91,6 @@ class CartUseCase @Inject constructor(
         }
     }
 
-    fun getCartJoinList(): Flow<List<UiCartOrderDishJoinItem>> {
-        return cartRepository.getAllCartJoinList().map { cartList ->
-            cartList.map { cart ->
-                with(cart) {
-                    val totalPrice = sPrice * amount
-                    UiCartOrderDishJoinItem(
-                        hash = hash,
-                        title = title,
-                        amount = amount,
-                        checked = checked,
-                        nPrice = nPrice,
-                        description = description,
-                        sPrice = sPrice,
-                        image = image,
-                        totalPrice = totalPrice
-                    )
-                }
-            }
-        }
-    }
-
     fun getAllRecentJoinListLimitSeven(): Flow<List<UiDishItem>> {
         return recentRepository.getAllRecentJoinListLimitSeven().map { recentlyViewedList ->
             recentlyViewedList.map { recentlyViewed ->
