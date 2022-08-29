@@ -226,13 +226,15 @@ class CartViewModel @Inject constructor(
         if (position == -1) return
         _allCartJoinMultiViewTypeState.value.let {
             if (it is UiState.Success) {
+                val sPrice = it.items[position].uiCartOrderDishJoinItem!!.sPrice
                 _allCartJoinMultiViewTypeState.value = UiState.Success(
                     it.items.toMutableList().apply {
                         set(
                             position,
                             get(position).copy(
                                 uiCartOrderDishJoinItem = get(position).uiCartOrderDishJoinItem!!.copy(
-                                    amount = amount
+                                    amount = amount,
+                                    totalPrice = amount*sPrice
                                 )
                             )
                         )
