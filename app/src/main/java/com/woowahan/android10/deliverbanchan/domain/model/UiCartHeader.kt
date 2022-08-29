@@ -1,8 +1,8 @@
-package com.woowahan.android10.deliverbanchan.presentation.cart.model
+package com.woowahan.android10.deliverbanchan.domain.model
 
 data class UiCartHeader(
-    val checkBoxText: String,
-    val checkBoxChecked: Boolean
+    var checkBoxText: String,
+    var checkBoxChecked: Boolean
 ) {
     companion object {
         const val TEXT_SELECT_ALL = "전체 선택"

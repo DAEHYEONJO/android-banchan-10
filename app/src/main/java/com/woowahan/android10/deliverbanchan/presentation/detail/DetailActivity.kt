@@ -73,7 +73,7 @@ class DetailActivity :
     }
 
     private fun setRecyclerView() {
-        detailThumbImageAdapter = DetailThumbImageAdapter{ pageNum ->
+        detailThumbImageAdapter = DetailThumbImageAdapter { pageNum ->
             detailViewModel.changeCurrentThumbImagePage(pageNum)
         }
         detailContentAdapter = DetailContentAdapter({
@@ -115,7 +115,7 @@ class DetailActivity :
                     binding.detailRv.toVisible()
                     binding.detailPb.toGone()
 
-                    with(detailThumbImageAdapter){
+                    with(detailThumbImageAdapter) {
                         currentImagePage = detailViewModel.currentThumbImagePage
                         submitList(listOf(uiDetailState.items.thumbList))
                     }

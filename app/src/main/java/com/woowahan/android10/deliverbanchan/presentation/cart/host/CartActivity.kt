@@ -57,7 +57,7 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart, "
     }
 
     private fun initFragment(tagArrayIndex: Int) {
-        if (tagArrayIndex==2){
+        if (tagArrayIndex == 2) {
             cartViewModel.updateAllCartItemChanged()
         }
         var fragment = supportFragmentManager.findFragmentByTag(fragmentTagArray[tagArrayIndex])
@@ -108,7 +108,7 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart, "
 
     override fun onStop() {
         super.onStop()
-        if(cartViewModel.orderBtnClickLiveData.value!=true)
+        if (cartViewModel.orderBtnClickLiveData.value != true)
             cartViewModel.updateAllCartItemChanged()
     }
 

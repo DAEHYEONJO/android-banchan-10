@@ -10,7 +10,7 @@ data class Order(
     @ColumnInfo(name = "n_price") val nPrices: Int,
     @ColumnInfo(name = "s_price") val sPrice: Int,
     @ColumnInfo(name = "time_stamp") val timeStamp: Long,
-    val amount: Int,//
+    val amount: Int,
     @ColumnInfo(name = "is_delivering") val isDelivering: Boolean,
     @ColumnInfo(name = "delivery_price") val deliveryPrice: Int
 )

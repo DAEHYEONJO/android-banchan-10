@@ -1,6 +1,5 @@
 package com.woowahan.android10.deliverbanchan.presentation.common.ext
 
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow

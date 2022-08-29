@@ -17,9 +17,10 @@ class GetAllRecentJoinPagerUseCase @Inject constructor(
     private val recentViewedRepository: RecentViewedRepository,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) {
-    companion object{
+    companion object {
         const val TAG = "GetAllRecentJoinPagerUseCase"
     }
+
     operator fun invoke(): Flow<PagingData<UiDishItem>> {
         return recentViewedRepository.getAllRecentJoinPager().flow.map { pagingData ->
             pagingData.map { recentViewed ->

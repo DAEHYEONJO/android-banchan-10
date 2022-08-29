@@ -20,8 +20,8 @@ import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
 class CartBottomSheetFragment : BottomSheetDialogFragment() {
-    
-    companion object{
+
+    companion object {
         const val TAG = "CartBottomSheetFragment"
     }
 

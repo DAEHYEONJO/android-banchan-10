@@ -12,7 +12,7 @@ import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.databinding.ItemDetailThumbImageRvBinding
 
 class DetailThumbImageAdapter(
-    private val changeCurrentPage: (pageNum : Int) -> Unit
+    private val changeCurrentPage: (pageNum: Int) -> Unit
 ) :
     ListAdapter<List<String>, DetailThumbImageAdapter.DetailThumbImageHolder>(
         DetailThumbImageDiffUtil
@@ -26,7 +26,7 @@ class DetailThumbImageAdapter(
             val vpAdapter = DetailThumbViewPagerAdapter()
             binding.detailVpThumb.apply {
                 adapter = vpAdapter
-                registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
+                registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                     override fun onPageSelected(position: Int) {
                         super.onPageSelected(position)
                         currentImagePage = position

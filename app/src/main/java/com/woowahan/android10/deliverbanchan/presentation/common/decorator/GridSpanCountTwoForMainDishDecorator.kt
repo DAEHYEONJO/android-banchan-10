@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.dpToPx
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.FragmentScoped
-import kotlinx.coroutines.*
 import javax.inject.Inject
 import kotlin.math.roundToInt
 

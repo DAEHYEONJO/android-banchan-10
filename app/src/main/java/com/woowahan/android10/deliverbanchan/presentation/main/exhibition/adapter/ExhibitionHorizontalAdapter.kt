@@ -31,7 +31,7 @@ class ExhibitionHorizontalAdapter() :
             }
 
             override fun getChangePayload(oldItem: UiDishItem, newItem: UiDishItem): Any? {
-                return if(oldItem.isInserted != newItem.isInserted) true else null
+                return if (oldItem.isInserted != newItem.isInserted) true else null
             }
         }
     }

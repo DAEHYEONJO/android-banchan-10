@@ -2,12 +2,12 @@ package com.woowahan.android10.deliverbanchan.domain.usecase
 
 import com.woowahan.android10.deliverbanchan.domain.model.UiCartOrderDishJoinItem
 import com.woowahan.android10.deliverbanchan.domain.repository.local.OrderRepository
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@ActivityRetainedScoped
 class GetAllOrderJoinListUseCase @Inject constructor(
     private val orderRepository: OrderRepository
 ) {

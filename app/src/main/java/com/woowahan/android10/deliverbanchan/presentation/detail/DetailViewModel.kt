@@ -163,18 +163,18 @@ class DetailViewModel @Inject constructor(
     }
 
     fun plusItemCount() {
-        if (_currentItemAmount != null){
-            if (_itemCount.value < 20 - _currentItemAmount!!){
+        if (_currentItemAmount != null) {
+            if (_itemCount.value < 20 - _currentItemAmount!!) {
                 setItemCountPlus()
             }
-        }else{
-            if (_itemCount.value < 20){
+        } else {
+            if (_itemCount.value < 20) {
                 setItemCountPlus()
             }
         }
     }
 
-    fun setItemCountPlus(amount: Int = 1){
+    fun setItemCountPlus(amount: Int = 1) {
         _itemCount.value += amount
         _uiDetailInfo.value = UiState.Success(
             (_uiDetailInfo.value as UiState.Success).items.copy(itemCount = _itemCount.value)

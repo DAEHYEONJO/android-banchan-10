@@ -13,21 +13,21 @@ import com.woowahan.android10.deliverbanchan.presentation.common.ext.toVisible
 
 @BindingAdapter("app:setOrderStateText")
 fun TextView.setDeliverStateText(isDeliver: Boolean) {
-    if (isDeliver) {
+    text = if (isDeliver) {
         setTextColor(ContextCompat.getColor(this.context, R.color.primary_accent))
-        text = "배송 준비중"
+        "배송 준비중"
     } else {
         setTextColor(ContextCompat.getColor(this.context, R.color.grey_scale_black))
-        text = "배송완료"
+        "배송완료"
     }
 }
 
 @BindingAdapter("app:setOrderListTitle", "app:setOrderItemSize")
 fun TextView.setOrderTitle(orderListTitle: String, orderItemSize: Int) {
-    if (orderItemSize <= 1) {
-        text = orderListTitle
+    text = if (orderItemSize <= 1) {
+        orderListTitle
     } else {
-        text = "${orderListTitle} 외 ${orderItemSize - 1}개"
+        "${orderListTitle} 외 ${orderItemSize - 1}개"
     }
 }
 

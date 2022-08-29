@@ -1,8 +1,8 @@
-package com.woowahan.android10.deliverbanchan.presentation.cart.model
+package com.woowahan.android10.deliverbanchan.domain.model
 
 data class UiCartBottomBody(
     var productTotalPrice: Int,
-    val deliveryPrice: Int = 2500,
+    var deliveryPrice: Int = 2500,
     var totalPrice: Int,
     var isAvailableDelivery: Boolean = false,
     var isAvailableFreeDelivery: Boolean = false,

@@ -41,7 +41,7 @@ class DishItemRepositoryImpl @Inject constructor(
                         emit(
                             BaseResult.Success(
                                 apiDishResponse.mapIndexed { index, dishItem ->
-                                async(dispatcher) {
+                                    async(dispatcher) {
                                         val isInserted =
                                             cartRepository.isExistCartInfo(dishItem.detailHash)
                                         ApiMapper.mapToUiDishItem(dishItem, isInserted, index)
@@ -74,7 +74,8 @@ class DishItemRepositoryImpl @Inject constructor(
                                     val uiDishItemList =
                                         categoryItem.items.mapIndexed { index, dishItem ->
                                             async {
-                                                val isInserted = cartRepository.isExistCartInfo(dishItem.detailHash)
+                                                val isInserted =
+                                                    cartRepository.isExistCartInfo(dishItem.detailHash)
                                                 ApiMapper.mapToUiDishItem(dishItem, isInserted, 0)
                                             }
                                         }.awaitAll().toList()
