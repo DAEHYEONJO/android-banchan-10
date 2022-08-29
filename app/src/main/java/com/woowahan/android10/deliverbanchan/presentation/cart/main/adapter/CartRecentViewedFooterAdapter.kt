@@ -1,6 +1,5 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart.main.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -70,7 +69,6 @@ class CartRecentViewedFooterAdapter @Inject constructor() :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        //Log.e(TAG, "푸터 onCreateViewHolder: ", )
         val binding = ItemCartRecentViewedFooterBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
@@ -80,7 +78,6 @@ class CartRecentViewedFooterAdapter @Inject constructor() :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        //Log.e(TAG, "푸터 onBindViewHolder: ", )
         holder.bind(currentList[position])
     }
 }

@@ -1,6 +1,5 @@
 package com.woowahan.android10.deliverbanchan.presentation.main.exhibition.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -8,7 +7,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.databinding.ItemExhibitionBinding
-import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.model.UiExhibitionItem
 import com.woowahan.android10.deliverbanchan.presentation.base.listeners.OnDishItemClickListener
 
@@ -49,7 +47,6 @@ class ExhibitionAdapter() :
         lateinit var exhibitonHorizontalAdpater: ExhibitionHorizontalAdapter
 
         fun bind(uiExhibitionItem: UiExhibitionItem, position: Int) {
-            Log.e(TAG, "bind, position : ${position}")
             binding.uiExhibitionItem = uiExhibitionItem
 
             exhibitonHorizontalAdpater = ExhibitionHorizontalAdapter().apply {
@@ -58,7 +55,6 @@ class ExhibitionAdapter() :
 
             binding.exhibitionRvHorizontal.apply {
                 if (adapter == null) {
-                    Log.e("ExhibitionViewHolder", "horizontal adapter == null")
                     adapter = exhibitonHorizontalAdpater
                     layoutManager = LinearLayoutManager(binding.root.context).also {
                         it.orientation = LinearLayoutManager.HORIZONTAL
@@ -74,14 +70,12 @@ class ExhibitionAdapter() :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExhibitionViewHolder {
-        Log.e(TAG, "onCreateViewHolder")
         val binding =
             ItemExhibitionBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ExhibitionViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ExhibitionViewHolder, position: Int) {
-        Log.e(TAG, "onBindViewHolder")
         holder.bind(currentList[position], position)
     }
 

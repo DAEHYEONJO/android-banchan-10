@@ -2,7 +2,6 @@ package com.woowahan.android10.deliverbanchan.presentation.detail
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -75,7 +74,6 @@ class DetailActivity :
 
     private fun setRecyclerView() {
         detailThumbImageAdapter = DetailThumbImageAdapter{ pageNum ->
-            Log.e(TAG, "current image page: ${pageNum}")
             detailViewModel.changeCurrentThumbImagePage(pageNum)
         }
         detailContentAdapter = DetailContentAdapter({
@@ -116,7 +114,6 @@ class DetailActivity :
                     binding.detailErrorLayout.errorCl.toGone()
                     binding.detailRv.toVisible()
                     binding.detailPb.toGone()
-                    Log.e("TAG", "UiState.Success")
 
                     with(detailThumbImageAdapter){
                         currentImagePage = detailViewModel.currentThumbImagePage

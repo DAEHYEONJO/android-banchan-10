@@ -1,6 +1,5 @@
 package com.woowahan.android10.deliverbanchan.presentation.main.exhibition.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
@@ -46,7 +45,6 @@ class ExhibitionHorizontalAdapter() :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(uiDishItem: UiDishItem, position: Int) {
-            Log.e(TAG, "bind")
             binding.item = uiDishItem
             binding.viewLeft.isVisible = (position == 0)
             binding.viewRight.isVisible = (position == currentList.size - 1)

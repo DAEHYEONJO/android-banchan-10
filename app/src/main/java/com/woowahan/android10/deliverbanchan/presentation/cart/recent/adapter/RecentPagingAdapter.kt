@@ -1,6 +1,5 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart.recent.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.findViewTreeLifecycleOwner
@@ -58,16 +57,10 @@ class RecentPagingAdapter @Inject constructor() :
                 executePendingBindings()
             }
         }
-
-        fun bindIsInserted(isInserted: Boolean){
-            Log.e(TAG, "bindIsInserted: 바인드 인설티드: $isInserted", )
-            binding.item!!.isInserted = isInserted
-        }
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         getItem(position)?.let {
-            Log.e(TAG, "onBindViewHolder: ${it.isInserted} ${it.title} ${it.timeStamp}", )
             holder.bind(it)
         }
     }
@@ -78,7 +71,6 @@ class RecentPagingAdapter @Inject constructor() :
         }else{
             if (payloads[0]==true){
                 getItem(position)?.let {
-                    //holder.bindIsInserted(it.isInserted)
                     holder.bind(it)
                 }
 

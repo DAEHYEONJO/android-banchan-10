@@ -1,6 +1,5 @@
 package com.woowahan.android10.deliverbanchan.presentation.main.maindish
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -85,10 +84,6 @@ class MainDishViewModel @Inject constructor(
     }
 
     fun sortMainDishes(position: Int) {
-        Log.e(
-            "MainDishViewModel",
-            "sortMainDishes: pre: ${_preMainSpinnerPosition.value} cur: ${_curMainSpinnerPosition.value}",
-        )
         if (_curMainSpinnerPosition.value != _preMainSpinnerPosition.value) { // 정렬 기준이 변경될 시
             _preMainSpinnerPosition.value = _curMainSpinnerPosition.value
         }

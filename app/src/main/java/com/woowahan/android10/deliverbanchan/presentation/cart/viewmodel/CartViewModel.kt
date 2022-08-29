@@ -1,6 +1,5 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.woowahan.android10.deliverbanchan.BanChanApplication
 import com.woowahan.android10.deliverbanchan.di.IoDispatcher
@@ -17,7 +16,6 @@ import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartHeade
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -131,7 +129,6 @@ class CartViewModel @Inject constructor(
         }.onEach { uiCartJoinItemList ->
             //calcCartBottomBodyAndHeaderVal(uiCartJoinItemList)
         }.collect {
-            Log.e(TAG, "getAllCartJoinList: 카트조인리스트 컬렉트------------------------", )
             _allCartJoinState.value = UiState.Loading(false)
             _allCartJoinState.value = UiState.Success(it)
             _uiCartJoinArrayList.clear()
@@ -208,9 +205,6 @@ class CartViewModel @Inject constructor(
         if (position == -1) return // 클릭했을때, 없어진 view의 경우 position == -1
         _uiCartJoinArrayList[position].checked = checked
         _uiCartJoinList.value = _uiCartJoinArrayList
-        _uiCartJoinList.value!!.forEach {
-            Log.e(TAG, "updateUiCartCheckedValue: ${it.title} ${it.checked}", )
-        }
     }
 
     fun updateUiCartAmountValue(position: Int, amount: Int) {
@@ -243,9 +237,6 @@ class CartViewModel @Inject constructor(
     fun changeCheckedState(checkedValue: Boolean) {
         _uiCartJoinList.value = _uiCartJoinArrayList.onEach {
             it.checked = checkedValue
-        }
-        _uiCartJoinList.value!!.forEach {
-            Log.e(TAG, "updateUiCartCheckedValue: ${it.title} ${it.checked}", )
         }
     }
 
@@ -284,10 +275,6 @@ class CartViewModel @Inject constructor(
             orderHashList.clear()
             //orderFirstItemTitle = "Title"
             orderHashList.addAll(_selectedCartItem.map { it.hash })
-//            _selectedCartItem.forEachIndexed { index, tempOrder ->
-//                //if (index == 0) orderFirstItemTitle = tempOrder.title
-//                orderHashList.add(tempOrder.hash)
-//            }
             cartUseCase.insertVarArgOrderInfo(
                 tempOrderSet = _selectedCartItem,
                 timeStamp = currentOrderTimeStamp,
@@ -295,9 +282,6 @@ class CartViewModel @Inject constructor(
                 deliveryPrice = _itemCartBottomBodyData.value!!.deliveryPrice
             )
             _orderButtonClicked.emit(true)
-            _selectedCartItem.forEach {
-                Log.e(TAG, "insertOrderInfoDeleteCartInfo: 지워질것들: ${it.title} ${it.hash}", )
-            }
             cartUseCase.insertAndDeleteCartItems(
                 _uiCartJoinList.value!!, _toBeDeletedCartItem.toList()
             )
@@ -309,15 +293,6 @@ class CartViewModel @Inject constructor(
 
     fun updateAllCartItemChanged() {
         BanChanApplication.applicationScope.launch {
-
-            Log.e(TAG, "--------: 업데이트 아이템 ---------", )
-            _uiCartJoinList.value!!.forEach {
-                Log.e(TAG, "업뎃되는 아이템: ${it.title} ${it.checked} ${it.amount}", )
-            }
-            _toBeDeletedCartItem.forEach {
-                Log.e(TAG, "지워지는 아이템: $it", )
-            }
-
             cartUseCase.insertAndDeleteCartItems(
                 _uiCartJoinList.value!!, _toBeDeletedCartItem.toList()
             )

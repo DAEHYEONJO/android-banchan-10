@@ -1,6 +1,5 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart.recent
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -10,8 +9,8 @@ import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllRecentJoinPagerUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.IsExistCartInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,7 +35,6 @@ class RecentViewModel @Inject constructor(
         viewModelScope.launch {
             getAllRecentJoinPagerUseCase().cachedIn(viewModelScope)
                 .collect { recentViewedPagingData ->
-                    Log.e(TAG, "getRecentJoinPagingFlow: 컬렉트 리센틀리 페이징 아이템", )
                     recentViewedPagingData.map {
                         it.copy(isInserted = isExistCartInfoUseCase(it.hash))
                     }

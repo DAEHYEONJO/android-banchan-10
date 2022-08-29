@@ -62,14 +62,12 @@ class CartSelectHeaderAdapter @Inject constructor() :
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        //Log.e(TAG, "헤더 onCreateViewHolder: ", )
         val binding =
             ItemCartSelectHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        //Log.e(TAG, "헤더 onBindViewHodler: ", )
         holder.bind(currentList[position])
     }
 
