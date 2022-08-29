@@ -3,10 +3,7 @@ package com.woowahan.android10.deliverbanchan.presentation.cart.viewmodel
 import androidx.lifecycle.*
 import com.woowahan.android10.deliverbanchan.BanChanApplication
 import com.woowahan.android10.deliverbanchan.di.IoDispatcher
-import com.woowahan.android10.deliverbanchan.domain.model.TempOrder
-import com.woowahan.android10.deliverbanchan.domain.model.UiCartOrderDishJoinItem
-import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
-import com.woowahan.android10.deliverbanchan.domain.model.UiOrderInfo
+import com.woowahan.android10.deliverbanchan.domain.model.*
 import com.woowahan.android10.deliverbanchan.domain.usecase.CartUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllOrderInfoListUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.RecentUseCase
@@ -33,45 +30,9 @@ class CartViewModel @Inject constructor(
     }
 
     val fragmentArrayIndex = MutableLiveData(0)
-
     val appBarTitle = MutableLiveData("")
+
     val orderDetailMode = MutableLiveData(false)
-
-    private val _allCartJoinState =
-        MutableStateFlow<UiState<List<UiCartOrderDishJoinItem>>>(UiState.Init)
-    val allCartJoinState: StateFlow<UiState<List<UiCartOrderDishJoinItem>>>
-        get() = _allCartJoinState.stateIn(
-            initialValue = UiState.Init,
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000)
-        )
-
-    private val _allRecentSevenJoinState =
-        MutableStateFlow<UiState<List<UiDishItem>>>(UiState.Init)
-    val allRecentSevenJoinState: StateFlow<UiState<List<UiDishItem>>>
-        get() = _allRecentSevenJoinState.stateIn(
-            initialValue = UiState.Init,
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000)
-        )
-
-    private var _itemCartBottomBodyProductTotalPrice = 0
-    var currentOrderTimeStamp = 0L
-
-    private val _itemCartHeaderData = MutableLiveData(UiCartHeader.emptyItem())
-    val itemCartHeaderData: LiveData<UiCartHeader> get() = _itemCartHeaderData
-
-    private val _uiCartJoinList = MutableLiveData<List<UiCartOrderDishJoinItem>>(emptyList())
-    val uiCartJoinList: LiveData<List<UiCartOrderDishJoinItem>> get() = _uiCartJoinList
-    private val _uiCartJoinArrayList = ArrayList<UiCartOrderDishJoinItem>()
-
-    private val _itemCartBottomBodyData = MutableLiveData(UiCartBottomBody.emptyItem())
-    val itemCartBottomBodyData: LiveData<UiCartBottomBody> get() = _itemCartBottomBodyData
-
-    private val _selectedCartItem = mutableSetOf<TempOrder>()
-
-    private val _toBeDeletedCartItem = mutableSetOf<String>()
-
     private val _orderCompleteTopItem = MutableStateFlow(UiCartCompleteHeader.emptyItem())
     val orderCompleteTopItem: StateFlow<UiCartCompleteHeader> get() = _orderCompleteTopItem
 
@@ -87,17 +48,66 @@ class CartViewModel @Inject constructor(
     val orderBtnClickLiveData = _orderButtonClicked.asLiveData()
 
     val orderHashList = ArrayList<String>()
-    var orderFirstItemTitle = "Title"
+    var orderFirstItemTitle = ""
 
     private val _reloadBtnClicked = MutableLiveData(false)
     val reloadBtnClicked: LiveData<Boolean> get() = _reloadBtnClicked
 
-    var forInitValue: Boolean? = true
+    private val _allRecentSevenJoinState =
+        MutableStateFlow<UiState<List<UiDishItem>>>(UiState.Init)
+    val allRecentSevenJoinState: StateFlow<UiState<List<UiDishItem>>>
+        get() = _allRecentSevenJoinState.stateIn(
+            initialValue = UiState.Init,
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000)
+        )
+
+    var currentOrderTimeStamp = 0L
+
+    private val _allCartJoinMultiViewTypeState =
+        MutableStateFlow<UiState<List<UiCartMultiViewType>>>(UiState.Init)
+    val allCartJoinMultiViewTypeState = _allCartJoinMultiViewTypeState.stateIn(
+        initialValue = UiState.Init,
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000)
+    )
+    private val _toBeDeleteItemsHash = mutableSetOf<String>()
 
     init {
         getAllRecentSevenJoinList()
-        getAllCartJoinList()
         observeOrderInfo()
+        getCartJoinMultiViewTypeList()
+    }
+
+    private fun getAllRecentSevenJoinList() = viewModelScope.launch {
+        cartUseCase.getAllRecentJoinListLimitSeven().onStart {
+            _allRecentSevenJoinState.value = UiState.Loading(true)
+        }.flowOn(dispatcher).catch { exception ->
+            _allRecentSevenJoinState.value = UiState.Loading(false)
+            _allRecentSevenJoinState.value = UiState.Error(exception.message.toString())
+        }.collect {
+            _allRecentSevenJoinState.value = UiState.Loading(false)
+            _allRecentSevenJoinState.value = UiState.Success(it)
+        }
+    }
+
+    private fun getCartJoinMultiViewTypeList() {
+        viewModelScope.launch {
+            cartUseCase.getCartJoinMultiViewTypeList().onStart {
+                _allCartJoinMultiViewTypeState.value = UiState.Loading(true)
+            }.flowOn(dispatcher).catch { exception ->
+                _allCartJoinMultiViewTypeState.value = UiState.Loading(false)
+                _allCartJoinMultiViewTypeState.value = UiState.Error(exception.message.toString())
+            }.collect {
+                _allCartJoinMultiViewTypeState.value = UiState.Loading(false)
+                if (it.isEmpty()) _allCartJoinMultiViewTypeState.value = UiState.Empty(true)
+                else _allCartJoinMultiViewTypeState.value = UiState.Success(it)
+            }
+        }
+    }
+
+    fun setAppBarTitle(string: String) {
+        appBarTitle.value = string
     }
 
     fun setReloadBtnValue() {
@@ -120,184 +130,285 @@ class CartViewModel @Inject constructor(
         }
     }
 
-    private fun getAllCartJoinList() = viewModelScope.launch {
-        cartUseCase.getCartJoinList().onStart {
-            _allCartJoinState.value = UiState.Loading(true)
-        }.flowOn(dispatcher).catch { exception ->
-            _allCartJoinState.value = UiState.Loading(false)
-            _allCartJoinState.value = UiState.Error(exception.message.toString())
-        }.onEach { uiCartJoinItemList ->
-            //calcCartBottomBodyAndHeaderVal(uiCartJoinItemList)
-        }.collect {
-            _allCartJoinState.value = UiState.Loading(false)
-            _allCartJoinState.value = UiState.Success(it)
-            _uiCartJoinArrayList.clear()
-            _uiCartJoinArrayList.addAll(it)
-            _uiCartJoinList.value = _uiCartJoinArrayList
-        }
-    }
-
-    fun calcCartBottomBodyAndHeaderVal(uiCartOrderDishJoinItemList: List<UiCartOrderDishJoinItem>) {
-        _itemCartBottomBodyProductTotalPrice = 0
-        _selectedCartItem.clear()
-        val checkedUiJoinCartItem = uiCartOrderDishJoinItemList.filter { it.checked }
-        checkedUiJoinCartItem.forEach { checkedUiCartJoinItem ->
-            _selectedCartItem.add(
-                TempOrder(
-                    checkedUiCartJoinItem.hash,
-                    checkedUiCartJoinItem.amount,
-                    checkedUiCartJoinItem.title
+    private fun updatePriceText() {
+        _allCartJoinMultiViewTypeState.value.let {
+            if (it is UiState.Success) {
+                var deliveryPrice = 2500
+                var productTotalPrice = 0
+                it.items.mapNotNull {
+                    it.uiCartOrderDishJoinItem
+                }.filter {
+                    it.checked
+                }.forEach {
+                    productTotalPrice += it.amount * it.sPrice
+                }
+                var totalPrice = productTotalPrice + deliveryPrice
+                val isAvailableDelivery = productTotalPrice >= UiCartBottomBody.MIN_DELIVERY_PRICE
+                var isAvailableFreeDeliver = false
+                if (productTotalPrice >= UiCartBottomBody.DELIVERY_FREE_PRICE) {
+                    totalPrice -= deliveryPrice
+                    deliveryPrice = 0
+                    if (isAvailableDelivery) isAvailableFreeDeliver = true
+                }
+                val lastPosition = it.items.lastIndex
+                _allCartJoinMultiViewTypeState.value = UiState.Success(
+                    it.items.toMutableList().apply {
+                        set(
+                            lastIndex,
+                            get(lastIndex).copy(
+                                uiCartBottomBody = get(lastPosition).uiCartBottomBody!!.copy(
+                                    deliveryPrice = deliveryPrice,
+                                    totalPrice = totalPrice,
+                                    isAvailableDelivery = isAvailableDelivery,
+                                    isAvailableFreeDelivery = isAvailableFreeDeliver,
+                                    productTotalPrice = productTotalPrice
+                                )
+                            )
+                        )
+                    }
                 )
-            )
-            _itemCartBottomBodyProductTotalPrice += checkedUiCartJoinItem.totalPrice
-        }
-        if (checkedUiJoinCartItem.size == uiCartOrderDishJoinItemList.size) {
-            _itemCartHeaderData.value = UiCartHeader(
-                checkBoxText = UiCartHeader.TEXT_SELECT_RELEASE,
-                checkBoxChecked = true
-            )
-        } else {
-            _itemCartHeaderData.value = UiCartHeader(
-                checkBoxText = UiCartHeader.TEXT_SELECT_ALL,
-                checkBoxChecked = false
-            )
-        }
-        setItemCartBottomBodyData()
-    }
-
-    private fun setItemCartBottomBodyData() {
-        var deliveryPrice = 2500
-        var totalPrice = _itemCartBottomBodyProductTotalPrice + deliveryPrice
-        val isAvailableDelivery =
-            _itemCartBottomBodyProductTotalPrice >= UiCartBottomBody.MIN_DELIVERY_PRICE
-        var isAvailableFreeDelivery = false
-        if (_itemCartBottomBodyProductTotalPrice >= UiCartBottomBody.DELIVERY_FREE_PRICE) {
-            totalPrice -= deliveryPrice
-            deliveryPrice = 0
-            if (isAvailableDelivery) isAvailableFreeDelivery = true
-        }
-        _itemCartBottomBodyData.value = UiCartBottomBody(
-            productTotalPrice = _itemCartBottomBodyProductTotalPrice,
-            deliveryPrice = deliveryPrice,
-            totalPrice = totalPrice,
-            isAvailableDelivery = isAvailableDelivery,
-            isAvailableFreeDelivery = isAvailableFreeDelivery and isAvailableDelivery,
-        )
-    }
-
-    private fun getAllRecentSevenJoinList() = viewModelScope.launch {
-        cartUseCase.getAllRecentJoinListLimitSeven().onStart {
-            _allRecentSevenJoinState.value = UiState.Loading(true)
-        }.flowOn(dispatcher).catch { exception ->
-            _allRecentSevenJoinState.value = UiState.Loading(false)
-            _allRecentSevenJoinState.value = UiState.Error(exception.message.toString())
-        }.collect {
-            _allRecentSevenJoinState.value = UiState.Loading(false)
-            _allRecentSevenJoinState.value = UiState.Success(it)
+            }
         }
     }
 
-    fun setAppBarTitle(string: String) {
-        appBarTitle.value = string
+    private fun updateHeaderValue() {
+        _allCartJoinMultiViewTypeState.value.let {
+            if (it is UiState.Success) {
+                val checkedCount = it.items.mapNotNull {
+                    it.uiCartOrderDishJoinItem
+                }.filter {
+                    it.checked
+                }.size
+
+                val checkBoxText = if (checkedCount == it.items.size - 2)
+                    UiCartHeader.TEXT_SELECT_RELEASE
+                else UiCartHeader.TEXT_SELECT_ALL
+
+                val checkBoxChecked = (checkedCount == it.items.size - 2)
+
+                _allCartJoinMultiViewTypeState.value = UiState.Success(
+                    it.items.toMutableList().apply {
+                        set(
+                            0,
+                            get(0).copy(
+                                uiCartHeader = get(0).uiCartHeader!!.copy(
+                                    checkBoxText = checkBoxText,
+                                    checkBoxChecked = checkBoxChecked
+                                )
+                            )
+                        )
+                    }
+                )
+            }
+        }
     }
 
     fun updateUiCartCheckedValue(position: Int, checked: Boolean) {
-        if (position == -1) return // 클릭했을때, 없어진 view의 경우 position == -1
-        _uiCartJoinArrayList[position].checked = checked
-        _uiCartJoinList.value = _uiCartJoinArrayList
+        if (position == -1) return
+        _allCartJoinMultiViewTypeState.value.let {
+            if (it is UiState.Success) {
+                _allCartJoinMultiViewTypeState.value = UiState.Success(
+                    it.items.toMutableList().apply {
+                        set(
+                            position,
+                            get(position).copy(
+                                uiCartOrderDishJoinItem = get(position).uiCartOrderDishJoinItem!!.copy(
+                                    checked = checked
+                                )
+                            )
+                        )
+                    }
+                )
+                updatePriceText()
+                updateHeaderValue()
+            }
+        }
     }
 
     fun updateUiCartAmountValue(position: Int, amount: Int) {
-        if (position == -1) return // 클릭했을때, 없어진 view의 경우 position == -1
-        _uiCartJoinArrayList[position].apply {
-            this.amount = amount
-            totalPrice = sPrice * amount
+        if (position == -1) return
+        _allCartJoinMultiViewTypeState.value.let {
+            if (it is UiState.Success) {
+                _allCartJoinMultiViewTypeState.value = UiState.Success(
+                    it.items.toMutableList().apply {
+                        set(
+                            position,
+                            get(position).copy(
+                                uiCartOrderDishJoinItem = get(position).uiCartOrderDishJoinItem!!.copy(
+                                    amount = amount
+                                )
+                            )
+                        )
+                    }
+                )
+                updatePriceText()
+            }
         }
-        _uiCartJoinList.value = _uiCartJoinArrayList
     }
 
     fun deleteUiCartItemByPos(position: Int, hash: String) {
-        if (position == -1) return // 클릭했을때, 없어진 view의 경우 position == -1
-        _toBeDeletedCartItem.add(hash)
-        _uiCartJoinArrayList.removeAt(position)
-        _uiCartJoinList.value = _uiCartJoinArrayList
+        if (position == -1) return
+        _allCartJoinMultiViewTypeState.value.let {
+            if (it is UiState.Success) {
+                _toBeDeleteItemsHash.add(hash) // 리스트에서는 삭제됐지만 db에 삭제 쿼리 보낼 애들
+                // ui에 보이는 리스트 갱신
+                _allCartJoinMultiViewTypeState.value = UiState.Success(
+                    it.items.toMutableList().apply {
+                        removeAt(position)
+                    }
+                )
+                updatePriceText()
+                updateHeaderValue()
+            }
+        }
     }
 
-    fun deleteUiCartItemByHash(completion: (complete: Boolean) -> Unit) {
-        val success = _uiCartJoinArrayList.removeAll(
-            _uiCartJoinArrayList.filter {
-                _selectedCartItem.contains(TempOrder(it.hash, it.amount, it.title))
-            }.toSet()
-        )
-        _toBeDeletedCartItem.addAll(_selectedCartItem.map { it.hash })
-        _uiCartJoinList.value = _uiCartJoinArrayList
-        completion(true)
+    fun deleteUiCartItemByHash() {
+        _allCartJoinMultiViewTypeState.value.let {
+            if (it is UiState.Success) {
+                val checkedCartItem = it.items.mapNotNull { uiMultiViewType ->
+                    uiMultiViewType.uiCartOrderDishJoinItem
+                }.filter { uiCartOrderDishJoinItem ->
+                    uiCartOrderDishJoinItem.checked
+                }.map {
+                    it.hash
+                }.toSet()
+
+                _toBeDeleteItemsHash.addAll(checkedCartItem)
+
+                _allCartJoinMultiViewTypeState.value = UiState.Success(
+                    it.items.toMutableList().apply {
+                        it.items.mapNotNull {
+                            it.uiCartOrderDishJoinItem
+                        }.apply {
+                            removeIf {
+                                it.uiCartOrderDishJoinItem != null && checkedCartItem.contains(it.uiCartOrderDishJoinItem!!.hash)
+                            }
+                        }
+                    }
+                )
+                updatePriceText()
+                updateHeaderValue()
+            }
+        }
     }
 
     fun changeCheckedState(checkedValue: Boolean) {
-        _uiCartJoinList.value = _uiCartJoinArrayList.onEach {
-            it.checked = checkedValue
+        _allCartJoinMultiViewTypeState.value.let {
+            if (it is UiState.Success) {
+                val header = UiCartMultiViewType(
+                    viewType = 0,
+                    uiCartHeader = UiCartHeader(
+                        checkBoxText = if (checkedValue) UiCartHeader.TEXT_SELECT_RELEASE else UiCartHeader.TEXT_SELECT_ALL,
+                        checkBoxChecked = checkedValue
+                    )
+                )
+                val footer = it.items.last()
+                val body = it.items.filter { it.viewType == 1 }
+                    .toMutableList()
+                    .apply {
+                        onEachIndexed { index, uiCartMultiViewType ->
+                            set(
+                                index,
+                                uiCartMultiViewType.copy(
+                                    uiCartOrderDishJoinItem = get(index).uiCartOrderDishJoinItem!!.copy(
+                                        checked = checkedValue
+                                    )
+                                )
+                            )
+                        }
+                    }
+                _allCartJoinMultiViewTypeState.value = UiState.Success(
+                    listOf(header) + body + listOf(footer)
+                )
+                updatePriceText()
+            }
         }
     }
 
     fun setOrderCompleteCartItem() {
-        // 주문 완료 화면에 대한 리스트 세팅
-        val tempHashList = _selectedCartItem.map { it.hash }.toList()
-        _orderCompleteBodyItem.value =
-            _uiCartJoinArrayList.filter { tempHashList.contains(it.hash) }.sortedBy { it.title }.toList()
-        orderFirstItemTitle = _orderCompleteBodyItem.value.first().title
-        val deliveryPrice = _itemCartBottomBodyData.value!!.deliveryPrice
-        val priceTotal = _orderCompleteBodyItem.value
-            .map { Pair(it.sPrice, it.amount) }
-            .fold(0) { acc, pair ->
-                acc + pair.first * pair.second
+        _allCartJoinMultiViewTypeState.value.let {
+            if (it is UiState.Success) {
+                val tempList = it.items.mapNotNull { it.uiCartOrderDishJoinItem }
+                val deliveryInfo = it.items.last().uiCartBottomBody!!
+                val orderItems = tempList.filter { it.checked }
+                _orderCompleteBodyItem.value = orderItems.sortedBy { it.title }.toList()
+                orderFirstItemTitle = _orderCompleteBodyItem.value.first().title
+                _orderCompleteTopItem.value = UiCartCompleteHeader(
+                    isDelivering = true,
+                    orderTimeStamp = System.currentTimeMillis(),
+                    orderItemCount = orderItems.size
+                )
+                _orderCompleteFooterItem.value = UiOrderInfo(
+                    itemPrice = deliveryInfo.productTotalPrice,
+                    deliveryFee = deliveryInfo.deliveryPrice,
+                    totalPrice = deliveryInfo.totalPrice
+                )
+                orderDetailMode.value = true
+                insertOrderInfoDeleteCartInfo()
             }
-        val totalPrice = priceTotal + deliveryPrice
-        val orderItemCount = _orderCompleteBodyItem.value.map { it.amount }
-            .reduce { sum, eachAmount -> sum + eachAmount }
-        _orderCompleteTopItem.value = UiCartCompleteHeader(
-            isDelivering = true,
-            orderTimeStamp = System.currentTimeMillis(),
-            orderItemCount = orderItemCount
-        )
-        _orderCompleteFooterItem.value = UiOrderInfo(
-            itemPrice = priceTotal,
-            deliveryFee = deliveryPrice,
-            totalPrice = totalPrice
-        )
-        orderDetailMode.value = true
-        insertOrderInfoDeleteCartInfo()
+        }
     }
 
     private fun insertOrderInfoDeleteCartInfo() {
         BanChanApplication.applicationScope.launch {
-            currentOrderTimeStamp = System.currentTimeMillis()
-            orderHashList.clear()
-            //orderFirstItemTitle = "Title"
-            orderHashList.addAll(_selectedCartItem.map { it.hash })
-            cartUseCase.insertVarArgOrderInfo(
-                tempOrderSet = _selectedCartItem,
-                timeStamp = currentOrderTimeStamp,
-                isDelivering = true,
-                deliveryPrice = _itemCartBottomBodyData.value!!.deliveryPrice
-            )
-            _orderButtonClicked.emit(true)
-            cartUseCase.insertAndDeleteCartItems(
-                _uiCartJoinList.value!!, _toBeDeletedCartItem.toList()
-            )
-            recentUseCase.updateVarArgRecentIsInsertedFalseInCartUseCase(_toBeDeletedCartItem.toList())
-            recentUseCase.updateVarArgRecentIsInsertedFalseInCartUseCase(_selectedCartItem.map { it.hash }.toList())
-            cartUseCase.deleteCartInfoByHashList(_selectedCartItem.map { it.hash }.toList())
+            _allCartJoinMultiViewTypeState.value.let {
+                if (it is UiState.Success) {
+                    // 주문하기 -> orderHashList -> 알람매니저 등록용
+                    currentOrderTimeStamp = System.currentTimeMillis()
+                    val uiCartOrderDishJoinList = it.items.mapNotNull { it.uiCartOrderDishJoinItem }
+                    orderHashList.clear()
+                    orderHashList.addAll(
+                        uiCartOrderDishJoinList.map { it.hash }
+                    )
+
+                    cartUseCase.insertVarArgOrderInfo(
+                        tempOrderSet = uiCartOrderDishJoinList.map {
+                            TempOrder(
+                                it.hash,
+                                it.amount,
+                                it.title
+                            )
+                        }.toSet(),
+                        timeStamp = currentOrderTimeStamp,
+                        isDelivering = true,
+                        deliveryPrice = it.items.last().uiCartBottomBody!!.deliveryPrice
+                    )
+                    _orderButtonClicked.emit(true) //-> 주문햇다고 emit
+                    cartUseCase.insertAndDeleteCartItems(
+                        uiCartOrderDishJoinList,
+                        _toBeDeleteItemsHash.toList()
+                    )
+                    val deleteFromCartHashList =
+                        uiCartOrderDishJoinList.filter { it.checked }.map { it.hash }
+                    recentUseCase.updateVarArgRecentIsInsertedFalseInCartUseCase(
+                        _toBeDeleteItemsHash.toList()
+                    )
+                    recentUseCase.updateVarArgRecentIsInsertedFalseInCartUseCase(
+                        deleteFromCartHashList
+                    )
+                    cartUseCase.deleteCartInfoByHashList(
+                        deleteFromCartHashList
+                    )
+                }
+            }
         }
     }
 
     fun updateAllCartItemChanged() {
         BanChanApplication.applicationScope.launch {
-            cartUseCase.insertAndDeleteCartItems(
-                _uiCartJoinList.value!!, _toBeDeletedCartItem.toList()
-            )
-            recentUseCase.updateVarArgRecentIsInsertedFalseInCartUseCase(_toBeDeletedCartItem.toList())
-            _toBeDeletedCartItem.clear()
+            _allCartJoinMultiViewTypeState.value.let {
+                if (it is UiState.Success) {
+                    cartUseCase.insertAndDeleteCartItems(
+                        it.items.mapNotNull { it.uiCartOrderDishJoinItem },
+                        _toBeDeleteItemsHash.toList()
+                    )
+                    recentUseCase.updateVarArgRecentIsInsertedFalseInCartUseCase(
+                        _toBeDeleteItemsHash.toList()
+                    )
+                    _toBeDeleteItemsHash.clear()
+                }
+            }
         }
     }
 }
