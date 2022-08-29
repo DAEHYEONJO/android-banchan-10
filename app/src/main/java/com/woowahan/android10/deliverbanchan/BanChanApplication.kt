@@ -13,7 +13,7 @@ class BanChanApplication : Application(), Configuration.Provider, ComponentCallb
 
     companion object {
         const val TAG = "GlobalApplication"
-        lateinit var applicationScope: CoroutineScope
+        lateinit var rootActivityViewModelScope: CoroutineScope
     }
 
     @Inject

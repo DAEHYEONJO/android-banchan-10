@@ -7,9 +7,6 @@ import com.woowahan.android10.deliverbanchan.domain.model.*
 import com.woowahan.android10.deliverbanchan.domain.usecase.CartUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.GetAllOrderInfoListUseCase
 import com.woowahan.android10.deliverbanchan.domain.usecase.RecentUseCase
-import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartBottomBody
-import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartCompleteHeader
-import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartHeader
 import com.woowahan.android10.deliverbanchan.presentation.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -351,7 +348,7 @@ class CartViewModel @Inject constructor(
     }
 
     private fun insertOrderInfoDeleteCartInfo() {
-        BanChanApplication.applicationScope.launch {
+        BanChanApplication.rootActivityViewModelScope.launch {
             _allCartJoinMultiViewTypeState.value.let {
                 if (it is UiState.Success) {
                     // 주문하기 -> orderHashList -> 알람매니저 등록용
@@ -396,7 +393,7 @@ class CartViewModel @Inject constructor(
     }
 
     fun updateAllCartItemChanged() {
-        BanChanApplication.applicationScope.launch {
+        BanChanApplication.rootActivityViewModelScope.launch {
             _allCartJoinMultiViewTypeState.value.let {
                 if (it is UiState.Success) {
                     cartUseCase.insertAndDeleteCartItems(

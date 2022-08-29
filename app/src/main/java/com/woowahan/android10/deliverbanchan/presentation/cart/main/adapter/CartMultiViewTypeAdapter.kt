@@ -1,6 +1,5 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart.main.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.findViewTreeLifecycleOwner
@@ -13,8 +12,8 @@ import com.woowahan.android10.deliverbanchan.databinding.ItemCartOrderInfoBottom
 import com.woowahan.android10.deliverbanchan.databinding.ItemCartSelectHeaderBinding
 import com.woowahan.android10.deliverbanchan.domain.model.UiCartMultiViewType
 import com.woowahan.android10.deliverbanchan.domain.model.UiCartOrderDishJoinItem
-import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartBottomBody
-import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartHeader
+import com.woowahan.android10.deliverbanchan.domain.model.UiCartBottomBody
+import com.woowahan.android10.deliverbanchan.domain.model.UiCartHeader
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEventWithDuration
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.CoroutineScope
@@ -66,7 +65,6 @@ class CartMultiViewTypeAdapter @Inject constructor() :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(uiCartHeader: UiCartHeader) {
-            Log.e("멀티퓨타입 어탭터", "헤더 $uiCartHeader", )
             with(binding) {
                 item = uiCartHeader
                 binding.cartSelectHeaderCb.setOnClickListener {
@@ -86,7 +84,6 @@ class CartMultiViewTypeAdapter @Inject constructor() :
     ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(uiCartOrderDishJoinItem: UiCartOrderDishJoinItem) {
-            Log.e("멀티퓨타입 어탭터", "바디 $uiCartOrderDishJoinItem", )
             with(binding) {
                 item = uiCartOrderDishJoinItem
                 val hash = uiCartOrderDishJoinItem.hash
@@ -134,7 +131,6 @@ class CartMultiViewTypeAdapter @Inject constructor() :
     ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(uiCartBottomBody: UiCartBottomBody) {
-            Log.e("멀티퓨타입 어탭터", "푸터 $uiCartBottomBody", )
             with(binding) {
                 item = uiCartBottomBody
                 cartOrderBottomBodyBtnOrder.setClickEventWithDuration(coroutineScope) {
@@ -186,19 +182,16 @@ class CartMultiViewTypeAdapter @Inject constructor() :
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
             UiCartMultiViewType.HEADER -> {
-                Log.e("멀티뷰타입 바인드 뷰 홀더", "onBindViewHolder: 헤더", )
                 currentList[position].uiCartHeader?.let {
                     (holder as HeaderViewHolder).bind(it)
                 }
             }
             UiCartMultiViewType.BODY -> {
-                Log.e("멀티뷰타입 바인드 뷰 홀더", "onBindViewHolder: 바디", )
                 currentList[position].uiCartOrderDishJoinItem?.let {
                     (holder as BodyViewHolder).bind(it)
                 }
             }
             else -> {
-                Log.e("멀티뷰타입 바인드 뷰 홀더", "onBindViewHolder: 푸터", )
                 currentList[position].uiCartBottomBody?.let {
                     (holder as FooterViewHolder).bind(it)
                 }

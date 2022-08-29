@@ -34,7 +34,7 @@ class ExhibitionAdapter() :
                 oldItem: UiExhibitionItem,
                 newItem: UiExhibitionItem
             ): Any? {
-                return if(oldItem.uiDishItems != newItem.uiDishItems) true else null
+                return if (oldItem.uiDishItems != newItem.uiDishItems) true else null
             }
         }
     }

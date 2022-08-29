@@ -36,7 +36,7 @@ class RecentPagingAdapter @Inject constructor() :
             }
 
             override fun getChangePayload(oldItem: UiDishItem, newItem: UiDishItem): Any? {
-                return if (oldItem.isInserted != newItem.isInserted || oldItem.timeStamp!=newItem.timeStamp) true else null
+                return if (oldItem.isInserted != newItem.isInserted || oldItem.timeStamp != newItem.timeStamp) true else null
             }
         }
     }
@@ -66,10 +66,10 @@ class RecentPagingAdapter @Inject constructor() :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
-        if (payloads.isEmpty()){
+        if (payloads.isEmpty()) {
             super.onBindViewHolder(holder, position, payloads)
-        }else{
-            if (payloads[0]==true){
+        } else {
+            if (payloads[0] == true) {
                 getItem(position)?.let {
                     holder.bind(it)
                 }

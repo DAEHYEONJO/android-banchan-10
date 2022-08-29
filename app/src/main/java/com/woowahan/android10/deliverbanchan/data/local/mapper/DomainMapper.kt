@@ -21,7 +21,11 @@ object DomainMapper {
         )
     }
 
-    fun mapToRecentViewedInfo(hash: String, timeStamp: Long, isInserted: Boolean): RecentViewedInfo {
+    fun mapToRecentViewedInfo(
+        hash: String,
+        timeStamp: Long,
+        isInserted: Boolean
+    ): RecentViewedInfo {
         return RecentViewedInfo(hash = hash, timeStamp = timeStamp, isInserted = isInserted)
     }
 

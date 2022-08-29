@@ -23,7 +23,7 @@ class CartRepositoryImpl @Inject constructor(
         return cartDao.getCartInfoById(hash).map { cartInfo ->
             cartInfo?.let {
                 EntityMapper.mapToUiBottomSheet(cartInfo)
-            }?:EntityMapper.mapToUiBottomSheet(CartInfo.emptyItem())
+            } ?: EntityMapper.mapToUiBottomSheet(CartInfo.emptyItem())
         }
     }
 

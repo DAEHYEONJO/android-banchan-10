@@ -16,7 +16,7 @@ import com.woowahan.android10.deliverbanchan.presentation.common.ext.setClickEve
 import com.woowahan.android10.deliverbanchan.presentation.main.host.adapter.TabViewPagerAdapter
 import com.woowahan.android10.deliverbanchan.presentation.order.host.OrderActivity
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.*
+import kotlinx.coroutines.FlowPreview
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main, "MainActivity") {
@@ -27,7 +27,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main, "
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
-        BanChanApplication.applicationScope  = dishViewModel.viewModelScope
+        BanChanApplication.rootActivityViewModelScope = dishViewModel.viewModelScope
         initBinding()
         initView()
         initBtn()

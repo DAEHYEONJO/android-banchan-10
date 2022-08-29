@@ -42,14 +42,14 @@ class ExhibitionFragment :
     }
 
     private fun initView() {
-        setExhibitionHeaderAdpater()
+        setExhibitionHeaderAdapter()
         setExhibitionContentAdapter()
         setRecyclerView()
         setErrorBtn()
         initObserver()
     }
 
-    private fun setExhibitionHeaderAdpater() {
+    private fun setExhibitionHeaderAdapter() {
         exhibitionHeaderAdapter = ExhibitionHeaderAdapter()
         exhibitionHeaderAdapter.submitList(listOf("header").toList())
     }

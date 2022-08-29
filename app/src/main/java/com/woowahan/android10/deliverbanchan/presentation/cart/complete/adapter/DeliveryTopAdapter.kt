@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.databinding.ItemCartOrderCompleteTopBinding
-import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartCompleteHeader
+import com.woowahan.android10.deliverbanchan.domain.model.UiCartCompleteHeader
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 

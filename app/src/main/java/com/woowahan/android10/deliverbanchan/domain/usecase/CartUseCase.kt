@@ -4,8 +4,8 @@ import com.woowahan.android10.deliverbanchan.domain.model.*
 import com.woowahan.android10.deliverbanchan.domain.repository.local.CartRepository
 import com.woowahan.android10.deliverbanchan.domain.repository.local.OrderRepository
 import com.woowahan.android10.deliverbanchan.domain.repository.local.RecentViewedRepository
-import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartBottomBody
-import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartHeader
+import com.woowahan.android10.deliverbanchan.domain.model.UiCartBottomBody
+import com.woowahan.android10.deliverbanchan.domain.model.UiCartHeader
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

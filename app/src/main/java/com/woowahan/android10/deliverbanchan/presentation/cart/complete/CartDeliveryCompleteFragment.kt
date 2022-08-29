@@ -27,8 +27,10 @@ class CartDeliveryCompleteFragment : BaseFragment<FragmentCartDeliveryCompleteBi
 
     @Inject
     lateinit var cartDishCompleteTopAdapter: DeliveryTopAdapter
+
     @Inject
     lateinit var cartDishCompleteBodyAdapter: DeliveryBodyAdapter
+
     @Inject
     lateinit var cartDishCompleteFooterAdapter: DeliveryFooterAdapter
     private val concatAdapter: ConcatAdapter by lazy {

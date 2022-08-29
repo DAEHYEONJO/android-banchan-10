@@ -18,10 +18,9 @@ import javax.inject.Inject
 @ActivityRetainedScoped
 class CartRecentViewedFooterAdapter @Inject constructor() :
     ListAdapter<List<UiDishItem>, CartRecentViewedFooterAdapter.ViewHolder>(itemCallback) {
-    //var uiRecentJoinList: List<UiDishItem> = emptyList()
 
     companion object {
-        val itemCallback = object : DiffUtil.ItemCallback<List<UiDishItem>>(){
+        val itemCallback = object : DiffUtil.ItemCallback<List<UiDishItem>>() {
             override fun areItemsTheSame(
                 oldItem: List<UiDishItem>,
                 newItem: List<UiDishItem>

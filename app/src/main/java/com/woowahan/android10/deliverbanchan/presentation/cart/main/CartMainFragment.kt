@@ -7,22 +7,20 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ConcatAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.background.DeliveryReceiver
 import com.woowahan.android10.deliverbanchan.databinding.FragmentCartMainBinding
+import com.woowahan.android10.deliverbanchan.domain.model.UiCartCompleteHeader.Companion.ESTIMATED_DELIVERY_TIME
 import com.woowahan.android10.deliverbanchan.domain.model.UiCartMultiViewType
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.presentation.base.BaseFragment
 import com.woowahan.android10.deliverbanchan.presentation.cart.main.adapter.CartMultiViewTypeAdapter
 import com.woowahan.android10.deliverbanchan.presentation.cart.main.adapter.CartRecentViewedFooterAdapter
-import com.woowahan.android10.deliverbanchan.presentation.cart.model.UiCartCompleteHeader.Companion.ESTIMATED_DELIVERY_TIME
 import com.woowahan.android10.deliverbanchan.presentation.cart.viewmodel.CartViewModel
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.showToast
 import com.woowahan.android10.deliverbanchan.presentation.common.ext.toGone
@@ -70,7 +68,7 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
 
     private fun initInterface() {
         cartMultiViewTypeAdapter.onCartMultiViewTypeClickInterface =
-            object : CartMultiViewTypeAdapter.OnCartMultiViewTypeClickInterface{
+            object : CartMultiViewTypeAdapter.OnCartMultiViewTypeClickInterface {
                 override fun onClickOrderBtn() {
                     cartViewModel.setOrderCompleteCartItem()
                 }
@@ -129,7 +127,7 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
 
             allCartJoinMultiViewTypeState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .onEach { uiState: UiState<List<UiCartMultiViewType>> ->
-                    handleState( cartMultiViewTypeAdapter, uiState)
+                    handleState(cartMultiViewTypeAdapter, uiState)
                 }.launchIn(viewLifecycleOwner.lifecycleScope)
         }
     }

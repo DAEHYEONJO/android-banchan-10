@@ -68,10 +68,10 @@ class MainGridAdapter @Inject constructor() :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
-        if (payloads.isEmpty()){
+        if (payloads.isEmpty()) {
             super.onBindViewHolder(holder, position, payloads)
-        }else{
-            if (payloads[0]==true){
+        } else {
+            if (payloads[0] == true) {
                 currentList[position]?.let { holder.bind(it) }
 
             }

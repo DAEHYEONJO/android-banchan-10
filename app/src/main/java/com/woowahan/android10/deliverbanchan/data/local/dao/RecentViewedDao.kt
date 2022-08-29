@@ -22,7 +22,7 @@ interface RecentViewedDao {
     suspend fun updateRecentIsInsertedInCart(hash: String, isInserted: Boolean)
 
     @Transaction
-    suspend fun updateVarArgRecentIsInsertedFalseInCart(hashList: List<String>){
+    suspend fun updateVarArgRecentIsInsertedFalseInCart(hashList: List<String>) {
         hashList.forEach {
             updateRecentIsInsertedInCart(it, false)
         }
