@@ -1,6 +1,5 @@
 package com.woowahan.android10.deliverbanchan.data.local.repository
 
-import android.util.Log
 import androidx.annotation.WorkerThread
 import com.woowahan.android10.deliverbanchan.data.local.dao.CartDao
 import com.woowahan.android10.deliverbanchan.data.local.mapper.DomainMapper

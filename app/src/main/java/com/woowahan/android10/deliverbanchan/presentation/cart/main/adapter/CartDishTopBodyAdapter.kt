@@ -102,14 +102,12 @@ class CartDishTopBodyAdapter @Inject constructor(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        //Log.e(TAG, "탑바디 onCreateViewHolder: ")
         val binding =
             ItemCartDishTopBodyBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding, parent.findViewTreeLifecycleOwner()!!.lifecycleScope)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        //Log.e(TAG, "탑바디 onBindViewHolder: ")
         holder.bind(currentList[position])
     }
 }

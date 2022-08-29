@@ -1,6 +1,5 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart.main.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.findViewTreeLifecycleOwner
@@ -73,7 +72,6 @@ class CartOrderInfoBottomBodyAdapter @Inject constructor() : ListAdapter<UiCartB
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        //Log.e(TAG, "바텀 바디 onCreateViewHolder: ", )
         val binding =
             ItemCartOrderInfoBottomBodyBinding.inflate(
                 LayoutInflater.from(parent.context),
@@ -84,7 +82,6 @@ class CartOrderInfoBottomBodyAdapter @Inject constructor() : ListAdapter<UiCartB
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        //Log.e(TAG, "바텀 바디 onBindViewHolder: ", )
         holder.bind(currentList[position])
     }
 

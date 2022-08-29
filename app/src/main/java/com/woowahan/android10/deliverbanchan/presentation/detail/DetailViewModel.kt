@@ -1,11 +1,9 @@
 package com.woowahan.android10.deliverbanchan.presentation.detail
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.woowahan.android10.deliverbanchan.data.local.model.entity.CartInfo
 import com.woowahan.android10.deliverbanchan.domain.model.UiDetailInfo
 import com.woowahan.android10.deliverbanchan.domain.model.UiDishItem
 import com.woowahan.android10.deliverbanchan.domain.model.response.BaseResult
@@ -62,7 +60,6 @@ class DetailViewModel @Inject constructor(
     }
 
     private fun getAllCartInfo() = viewModelScope.launch {
-        Log.e(TAG, "getAllCartInfo 호출")
         getAllCartInfoUseCase(this).collect { cartInfoList ->
             setCartIconText(cartInfoList.size)
             // 디테일화면에서 insert하고, 다른곳 갔다가 다시 왔을때 카트에 있는것인지 없는것인지 판단하여 수량을 update할지

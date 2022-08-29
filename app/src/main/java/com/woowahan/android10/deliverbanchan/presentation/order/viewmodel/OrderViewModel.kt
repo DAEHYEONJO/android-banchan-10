@@ -90,9 +90,6 @@ class OrderViewModel @Inject constructor(
                             )
                         }
                     }
-                    map.forEach { t, u ->
-                        Log.e(TAG, "getAllOrderList: $t ${u.map { it.title }.toList()}", )
-                    }
 
                     val list = map.toList().map { (timeStamp, uiCartJointItemLIst) ->
                         val curDeliveryTotalPrice =

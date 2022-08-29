@@ -1,8 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart.host
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.activity.viewModels

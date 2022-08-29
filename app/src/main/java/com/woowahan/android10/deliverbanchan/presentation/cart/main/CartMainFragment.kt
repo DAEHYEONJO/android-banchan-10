@@ -7,16 +7,12 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
-import android.util.Log
 import android.view.View
-import androidx.annotation.NonNull
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ConcatAdapter
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.SimpleItemAnimator
 import com.woowahan.android10.deliverbanchan.R
 import com.woowahan.android10.deliverbanchan.background.DeliveryReceiver
 import com.woowahan.android10.deliverbanchan.databinding.FragmentCartMainBinding
@@ -165,14 +161,8 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
     private fun initAdapterList() {
         with(cartViewModel) {
 
-//            allCartJoinState.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { uiTempState ->
-//                Log.e(TAG, "initAdapterList: 올카트조인스테이스 다시 핸들링됨", )
-//                handleState(cartTopBodyAdapter, uiTempState)
-//            }.launchIn(viewLifecycleOwner.lifecycleScope)
-
             allRecentSevenJoinState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .onEach { uiTempState ->
-                    Log.e(TAG, "initAdapterList: 7r개 아이템들 다시 핸들링되기")
                     handleState(cartRecentViewedFooterAdapter, uiTempState)
                 }.launchIn(viewLifecycleOwner.lifecycleScope)
 
@@ -185,23 +175,12 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
 
             itemCartBottomBodyData.observe(viewLifecycleOwner) { uiCartBottomBody ->
                 with(cartBottomBodyAdapter) {
-                    
-//                    if (cartViewModel.forInitValue!=null) {
-//
-//                    }
-                    Log.e(TAG, "initAdapterList: 널아님 트루대입")
-                    //cartViewModel.forInitValue = true
                     submitList(listOf(uiCartBottomBody))
                 }
             }
 
             uiCartJoinList.observe(viewLifecycleOwner) {
-                it.forEach {
-                    Log.e(TAG, "프래그먼트 오브절버: ${it.title} ${it.checked} ${it.amount}")
-                }
-
                 val newList = ArrayList<UiCartOrderDishJoinItem>().apply {
-//                    addAll(this)
                     it.forEach {
                         add(it.copy())
                     }
@@ -261,15 +240,12 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
             is UiState.Success -> {
                 when (adapter) {
                     is CartDishTopBodyAdapter -> {
-                        Log.e(TAG, "handleState: 위에 카트 아이템틀 서브밋")
                         adapter.submitList(uiState.items as List<UiCartOrderDishJoinItem>)
                     }
                     is CartRecentViewedFooterAdapter -> {
-                        Log.e(TAG, "handleState: 리센트7개넣기")
                         with(adapter) {
                             recentOnDishItemClickListener = this@CartMainFragment
                             submitList(listOf(uiState.items as List<UiDishItem>))
-                            //notifyDataSetChanged()
                         }
                     }
                 }
@@ -285,11 +261,7 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
     private fun initRecyclerView() {
         with(binding.cartMainRv) {
             adapter = concatAdapter
-            val animator = itemAnimator
-            if (animator is SimpleItemAnimator) {
-                animator.supportsChangeAnimations = false
-            }
-
+            itemAnimator = null
         }
     }
 

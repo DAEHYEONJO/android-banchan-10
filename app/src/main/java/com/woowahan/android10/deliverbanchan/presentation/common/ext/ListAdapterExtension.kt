@@ -10,7 +10,7 @@ inline fun <reified VH : RecyclerView.ViewHolder?> RecyclerView.Adapter<VH>.obse
     callbackFlow {
         val observer = object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
-                trySend(Unit)
+                trySend(Unit).isSuccess
             }
         }
         registerAdapterDataObserver(observer)
