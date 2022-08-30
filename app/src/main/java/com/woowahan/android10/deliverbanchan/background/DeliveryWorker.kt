@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.woowahan.android10.deliverbanchan.di.IoDispatcher
 import com.woowahan.android10.deliverbanchan.domain.repository.local.OrderRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -21,9 +22,7 @@ class DeliveryWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
         return@withContext try {
-
             orderRepository.updateOrderIsDelivering(orderHashList)
-
             Result.success()
         } catch (exception: Exception) {
             Result.failure()

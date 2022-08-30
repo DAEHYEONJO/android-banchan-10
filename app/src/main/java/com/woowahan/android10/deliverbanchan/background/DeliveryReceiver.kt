@@ -34,7 +34,6 @@ class DeliveryReceiver : BroadcastReceiver() {
         val deliveryWorkManager = WorkManager.getInstance(context)
 
         val deliveryWorkRequest = OneTimeWorkRequestBuilder<DeliveryWorker>()
-            .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
             .addTag("DeliveryWorker")
             .setInputData(getWorkerData(orderHashList))
             .build()

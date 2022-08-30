@@ -1,5 +1,6 @@
 package com.woowahan.android10.deliverbanchan.presentation.cart.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.woowahan.android10.deliverbanchan.BanChanApplication
 import com.woowahan.android10.deliverbanchan.di.IoDispatcher
@@ -356,13 +357,14 @@ class CartViewModel @Inject constructor(
                     // 주문하기 -> orderHashList -> 알람매니저 등록용
                     currentOrderTimeStamp = System.currentTimeMillis()
                     val uiCartOrderDishJoinList = it.items.mapNotNull { it.uiCartOrderDishJoinItem }
+                    val toOrderList = uiCartOrderDishJoinList.filter { it.checked }
                     orderHashList.clear()
                     orderHashList.addAll(
-                        uiCartOrderDishJoinList.map { it.hash }
+                        toOrderList.map { it.hash }
                     )
 
                     cartUseCase.insertVarArgOrderInfo(
-                        tempOrderSet = uiCartOrderDishJoinList.map {
+                        tempOrderSet = toOrderList.map {
                             TempOrder(
                                 it.hash,
                                 it.amount,
@@ -379,7 +381,7 @@ class CartViewModel @Inject constructor(
                         _toBeDeleteItemsHash.toList()
                     )
                     val deleteFromCartHashList =
-                        uiCartOrderDishJoinList.filter { it.checked }.map { it.hash }
+                        toOrderList.map { it.hash }
                     recentUseCase.updateVarArgRecentIsInsertedFalseInCartUseCase(
                         _toBeDeleteItemsHash.toList()
                     )

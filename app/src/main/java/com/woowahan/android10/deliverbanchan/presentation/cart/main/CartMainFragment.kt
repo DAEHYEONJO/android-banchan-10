@@ -145,12 +145,7 @@ class CartMainFragment : BaseFragment<FragmentCartMainBinding>(
                 binding.cartMainRv.toVisible()
                 when (adapter) {
                     is CartMultiViewTypeAdapter -> {
-                        val newList = ArrayList<UiCartMultiViewType>().apply {
-                            (uiState.items as List<UiCartMultiViewType>).forEach {
-                                add(it.copy())
-                            }
-                        }
-                        adapter.submitList(newList)
+                        adapter.submitList(uiState.items as List<UiCartMultiViewType>)
                     }
                     is CartRecentViewedFooterAdapter -> {
                         with(adapter) {
